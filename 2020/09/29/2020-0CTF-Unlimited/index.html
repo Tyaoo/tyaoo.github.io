@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CTF,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="PHP AST + 反混淆 + 矩阵快速幂  唯一带有Web特征的逆向题">
+<meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020 0CTF Unlimited">
+<meta property="og:url" content="https://tyaoo.github.io/2020/09/29/2020-0CTF-Unlimited/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="PHP AST + 反混淆 + 矩阵快速幂  唯一带有Web特征的逆向题">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-09-29T07:14:47.531Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2020 0CTF Unlimited">
+<meta name="twitter:description" content="PHP AST + 反混淆 + 矩阵快速幂  唯一带有Web特征的逆向题">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tyaoo.github.io/2020/09/29/2020-0CTF-Unlimited/">
+
+
+
+
+
+  <title>2020 0CTF Unlimited | Tyaoo's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tyaoo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2020/09/29/2020-0CTF-Unlimited/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2020 0CTF Unlimited</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-29T15:10:02+08:00">
+                2020-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>PHP AST + 反混淆 + 矩阵快速幂</p>
+</blockquote>
+<p>唯一带有Web特征的逆向题</p>
+<a id="more"></a>
+
+<p><a href="https://mega.nz/file/uJ4HgQTK#xq0vn5txVQ7kgroD5x4b3kpd87-fKviU8_Cuwvb7pAc" target="_blank" rel="noopener">题目</a>是一个经过混淆的PHP抽象语法树文件，请点击题目下载</p>
+<p>一开始想直接找抽象语法树（AST）转为PHP代码的函数，找到了<a href="https://github.com/nikic/PHP-Parser/blob/master/doc/component/Pretty_printing.markdown" target="_blank" rel="noopener">pretty_printing</a>，但是尝试许久，无法直接将AST初始化</p>
+<h3 id="JsonDecoder"><a href="#JsonDecoder" class="headerlink" title="JsonDecoder"></a>JsonDecoder</h3><p>继续查资料看到PHP-Parser可以将json字符串和AST进行互转</p>
+<p><a href="https://github.com/nikic/PHP-Parser/blob/master/lib/PhpParser/JsonDecoder.php" target="_blank" rel="noopener">https://github.com/nikic/PHP-Parser/blob/master/lib/PhpParser/JsonDecoder.php</a></p>
+<p>AST转json脚本如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require</span> dirname(<span class="keyword">__FILE__</span>).<span class="string">'/vendor/autoload.php'</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">PhpParser</span>\<span class="title">Error</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">PhpParser</span>\<span class="title">ParserFactory</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">PhpParser</span>\<span class="title">PrettyPrinter</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">PhpParser</span>\<span class="title">NodeDumper</span>;</span><br><span class="line"></span><br><span class="line">$code = <span class="string">&lt;&lt;&lt;'CODE'</span></span><br><span class="line"><span class="string">&lt;?php</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">function printLine(<span class="subst">$msg</span>) &#123;</span></span><br><span class="line"><span class="string">    echo <span class="subst">$msg</span>;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">CODE;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// PHP转化为AST再转化为Json</span></span><br><span class="line">$parser = (<span class="keyword">new</span> ParserFactory)-&gt;create(ParserFactory::PREFER_PHP7);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// PHP =&gt; AST</span></span><br><span class="line">    $ast = $parser-&gt;parse($code);</span><br><span class="line">    $dumper = <span class="keyword">new</span> NodeDumper;</span><br><span class="line">    <span class="keyword">echo</span> $dumper-&gt;dump($ast) . <span class="string">"\n"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// AST =&gt; Json</span></span><br><span class="line">    $json = json_encode($ast, JSON_PRETTY_PRINT);</span><br><span class="line">    <span class="keyword">echo</span> $json, <span class="string">"\n"</span>;</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">catch</span> (PhpParser\Error $e) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'Parse Error: '</span>, $e-&gt;getMessage();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Json转化为AST再转化为PHP</span></span><br><span class="line">$json = file_get_contents(<span class="string">"3.json"</span>);</span><br><span class="line"><span class="comment">// $json = &lt;&lt;&lt;'CODE'</span></span><br><span class="line"><span class="comment">// ]</span></span><br><span class="line"><span class="comment">// CODE;</span></span><br><span class="line"><span class="comment">// Json =&gt; AST</span></span><br><span class="line">$jsonDecoder = <span class="keyword">new</span> PhpParser\JsonDecoder();</span><br><span class="line">$ast = $jsonDecoder-&gt;decode($json);</span><br><span class="line"><span class="comment">// AST =&gt; PHP</span></span><br><span class="line">$parser = (<span class="keyword">new</span> ParserFactory)-&gt;create(ParserFactory::PREFER_PHP7);</span><br><span class="line">$prettyPrinter = <span class="keyword">new</span> PrettyPrinter\Standard;</span><br><span class="line">$code = $prettyPrinter-&gt;prettyPrint($ast);</span><br><span class="line"><span class="keyword">echo</span> $code, <span class="string">"\n"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>其中json字符串如下</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"nodeType"</span>: <span class="string">"Stmt_Function"</span>,</span><br><span class="line">        <span class="attr">"byRef"</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">"name"</span>: &#123;</span><br><span class="line">            <span class="attr">"nodeType"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"printLine"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"params"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"nodeType"</span>: <span class="string">"Param"</span>,</span><br><span class="line">                <span class="attr">"type"</span>: <span class="literal">null</span>,</span><br><span class="line">                <span class="attr">"byRef"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"variadic"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="attr">"var"</span>: &#123;</span><br><span class="line">                    <span class="attr">"nodeType"</span>: <span class="string">"Expr_Variable"</span>,</span><br><span class="line">                    <span class="attr">"name"</span>: <span class="string">"msg"</span>,</span><br><span class="line">                    <span class="attr">"attributes"</span>: &#123;</span><br><span class="line">                        <span class="attr">"startLine"</span>: <span class="number">3</span>,</span><br><span class="line">                        <span class="attr">"endLine"</span>: <span class="number">3</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="attr">"default"</span>: <span class="literal">null</span>,</span><br><span class="line">                <span class="attr">"flags"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="attr">"attrGroups"</span>: []</span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">"returnType"</span>: <span class="literal">null</span>,</span><br><span class="line">        <span class="attr">"stmts"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"nodeType"</span>: <span class="string">"Stmt_Echo"</span>,</span><br><span class="line">                <span class="attr">"exprs"</span>: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">"nodeType"</span>: <span class="string">"Expr_Variable"</span>,</span><br><span class="line">                        <span class="attr">"name"</span>: <span class="string">"msg"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">"attrGroups"</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>AST如下</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">array(</span><br><span class="line">    0: Stmt_Function(</span><br><span class="line">        attrGroups: array(</span><br><span class="line">        )</span><br><span class="line">        byRef: false</span><br><span class="line">        name: Identifier(</span><br><span class="line">            name: printLine</span><br><span class="line">        )</span><br><span class="line">        params: array(</span><br><span class="line">            0: Param(</span><br><span class="line">                attrGroups: array(</span><br><span class="line">                )</span><br><span class="line">                flags: 0</span><br><span class="line">                type: null</span><br><span class="line">                byRef: false</span><br><span class="line">                variadic: false</span><br><span class="line">                var: Expr_Variable(</span><br><span class="line">                    name: msg</span><br><span class="line">                )</span><br><span class="line">                default: null</span><br><span class="line">            )</span><br><span class="line">        )</span><br><span class="line">        returnType: null</span><br><span class="line">        stmts: array(</span><br><span class="line">            0: Stmt_Echo(</span><br><span class="line">                exprs: array(</span><br><span class="line">                    0: Expr_Variable(</span><br><span class="line">                        name: msg</span><br><span class="line">                    )</span><br><span class="line">                )</span><br><span class="line">            )</span><br><span class="line">        )</span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>根据上面的例子，我们可以观察到要把AST转为Json需要进行以下处理：</p>
+<ol>
+<li>将<code>array(...)</code>转换为<code>[...]</code></li>
+<li>将<code>Stmt_Function(...)</code> 转化为<code>{&quot;nodeType&quot;: &quot;Stmt_Function&quot;, ...}</code></li>
+<li>对于全部字符串要加上引号</li>
+<li>在<code>&quot;nodeType&quot;</code>后面添加<code>&quot;attributes&quot;: {}</code>属性 </li>
+</ol>
+<p>这里给出一个AST转Json的脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">data = open(<span class="string">"output.txt"</span>, <span class="string">"r"</span>).readlines()</span><br><span class="line">out = open(<span class="string">"4.json"</span>, <span class="string">"w"</span>)</span><br><span class="line">lines = len(data)</span><br><span class="line"></span><br><span class="line">brackets = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> range(lines):</span><br><span class="line">	tmp = data[line].strip(<span class="string">"\n"</span>)</span><br><span class="line">	<span class="comment"># 检测 array</span></span><br><span class="line">	res1 = re.findall(<span class="string">r"array\("</span>, tmp)</span><br><span class="line">	<span class="keyword">if</span> res1:</span><br><span class="line">		brackets.append(<span class="string">"]"</span>)</span><br><span class="line">		tmp = tmp.replace(<span class="string">"array("</span>, <span class="string">"["</span>)</span><br><span class="line">	<span class="comment"># 检测 class</span></span><br><span class="line">	res2 = re.findall(<span class="string">r"(\w+)\("</span>, tmp)</span><br><span class="line">	<span class="keyword">if</span> res2:</span><br><span class="line">		brackets.append(<span class="string">"&#125;"</span>)</span><br><span class="line">		tmp = tmp.replace(res2[<span class="number">0</span>] + <span class="string">"("</span>, <span class="string">"&#123;nodeType: %s, attributes: &#123;&#125;"</span> % res2[<span class="number">0</span>])</span><br><span class="line">	<span class="comment"># 删除多余标签</span></span><br><span class="line">	res3 = re.findall(<span class="string">r"(\d+: )"</span>, tmp)</span><br><span class="line">	<span class="keyword">if</span> res3:</span><br><span class="line">		tmp = tmp.replace(res3[<span class="number">0</span>], <span class="string">''</span>)</span><br><span class="line">	<span class="comment"># 添加引号</span></span><br><span class="line">	res4 = re.findall(<span class="string">r"(flag\&#123;| \&#125;|[\w\-]+)"</span>, tmp)</span><br><span class="line">	<span class="keyword">if</span> res4:</span><br><span class="line">		<span class="keyword">for</span> word <span class="keyword">in</span> res4:</span><br><span class="line">			<span class="keyword">if</span> <span class="keyword">not</span> (word.isdigit() <span class="keyword">or</span> word == <span class="string">"null"</span> <span class="keyword">or</span> word == <span class="string">"true"</span> <span class="keyword">or</span> word == <span class="string">"false"</span>):</span><br><span class="line">				<span class="keyword">if</span> word == <span class="string">" &#125;"</span>:</span><br><span class="line">					word = <span class="string">"&#125;"</span></span><br><span class="line">				tmp = tmp.replace(word, <span class="string">'"%s"'</span> % word)</span><br><span class="line">	<span class="comment"># 匹配右括号</span></span><br><span class="line">	<span class="keyword">if</span> <span class="string">")"</span> <span class="keyword">in</span> tmp:</span><br><span class="line">		tmp = tmp.replace(<span class="string">")"</span>, brackets.pop())</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 添加逗号</span></span><br><span class="line">	<span class="keyword">if</span> ((line + <span class="number">1</span>) &lt; lines) <span class="keyword">and</span> (<span class="keyword">not</span> <span class="string">")"</span> <span class="keyword">in</span> data[line + <span class="number">1</span>]) <span class="keyword">and</span> (<span class="keyword">not</span> <span class="string">"["</span> <span class="keyword">in</span> tmp):</span><br><span class="line">		tmp = tmp + <span class="string">","</span> </span><br><span class="line">	<span class="comment"># 写进文件</span></span><br><span class="line">	out.write(tmp + <span class="string">"\n"</span>)</span><br><span class="line">out.close()</span><br></pre></td></tr></table></figure>
+
+<p>最后再用上面的pretty_printing代码转出一份稍微好看点的混淆过的PHP代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$l1IIl1II1l = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> <span class="title">use</span><span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> <span class="title">use</span><span class="params">($II1IlllI11, $lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $II1IlllI11($lII1lI1IlI($II1IlllI11)($ll1IlllIIl));</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">$llIIllIlll = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $lII1lI1IlI + <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br><span class="line">$I1lll111II = <span class="function"><span class="keyword">function</span> <span class="params">($lIlIll1111)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IIl1Ill)</span> <span class="title">use</span><span class="params">($lIlIll1111)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> <span class="title">use</span><span class="params">($lIlIll1111, $II1IIl1Ill)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> <span class="title">use</span><span class="params">($II1IlllI11, $lIlIll1111, $II1IIl1Ill)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> $lIlIll1111($II1IlllI11)($II1IIl1Ill($II1IlllI11)($ll1IlllIIl));</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">$I1II11lIl1 = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $lII1lI1IlI - <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br><span class="line">$I1IIlII1Il = <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $ll1IlllIIl;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">$IIl1II1lIl = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $lII1lI1IlI * <span class="number">3</span> % <span class="number">7</span>;</span><br><span class="line">&#125;;</span><br><span class="line">$I1IllI1l11 = <span class="function"><span class="keyword">function</span> <span class="params">($lIlIll1111)</span> <span class="title">use</span><span class="params">($I1lll111II, $I1IIlII1Il)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IIl1Ill)</span> <span class="title">use</span><span class="params">($lIlIll1111, $I1lll111II, $I1IIlII1Il)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $lIlIll1111($I1lll111II($II1IIl1Ill))($I1IIlII1Il);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">$l1I11lll1l = <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> <span class="title">use</span><span class="params">($II1IlllI11)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $II1IlllI11($ll1IlllIIl);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">$lIl1l1lIlI = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ($lII1lI1IlI + <span class="number">1</span>) % <span class="number">1000000007</span>;</span><br><span class="line">&#125;;</span><br><span class="line">$l1llIlll1l = <span class="keyword">array</span>(<span class="keyword">array</span>($I1lll111II($l1IIl1II1l($I1lll111II($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l))))($l1I11lll1l)))($l1I11lll1l), $I1lll111II($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1IIl1II1l($l1I11lll1l))))($I1lll111II($l1I11lll1l)($I1lll111II($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l)))), $l1IIl1II1l($I1lll111II($I1lll111II($l1IIl1II1l($I1lll111II($l1I11lll1l)($I1lll111II($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))($l1I11lll1l))))($l1I11lll1l))($l1I11lll1l)), $I1IllI1l11($l1IIl1II1l($l1I11lll1l))($l1IIl1II1l($l1I11lll1l)), $I1IIlII1Il, $I1IllI1l11($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1IIl1II1l($l1I11lll1l)))), $I1lll111II($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($I1IllI1l11($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1I11lll1l))))), $l1IIl1II1l($l1IIl1II1l($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))), $I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l))), <span class="keyword">array</span>($I1lll111II($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))($I1lll111II($l1I11lll1l)($I1lll111II($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))($l1I11lll1l))), $I1IIlII1Il, $l1IIl1II1l($l1IIl1II1l($l1I11lll1l)), $I1lll111II($I1lll111II($I1IllI1l11($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l)))($l1I11lll1l))($l1I11lll1l), $I1IIlII1Il, $l1IIl1II1l($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1IIl1II1l($l1I11lll1l))), $I1lll111II($I1lll111II($I1lll111II($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l)))($I1lll111II($l1I11lll1l)($l1I11lll1l)))($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l))), $I1lll111II($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))($I1lll111II($I1lll111II($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l)))($I1lll111II($l1I11lll1l)($l1I11lll1l))), $I1IllI1l11($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l))))), <span class="keyword">array</span>($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1I11lll1l), $l1IIl1II1l($l1I11lll1l), $I1IIlII1Il, $l1IIl1II1l($I1lll111II($I1IllI1l11($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l))))($l1I11lll1l)), $I1lll111II($l1I11lll1l)($l1I11lll1l), $I1lll111II($l1I11lll1l)($I1lll111II($l1IIl1II1l($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l))))($l1I11lll1l)), $I1IIlII1Il, $l1I11lll1l, $I1lll111II($l1I11lll1l)($I1lll111II($I1lll111II($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l)))($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l))))($l1IIl1II1l($l1I11lll1l)))), <span class="keyword">array</span>($l1IIl1II1l($I1lll111II($I1lll111II($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1I11lll1l)))($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1I11lll1l))))($I1lll111II($l1I11lll1l)($l1I11lll1l))), $I1lll111II($l1IIl1II1l($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1I11lll1l)))($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1I11lll1l))), $l1IIl1II1l($l1IIl1II1l($l1I11lll1l)), $I1lll111II($l1I11lll1l)($l1I11lll1l), $l1I11lll1l, $I1IIlII1Il, $I1lll111II($l1I11lll1l)($I1IllI1l11($I1lll111II($l1I11lll1l)($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l))), $I1lll111II($l1IIl1II1l($I1IllI1l11($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l))))($I1lll111II($l1I11lll1l)($l1I11lll1l)), $I1lll111II($I1lll111II($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))($I1lll111II($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l))($l1I11lll1l)))($I1lll111II($l1I11lll1l)($l1I11lll1l))), <span class="keyword">array</span>($I1lll111II($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1I11lll1l))($I1lll111II($l1I11lll1l)($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l)))), $I1lll111II($I1lll111II($l1I11lll1l)($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l)))))($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l))), $I1IllI1l11($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l))($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l)), $I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l))), $I1IIlII1Il, $I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l), $I1lll111II($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1IIl1II1l($l1I11lll1l))))($l1I11lll1l), $l1I11lll1l, $I1lll111II($l1I11lll1l)($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l)))), <span class="keyword">array</span>($I1lll111II($l1I11lll1l)($l1I11lll1l), $l1IIl1II1l($I1lll111II($l1IIl1II1l($l1I11lll1l))($I1IllI1l11($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l))($l1IIl1II1l($l1I11lll1l)))), $l1IIl1II1l($l1I11lll1l), $I1IIlII1Il, $I1lll111II($I1IllI1l11($l1IIl1II1l($l1I11lll1l))($l1IIl1II1l($l1I11lll1l)))($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1I11lll1l))), $I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1I11lll1l))))), $I1lll111II($I1lll111II($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l))($l1I11lll1l))($l1I11lll1l), $I1IIlII1Il, $I1lll111II($l1IIl1II1l($l1IIl1II1l($I1lll111II($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l))))($l1I11lll1l))))($l1I11lll1l)), <span class="keyword">array</span>($I1IIlII1Il, $I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)), $I1lll111II($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1I11lll1l)))($I1IllI1l11($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l))), $I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l))), $I1IIlII1Il, $I1lll111II($I1lll111II($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1I11lll1l))($l1IIl1II1l($I1IllI1l11($I1lll111II($l1I11lll1l)($l1I11lll1l))($I1lll111II($l1I11lll1l)($l1I11lll1l)))))($l1I11lll1l), $I1IIlII1Il, $I1lll111II($I1lll111II($I1lll111II($l1IIl1II1l($l1I11lll1l))($l1IIl1II1l($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))))($l1I11lll1l))($l1I11lll1l), $l1IIl1II1l($l1I11lll1l)), <span class="keyword">array</span>($I1lll111II($l1I11lll1l)($l1I11lll1l), $I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($I1lll111II($l1IIl1II1l($I1lll111II($l1I11lll1l)($l1IIl1II1l($l1I11lll1l))))($I1lll111II($l1I11lll1l)($l1I11lll1l)))), $l1I11lll1l, $I1lll111II($l1IIl1II1l($l1I11lll1l))($l1I11lll1l), $I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)), $I1IllI1l11($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($I1lll111II($I1lll111II($l1I11lll1l)($l1I11lll1l))($l1I11lll1l))), $I1IIlII1Il, $I1lll111II($I1lll111II($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l)))($I1lll111II($l1I11lll1l)($l1I11lll1l)))($I1lll111II($l1I11lll1l)($l1I11lll1l)), $I1IllI1l11($l1IIl1II1l($l1I11lll1l))($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($I1lll111II($l1I11lll1l)($l1I11lll1l))))));</span><br><span class="line">$l11IlII11I = $l1llIlll1l[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">for</span> ($IlI11III11 = $I1IIlII1Il; $IlI11III11($llIIllIlll)(<span class="number">998244353</span>) &lt; $IlI11III11($I1II11lIl1)(<span class="number">6755399441055744</span>); $IlI11III11 = $l1IIl1II1l($IlI11III11)) &#123;</span><br><span class="line">    $l1l1l11Il1 = $l1llIlll1l[$IlI11III11($IIl1II1lIl)(<span class="number">1</span>)];</span><br><span class="line">    $lIl11lI1I1 = $l1llIlll1l[$I1IllI1l11($IlI11III11)($IlI11III11)($IIl1II1lIl)(<span class="number">1</span>)];</span><br><span class="line">    $lIl11lI1I1[<span class="number">0</span>] = $I1IllI1l11($l11IlII11I[<span class="number">0</span>])($l1l1l11Il1[<span class="number">0</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">0</span>] = $I1lll111II($I1IllI1l11($l1l1l11Il1[<span class="number">3</span>])($l11IlII11I[<span class="number">1</span>]))($lIl11lI1I1[<span class="number">0</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">8</span>] = $I1IllI1l11($l11IlII11I[<span class="number">8</span>])($l1l1l11Il1[<span class="number">8</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">8</span>] = $I1lll111II($lIl11lI1I1[<span class="number">8</span>])($I1IllI1l11($l11IlII11I[<span class="number">6</span>])($l1l1l11Il1[<span class="number">2</span>]));</span><br><span class="line">    $lIl11lI1I1[<span class="number">7</span>] = $I1IllI1l11($l11IlII11I[<span class="number">7</span>])($l1l1l11Il1[<span class="number">4</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">7</span>] = $I1lll111II($I1IllI1l11($l1l1l11Il1[<span class="number">1</span>])($l11IlII11I[<span class="number">6</span>]))($lIl11lI1I1[<span class="number">7</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">1</span>] = $I1IllI1l11($l11IlII11I[<span class="number">1</span>])($l1l1l11Il1[<span class="number">4</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">2</span>] = $I1IllI1l11($l11IlII11I[<span class="number">1</span>])($l1l1l11Il1[<span class="number">5</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">8</span>] = $I1lll111II($I1IllI1l11($l11IlII11I[<span class="number">7</span>])($l1l1l11Il1[<span class="number">5</span>]))($lIl11lI1I1[<span class="number">8</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">4</span>] = $I1IllI1l11($l11IlII11I[<span class="number">4</span>])($l1l1l11Il1[<span class="number">4</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">7</span>] = $I1lll111II($I1IllI1l11($l11IlII11I[<span class="number">8</span>])($l1l1l11Il1[<span class="number">7</span>]))($lIl11lI1I1[<span class="number">7</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">1</span>] = $I1lll111II($I1IllI1l11($l1l1l11Il1[<span class="number">1</span>])($l11IlII11I[<span class="number">0</span>]))($lIl11lI1I1[<span class="number">1</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">1</span>] = $I1lll111II($lIl11lI1I1[<span class="number">1</span>])($I1IllI1l11($l1l1l11Il1[<span class="number">7</span>])($l11IlII11I[<span class="number">2</span>]));</span><br><span class="line">    $lIl11lI1I1[<span class="number">5</span>] = $I1IllI1l11($l11IlII11I[<span class="number">3</span>])($l1l1l11Il1[<span class="number">2</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">5</span>] = $I1lll111II($I1IllI1l11($l1l1l11Il1[<span class="number">5</span>])($l11IlII11I[<span class="number">4</span>]))($lIl11lI1I1[<span class="number">5</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">3</span>] = $I1IllI1l11($l11IlII11I[<span class="number">4</span>])($l1l1l11Il1[<span class="number">3</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">0</span>] = $I1lll111II($I1IllI1l11($l11IlII11I[<span class="number">2</span>])($l1l1l11Il1[<span class="number">6</span>]))($lIl11lI1I1[<span class="number">0</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">5</span>] = $I1lll111II($I1IllI1l11($l1l1l11Il1[<span class="number">8</span>])($l11IlII11I[<span class="number">5</span>]))($lIl11lI1I1[<span class="number">5</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">3</span>] = $I1lll111II($lIl11lI1I1[<span class="number">3</span>])($I1IllI1l11($l1l1l11Il1[<span class="number">0</span>])($l11IlII11I[<span class="number">3</span>]));</span><br><span class="line">    $lIl11lI1I1[<span class="number">2</span>] = $I1lll111II($I1IllI1l11($l11IlII11I[<span class="number">0</span>])($l1l1l11Il1[<span class="number">2</span>]))($lIl11lI1I1[<span class="number">2</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">2</span>] = $I1lll111II($I1IllI1l11($l11IlII11I[<span class="number">2</span>])($l1l1l11Il1[<span class="number">8</span>]))($lIl11lI1I1[<span class="number">2</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">4</span>] = $I1lll111II($I1IllI1l11($l11IlII11I[<span class="number">5</span>])($l1l1l11Il1[<span class="number">7</span>]))($lIl11lI1I1[<span class="number">4</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">4</span>] = $I1lll111II($I1IllI1l11($l1l1l11Il1[<span class="number">1</span>])($l11IlII11I[<span class="number">3</span>]))($lIl11lI1I1[<span class="number">4</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">6</span>] = $I1IllI1l11($l11IlII11I[<span class="number">7</span>])($l1l1l11Il1[<span class="number">3</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">3</span>] = $I1lll111II($lIl11lI1I1[<span class="number">3</span>])($I1IllI1l11($l11IlII11I[<span class="number">5</span>])($l1l1l11Il1[<span class="number">6</span>]));</span><br><span class="line">    $lIl11lI1I1[<span class="number">6</span>] = $I1lll111II($I1IllI1l11($l1l1l11Il1[<span class="number">0</span>])($l11IlII11I[<span class="number">6</span>]))($lIl11lI1I1[<span class="number">6</span>]);</span><br><span class="line">    $lIl11lI1I1[<span class="number">6</span>] = $I1lll111II($lIl11lI1I1[<span class="number">6</span>])($I1IllI1l11($l11IlII11I[<span class="number">8</span>])($l1l1l11Il1[<span class="number">6</span>]));</span><br><span class="line">    $l11IlII11I = $lIl11lI1I1;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'flag&#123;'</span>;</span><br><span class="line"><span class="keyword">for</span> ($IlI11III11 = $l1I11lll1l; $IlI11III11($llIIllIlll)(<span class="number">-9</span>); $IlI11III11 = $I1lll111II($l1I11lll1l)($IlI11III11)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&#123;$l11IlII11I[$IlI11III11($I1II11lIl1)(9)]($lIl1l1lIlI)(0)&#125;-"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&#123;$l11IlII11I[$IlI11III11($I1II11lIl1)(9)]($lIl1l1lIlI)(0)&#125;&#125;"</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="反混淆"><a href="#反混淆" class="headerlink" title="反混淆"></a>反混淆</h3><p>因为混淆用的是闭包函数，所以用正常的xdebug调式并不能看出函数间的调用，而且会因为函数调用层数过多而报错，所以这里唯一的技巧就是手动化简变量名（x</p>
+<p>这里给出一份自己处理后的代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$f1 = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> <span class="title">use</span><span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> <span class="title">use</span><span class="params">($II1IlllI11, $lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $II1IlllI11($lII1lI1IlI($II1IlllI11)($ll1IlllIIl));</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 自增</span></span><br><span class="line">$increase = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $lII1lI1IlI + <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br><span class="line">$f2 = <span class="function"><span class="keyword">function</span> <span class="params">($lIlIll1111)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IIl1Ill)</span> <span class="title">use</span><span class="params">($lIlIll1111)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> <span class="title">use</span><span class="params">($lIlIll1111, $II1IIl1Ill)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> <span class="title">use</span><span class="params">($II1IlllI11, $lIlIll1111, $II1IIl1Ill)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> $lIlIll1111($II1IlllI11)($II1IIl1Ill($II1IlllI11)($ll1IlllIIl));</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 自减</span></span><br><span class="line">$decrease = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $lII1lI1IlI - <span class="number">1</span>;</span><br><span class="line">&#125;;</span><br><span class="line">$ret_self = <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $ll1IlllIIl;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 乘3模7</span></span><br><span class="line">$mul_mod = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> $lII1lI1IlI * <span class="number">3</span> % <span class="number">7</span>;</span><br><span class="line">&#125;;</span><br><span class="line">$f3 = <span class="function"><span class="keyword">function</span> <span class="params">($lIlIll1111)</span> <span class="title">use</span><span class="params">($f2, $ret_self)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($II1IIl1Ill)</span> <span class="title">use</span><span class="params">($lIlIll1111, $f2, $ret_self)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $lIlIll1111($f2($II1IIl1Ill))($ret_self);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">$f4 = <span class="function"><span class="keyword">function</span> <span class="params">($II1IlllI11)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">($ll1IlllIIl)</span> <span class="title">use</span><span class="params">($II1IlllI11)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $II1IlllI11($ll1IlllIIl);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 模1000000007自增</span></span><br><span class="line">$increase_mod = <span class="function"><span class="keyword">function</span> <span class="params">($lII1lI1IlI)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ($lII1lI1IlI + <span class="number">1</span>) % <span class="number">1000000007</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// array(8)</span></span><br><span class="line">$v1 = <span class="keyword">array</span>(<span class="keyword">array</span>($f2($f1($f2($f2($f4)($f2($f4)($f2($f1($f4))($f4))))($f4)))($f4), $f2($f2($f4)($f1($f1($f4))))($f2($f4)($f2($f1($f4))($f2($f4)($f4)))), $f1($f2($f2($f1($f2($f4)($f2($f2($f4)($f2($f4)($f4)))($f4))))($f4))($f4)), $f3($f1($f4))($f1($f4)), $ret_self, $f3($f1($f4))($f2($f4)($f1($f1($f4)))), $f2($f1($f4))($f2($f4)($f3($f2($f4)($f4))($f1($f2($f4)($f4))))), $f1($f1($f2($f4)($f2($f4)($f4)))), $f2($f4)($f2($f4)($f4))), <span class="keyword">array</span>($f2($f2($f4)($f2($f4)($f4)))($f2($f4)($f2($f2($f4)($f2($f4)($f4)))($f4))), $ret_self, $f1($f1($f4)), $f2($f2($f3($f2($f1($f4))($f4))($f2($f4)($f4)))($f4))($f4), $ret_self, $f1($f2($f2($f4)($f4))($f1($f4))), $f2($f2($f2($f2($f4)($f1($f4)))($f2($f4)($f4)))($f4))($f2($f4)($f1($f4))), $f2($f2($f4)($f2($f4)($f4)))($f2($f2($f1($f4))($f2($f4)($f4)))($f2($f4)($f4))), $f3($f1($f4))($f2($f4)($f2($f4)($f1($f4))))), <span class="keyword">array</span>($f2($f2($f4)($f4))($f4), $f1($f4), $ret_self, $f1($f2($f3($f1($f4))($f2($f4)($f2($f4)($f4))))($f4)), $f2($f4)($f4), $f2($f4)($f2($f1($f2($f4)($f2($f4)($f4))))($f4)), $ret_self, $f4, $f2($f4)($f2($f2($f2($f4)($f1($f4)))($f2($f4)($f2($f4)($f4))))($f1($f4)))), <span class="keyword">array</span>($f1($f2($f2($f1($f2($f4)($f4)))($f1($f2($f4)($f4))))($f2($f4)($f4))), $f2($f1($f2($f2($f4)($f4))($f4)))($f1($f2($f4)($f4))), $f1($f1($f4)), $f2($f4)($f4), $f4, $ret_self, $f2($f4)($f3($f2($f4)($f4))($f2($f4)($f4))), $f2($f1($f3($f2($f2($f4)($f4))($f4))($f2($f4)($f4))))($f2($f4)($f4)), $f2($f2($f2($f4)($f2($f4)($f4)))($f2($f2($f1($f4))($f4))($f4)))($f2($f4)($f4))), <span class="keyword">array</span>($f2($f2($f2($f4)($f4))($f4))($f2($f4)($f2($f2($f4)($f4))($f2($f4)($f4)))), $f2($f2($f4)($f1($f2($f4)($f1($f4)))))($f2($f4)($f1($f4))), $f3($f2($f1($f4))($f4))($f2($f1($f4))($f4)), $f2($f4)($f2($f4)($f2($f4)($f4))), $ret_self, $f2($f1($f4))($f4), $f2($f2($f4)($f1($f1($f4))))($f4), $f4, $f2($f4)($f2($f2($f4)($f4))($f2($f4)($f4)))), <span class="keyword">array</span>($f2($f4)($f4), $f1($f2($f1($f4))($f3($f2($f1($f4))($f4))($f1($f4)))), $f1($f4), $ret_self, $f2($f3($f1($f4))($f1($f4)))($f2($f2($f4)($f4))($f2($f2($f4)($f4))($f4))), $f2($f2($f4)($f4))($f1($f2($f4)($f1($f2($f4)($f4))))), $f2($f2($f2($f1($f4))($f4))($f4))($f4), $ret_self, $f2($f1($f1($f2($f1($f2($f4)($f1($f4))))($f4))))($f4)), <span class="keyword">array</span>($ret_self, $f2($f4)($f2($f4)($f4)), $f2($f1($f2($f4)($f4)))($f3($f1($f4))($f2($f4)($f4))), $f2($f4)($f2($f4)($f1($f4))), $ret_self, $f2($f2($f2($f2($f4)($f4))($f4))($f1($f3($f2($f4)($f4))($f2($f4)($f4)))))($f4), $ret_self, $f2($f2($f2($f1($f4))($f1($f2($f4)($f2($f4)($f4)))))($f4))($f4), $f1($f4)), <span class="keyword">array</span>($f2($f4)($f4), $f2($f4)($f2($f4)($f2($f1($f2($f4)($f1($f4))))($f2($f4)($f4)))), $f4, $f2($f1($f4))($f4), $f2($f4)($f2($f4)($f4)), $f3($f1($f4))($f2($f4)($f2($f2($f4)($f4))($f4))), $ret_self, $f2($f2($f2($f4)($f2($f4)($f4)))($f2($f4)($f4)))($f2($f4)($f4)), $f3($f1($f4))($f2($f4)($f2($f4)($f2($f4)($f4))))));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印初始变量</span></span><br><span class="line"><span class="keyword">for</span>($i = <span class="number">0</span>; $i &lt; <span class="number">8</span>; $i++) &#123;</span><br><span class="line">    <span class="keyword">echo</span> $i . <span class="string">': ['</span>;</span><br><span class="line">    <span class="keyword">for</span> ($f4_2 = $f4; $f4_2($increase)(<span class="number">-9</span>); $f4_2 = $f2($f4)($f4_2)) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&#123;$v1[$i][$f4_2($decrease)(9)]($increase_mod)(0)&#125;,"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&#123;$v1[$i][$f4_2($decrease)(9)]($increase_mod)(0)&#125;]"</span>, <span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$v2 = $v1[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ($f4_2 = $ret_self; $f4_2($increase)(<span class="number">998244353</span>) &lt; $f4_2($decrease)(<span class="number">6755399441055744</span>); $f4_2 = $f1($f4_2)) &#123;</span><br><span class="line">    <span class="comment">// $v3 = 3 ** k % 7</span></span><br><span class="line">    $v3 = $v1[$f4_2($mul_mod)(<span class="number">1</span>)];</span><br><span class="line">    <span class="comment">// $v4 其实是无用的</span></span><br><span class="line">    <span class="comment">// $v4 = $v1[$f3($f4_2)($f4_2)($mul_mod)(1)];</span></span><br><span class="line">    $v4 = <span class="keyword">array</span>(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">    $v4[<span class="number">0</span>] = $f3($v2[<span class="number">0</span>])($v3[<span class="number">0</span>]);</span><br><span class="line">    $v4[<span class="number">0</span>] = $f2($f3($v3[<span class="number">3</span>])($v2[<span class="number">1</span>]))($v4[<span class="number">0</span>]);</span><br><span class="line">    $v4[<span class="number">0</span>] = $f2($f3($v2[<span class="number">2</span>])($v3[<span class="number">6</span>]))($v4[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    $v4[<span class="number">1</span>] = $f3($v2[<span class="number">1</span>])($v3[<span class="number">4</span>]);</span><br><span class="line">    $v4[<span class="number">1</span>] = $f2($f3($v3[<span class="number">1</span>])($v2[<span class="number">0</span>]))($v4[<span class="number">1</span>]);</span><br><span class="line">    $v4[<span class="number">1</span>] = $f2($v4[<span class="number">1</span>])($f3($v3[<span class="number">7</span>])($v2[<span class="number">2</span>]));</span><br><span class="line"></span><br><span class="line">    $v4[<span class="number">2</span>] = $f3($v2[<span class="number">1</span>])($v3[<span class="number">5</span>]);</span><br><span class="line">    $v4[<span class="number">2</span>] = $f2($f3($v2[<span class="number">0</span>])($v3[<span class="number">2</span>]))($v4[<span class="number">2</span>]);</span><br><span class="line">    $v4[<span class="number">2</span>] = $f2($f3($v2[<span class="number">2</span>])($v3[<span class="number">8</span>]))($v4[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">    $v4[<span class="number">3</span>] = $f3($v2[<span class="number">4</span>])($v3[<span class="number">3</span>]);</span><br><span class="line">    $v4[<span class="number">3</span>] = $f2($v4[<span class="number">3</span>])($f3($v3[<span class="number">0</span>])($v2[<span class="number">3</span>]));</span><br><span class="line">    $v4[<span class="number">3</span>] = $f2($v4[<span class="number">3</span>])($f3($v2[<span class="number">5</span>])($v3[<span class="number">6</span>]));</span><br><span class="line"></span><br><span class="line">    $v4[<span class="number">4</span>] = $f3($v2[<span class="number">4</span>])($v3[<span class="number">4</span>]);</span><br><span class="line">    $v4[<span class="number">4</span>] = $f2($f3($v2[<span class="number">5</span>])($v3[<span class="number">7</span>]))($v4[<span class="number">4</span>]);</span><br><span class="line">    $v4[<span class="number">4</span>] = $f2($f3($v3[<span class="number">1</span>])($v2[<span class="number">3</span>]))($v4[<span class="number">4</span>]);</span><br><span class="line">   </span><br><span class="line">    $v4[<span class="number">5</span>] = $f3($v2[<span class="number">3</span>])($v3[<span class="number">2</span>]);</span><br><span class="line">    $v4[<span class="number">5</span>] = $f2($f3($v3[<span class="number">5</span>])($v2[<span class="number">4</span>]))($v4[<span class="number">5</span>]);</span><br><span class="line">    $v4[<span class="number">5</span>] = $f2($f3($v3[<span class="number">8</span>])($v2[<span class="number">5</span>]))($v4[<span class="number">5</span>]);</span><br><span class="line">    </span><br><span class="line">    $v4[<span class="number">6</span>] = $f3($v2[<span class="number">7</span>])($v3[<span class="number">3</span>]);</span><br><span class="line">    $v4[<span class="number">6</span>] = $f2($f3($v3[<span class="number">0</span>])($v2[<span class="number">6</span>]))($v4[<span class="number">6</span>]);</span><br><span class="line">    $v4[<span class="number">6</span>] = $f2($v4[<span class="number">6</span>])($f3($v2[<span class="number">8</span>])($v3[<span class="number">6</span>]));</span><br><span class="line"></span><br><span class="line">    $v4[<span class="number">7</span>] = $f3($v2[<span class="number">7</span>])($v3[<span class="number">4</span>]);</span><br><span class="line">    $v4[<span class="number">7</span>] = $f2($f3($v3[<span class="number">1</span>])($v2[<span class="number">6</span>]))($v4[<span class="number">7</span>]);</span><br><span class="line">    $v4[<span class="number">7</span>] = $f2($f3($v2[<span class="number">8</span>])($v3[<span class="number">7</span>]))($v4[<span class="number">7</span>]);</span><br><span class="line"></span><br><span class="line">    $v4[<span class="number">8</span>] = $f3($v2[<span class="number">8</span>])($v3[<span class="number">8</span>]);</span><br><span class="line">    $v4[<span class="number">8</span>] = $f2($v4[<span class="number">8</span>])($f3($v2[<span class="number">6</span>])($v3[<span class="number">2</span>]));</span><br><span class="line">    $v4[<span class="number">8</span>] = $f2($f3($v2[<span class="number">7</span>])($v3[<span class="number">5</span>]))($v4[<span class="number">8</span>]);</span><br><span class="line"></span><br><span class="line">    $v2 = $v4;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 倒序打印 v2</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">'flag&#123;'</span>;</span><br><span class="line"><span class="keyword">for</span> ($f4_2 = $f4; $f4_2($increase)(<span class="number">-9</span>); $f4_2 = $f2($f4)($f4_2)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&#123;$v2[$f4_2($decrease)(9)]($increase_mod)(0)&#125;-"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&#123;$v2[$f4_2($decrease)(9)]($increase_mod)(0)&#125;&#125;"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>基本逻辑都写在注释里面了，代码的重点在如何找到for循环的规律，正所谓<strong>逆向七分解三分猜</strong>，这里其实就是对$v2，$v3的数据进行处理，而且是整整齐齐的三组数据连起来进行计算</p>
+<p>我们先把矩阵打印出来看看</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: [<span class="number">3</span>,<span class="number">5</span>,<span class="number">9</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">4</span>,<span class="number">9</span>,<span class="number">9</span>,<span class="number">8</span>] =&gt; 第一步的$v2</span><br><span class="line"><span class="number">1</span>: [<span class="number">8</span>,<span class="number">9</span>,<span class="number">9</span>,<span class="number">5</span>,<span class="number">0</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">8</span>] =&gt; 第一步的$v3</span><br><span class="line"><span class="number">2</span>: [<span class="number">9</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">6</span>,<span class="number">2</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="number">3</span>: [<span class="number">9</span>,<span class="number">9</span>,<span class="number">5</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">9</span>]</span><br><span class="line"><span class="number">4</span>: [<span class="number">5</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">4</span>,<span class="number">9</span>,<span class="number">8</span>,<span class="number">8</span>]</span><br><span class="line"><span class="number">5</span>: [<span class="number">8</span>,<span class="number">0</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">2</span>]</span><br><span class="line"><span class="number">6</span>: [<span class="number">2</span>,<span class="number">8</span>,<span class="number">0</span>,<span class="number">9</span>,<span class="number">0</span>,<span class="number">4</span>,<span class="number">7</span>,<span class="number">3</span>,<span class="number">0</span>]</span><br><span class="line"><span class="number">7</span>: [<span class="number">8</span>,<span class="number">7</span>,<span class="number">0</span>,<span class="number">8</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">8</span>,<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+
+<p>再把经过第一次转换的flag打印出来</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag&#123;<span class="number">76</span><span class="number">-27</span><span class="number">-139</span><span class="number">-76</span><span class="number">-72</span><span class="number">-104</span><span class="number">-141</span><span class="number">-81</span><span class="number">-217</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们就可以猜测其实它们就是进行了这样一个运算</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$v4[<span class="number">0</span>] = $v2[<span class="number">0</span>] * $v3[<span class="number">0</span>] + $v2[<span class="number">1</span>] * $v3[<span class="number">3</span>] + $v2[<span class="number">2</span>] * $v3[<span class="number">6</span>];</span><br></pre></td></tr></table></figure>
+
+<p>根据这个规律我们可以得到初步的exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calc</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="keyword">global</span> v1, v2, x</span><br><span class="line"></span><br><span class="line">	v3 = v1[(<span class="number">3</span> ** x) % <span class="number">7</span>]</span><br><span class="line">	v4 = [<span class="number">0</span>] * <span class="number">9</span></span><br><span class="line"></span><br><span class="line">	v4[<span class="number">0</span>] = (v2[<span class="number">0</span>]*v3[<span class="number">0</span>] + v2[<span class="number">1</span>]*v3[<span class="number">3</span>] + v2[<span class="number">2</span>]*v3[<span class="number">6</span>]) % <span class="number">1000000007</span></span><br><span class="line">	v4[<span class="number">1</span>] = (v2[<span class="number">0</span>]*v3[<span class="number">1</span>] + v2[<span class="number">1</span>]*v3[<span class="number">4</span>] + v2[<span class="number">2</span>]*v3[<span class="number">7</span>]) % <span class="number">1000000007</span></span><br><span class="line">	v4[<span class="number">2</span>] = (v2[<span class="number">0</span>]*v3[<span class="number">2</span>] + v2[<span class="number">1</span>]*v3[<span class="number">5</span>] + v2[<span class="number">2</span>]*v3[<span class="number">8</span>]) % <span class="number">1000000007</span></span><br><span class="line"></span><br><span class="line">	v4[<span class="number">3</span>] = (v2[<span class="number">3</span>]*v3[<span class="number">0</span>] + v2[<span class="number">4</span>]*v3[<span class="number">3</span>] + v2[<span class="number">5</span>]*v3[<span class="number">6</span>]) % <span class="number">1000000007</span></span><br><span class="line">	v4[<span class="number">4</span>] = (v2[<span class="number">3</span>]*v3[<span class="number">1</span>] + v2[<span class="number">4</span>]*v3[<span class="number">4</span>] + v2[<span class="number">5</span>]*v3[<span class="number">7</span>]) % <span class="number">1000000007</span></span><br><span class="line">	v4[<span class="number">5</span>] = (v2[<span class="number">3</span>]*v3[<span class="number">2</span>] + v2[<span class="number">4</span>]*v3[<span class="number">5</span>] + v2[<span class="number">5</span>]*v3[<span class="number">8</span>]) % <span class="number">1000000007</span></span><br><span class="line"></span><br><span class="line">	v4[<span class="number">6</span>] = (v2[<span class="number">6</span>]*v3[<span class="number">0</span>] + v2[<span class="number">7</span>]*v3[<span class="number">3</span>] + v2[<span class="number">8</span>]*v3[<span class="number">6</span>]) % <span class="number">1000000007</span></span><br><span class="line">	v4[<span class="number">7</span>] = (v2[<span class="number">6</span>]*v3[<span class="number">1</span>] + v2[<span class="number">7</span>]*v3[<span class="number">4</span>] + v2[<span class="number">8</span>]*v3[<span class="number">7</span>]) % <span class="number">1000000007</span></span><br><span class="line">	v4[<span class="number">8</span>] = (v2[<span class="number">6</span>]*v3[<span class="number">2</span>] + v2[<span class="number">7</span>]*v3[<span class="number">5</span>] + v2[<span class="number">8</span>]*v3[<span class="number">8</span>]) % <span class="number">1000000007</span></span><br><span class="line">	</span><br><span class="line">	v2 = v4</span><br><span class="line">	x += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line"></span><br><span class="line">	v1 = [</span><br><span class="line">		[<span class="number">3</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">8</span>],</span><br><span class="line">		[<span class="number">8</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">8</span>], </span><br><span class="line">		[<span class="number">9</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>], </span><br><span class="line">		[<span class="number">9</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span>], </span><br><span class="line">		[<span class="number">5</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">8</span>], </span><br><span class="line">		[<span class="number">8</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">2</span>], </span><br><span class="line">		[<span class="number">2</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">3</span>, <span class="number">0</span>], </span><br><span class="line">		[<span class="number">8</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">2</span>]</span><br><span class="line">	]</span><br><span class="line">	v2 = v1[<span class="number">0</span>]</span><br><span class="line">	x = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">	count = (<span class="number">6755399441055744</span> - <span class="number">998244353</span>) // <span class="number">2</span></span><br><span class="line">	count = <span class="number">2</span></span><br><span class="line">	<span class="keyword">for</span> _ <span class="keyword">in</span> range(count):</span><br><span class="line">		calc()</span><br><span class="line"></span><br><span class="line">	print(<span class="string">"flag&#123;"</span> + <span class="string">"-"</span>.join([str(_ % <span class="number">1000000007</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> v2]) + <span class="string">"&#125;"</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="矩阵快速幂"><a href="#矩阵快速幂" class="headerlink" title="矩阵快速幂"></a>矩阵快速幂</h3><p>想要上面的脚本暴力解出来不可能的，因为需要3377699221405695次运算</p>
+<p>仔细观察，其实这刚好是一个3组3*3矩阵连乘的运算，这里考察的是一个矩阵快速幂的算法</p>
+<blockquote>
+<p>推荐使用SageMath解题，SageMath整合了很多数学的常用算法</p>
+</blockquote>
+<p>贴出<strong>@ver</strong>大哥给的最终exp</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#/usr/bin/sage</span></span><br><span class="line">v1 = [</span><br><span class="line">    [<span class="number">3</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">8</span>],</span><br><span class="line">    [<span class="number">8</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">8</span>], </span><br><span class="line">    [<span class="number">9</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>], </span><br><span class="line">    [<span class="number">9</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span>], </span><br><span class="line">    [<span class="number">5</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">8</span>, <span class="number">8</span>], </span><br><span class="line">    [<span class="number">8</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">2</span>], </span><br><span class="line">    [<span class="number">2</span>, <span class="number">8</span>, <span class="number">0</span>, <span class="number">9</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">3</span>, <span class="number">0</span>], </span><br><span class="line">    [<span class="number">8</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">2</span>]</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">v2 = v1[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">p = <span class="number">1000000007</span></span><br><span class="line">count = (<span class="number">6755399441055744</span> - <span class="number">998244353</span>) // <span class="number">2</span></span><br><span class="line"></span><br><span class="line">m = []</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">6</span>):</span><br><span class="line">    v3 = v1[(<span class="number">3</span> ** x) % <span class="number">7</span>]</span><br><span class="line">    m.append(v3)</span><br><span class="line"></span><br><span class="line">vec1 = Matrix(GF(p),<span class="number">1</span>,<span class="number">3</span>,v2[:<span class="number">3</span>])</span><br><span class="line">vec2 = Matrix(GF(p),<span class="number">1</span>,<span class="number">3</span>,v2[<span class="number">3</span>:<span class="number">6</span>])</span><br><span class="line">vec3 = Matrix(GF(p),<span class="number">1</span>,<span class="number">3</span>,v2[<span class="number">6</span>:])</span><br><span class="line">ma = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">6</span>):</span><br><span class="line">    v = m[i]</span><br><span class="line">    tmp = Matrix(GF(p),<span class="number">3</span>,<span class="number">3</span>,</span><br><span class="line">        [</span><br><span class="line">            [v[<span class="number">0</span>],v[<span class="number">1</span>],v[<span class="number">2</span>]],</span><br><span class="line">            [v[<span class="number">3</span>],v[<span class="number">4</span>],v[<span class="number">5</span>]],</span><br><span class="line">            [v[<span class="number">6</span>],v[<span class="number">7</span>],v[<span class="number">8</span>]]</span><br><span class="line">        ]</span><br><span class="line">    )</span><br><span class="line">    ma.append(tmp)</span><br><span class="line">    print(tmp)</span><br><span class="line"></span><br><span class="line">mm = ma[<span class="number">0</span>] * ma[<span class="number">1</span>] * ma[<span class="number">2</span>] * ma[<span class="number">3</span>] * ma[<span class="number">4</span>] * ma[<span class="number">5</span>]</span><br><span class="line">print(count % <span class="number">6</span>)</span><br><span class="line">mm = (mm ** (count//<span class="number">6</span>)) * ma[<span class="number">0</span>] * ma[<span class="number">1</span>] * ma[<span class="number">2</span>] * ma[<span class="number">3</span>]</span><br><span class="line">res1 = vec1 * mm</span><br><span class="line">res2 = vec2 * mm</span><br><span class="line">res3 = vec3 * mm</span><br><span class="line">res = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> res1[<span class="number">0</span>]:</span><br><span class="line">    res.append(int(i))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> res2[<span class="number">0</span>]:</span><br><span class="line">    res.append(int(i))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> res3[<span class="number">0</span>]:</span><br><span class="line">    res.append(int(i))</span><br><span class="line">print(res)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"flag&#123;"</span> + <span class="string">"-"</span>.join([str(_ % <span class="number">1000000007</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> res]) + <span class="string">"&#125;"</span>)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag"># CTF</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/31/2020-GACTF-web/" rel="next" title="2020 GACTF web">
+                <i class="fa fa-chevron-left"></i> 2020 GACTF web
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Tyaoo">
+            
+              <p class="site-author-name" itemprop="name">Tyaoo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Tyaoo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#JsonDecoder"><span class="nav-number">1.</span> <span class="nav-text">JsonDecoder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反混淆"><span class="nav-number">2.</span> <span class="nav-text">反混淆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#矩阵快速幂"><span class="nav-number">3.</span> <span class="nav-text">矩阵快速幂</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tyaoo</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
