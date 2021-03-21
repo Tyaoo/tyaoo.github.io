@@ -107,7 +107,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Reverse,">
 
 
 
@@ -120,13 +120,22 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Tyaoo&#39;s Blog">
-<meta property="og:url" content="https://tyaoo.github.io/tags/Study/index.html">
+<meta name="description" content="题目源于【SCTF2019】，考点为Unity程序逆向  记录一下关于Unity程序的基本逆向思路">
+<meta name="keywords" content="Reverse">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Who is he-Unity逆向">
+<meta property="og:url" content="https://tyaoo.github.io/2021/03/21/Who-is-he-Unity逆向/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="题目源于【SCTF2019】，考点为Unity程序逆向  记录一下关于Unity程序的基本逆向思路">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103212021bc5cb718883dcc9f2f1e.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103212021542ba7569bce279fa908.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210321202185f0353d43ffa725a934.png">
+<meta property="og:updated_time" content="2021-03-21T12:23:48.080Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tyaoo&#39;s Blog">
+<meta name="twitter:title" content="Who is he-Unity逆向">
+<meta name="twitter:description" content="题目源于【SCTF2019】，考点为Unity程序逆向  记录一下关于Unity程序的基本逆向思路">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103212021bc5cb718883dcc9f2f1e.png">
 
 
 
@@ -156,13 +165,13 @@
 
 
 
-  <link rel="canonical" href="https://tyaoo.github.io/tags/Study/">
+  <link rel="canonical" href="https://tyaoo.github.io/2021/03/21/Who-is-he-Unity逆向/">
 
 
 
 
 
-  <title>标签: Study | Tyaoo's Blog</title>
+  <title>Who is he-Unity逆向 | Tyaoo's Blog</title>
   
 
 
@@ -181,7 +190,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -297,52 +306,180 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Study<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/03/21/Who-is-he-Unity逆向/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/05/26/MD上传图床小工具/" itemprop="url">
-              
-                <span itemprop="name">MD上传图床小工具</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Who is he-Unity逆向</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-05-26T10:07:55+08:00" content="2020-05-26">
-          05-26
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-21T20:21:19+08:00">
+                2021-03-21
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>题目源于【SCTF2019】，考点为Unity程序逆向</p>
+</blockquote>
+<p>记录一下关于Unity程序的基本逆向思路</p>
+<a id="more"></a>
+
+<h3 id="dnspy分析"><a href="#dnspy分析" class="headerlink" title="dnspy分析"></a>dnspy分析</h3><p>题目是Unity程序，只有一段视频，一个输入框和一个点击按钮</p>
+<p>因为.NET应用把所有的C#代码都打包在了<code>Assembly-CSharp.dll</code>，所以把<code>Who is he/Who is he_Data/Managed/Assembly-CSharp.dll</code>文件放入到dnspy分析</p>
+<p>可以看到程序只是判断了提交的数据与程序某一段密文的解密结果是否相同，其中数据加密流程如下，是一个CBC模式的DES，而且给出了key，iv（和key一样）和密文</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103212021bc5cb718883dcc9f2f1e.png" alt="image-20210321172137884"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103212021542ba7569bce279fa908.png" alt="image-20210321172049937"></p>
+<p>直接写解密脚本</p>
+<blockquote>
+<p>这里需要注意的是C#里面字符串默认是Unicode，每个字符后面补”\x00”，所以这里的key为”1\x002\x003\x004\x00”</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> DES</span><br><span class="line"></span><br><span class="line">key = <span class="string">"1\x002\x003\x004\x00"</span></span><br><span class="line">des = DES.new(key, DES.MODE_CBC, key)</span><br><span class="line">cipher = <span class="string">"1Tsy0ZGotyMinSpxqYzVBWnfMdUcqCMLu0MA+22Jnp+MNwLHvYuFToxRQr0c+ONZc6Q7L0EAmzbycqobZHh4H23U4WDTNmmXwusW4E+SZjygsntGkO2sGA=="</span></span><br><span class="line">cipher = base64.b64decode(cipher)</span><br><span class="line">plain = des.decrypt(cipher).decode()</span><br><span class="line">print(plain)</span><br><span class="line"><span class="comment"># He_P1ay_Basketball_Very_We11!Hahahahaha!</span></span><br></pre></td></tr></table></figure>
+
+<p>但是这个flag是假的，所以这个<code>Assembly-CSharp.dll</code>其实打包的不是真正的源码，所以我们就得动态调式程序来获取真实值</p>
+<h3 id="cheat-engine分析"><a href="#cheat-engine分析" class="headerlink" title="cheat engine分析"></a>cheat engine分析</h3><p>开外挂器查看其内存，在ce中搜索弹窗里面出现的字符串”Emmmmm”，发现一共有两处</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210321202185f0353d43ffa725a934.png" alt="image-20210321200237714"></p>
+<p>两处Emmmmm的上下文我们都发现了不同的的密文和key</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> DES</span><br><span class="line"></span><br><span class="line">key = <span class="string">"t\x00e\x00s\x00t\x00"</span></span><br><span class="line"><span class="comment"># key = "1\x002\x003\x004\x00"</span></span><br><span class="line">des = DES.new(key, DES.MODE_CBC, key)</span><br><span class="line">cipher = <span class="string">"1Tsy0ZGotyMinSpxqYzVBWnfMdUcqCMLu0MA+22Jnp+MNwLHvYuFToxRQr0c+ONZc6Q7L0EAmzbycqobZHh4H23U4WDTNmmXwusW4E+SZjygsntGkO2sGA=="</span></span><br><span class="line">cipher = <span class="string">'78 00 5A 00 57 00 44 00 5A 00 61 00 4B 00 45 00 68 00 57 00 4E 00 4D 00 43 00 62 00 69 00 47 00 59 00 50 00 42 00 49 00 6C 00 59 00 33 00 2B 00 61 00 72 00 6F 00 7A 00 4F 00 39 00 7A 00 6F 00 6E 00 77 00 72 00 59 00 4C 00 69 00 56 00 4C 00 34 00 6E 00 6A 00 53 00 65 00 7A 00 32 00 52 00 59 00 4D 00 32 00 57 00 77 00 73 00 47 00 6E 00 73 00 6E 00 6A 00 43 00 44 00 6E 00 48 00 73 00 37 00 4E 00 34 00 33 00 61 00 46 00 76 00 4E 00 45 00 35 00 34 00 6E 00 6F 00 53 00 61 00 64 00 50 00 39 00 46 00 38 00 65 00 45 00 70 00 76 00 54 00 73 00 35 00 51 00 50 00 47 00 2B 00 4B 00 4C 00 30 00 54 00 44 00 45 00 2F 00 34 00 30 00 6E 00 62 00 55 00 3D 00'</span></span><br><span class="line"><span class="comment"># cipher = '71 00 2B 00 77 00 38 00 39 00 59 00 32 00 32 00 72 00 4F 00 62 00 66 00 7A 00 78 00 67 00 73 00 71 00 75 00 63 00 35 00 51 00 78 00 62 00 62 00 68 00 39 00 5A 00 49 00 41 00 48 00 45 00 54 00 2F 00 4E 00 6E 00 63 00 6D 00 69 00 71 00 45 00 6F 00 36 00 37 00 52 00 72 00 44 00 76 00 7A 00 33 00 34 00 63 00 64 00 41 00 6B 00 30 00 42 00 61 00 6C 00 4B 00 57 00 68 00 4A 00 47 00 6C 00 32 00 43 00 42 00 59 00 4D 00 6C 00 72 00 38 00 70 00 50 00 41 00 3D 00'</span></span><br><span class="line">cipher = cipher.replace(<span class="string">' 00'</span>, <span class="string">''</span>).split(<span class="string">' '</span>)</span><br><span class="line">cipher = <span class="string">''</span>.join([chr(int(_, <span class="number">16</span>)) <span class="keyword">for</span> _ <span class="keyword">in</span> cipher])</span><br><span class="line">cipher = base64.b64decode(cipher)</span><br><span class="line">plain = des.decrypt(cipher).decode()</span><br><span class="line">print(plain)</span><br><span class="line"><span class="comment"># [right] She_P1ay_Black_Hole_Very_Wel1!LOL!XD!</span></span><br><span class="line"><span class="comment"># [tip] Oh no!This is a trick!!!</span></span><br></pre></td></tr></table></figure>
+
+<p>所以我们最终的flag是<code>flag{She_P1ay_Black_Hole_Very_Wel1!LOL!XD!}</code></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.anquanke.com/post/id/181019" target="_blank" rel="noopener">SCTF2019 Writeup——De1ta</a></p>
 
       
     </div>
+    
+    
+    
 
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reverse/" rel="tag"># Reverse</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/21/bang-apk脱壳/" rel="next" title="bang-apk脱壳">
+                <i class="fa fa-chevron-left"></i> bang-apk脱壳
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -350,6 +487,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -370,8 +511,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -441,6 +591,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#dnspy分析"><span class="nav-number">1.</span> <span class="nav-text">dnspy分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cheat-engine分析"><span class="nav-number">2.</span> <span class="nav-text">cheat engine分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -581,6 +747,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

@@ -120,21 +120,21 @@
 
 
 
-<meta name="description" content="记录一下入门Reverse中符号执行的利用">
+<meta name="description" content="题目源于【WUSTCTF2020】，这里利用这道题目来讲解Angr在CTF逆向中的应用  记录一下入门Reverse中符号执行的利用">
 <meta name="keywords" content="Reverse">
 <meta property="og:type" content="article">
 <meta property="og:title" content="funnyre-符号执行">
 <meta property="og:url" content="https://tyaoo.github.io/2021/03/19/funnyre-符号执行/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
-<meta property="og:description" content="记录一下入门Reverse中符号执行的利用">
+<meta property="og:description" content="题目源于【WUSTCTF2020】，这里利用这道题目来讲解Angr在CTF逆向中的应用  记录一下入门Reverse中符号执行的利用">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317bf81ee1b2abcab097522.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021031923179e8ec2c34d6a38fed435.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317b68e2a8d0e4880427510.png">
-<meta property="og:updated_time" content="2021-03-19T15:25:08.279Z">
+<meta property="og:updated_time" content="2021-03-21T12:25:58.090Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="funnyre-符号执行">
-<meta name="twitter:description" content="记录一下入门Reverse中符号执行的利用">
+<meta name="twitter:description" content="题目源于【WUSTCTF2020】，这里利用这道题目来讲解Angr在CTF逆向中的应用  记录一下入门Reverse中符号执行的利用">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317bf81ee1b2abcab097522.png">
 
 
@@ -387,7 +387,10 @@
       
 
       
-        <p>记录一下入门Reverse中符号执行的利用</p>
+        <blockquote>
+<p>题目源于【WUSTCTF2020】，这里利用这道题目来讲解Angr在CTF逆向中的应用</p>
+</blockquote>
+<p>记录一下入门Reverse中符号执行的利用</p>
 <a id="more"></a>
 
 <h2 id="Angr"><a href="#Angr" class="headerlink" title="Angr"></a>Angr</h2><blockquote>
@@ -424,10 +427,7 @@
 <p>使用<code>claripy.BVV()</code>创建位向量值</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claripy.BVV(0xab, 0x2 * 8)</span><br></pre></td></tr></table></figure>
 
-<h2 id="funnyre"><a href="#funnyre" class="headerlink" title="funnyre"></a>funnyre</h2><blockquote>
-<p>题目源于WUSTCTF2020，这里利用这道题目来讲解Angr在CTF逆向中的应用</p>
-</blockquote>
-<h3 id="去花指令"><a href="#去花指令" class="headerlink" title="去花指令"></a>去花指令</h3><p>直接用IDA打开，尝试反编译main函数发现有花指令，根据上下文逻辑nop掉图中红框部分，一共有4处</p>
+<h2 id="funnyre"><a href="#funnyre" class="headerlink" title="funnyre"></a>funnyre</h2><h3 id="去花指令"><a href="#去花指令" class="headerlink" title="去花指令"></a>去花指令</h3><p>直接用IDA打开，尝试反编译main函数发现有花指令，根据上下文逻辑nop掉图中红框部分，一共有4处</p>
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317bf81ee1b2abcab097522.png" alt="image-20210319172652670" style="zoom:80%;">
 
 
@@ -576,7 +576,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
