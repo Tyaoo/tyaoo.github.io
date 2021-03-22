@@ -120,20 +120,26 @@
 
 
 
-<meta name="description" content="题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固  记录一下如何使用ApkShelling脱壳">
+<meta name="description" content="记录一下入门Reverse中符号执行的利用">
 <meta name="keywords" content="Reverse">
 <meta property="og:type" content="article">
-<meta property="og:title" content="bang-apk脱壳">
-<meta property="og:url" content="https://tyaoo.github.io/2021/03/21/bang-apk脱壳/index.html">
+<meta property="og:title" content="Reverse中Angr的利用">
+<meta property="og:url" content="https://tyaoo.github.io/2021/03/19/Reverse中Angr的利用/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
-<meta property="og:description" content="题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固  记录一下如何使用ApkShelling脱壳">
+<meta property="og:description" content="记录一下入门Reverse中符号执行的利用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032017503e57ecc42afcf9a2e56f.png">
-<meta property="og:updated_time" content="2021-03-21T12:25:20.059Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317bf81ee1b2abcab097522.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021031923179e8ec2c34d6a38fed435.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317b68e2a8d0e4880427510.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210322015898685f1ba3e262015856.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158b532dd716df687936055.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210322015864c952b7f622010e130d.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158d6b80952cb87c09ebd2b.png">
+<meta property="og:updated_time" content="2021-03-22T03:00:29.530Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="bang-apk脱壳">
-<meta name="twitter:description" content="题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固  记录一下如何使用ApkShelling脱壳">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032017503e57ecc42afcf9a2e56f.png">
+<meta name="twitter:title" content="Reverse中Angr的利用">
+<meta name="twitter:description" content="记录一下入门Reverse中符号执行的利用">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317bf81ee1b2abcab097522.png">
 
 
 
@@ -163,13 +169,13 @@
 
 
 
-  <link rel="canonical" href="https://tyaoo.github.io/2021/03/21/bang-apk脱壳/">
+  <link rel="canonical" href="https://tyaoo.github.io/2021/03/19/Reverse中Angr的利用/">
 
 
 
 
 
-  <title>bang-apk脱壳 | Tyaoo's Blog</title>
+  <title>Reverse中Angr的利用 | Tyaoo's Blog</title>
   
 
 
@@ -318,7 +324,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/03/21/bang-apk脱壳/">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/03/19/Reverse中Angr的利用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tyaoo">
@@ -335,7 +341,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">bang-apk脱壳</h1>
+          <h1 class="post-title" itemprop="name headline">Reverse中Angr的利用</h1>
         
 
         <div class="post-meta">
@@ -347,8 +353,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-21T00:44:56+08:00">
-                2021-03-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-19T23:20:49+08:00">
+                2021-03-19
               </time>
             
 
@@ -385,70 +391,85 @@
       
 
       
-        <blockquote>
-<p>题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固</p>
-</blockquote>
-<p>记录一下如何使用<code>ApkShelling</code>脱壳</p>
+        <p>记录一下入门Reverse中符号执行的利用</p>
 <a id="more"></a>
 
-<h3 id="安卓模拟器"><a href="#安卓模拟器" class="headerlink" title="安卓模拟器"></a>安卓模拟器</h3><p>我这里使用地是Android Studio创建安卓模拟器，当然你也可以直接下一个拥有root权限的安卓模拟器</p>
-<p>镜像要求：</p>
-<ul>
-<li>Android 8.0（包含8.0）以下的镜像</li>
-<li>镜像Google APIs</li>
-<li>ABI为x86架构</li>
-</ul>
-<p>使用可写权限启动模拟器</p>
-<blockquote>
-<p>以后想要root的话也需要这样打开</p>
+<h2 id="Angr"><a href="#Angr" class="headerlink" title="Angr"></a>Angr</h2><blockquote>
+<p>官方文档：<a href="http://angr.io/api-doc/angr.html" target="_blank" rel="noopener">http://angr.io/api-doc/angr.html</a></p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/tools</span><br><span class="line">emulator -list-avds</span><br><span class="line">emulator -avd Pixel_2_API_24 -writable-system</span><br></pre></td></tr></table></figure>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Angr是一个利用python开发的二进制程序分析框架，我们可以利用这个工具尝试对一些CTF题目进行符号执行来找到正确的解答，即flag。当然，要注意的是符号执行的路径选择问题到现在依旧是一个很大的问题，换句话说也就是当我们的程序存在循环时，因为符号执行会尽量遍历所有的路径，所以每次循环之后会形成至少两个分支，当循环的次数足够多时，就会造成路径爆炸，整个机器的内存会被耗尽。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖</span></span><br><span class="line">sudo apt-get install python3-dev libffi-dev build-essential virtualenvwrapper</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在/etc/profile中加入以下代码并进行<span class="built_in">source</span></span></span><br><span class="line">export WORKON_HOME=$HOME/Python-workhome</span><br><span class="line">source /usr/share/virtualenvwrapper/virtualenvwrapper.sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装angr</span></span><br><span class="line">mkvirtualenv --python=$(which python3) angr &amp;&amp; pip install angr</span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行angr</span></span><br><span class="line">workon angr</span><br></pre></td></tr></table></figure>
 
-<h3 id="安装SuperSU"><a href="#安装SuperSU" class="headerlink" title="安装SuperSU"></a>安装SuperSU</h3><blockquote>
-<p>SuperSU下载地址：<a href="https://supersuroot.org/download/" target="_blank" rel="noopener">https://supersuroot.org/download/</a></p>
+<h3 id="符号执行"><a href="#符号执行" class="headerlink" title="符号执行"></a>符号执行</h3><p><strong>基础实例</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    p = angr.Project(<span class="string">"r100"</span>, auto_load_libs=<span class="literal">True</span>)</span><br><span class="line">    simgr = p.factory.simulation_manager(p.factory.full_init_state())</span><br><span class="line">    simgr.explore(find=<span class="number">0x400844</span>, avoid=<span class="number">0x400855</span>)</span><br><span class="line">    <span class="keyword">return</span> simgr.found[<span class="number">0</span>].posix.dumps(<span class="number">0</span>).strip(<span class="string">b'\0\n'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    print(main())</span><br></pre></td></tr></table></figure>
+
+<p><strong>加载依赖库</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auto_load_libs用来设置是否自动载入依赖的库，如果设置为True会自动载入依赖的库，然后分析到库函数调用时也会进入库函数，这样会增加分析的工作量。如果为False，程序调用函数时，会直接返回一个不受约束的符号值</span><br></pre></td></tr></table></figure>
+
+<p><strong>设置SimState</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SimState表示程序的状态，包括它的内存、寄存器等等</span><br><span class="line"></span><br><span class="line">SimState对象通常有三种：</span><br><span class="line"><span class="number">1.</span> blank_state(**kwargs)</span><br><span class="line">   返回一个未初始化的state，此时需要主动设置入口地址，以及自己想要设置的参数</span><br><span class="line"><span class="number">2.</span> entry_state(**kwargs)</span><br><span class="line">   返回程序入口地址的state，通常来说都会使用该状态</span><br><span class="line"><span class="number">3.</span> full_init_state(**kwargs)</span><br><span class="line">   同entry_state(**kwargs)类似，但是调用在执行到达入口点之前应该调用每个初始化函数</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建Simulation Managers</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">p.factory.simulation_manager创建一个simulation_manager进行模拟执行，其中传入一个SimState</span><br><span class="line"></span><br><span class="line">SimulationManager一共有三种运行方式：</span><br><span class="line"><span class="number">1.</span> step()</span><br><span class="line">   每次向前运行一个基本块，并返回进行分类</span><br><span class="line"><span class="number">2.</span> run()</span><br><span class="line">   运行完所有的基本块，然后会出现deadended的状态，此时我们通常访问最后一个状态来获取我们所需要的信息</span><br><span class="line"><span class="number">3.</span> explore()</span><br><span class="line">   根据find和avoid进行基本块的执行，最后会返回found和avoid状态</span><br></pre></td></tr></table></figure>
+
+<p><strong>获取执行结果</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">simgr.found存储所有符合条件的分支</span><br></pre></td></tr></table></figure>
+
+<p><strong>帮助</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">可以使用help命令查看某个函数的详细说明，比如help(state)</span><br></pre></td></tr></table></figure>
+
+<h3 id="clarioy"><a href="#clarioy" class="headerlink" title="clarioy"></a>clarioy</h3><blockquote>
+<p>官方文档：<a href="http://angr.io/api-doc/claripy.html" target="_blank" rel="noopener">http://angr.io/api-doc/claripy.html</a></p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb install supersu-2-82.apk</span><br></pre></td></tr></table></figure>
+<p>claripy是一个符号求解引擎，和z3类似，通常用来构造输入，创建单位为bit</p>
+<p>使用<code>claripy.BVS()</code>创建位向量符号</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claripy.BVS(<span class="string">"u"</span>, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
 
-<h3 id="安装Xposed"><a href="#安装Xposed" class="headerlink" title="安装Xposed"></a>安装Xposed</h3><blockquote>
-<p>Xposed下载地址：<a href="https://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="noopener">https://repo.xposed.info/module/de.robv.android.xposed.installer</a></p>
+<p>使用<code>claripy.BVV()</code>创建位向量值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claripy.BVV(<span class="number">0xab</span>, <span class="number">0x2</span> * <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h3><p>这个<a href="https://github.com/jakespringer/angr_ctf" target="_blank" rel="noopener">地址</a>是官方关于在CTF利用Angr的详细教程</p>
+<p>这个<a href="https://docs.angr.io/examples" target="_blank" rel="noopener">地址</a>是官方给出的在CTF比赛中使用Angr的例子，都是些精髓</p>
+<p>此外还有@<a href="https://xz.aliyun.com/u/11261" target="_blank" rel="noopener">Badrer</a>师傅在先知也写了很多相关的文章，大家可以学习一下</p>
+<p>下面是一些我碰到的一些CTF例子，会不断地进行更新</p>
+<h2 id="funnyre"><a href="#funnyre" class="headerlink" title="funnyre"></a>funnyre</h2><blockquote>
+<p>题目源于【WUSTCTF2020】</p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb install XposedInstaller_3.1.5.apk</span><br></pre></td></tr></table></figure>
+<h3 id="去花指令"><a href="#去花指令" class="headerlink" title="去花指令"></a>去花指令</h3><p>直接用IDA打开，尝试反编译main函数发现有花指令，根据上下文逻辑nop掉图中红框部分，一共有4处</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317bf81ee1b2abcab097522.png" alt="image-20210319172652670" style="zoom:80%;">
 
-<h3 id="Root模拟器"><a href="#Root模拟器" class="headerlink" title="Root模拟器"></a>Root模拟器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb root</span><br><span class="line">adb remount</span><br><span class="line">adb shell </span><br><span class="line">setenforce 0</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
 
-<h3 id="上传配置文件"><a href="#上传配置文件" class="headerlink" title="上传配置文件"></a>上传配置文件</h3><blockquote>
-<p>SupoerSu.zip下载地址：<a href="https://download.chainfire.eu/1220/SuperSU" target="_blank" rel="noopener">https://download.chainfire.eu/1220/SuperSU</a></p>
+
+<p>把data强制分析为code，再把修改过的code声明为function，之后就可以正常的反汇编了</p>
+<p>main()函数中确定了flag的长度和格式，还有一长串的异或运算</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021031923179e8ec2c34d6a38fed435.png" alt="image-20210319211423984" style="zoom: 80%;">
+
+<p>最后与unk_4025C0的数据进行比对</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317b68e2a8d0e4880427510.png" alt="image-20210319211739539" style="zoom:80%;">
+
+<h3 id="符号执行-1"><a href="#符号执行-1" class="headerlink" title="符号执行"></a>符号执行</h3><p>到这里就可以有三种解决方法，第一种是直接爆破，时间会很长；第二种是把所有代码逆回去，会很麻烦；第三种，也是最简单的一种，就是使用Angr来进行符号执行约束求解</p>
+<p>下面给出符号执行的代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建project</span></span><br><span class="line">p = angr.Project(<span class="string">"./attachment"</span>, load_options=&#123;<span class="string">"auto_load_libs"</span>: <span class="literal">False</span>&#125;)</span><br><span class="line"><span class="comment"># 设置程序入口,此处必须是flag加载完的位置</span></span><br><span class="line">state = p.factory.entry_state(addr=<span class="number">0x400601</span>)</span><br><span class="line"><span class="comment"># 创建符号向量</span></span><br><span class="line">flag = claripy.BVS(<span class="string">"flag"</span>, <span class="number">8</span>*<span class="number">32</span>)</span><br><span class="line"><span class="comment"># 按照程序逻辑flag存放在rdx的第6位,因为前5位是'flag&#123;'</span></span><br><span class="line">state.memory.store(state.regs.rdx + <span class="number">5</span>, flag)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string"># 也可以自己手动修改rdx的位置，但是相对位置不变就行</span></span><br><span class="line"><span class="string">state.memory.store(0x603056+0x300 + 5, flag)</span></span><br><span class="line"><span class="string">state.regs.rdx = 0x603056+0x300</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="comment"># 创建Simulation Manager</span></span><br><span class="line">sm = p.factory.simulation_manager(state)</span><br><span class="line">print(<span class="string">"[+] init ok"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置探索成功的地址</span></span><br><span class="line">sm.explore(find=<span class="number">0x401DAE</span>)</span><br><span class="line"><span class="keyword">if</span> sm.found:</span><br><span class="line">    print(<span class="string">"[+] found!"</span>)</span><br><span class="line">    <span class="comment">#输出flag结果</span></span><br><span class="line">    x = sm.found[<span class="number">0</span>].solver.eval(flag, cast_to=bytes).strip(<span class="string">b'\0'</span>)</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+
+<h2 id="very-success"><a href="#very-success" class="headerlink" title="very_success"></a>very_success</h2><blockquote>
+<p>题目来源于【flareon2015_2】</p>
 </blockquote>
-<p>把<code>SuperSu/x86/su.pie</code>上传到模拟器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb push su.pie /system/bin/su</span><br><span class="line">adb push su.pie /system/xbin/su</span><br></pre></td></tr></table></figure>
+<h3 id="符号执行-2"><a href="#符号执行-2" class="headerlink" title="符号执行"></a>符号执行</h3><p>程序主要代码如下，把用户输入存储到<code>byte_402159</code>中，其中用户输入为37位，<code>sub_401084()</code>对用户输入进行加密，最后与系统的<code>a1</code>比较，相同则成功，其中<code>a1</code>可以通过动态调试得到</p>
+<p>所以我们可以把符号执行的初始地址地位在<code>sub_401084()</code>的开始</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210322015898685f1ba3e262015856.png" alt="image-20210322002451961"></p>
+<p>选取好了初始地址之后，我们需要给参数进行赋值，这里涉及到对内存进行操控</p>
+<p>第1个参数来源于<code>0x401064</code>，即函数的返回地址</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158b532dd716df687936055.png" alt="image-20210322013920422"></p>
+<p>第2个参数来源于<code>0x4010e4</code>，得追溯到父函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210322015864c952b7f622010e130d.png" alt="image-20210322012614011"></p>
+<p>第3个参数来源于<code>0x402159</code>，直接是一个静态地址</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158d6b80952cb87c09ebd2b.png" alt="image-20210322001900137"></p>
+<p>第4个参数就是输入字符串的长度，直接赋一个大于等于37的数值即可</p>
+<p>所以最终脚本如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line"></span><br><span class="line">p = angr.Project(<span class="string">"./very_success"</span>, load_options=&#123;<span class="string">"auto_load_libs"</span>: <span class="literal">False</span>&#125;)</span><br><span class="line">s = p.factory.entry_state(addr=<span class="number">0x401084</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 填入函数的参数</span></span><br><span class="line">s.mem[s.regs.esp:].dword = <span class="number">0x401064</span></span><br><span class="line">s.mem[s.regs.esp+<span class="number">4</span>:].dword = <span class="number">0x4010E4</span></span><br><span class="line">s.mem[s.regs.esp+<span class="number">8</span>:].dword = <span class="number">0x402159</span></span><br><span class="line">s.mem[s.regs.esp+<span class="number">12</span>:].dword = <span class="number">37</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在第三个参数创建一个符号向量</span></span><br><span class="line">s.memory.store(<span class="number">0x402159</span>, claripy.BVS(<span class="string">"flag"</span>, <span class="number">8</span>*<span class="number">37</span>))</span><br><span class="line"></span><br><span class="line">sm = p.factory.simulation_manager(s)</span><br><span class="line">print(<span class="string">"[+] init ok"</span>)</span><br><span class="line"></span><br><span class="line">sm.explore(find=<span class="number">0x40106B</span>, avoid=<span class="number">0x401072</span>)</span><br><span class="line"><span class="keyword">if</span> sm.found:</span><br><span class="line">    print(<span class="string">"[+] found!"</span>)</span><br><span class="line">    x = sm.found[<span class="number">0</span>].solver.eval(flag, cast_to=bytes).strip(<span class="string">b'\0'</span>)</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
 
-<p>进入adb shell修改文件权限</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb shell</span><br><span class="line">chmod 0755 /system/bin/su</span><br><span class="line">chmod 0755 /system/xbin/su</span><br><span class="line">su --install</span><br><span class="line">su --daemon&amp;</span><br></pre></td></tr></table></figure>
-
-<p>在模拟器上分别打开SuperSU和Xposed Installer进行安装</p>
-<blockquote>
-<p>安装SuperSU时不要选择更新，不然会卡死在开机页面，需要重新root</p>
-<p>安装Xposed Installer后授权重启即可</p>
-<p>关闭模拟器时直接x掉就好，千万不要选power off，不然需要重新root</p>
-<p>重启使用adb reboot</p>
-</blockquote>
-<h3 id="安装ApkShelling"><a href="#安装ApkShelling" class="headerlink" title="安装ApkShelling"></a>安装ApkShelling</h3><blockquote>
-<p>AplShelling下载地址：<a href="https://github.com/OakChen/ApkShelling" target="_blank" rel="noopener">https://github.com/OakChen/ApkShelling</a></p>
-</blockquote>
-<p>Android Studio打开ApkShelling，修改XposedEntry.java的targetPackages值，加入需要脱壳的包名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] targetPackages =</span><br><span class="line">        <span class="keyword">new</span> String[]&#123;<span class="string">"com.example.how_debug"</span>, <span class="string">"com.sfysoft.shellingtest2"</span>&#125;;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>launch option改为nothing</p>
-</blockquote>
-<p>安装完后重启，然后上传题目的apk，再拉取题目的dex</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell ls /<span class="keyword">data</span>/<span class="keyword">data</span>/com.example.how_debug</span><br><span class="line">adb pull /<span class="keyword">data</span>/<span class="keyword">data</span>/com.example.how_debug/<span class="number">00125</span>-<span class="number">02</span>.dex ./</span><br></pre></td></tr></table></figure>
-
-<p>jadx直接打开dex搜索flag</p>
-<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032017503e57ecc42afcf9a2e56f.png" alt="image-20210320174944804" style="zoom: 80%;">
-
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://blog.csdn.net/lostnerv/article/details/106061517" target="_blank" rel="noopener">Reverse 解法2：bang Writeup（安卓简单的加壳）（2020网鼎杯青龙组）</a></p>
-<p><a href="https://juejin.cn/post/6844903840026722311" target="_blank" rel="noopener">搞机：AS自带模拟器AVD Root 和 Xposed安装</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.52hertz.tech/2020/03/30/wctf2020_official_wp/#funnyre-7-solves" target="_blank" rel="noopener">WUST-CTF 2020 官方 Writeup</a></p>
+<p><a href="https://xz.aliyun.com/u/11261" target="_blank" rel="noopener">先知社区-Badrer</a></p>
 
       
     </div>
@@ -488,8 +509,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/03/19/Reverse中Angr的利用/" rel="next" title="Reverse中Angr的利用">
-                <i class="fa fa-chevron-left"></i> Reverse中Angr的利用
+              <a href="/2021/02/17/nonce-strict-dynamic-bypass/" rel="next" title="CSP nonce&strict-dynamic Bypass">
+                <i class="fa fa-chevron-left"></i> CSP nonce&strict-dynamic Bypass
               </a>
             
           </div>
@@ -498,8 +519,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2021/03/21/Who-is-he-Unity逆向/" rel="prev" title="Who is he-Unity逆向">
-                Who is he-Unity逆向 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/03/21/bang-apk脱壳/" rel="prev" title="bang-apk脱壳">
+                bang-apk脱壳 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -642,7 +663,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安卓模拟器"><span class="nav-number">1.</span> <span class="nav-text">安卓模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装SuperSU"><span class="nav-number">2.</span> <span class="nav-text">安装SuperSU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Xposed"><span class="nav-number">3.</span> <span class="nav-text">安装Xposed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Root模拟器"><span class="nav-number">4.</span> <span class="nav-text">Root模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上传配置文件"><span class="nav-number">5.</span> <span class="nav-text">上传配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装ApkShelling"><span class="nav-number">6.</span> <span class="nav-text">安装ApkShelling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Angr"><span class="nav-number">1.</span> <span class="nav-text">Angr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行"><span class="nav-number">1.3.</span> <span class="nav-text">符号执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clarioy"><span class="nav-number">1.4.</span> <span class="nav-text">clarioy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CTF"><span class="nav-number">1.5.</span> <span class="nav-text">CTF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#funnyre"><span class="nav-number">2.</span> <span class="nav-text">funnyre</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#去花指令"><span class="nav-number">2.1.</span> <span class="nav-text">去花指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行-1"><span class="nav-number">2.2.</span> <span class="nav-text">符号执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#very-success"><span class="nav-number">3.</span> <span class="nav-text">very_success</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行-2"><span class="nav-number">3.1.</span> <span class="nav-text">符号执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
