@@ -120,20 +120,21 @@
 
 
 
-<meta name="description" content="题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固  记录一下如何使用ApkShelling脱壳">
+<meta name="description" content="题目源于【羊城杯 2020】，主要考点为exe文件反编译为py文件，以及z3解方程  记录一下Reverse中的exe反编译为py文件">
 <meta name="keywords" content="Reverse">
 <meta property="og:type" content="article">
-<meta property="og:title" content="bang-apk脱壳">
-<meta property="og:url" content="https://tyaoo.github.io/2021/03/21/bang-apk脱壳/index.html">
+<meta property="og:title" content="Login-py反编译">
+<meta property="og:url" content="https://tyaoo.github.io/2021/03/27/Login-py反编译/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
-<meta property="og:description" content="题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固  记录一下如何使用ApkShelling脱壳">
+<meta property="og:description" content="题目源于【羊城杯 2020】，主要考点为exe文件反编译为py文件，以及z3解方程  记录一下Reverse中的exe反编译为py文件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032017503e57ecc42afcf9a2e56f.png">
-<meta property="og:updated_time" content="2021-03-21T12:25:20.059Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103271842e0e47e71bcf6adb68ead.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210327184298387f324a69568decb6.png">
+<meta property="og:updated_time" content="2021-03-27T10:43:53.531Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="bang-apk脱壳">
-<meta name="twitter:description" content="题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固  记录一下如何使用ApkShelling脱壳">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032017503e57ecc42afcf9a2e56f.png">
+<meta name="twitter:title" content="Login-py反编译">
+<meta name="twitter:description" content="题目源于【羊城杯 2020】，主要考点为exe文件反编译为py文件，以及z3解方程  记录一下Reverse中的exe反编译为py文件">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103271842e0e47e71bcf6adb68ead.png">
 
 
 
@@ -163,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="https://tyaoo.github.io/2021/03/21/bang-apk脱壳/">
+  <link rel="canonical" href="https://tyaoo.github.io/2021/03/27/Login-py反编译/">
 
 
 
 
 
-  <title>bang-apk脱壳 | Tyaoo's Blog</title>
+  <title>Login-py反编译 | Tyaoo's Blog</title>
   
 
 
@@ -318,7 +319,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/03/21/bang-apk脱壳/">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/03/27/Login-py反编译/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tyaoo">
@@ -335,7 +336,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">bang-apk脱壳</h1>
+          <h1 class="post-title" itemprop="name headline">Login-py反编译</h1>
         
 
         <div class="post-meta">
@@ -347,8 +348,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-21T00:44:56+08:00">
-                2021-03-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-27T18:43:18+08:00">
+                2021-03-27
               </time>
             
 
@@ -386,69 +387,44 @@
 
       
         <blockquote>
-<p>题目源于【网鼎杯2020青龙组 bang】，主要考点为apk脱壳，题目使用梆梆安全加固</p>
+<p>题目源于【羊城杯 2020】，主要考点为exe文件反编译为py文件，以及z3解方程</p>
 </blockquote>
-<p>记录一下如何使用<code>ApkShelling</code>脱壳</p>
+<p>记录一下Reverse中的exe反编译为py文件</p>
 <a id="more"></a>
 
-<h3 id="安卓模拟器"><a href="#安卓模拟器" class="headerlink" title="安卓模拟器"></a>安卓模拟器</h3><p>我这里使用地是Android Studio创建安卓模拟器，当然你也可以直接下一个拥有root权限的安卓模拟器</p>
-<p>镜像要求：</p>
-<ul>
-<li>Android 8.0（包含8.0）以下的镜像</li>
-<li>镜像Google APIs</li>
-<li>ABI为x86架构</li>
-</ul>
-<p>使用可写权限启动模拟器</p>
+<h3 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h3><p><strong>exeinfo分析</strong></p>
+<p>把文件放到exeinfo看到是用py3.6版本的pyinstaller打包的</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103271842e0e47e71bcf6adb68ead.png" alt="image-20210327164113543" style="zoom: 80%;">
+
+<p><strong>exe-&gt;pyc</strong></p>
 <blockquote>
-<p>以后想要root的话也需要这样打开</p>
+<p>pyinstxtractor下载地址：<a href="https://github.com/countercept/python-exe-unpacker.git" target="_blank" rel="noopener">https://github.com/countercept/python-exe-unpacker.git</a></p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/tools</span><br><span class="line">emulator -list-avds</span><br><span class="line">emulator -avd Pixel_2_API_24 -writable-system</span><br></pre></td></tr></table></figure>
+<p>使用pyinstxtractor把exe里的pyc提取出来，py环境要尽量贴合源代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python pyinstxtractor.py attachment.exe</span><br></pre></td></tr></table></figure>
 
-<h3 id="安装SuperSU"><a href="#安装SuperSU" class="headerlink" title="安装SuperSU"></a>安装SuperSU</h3><blockquote>
-<p>SuperSU下载地址：<a href="https://supersuroot.org/download/" target="_blank" rel="noopener">https://supersuroot.org/download/</a></p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb install supersu-2-82.apk</span><br></pre></td></tr></table></figure>
+<p>找到和与题目对应的文件<code>login</code>，并添加后缀修改为<code>login.pyc</code>，因为pyinstaller在反编译时会把对应的py版本、时间戳等信息去掉，所以我们需要使用<code>010 Editor</code>或其他十六进制编辑器打开<code>login.pyc</code>和同目录下的<code>struct</code>，把<code>struct</code>的前12个字节填补到<code>login.pyc</code>前面</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210327184298387f324a69568decb6.png" alt="image-20210327165157405" style="zoom: 80%;">
 
-<h3 id="安装Xposed"><a href="#安装Xposed" class="headerlink" title="安装Xposed"></a>安装Xposed</h3><blockquote>
-<p>Xposed下载地址：<a href="https://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="noopener">https://repo.xposed.info/module/de.robv.android.xposed.installer</a></p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb install XposedInstaller_3.1.5.apk</span><br></pre></td></tr></table></figure>
 
-<h3 id="Root模拟器"><a href="#Root模拟器" class="headerlink" title="Root模拟器"></a>Root模拟器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb root</span><br><span class="line">adb remount</span><br><span class="line">adb shell </span><br><span class="line">setenforce 0</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
 
-<h3 id="上传配置文件"><a href="#上传配置文件" class="headerlink" title="上传配置文件"></a>上传配置文件</h3><blockquote>
-<p>SupoerSu.zip下载地址：<a href="https://download.chainfire.eu/1220/SuperSU" target="_blank" rel="noopener">https://download.chainfire.eu/1220/SuperSU</a></p>
-</blockquote>
-<p>把<code>SuperSu/x86/su.pie</code>上传到模拟器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb push su.pie /system/bin/su</span><br><span class="line">adb push su.pie /system/xbin/su</span><br></pre></td></tr></table></figure>
-
-<p>进入adb shell修改文件权限</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb shell</span><br><span class="line">chmod 0755 /system/bin/su</span><br><span class="line">chmod 0755 /system/xbin/su</span><br><span class="line">su --install</span><br><span class="line">su --daemon&amp;</span><br></pre></td></tr></table></figure>
-
-<p>在模拟器上分别打开SuperSU和Xposed Installer进行安装</p>
+<p><strong>pyc-&gt;py</strong></p>
 <blockquote>
-<p>安装SuperSU时不要选择更新，不然会卡死在开机页面，需要重新root</p>
-<p>安装Xposed Installer后授权重启即可</p>
-<p>关闭模拟器时直接x掉就好，千万不要选power off，不然需要重新root</p>
-<p>重启使用adb reboot</p>
+<p>安装uncompyle6：pip install uncompyle6</p>
 </blockquote>
-<h3 id="安装ApkShelling"><a href="#安装ApkShelling" class="headerlink" title="安装ApkShelling"></a>安装ApkShelling</h3><blockquote>
-<p>AplShelling下载地址：<a href="https://github.com/OakChen/ApkShelling" target="_blank" rel="noopener">https://github.com/OakChen/ApkShelling</a></p>
-</blockquote>
-<p>Android Studio打开ApkShelling，修改XposedEntry.java的targetPackages值，加入需要脱壳的包名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] targetPackages =</span><br><span class="line">        <span class="keyword">new</span> String[]&#123;<span class="string">"com.example.how_debug"</span>, <span class="string">"com.sfysoft.shellingtest2"</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>把pyc文件反编译为py文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uncompyle6 -o login.py login.pyc</span><br></pre></td></tr></table></figure>
 
+<h3 id="z3解方程"><a href="#z3解方程" class="headerlink" title="z3解方程"></a>z3解方程</h3><p>源代码恢复如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">input1 = input(<span class="string">'input something:'</span>)</span><br><span class="line"><span class="keyword">if</span> len(input1) != <span class="number">14</span>:</span><br><span class="line">    print(<span class="string">'Wrong length!'</span>)</span><br><span class="line">    sys.exit()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    code = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">13</span>):</span><br><span class="line">        code.append(ord(input1[i]) ^ ord(input1[(i + <span class="number">1</span>)]))</span><br><span class="line"></span><br><span class="line">    code.append(ord(input1[<span class="number">13</span>]))</span><br><span class="line">    a1 = code[<span class="number">2</span>]</span><br><span class="line">    a2 = code[<span class="number">1</span>]</span><br><span class="line">    a3 = code[<span class="number">0</span>]</span><br><span class="line">    a4 = code[<span class="number">3</span>]</span><br><span class="line">    a5 = code[<span class="number">4</span>]</span><br><span class="line">    a6 = code[<span class="number">5</span>]</span><br><span class="line">    a7 = code[<span class="number">6</span>]</span><br><span class="line">    a8 = code[<span class="number">7</span>]</span><br><span class="line">    a9 = code[<span class="number">9</span>]</span><br><span class="line">    a10 = code[<span class="number">8</span>]</span><br><span class="line">    a11 = code[<span class="number">10</span>]</span><br><span class="line">    a12 = code[<span class="number">11</span>]</span><br><span class="line">    a13 = code[<span class="number">12</span>]</span><br><span class="line">    a14 = code[<span class="number">13</span>]</span><br><span class="line">    <span class="keyword">if</span> (a1 * <span class="number">88</span> + a2 * <span class="number">67</span> + a3 * <span class="number">65</span> - a4 * <span class="number">5</span> + a5 * <span class="number">43</span> + a6 * <span class="number">89</span> + a7 * <span class="number">25</span> + a8 * <span class="number">13</span> - a9 * <span class="number">36</span> + a10 * <span class="number">15</span> + a11 * <span class="number">11</span> + a12 * <span class="number">47</span> - a13 * <span class="number">60</span> + a14 * <span class="number">29</span> == <span class="number">22748</span>) &amp; (a1 * <span class="number">89</span> + a2 * <span class="number">7</span> + a3 * <span class="number">12</span> - a4 * <span class="number">25</span> + a5 * <span class="number">41</span> + a6 * <span class="number">23</span> + a7 * <span class="number">20</span> - a8 * <span class="number">66</span> + a9 * <span class="number">31</span> + a10 * <span class="number">8</span> + a11 * <span class="number">2</span> - a12 * <span class="number">41</span> - a13 * <span class="number">39</span> + a14 * <span class="number">17</span> == <span class="number">7258</span>) &amp; (a1 * <span class="number">28</span> + a2 * <span class="number">35</span> + a3 * <span class="number">16</span> - a4 * <span class="number">65</span> + a5 * <span class="number">53</span> + a6 * <span class="number">39</span> + a7 * <span class="number">27</span> + a8 * <span class="number">15</span> - a9 * <span class="number">33</span> + a10 * <span class="number">13</span> + a11 * <span class="number">101</span> + a12 * <span class="number">90</span> - a13 * <span class="number">34</span> + a14 * <span class="number">23</span> == <span class="number">26190</span>) &amp; (a1 * <span class="number">23</span> + a2 * <span class="number">34</span> + a3 * <span class="number">35</span> - a4 * <span class="number">59</span> + a5 * <span class="number">49</span> + a6 * <span class="number">81</span> + a7 * <span class="number">25</span> + (a8 &lt;&lt; <span class="number">7</span>) - a9 * <span class="number">32</span> + a10 * <span class="number">75</span> + a11 * <span class="number">81</span> + a12 * <span class="number">47</span> - a13 * <span class="number">60</span> + a14 * <span class="number">29</span> == <span class="number">37136</span>) &amp; (a1 * <span class="number">38</span> + a2 * <span class="number">97</span> + a3 * <span class="number">35</span> - a4 * <span class="number">52</span> + a5 * <span class="number">42</span> + a6 * <span class="number">79</span> + a7 * <span class="number">90</span> + a8 * <span class="number">23</span> - a9 * <span class="number">36</span> + a10 * <span class="number">57</span> + a11 * <span class="number">81</span> + a12 * <span class="number">42</span> - a13 * <span class="number">62</span> - a14 * <span class="number">11</span> == <span class="number">27915</span>) &amp; (a1 * <span class="number">22</span> + a2 * <span class="number">27</span> + a3 * <span class="number">35</span> - a4 * <span class="number">45</span> + a5 * <span class="number">47</span> + a6 * <span class="number">49</span> + a7 * <span class="number">29</span> + a8 * <span class="number">18</span> - a9 * <span class="number">26</span> + a10 * <span class="number">35</span> + a11 * <span class="number">41</span> + a12 * <span class="number">40</span> - a13 * <span class="number">61</span> + a14 * <span class="number">28</span> == <span class="number">17298</span>) &amp; (a1 * <span class="number">12</span> + a2 * <span class="number">45</span> + a3 * <span class="number">35</span> - a4 * <span class="number">9</span> - a5 * <span class="number">42</span> + a6 * <span class="number">86</span> + a7 * <span class="number">23</span> + a8 * <span class="number">85</span> - a9 * <span class="number">47</span> + a10 * <span class="number">34</span> + a11 * <span class="number">76</span> + a12 * <span class="number">43</span> - a13 * <span class="number">44</span> + a14 * <span class="number">65</span> == <span class="number">19875</span>) &amp; (a1 * <span class="number">79</span> + a2 * <span class="number">62</span> + a3 * <span class="number">35</span> - a4 * <span class="number">85</span> + a5 * <span class="number">33</span> + a6 * <span class="number">79</span> + a7 * <span class="number">86</span> + a8 * <span class="number">14</span> - a9 * <span class="number">30</span> + a10 * <span class="number">25</span> + a11 * <span class="number">11</span> + a12 * <span class="number">57</span> - a13 * <span class="number">50</span> - a14 * <span class="number">9</span> == <span class="number">22784</span>) &amp; (a1 * <span class="number">8</span> + a2 * <span class="number">6</span> + a3 * <span class="number">64</span> - a4 * <span class="number">85</span> + a5 * <span class="number">73</span> + a6 * <span class="number">29</span> + a7 * <span class="number">2</span> + a8 * <span class="number">23</span> - a9 * <span class="number">36</span> + a10 * <span class="number">5</span> + a11 * <span class="number">2</span> + a12 * <span class="number">47</span> - a13 * <span class="number">64</span> + a14 * <span class="number">27</span> == <span class="number">9710</span>) &amp; (a1 * <span class="number">67</span> - a2 * <span class="number">68</span> + a3 * <span class="number">68</span> - a4 * <span class="number">51</span> - a5 * <span class="number">43</span> + a6 * <span class="number">81</span> + a7 * <span class="number">22</span> - a8 * <span class="number">12</span> - a9 * <span class="number">38</span> + a10 * <span class="number">75</span> + a11 * <span class="number">41</span> + a12 * <span class="number">27</span> - a13 * <span class="number">52</span> + a14 * <span class="number">31</span> == <span class="number">13376</span>) &amp; (a1 * <span class="number">85</span> + a2 * <span class="number">63</span> + a3 * <span class="number">5</span> - a4 * <span class="number">51</span> + a5 * <span class="number">44</span> + a6 * <span class="number">36</span> + a7 * <span class="number">28</span> + a8 * <span class="number">15</span> - a9 * <span class="number">6</span> + a10 * <span class="number">45</span> + a11 * <span class="number">31</span> + a12 * <span class="number">7</span> - a13 * <span class="number">67</span> + a14 * <span class="number">78</span> == <span class="number">24065</span>) &amp; (a1 * <span class="number">47</span> + a2 * <span class="number">64</span> + a3 * <span class="number">66</span> - a4 * <span class="number">5</span> + a5 * <span class="number">43</span> + a6 * <span class="number">112</span> + a7 * <span class="number">25</span> + a8 * <span class="number">13</span> - a9 * <span class="number">35</span> + a10 * <span class="number">95</span> + a11 * <span class="number">21</span> + a12 * <span class="number">43</span> - a13 * <span class="number">61</span> + a14 * <span class="number">20</span> == <span class="number">27687</span>) &amp; (a1 * <span class="number">89</span> + a2 * <span class="number">67</span> + a3 * <span class="number">85</span> - a4 * <span class="number">25</span> + a5 * <span class="number">49</span> + a6 * <span class="number">89</span> + a7 * <span class="number">23</span> + a8 * <span class="number">56</span> - a9 * <span class="number">92</span> + a10 * <span class="number">14</span> + a11 * <span class="number">89</span> + a12 * <span class="number">47</span> - a13 * <span class="number">61</span> - a14 * <span class="number">29</span> == <span class="number">29250</span>) &amp; (a1 * <span class="number">95</span> + a2 * <span class="number">34</span> + a3 * <span class="number">62</span> - a4 * <span class="number">9</span> - a5 * <span class="number">43</span> + a6 * <span class="number">83</span> + a7 * <span class="number">25</span> + a8 * <span class="number">12</span> - a9 * <span class="number">36</span> + a10 * <span class="number">16</span> + a11 * <span class="number">51</span> + a12 * <span class="number">47</span> - a13 * <span class="number">60</span> - a14 * <span class="number">24</span> == <span class="number">15317</span>):</span><br><span class="line">        print(<span class="string">'flag is GWHT&#123;md5(your_input)&#125;'</span>)</span><br><span class="line">        print(<span class="string">'Congratulations and have fun!'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(<span class="string">'Sorry,plz try again...'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>直接丢z3就能出来了</p>
 <blockquote>
-<p>launch option改为nothing</p>
+<p>需要注意的是要把(a8 &lt;&lt; 7)改为(a8 * 128)，不然会报以下错误（Int类型不支持移位操作）</p>
+<p>TypeError: unsupported operand type(s) for &lt;&lt;: ‘ArithRef’ and ‘ArithRef’</p>
 </blockquote>
-<p>安装完后重启，然后上传题目的apk，再拉取题目的dex</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell ls /<span class="keyword">data</span>/<span class="keyword">data</span>/com.example.how_debug</span><br><span class="line">adb pull /<span class="keyword">data</span>/<span class="keyword">data</span>/com.example.how_debug/<span class="number">00125</span>-<span class="number">02</span>.dex ./</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> z3 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">code1 = [<span class="number">0</span>] * <span class="number">14</span></span><br><span class="line">code2 = [<span class="number">0</span>] * <span class="number">14</span></span><br><span class="line">flag = [<span class="number">0</span>] * <span class="number">14</span></span><br><span class="line">orders = [<span class="number">2</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span> ,<span class="number">8</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">15</span>):</span><br><span class="line">    globals()[<span class="string">f'a<span class="subst">&#123;i&#125;</span>'</span>] = Int(<span class="string">f'a<span class="subst">&#123;i&#125;</span>'</span>)</span><br><span class="line">s = Solver()</span><br><span class="line">equations = <span class="string">'(a1 * 88 + a2 * 67 + a3 * 65 - a4 * 5 + a5 * 43 + a6 * 89 + a7 * 25 + a8 * 13 - a9 * 36 + a10 * 15 + a11 * 11 + a12 * 47 - a13 * 60 + a14 * 29 == 22748) &amp; (a1 * 89 + a2 * 7 + a3 * 12 - a4 * 25 + a5 * 41 + a6 * 23 + a7 * 20 - a8 * 66 + a9 * 31 + a10 * 8 + a11 * 2 - a12 * 41 - a13 * 39 + a14 * 17 == 7258) &amp; (a1 * 28 + a2 * 35 + a3 * 16 - a4 * 65 + a5 * 53 + a6 * 39 + a7 * 27 + a8 * 15 - a9 * 33 + a10 * 13 + a11 * 101 + a12 * 90 - a13 * 34 + a14 * 23 == 26190) &amp; (a1 * 23 + a2 * 34 + a3 * 35 - a4 * 59 + a5 * 49 + a6 * 81 + a7 * 25 + (a8 &lt;&lt; 7) - a9 * 32 + a10 * 75 + a11 * 81 + a12 * 47 - a13 * 60 + a14 * 29 == 37136) &amp; (a1 * 38 + a2 * 97 + a3 * 35 - a4 * 52 + a5 * 42 + a6 * 79 + a7 * 90 + a8 * 23 - a9 * 36 + a10 * 57 + a11 * 81 + a12 * 42 - a13 * 62 - a14 * 11 == 27915) &amp; (a1 * 22 + a2 * 27 + a3 * 35 - a4 * 45 + a5 * 47 + a6 * 49 + a7 * 29 + a8 * 18 - a9 * 26 + a10 * 35 + a11 * 41 + a12 * 40 - a13 * 61 + a14 * 28 == 17298) &amp; (a1 * 12 + a2 * 45 + a3 * 35 - a4 * 9 - a5 * 42 + a6 * 86 + a7 * 23 + a8 * 85 - a9 * 47 + a10 * 34 + a11 * 76 + a12 * 43 - a13 * 44 + a14 * 65 == 19875) &amp; (a1 * 79 + a2 * 62 + a3 * 35 - a4 * 85 + a5 * 33 + a6 * 79 + a7 * 86 + a8 * 14 - a9 * 30 + a10 * 25 + a11 * 11 + a12 * 57 - a13 * 50 - a14 * 9 == 22784) &amp; (a1 * 8 + a2 * 6 + a3 * 64 - a4 * 85 + a5 * 73 + a6 * 29 + a7 * 2 + a8 * 23 - a9 * 36 + a10 * 5 + a11 * 2 + a12 * 47 - a13 * 64 + a14 * 27 == 9710) &amp; (a1 * 67 - a2 * 68 + a3 * 68 - a4 * 51 - a5 * 43 + a6 * 81 + a7 * 22 - a8 * 12 - a9 * 38 + a10 * 75 + a11 * 41 + a12 * 27 - a13 * 52 + a14 * 31 == 13376) &amp; (a1 * 85 + a2 * 63 + a3 * 5 - a4 * 51 + a5 * 44 + a6 * 36 + a7 * 28 + a8 * 15 - a9 * 6 + a10 * 45 + a11 * 31 + a12 * 7 - a13 * 67 + a14 * 78 == 24065) &amp; (a1 * 47 + a2 * 64 + a3 * 66 - a4 * 5 + a5 * 43 + a6 * 112 + a7 * 25 + a8 * 13 - a9 * 35 + a10 * 95 + a11 * 21 + a12 * 43 - a13 * 61 + a14 * 20 == 27687) &amp; (a1 * 89 + a2 * 67 + a3 * 85 - a4 * 25 + a5 * 49 + a6 * 89 + a7 * 23 + a8 * 56 - a9 * 92 + a10 * 14 + a11 * 89 + a12 * 47 - a13 * 61 - a14 * 29 == 29250) &amp; (a1 * 95 + a2 * 34 + a3 * 62 - a4 * 9 - a5 * 43 + a6 * 83 + a7 * 25 + a8 * 12 - a9 * 36 + a10 * 16 + a11 * 51 + a12 * 47 - a13 * 60 - a14 * 24 == 15317)'</span></span><br><span class="line">equations = equations.replace(<span class="string">'&lt;&lt; 7'</span>, <span class="string">'* 128'</span>)</span><br><span class="line">equations = equations.split(<span class="string">'&amp;'</span>)</span><br><span class="line">[s.add(eval(_)) <span class="keyword">for</span> _ <span class="keyword">in</span> equations]</span><br><span class="line"><span class="keyword">if</span> s.check() == sat:</span><br><span class="line">    m = s.model()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> m:</span><br><span class="line">        <span class="comment"># print("%s = %ld" % (i, m[i].as_long()))</span></span><br><span class="line">        index = int(re.search(<span class="string">r'\d+'</span>, str(i)).group()) - <span class="number">1</span></span><br><span class="line">        code1[index] = m[i].as_long()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 置换</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(code1)):</span><br><span class="line">    code2[orders[i]] = code1[i]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 异或</span></span><br><span class="line">flag[<span class="number">13</span>] = code2[<span class="number">13</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">12</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">    flag[i] = flag[i + <span class="number">1</span>] ^ code2[i]</span><br><span class="line"></span><br><span class="line">print(<span class="string">'[+] flag:'</span>, hashlib.md5(<span class="string">''</span>.join([chr(_) <span class="keyword">for</span> _ <span class="keyword">in</span> flag]).encode()).hexdigest())</span><br><span class="line"><span class="comment"># [+] flag: 58964088b637e50d3a22b9510c1d1ef8</span></span><br></pre></td></tr></table></figure>
 
-<p>jadx直接打开dex搜索flag</p>
-<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032017503e57ecc42afcf9a2e56f.png" alt="image-20210320174944804" style="zoom: 80%;">
-
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://blog.csdn.net/lostnerv/article/details/106061517" target="_blank" rel="noopener">Reverse 解法2：bang Writeup（安卓简单的加壳）（2020网鼎杯青龙组）</a></p>
-<p><a href="https://juejin.cn/post/6844903840026722311" target="_blank" rel="noopener">搞机：AS自带模拟器AVD Root 和 Xposed安装</a></p>
 
       
     </div>
@@ -488,8 +464,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/03/19/Reverse中Angr的利用/" rel="next" title="Reverse中Angr的利用">
-                <i class="fa fa-chevron-left"></i> Reverse中Angr的利用
+              <a href="/2021/03/21/Reverse中Unity的逆向/" rel="next" title="Reverse中Unity的逆向">
+                <i class="fa fa-chevron-left"></i> Reverse中Unity的逆向
               </a>
             
           </div>
@@ -497,10 +473,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2021/03/21/Reverse中Unity的逆向/" rel="prev" title="Reverse中Unity的逆向">
-                Reverse中Unity的逆向 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -642,7 +614,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安卓模拟器"><span class="nav-number">1.</span> <span class="nav-text">安卓模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装SuperSU"><span class="nav-number">2.</span> <span class="nav-text">安装SuperSU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Xposed"><span class="nav-number">3.</span> <span class="nav-text">安装Xposed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Root模拟器"><span class="nav-number">4.</span> <span class="nav-text">Root模拟器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上传配置文件"><span class="nav-number">5.</span> <span class="nav-text">上传配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装ApkShelling"><span class="nav-number">6.</span> <span class="nav-text">安装ApkShelling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#反编译"><span class="nav-number">1.</span> <span class="nav-text">反编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#z3解方程"><span class="nav-number">2.</span> <span class="nav-text">z3解方程</span></a></li></ol></div>
             
 
           </div>

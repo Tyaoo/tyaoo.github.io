@@ -135,7 +135,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158b532dd716df687936055.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210322015864c952b7f622010e130d.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158d6b80952cb87c09ebd2b.png">
-<meta property="og:updated_time" content="2021-03-22T03:00:29.530Z">
+<meta property="og:updated_time" content="2021-03-22T03:11:32.762Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Reverse中Angr的利用">
 <meta name="twitter:description" content="记录一下入门Reverse中符号执行的利用">
@@ -398,30 +398,42 @@
 <p>官方文档：<a href="http://angr.io/api-doc/angr.html" target="_blank" rel="noopener">http://angr.io/api-doc/angr.html</a></p>
 </blockquote>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Angr是一个利用python开发的二进制程序分析框架，我们可以利用这个工具尝试对一些CTF题目进行符号执行来找到正确的解答，即flag。当然，要注意的是符号执行的路径选择问题到现在依旧是一个很大的问题，换句话说也就是当我们的程序存在循环时，因为符号执行会尽量遍历所有的路径，所以每次循环之后会形成至少两个分支，当循环的次数足够多时，就会造成路径爆炸，整个机器的内存会被耗尽。</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖</span></span><br><span class="line">sudo apt-get install python3-dev libffi-dev build-essential virtualenvwrapper</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在/etc/profile中加入以下代码并进行<span class="built_in">source</span></span></span><br><span class="line">export WORKON_HOME=$HOME/Python-workhome</span><br><span class="line">source /usr/share/virtualenvwrapper/virtualenvwrapper.sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装angr</span></span><br><span class="line">mkvirtualenv --python=$(which python3) angr &amp;&amp; pip install angr</span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行angr</span></span><br><span class="line">workon angr</span><br></pre></td></tr></table></figure>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>ubuntu安装教程如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖</span></span><br><span class="line">sudo apt-get install python3-dev libffi-dev build-essential virtualenvwrapper</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在/etc/profile中加入以下代码并进行<span class="built_in">source</span></span></span><br><span class="line">export WORKON_HOME=$HOME/Python-workhome</span><br><span class="line">source /usr/share/virtualenvwrapper/virtualenvwrapper.sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装angr</span></span><br><span class="line">mkvirtualenv --python=$(which python3) angr &amp;&amp; pip install angr</span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行angr</span></span><br><span class="line">workon angr</span><br></pre></td></tr></table></figure>
 
 <h3 id="符号执行"><a href="#符号执行" class="headerlink" title="符号执行"></a>符号执行</h3><p><strong>基础实例</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    p = angr.Project(<span class="string">"r100"</span>, auto_load_libs=<span class="literal">True</span>)</span><br><span class="line">    simgr = p.factory.simulation_manager(p.factory.full_init_state())</span><br><span class="line">    simgr.explore(find=<span class="number">0x400844</span>, avoid=<span class="number">0x400855</span>)</span><br><span class="line">    <span class="keyword">return</span> simgr.found[<span class="number">0</span>].posix.dumps(<span class="number">0</span>).strip(<span class="string">b'\0\n'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    print(main())</span><br></pre></td></tr></table></figure>
 
 <p><strong>加载依赖库</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auto_load_libs用来设置是否自动载入依赖的库，如果设置为True会自动载入依赖的库，然后分析到库函数调用时也会进入库函数，这样会增加分析的工作量。如果为False，程序调用函数时，会直接返回一个不受约束的符号值</span><br></pre></td></tr></table></figure>
-
+<p>auto_load_libs用来设置是否自动载入依赖的库，如果设置为True会自动载入依赖的库，然后分析到库函数调用时也会进入库函数，这样会增加分析的工作量。如果为False，程序调用函数时，会直接返回一个不受约束的符号值</p>
 <p><strong>设置SimState</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SimState表示程序的状态，包括它的内存、寄存器等等</span><br><span class="line"></span><br><span class="line">SimState对象通常有三种：</span><br><span class="line"><span class="number">1.</span> blank_state(**kwargs)</span><br><span class="line">   返回一个未初始化的state，此时需要主动设置入口地址，以及自己想要设置的参数</span><br><span class="line"><span class="number">2.</span> entry_state(**kwargs)</span><br><span class="line">   返回程序入口地址的state，通常来说都会使用该状态</span><br><span class="line"><span class="number">3.</span> full_init_state(**kwargs)</span><br><span class="line">   同entry_state(**kwargs)类似，但是调用在执行到达入口点之前应该调用每个初始化函数</span><br></pre></td></tr></table></figure>
+<p>SimState表示程序的状态，包括它的内存、寄存器等等</p>
+<p>SimState对象通常有三种：</p>
+<ol>
+<li><code>blank_state(**kwargs)</code><br>返回一个未初始化的state，此时需要主动设置入口地址，以及自己想要设置的参数</li>
+<li><code>entry_state(**kwargs)</code><br>返回程序入口地址的state，通常来说都会使用该状态</li>
+<li><code>full_init_state(**kwargs)</code><br>和<code>entry_state(**kwargs)</code>类似，但是调用在执行到达入口点之前应该调用每个初始化函数</li>
+</ol>
+<p>我们可以通过 <code>state.regs</code> 和 <code>state.mem</code> 访问寄存器和内存信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">state.regs.rip</span><br><span class="line">state.regs.rax</span><br><span class="line">state.mem[proj.entry].int.resolved</span><br></pre></td></tr></table></figure>
 
 <p><strong>创建Simulation Managers</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">p.factory.simulation_manager创建一个simulation_manager进行模拟执行，其中传入一个SimState</span><br><span class="line"></span><br><span class="line">SimulationManager一共有三种运行方式：</span><br><span class="line"><span class="number">1.</span> step()</span><br><span class="line">   每次向前运行一个基本块，并返回进行分类</span><br><span class="line"><span class="number">2.</span> run()</span><br><span class="line">   运行完所有的基本块，然后会出现deadended的状态，此时我们通常访问最后一个状态来获取我们所需要的信息</span><br><span class="line"><span class="number">3.</span> explore()</span><br><span class="line">   根据find和avoid进行基本块的执行，最后会返回found和avoid状态</span><br></pre></td></tr></table></figure>
-
+<p>p.factory.simulation_manager创建一个simulation_manager进行模拟执行，其中传入一个SimState</p>
+<p>SimulationManager一共有三种运行方式：</p>
+<ol>
+<li><code>step()</code><br>每次向前运行一个基本块，并返回进行分类</li>
+<li><code>run()</code><br>运行完所有的基本块，然后会出现deadended的状态，此时我们通常访问最后一个状态来获取我们所需要的信息</li>
+<li><code>explore()</code><br>根据find和avoid进行基本块的执行，最后会返回found和avoid状态</li>
+</ol>
 <p><strong>获取执行结果</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">simgr.found存储所有符合条件的分支</span><br></pre></td></tr></table></figure>
-
-<p><strong>帮助</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">可以使用help命令查看某个函数的详细说明，比如help(state)</span><br></pre></td></tr></table></figure>
-
-<h3 id="clarioy"><a href="#clarioy" class="headerlink" title="clarioy"></a>clarioy</h3><blockquote>
+<p>simgr.found存储了所有符合条件的分支</p>
+<p><strong>help命令</strong></p>
+<p>可以使用help命令查看某个函数的详细说明，比如<code>help(state)</code></p>
+<p><strong>clarioy</strong></p>
+<blockquote>
 <p>官方文档：<a href="http://angr.io/api-doc/claripy.html" target="_blank" rel="noopener">http://angr.io/api-doc/claripy.html</a></p>
 </blockquote>
-<p>claripy是一个符号求解引擎，和z3类似，通常用来构造输入，创建单位为bit</p>
+<p>claripy是一个符号求解引擎，和z3类似，通常用来构造输入，单位为bit</p>
 <p>使用<code>claripy.BVS()</code>创建位向量符号</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claripy.BVS(<span class="string">"u"</span>, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
 
@@ -470,6 +482,7 @@
 
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.52hertz.tech/2020/03/30/wctf2020_official_wp/#funnyre-7-solves" target="_blank" rel="noopener">WUST-CTF 2020 官方 Writeup</a></p>
 <p><a href="https://xz.aliyun.com/u/11261" target="_blank" rel="noopener">先知社区-Badrer</a></p>
+<p><a href="https://xz.aliyun.com/t/7117" target="_blank" rel="noopener">angr 系列教程(一）核心概念及模块解读</a></p>
 
       
     </div>
@@ -600,7 +613,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -663,7 +676,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Angr"><span class="nav-number">1.</span> <span class="nav-text">Angr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行"><span class="nav-number">1.3.</span> <span class="nav-text">符号执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clarioy"><span class="nav-number">1.4.</span> <span class="nav-text">clarioy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CTF"><span class="nav-number">1.5.</span> <span class="nav-text">CTF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#funnyre"><span class="nav-number">2.</span> <span class="nav-text">funnyre</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#去花指令"><span class="nav-number">2.1.</span> <span class="nav-text">去花指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行-1"><span class="nav-number">2.2.</span> <span class="nav-text">符号执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#very-success"><span class="nav-number">3.</span> <span class="nav-text">very_success</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行-2"><span class="nav-number">3.1.</span> <span class="nav-text">符号执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Angr"><span class="nav-number">1.</span> <span class="nav-text">Angr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行"><span class="nav-number">1.3.</span> <span class="nav-text">符号执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CTF"><span class="nav-number">1.4.</span> <span class="nav-text">CTF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#funnyre"><span class="nav-number">2.</span> <span class="nav-text">funnyre</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#去花指令"><span class="nav-number">2.1.</span> <span class="nav-text">去花指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行-1"><span class="nav-number">2.2.</span> <span class="nav-text">符号执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#very-success"><span class="nav-number">3.</span> <span class="nav-text">very_success</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#符号执行-2"><span class="nav-number">3.1.</span> <span class="nav-text">符号执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
