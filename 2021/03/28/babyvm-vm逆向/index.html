@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Reverse,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="题目源于【GWCTF 2019】，考点为vm逆向  记录一道比较典型的vm题">
+<meta name="keywords" content="Reverse">
+<meta property="og:type" content="article">
+<meta property="og:title" content="babyvm-vm逆向">
+<meta property="og:url" content="https://tyaoo.github.io/2021/03/28/babyvm-vm逆向/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="题目源于【GWCTF 2019】，考点为vm逆向  记录一道比较典型的vm题">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032802545d24aa8308413d2dccd8.png">
+<meta property="og:updated_time" content="2021-03-28T03:08:05.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="babyvm-vm逆向">
+<meta name="twitter:description" content="题目源于【GWCTF 2019】，考点为vm逆向  记录一道比较典型的vm题">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032802545d24aa8308413d2dccd8.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tyaoo.github.io/2021/03/28/babyvm-vm逆向/">
+
+
+
+
+
+  <title>babyvm-vm逆向 | Tyaoo's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tyaoo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/03/28/babyvm-vm逆向/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">babyvm-vm逆向</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-28T02:57:00+08:00">
+                2021-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>题目源于【GWCTF 2019】，考点为vm逆向</p>
+</blockquote>
+<p>记录一道比较典型的vm题</p>
+<a id="more"></a>
+
+<h4 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a><strong>主函数</strong></h4><p>程序主函数如下，下面我们对调用到的3个函数进行分析</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032802545d24aa8308413d2dccd8.png" alt="image-20210327233354971"></p>
+<h4 id="vm自定义方法"><a href="#vm自定义方法" class="headerlink" title="vm自定义方法"></a><strong>vm自定义方法</strong></h4><p><code>sub_55BE054DCCD1()</code>函数用于存储需要调用到的方法，也可以观察到每调用完一次操作，a1就会自增跳到下一个命令，类似RIP功能</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCCD1</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 = <span class="number">0</span>;</span><br><span class="line">  *(_DWORD *)(a1 + <span class="number">4</span>) = <span class="number">0x12</span>;</span><br><span class="line">  *(_DWORD *)(a1 + <span class="number">8</span>) = <span class="number">0</span>;</span><br><span class="line">  *(_DWORD *)(a1 + <span class="number">12</span>) = <span class="number">0</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">16</span>) = &amp;unk_55BE056DE060;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">24</span>) = <span class="number">0xF1</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">32</span>) = sub_55BE054DCB5F;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">40</span>) = <span class="number">0xF2</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">48</span>) = sub_55BE054DCA64;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">56</span>) = <span class="number">0xF5</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">64</span>) = sub_55BE054DCAC5;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">72</span>) = <span class="number">0xF4</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">80</span>) = sub_55BE054DC956;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">88</span>) = <span class="number">0xF7</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">96</span>) = sub_55BE054DCA08;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">104</span>) = <span class="number">0xF8</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">112</span>) = sub_55BE054DC8F0;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">120</span>) = <span class="number">0xF6</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">128</span>) = sub_55BE054DC99C;</span><br><span class="line">  qword_55BE056DE2A8 = <span class="built_in">malloc</span>(<span class="number">0x512</span>uLL);</span><br><span class="line">  <span class="built_in">memset</span>(qword_55BE056DE2A8, <span class="number">0</span>, <span class="number">0x512</span>uLL);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>选择置换</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCB5F</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> *v2; <span class="comment">// [rsp+28h] [rbp-18h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+38h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  v2 = (<span class="keyword">int</span> *)(*(_QWORD *)(a1 + <span class="number">16</span>) + <span class="number">2L</span>L);</span><br><span class="line">  <span class="keyword">switch</span> ( *(_BYTE *)(*(_QWORD *)(a1 + <span class="number">16</span>) + <span class="number">1L</span>L) )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE1</span>:</span><br><span class="line">      *(_DWORD *)a1 = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE2</span>:</span><br><span class="line">      *(_DWORD *)(a1 + <span class="number">4</span>) = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE3</span>:</span><br><span class="line">      *(_DWORD *)(a1 + <span class="number">8</span>) = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE4</span>:</span><br><span class="line">      *((_BYTE *)qword_55BE056DE2A8 + *v2) = *(_DWORD *)a1;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE5</span>:</span><br><span class="line">      *(_DWORD *)(a1 + <span class="number">12</span>) = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE7</span>:</span><br><span class="line">      *((_BYTE *)qword_55BE056DE2A8 + *v2) = *(_DWORD *)(a1 + <span class="number">4</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">16</span>) += <span class="number">6L</span>L;</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>异或</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCA64</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 ^= *(_DWORD *)(a1 + <span class="number">4</span>);</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>读取数据，并且限制长度为21</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCAC5</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *buf; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  buf = (<span class="keyword">const</span> <span class="keyword">char</span> *)qword_55BE056DE2A8;</span><br><span class="line">  read(<span class="number">0</span>, qword_55BE056DE2A8, <span class="number">0x20</span>uLL);</span><br><span class="line">  dword_55BE056DE2A4 = <span class="built_in">strlen</span>(buf);</span><br><span class="line">  <span class="keyword">if</span> ( dword_55BE056DE2A4 != <span class="number">21</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">"WRONG!"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>无操作</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DC956</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>乘法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCA08</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 *= *(_DWORD *)(a1 + <span class="number">12</span>);</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>交换</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DC8F0</span><span class="params">(<span class="keyword">int</span> *a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v2; <span class="comment">// [rsp+14h] [rbp-Ch]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  v2 = *a1;</span><br><span class="line">  *a1 = a1[<span class="number">1</span>];</span><br><span class="line">  a1[<span class="number">1</span>] = v2;</span><br><span class="line">  ++*((_QWORD *)a1 + <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DC99C</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 = *(_DWORD *)(a1 + <span class="number">8</span>) + <span class="number">2</span> * *(_DWORD *)(a1 + <span class="number">4</span>) + <span class="number">3</span> * *(_DWORD *)a1;</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="加密操作1"><a href="#加密操作1" class="headerlink" title="加密操作1"></a><strong>加密操作</strong>1</h4><p><code>sub_55BE054DCE0B()</code>函数根据<code>unk_55BE056DE060</code>给出的opcode对a1进行加密，知道操作码等于<code>0xF4</code>为止</p>
+<p>下面我们需要对opcode进行分析，也是我们解题中最关键的一步</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCE0B</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">16</span>) = &amp;unk_55BE056DE060;</span><br><span class="line">  <span class="keyword">while</span> ( **(_BYTE **)(a1 + <span class="number">16</span>) != <span class="number">0xF4</span> )</span><br><span class="line">    sub_55BE054DCE6E(a1);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据地址选取指令对a1进行操作</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_556FD909DE6E</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+14h] [rbp-Ch]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; **(_BYTE **)(a1 + <span class="number">16</span>) != *(_BYTE *)(<span class="number">16</span> * (i + <span class="number">1L</span>L) + a1 + <span class="number">8</span>); ++i )</span><br><span class="line">    ;</span><br><span class="line">  (*(<span class="keyword">void</span> (__fastcall **)(__int64))(<span class="number">16</span> * (i + <span class="number">1L</span>L) + a1 + <span class="number">16</span>))(a1);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把opcode截取到0xF4（在这里你会发现有两段F5-F4），结合动态调试分析，其实一个简单的异或循环，虽然这里写进<code>input[0x20]</code>显得有点奇怪，但是只要看一下<strong>密文对比1</strong>那部分就知道其实这里存储的就是加密后的结果</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">F5 <span class="comment">// read</span></span><br><span class="line">F1 E1 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x20] = input[0] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">21</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x21] = input[0x01] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2  </span><br><span class="line">F1 E4 <span class="number">22</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x22] = input[0x02] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">23</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x23] = input[0x03] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">24</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x24] = input[0x04] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">25</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x25] = input[0x05] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">26</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x26] = input[0x06] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">27</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x27] = input[0x07] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">28</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x28] = input[0x08] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">09</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">29</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x29] = input[0x09] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>A <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>A <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2A] = input[0x0A] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0B</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2B</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2B] = input[0x0B] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2C] = input[0x0C] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2D] = input[0x0D] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2E] = input[0x0E] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2F] = input[0x0F] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">10</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">30</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x30] = input[0x10] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">31</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x31] = input[0x11] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">12</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">32</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x32] = input[0x12] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">13</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">33</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x33] = input[0x13] ^ a1[1]</span></span><br><span class="line">F4 <span class="comment">// ret</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>a1[1]就是之前存储的<code>*(_DWORD *)(a1 + 4) = 0x12;</code></p>
+</blockquote>
+<h4 id="密文比较1"><a href="#密文比较1" class="headerlink" title="密文比较1"></a><strong>密文比较1</strong></h4><p><code>sub_55BE054DCF83()</code>函数与<code>aFzAmAmFmtSum</code>的指针值（其实就是我们的input）进行比较</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __<span class="function">int64 <span class="title">sub_55BE054DCF83</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; dword_55BE056DE2A4 - <span class="number">1</span> &gt; i; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( *((_BYTE *)qword_55BE056DE2A8 + i + <span class="number">0x20</span>) != aFzAmAmFmtSum[i] )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">"WRONG!"</span>);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Congratulation?"</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"tips: input is the start"</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接用这个值<code>aFzAmAmFmtSum</code>解密发现是假flag</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'[+] flag:'</span>, <span class="string">''</span>.join([chr(ord(_)^<span class="number">0x12</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="string">'Fz&#123;aM&#123;aM|&#125;fMt~suM !!'</span>]))</span><br><span class="line"><span class="comment"># [+] flag: This_is_not_flag_233</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="密文比较2"><a href="#密文比较2" class="headerlink" title="密文比较2"></a>密文比较2</h4><p>在假flag上面有一个疑似密文的<code>byte_556FD929F020</code>数据，交叉引用到<code>sub_556FD909DF00()</code>中找到了另外一段密文比较</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __<span class="function">int64 <span class="title">sub_556FD909DF00</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; dword_556FD929F2A4 - <span class="number">1</span> &gt; i; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( *((_BYTE *)qword_556FD929F2A8 + i) != byte_556FD929F020[i] )</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="加密操作2"><a href="#加密操作2" class="headerlink" title="加密操作2"></a>加密操作2</h4><p>在上面进行加密操作1的时候我们发现还有第二段opcode，那我们尝试分析一下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">F5 <span class="comment">// read</span></span><br><span class="line">F1 E1 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0] = input[0] ^ input[0x01]</span></span><br><span class="line">F1 E1 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x01] = input[0x01] ^ input[0x02]</span></span><br><span class="line">F1 E1 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x02] = input[0x02] ^ input[0x03]</span></span><br><span class="line">F1 E1 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x03] = input[0x03] ^ input[0x04]</span></span><br><span class="line">F1 E1 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x04] = input[0x04] ^ input[0x05]</span></span><br><span class="line">F1 E1 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x05] = input[0x05] ^ input[0x06]</span></span><br><span class="line">F1 E1 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E3 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E5 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F6 </span><br><span class="line">F7 </span><br><span class="line">F1 E4 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x06] = (input[0x08] + 2 ** input[0x07] + 3 ** input[0x06]) * input[0x0C]</span></span><br><span class="line">F1 E1 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E3 <span class="number">09</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E5 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F6 </span><br><span class="line">F7 </span><br><span class="line">F1 E4 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x07] = (input[0x09] + 2 ** input[0x08] + 3 ** input[0x07]) * input[0x0C]</span></span><br><span class="line">F1 E1 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">09</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E3 <span class="number">0</span>A <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E5 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F6 </span><br><span class="line">F7 </span><br><span class="line">F1 E4 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x08] = (input[0x0A] + 2 ** input[0x09] + 3 ** input[0x08]) * input[0x0C]</span></span><br><span class="line">F1 E1 <span class="number">0</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">13</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F8 </span><br><span class="line">F1 E4 <span class="number">0</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E7 <span class="number">13</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x0D], input[0x13] = input[0x13], input[0x0D]</span></span><br><span class="line">F1 E1 <span class="number">0</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">12</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F8 </span><br><span class="line">F1 E4 <span class="number">0</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E7 <span class="number">12</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x0E], input[0x12] = input[0x12], input[0x0E]</span></span><br><span class="line">F1 E1 <span class="number">0F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F8 </span><br><span class="line">F1 E4 <span class="number">0F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E7 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x0F], input[0x11] = input[0x11], input[0x0F]</span></span><br><span class="line">F4 <span class="comment">// ret</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h4><p>直接逆向上面的操作就好</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> z3 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">flag = <span class="string">'69 45 2A 37 09 17 C5 0B 5C 72 33 76 33 21 74 31 5F 33 73 72'</span>.split(<span class="string">' '</span>)</span><br><span class="line">flag = [int(_, <span class="number">16</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> flag]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 置换</span></span><br><span class="line">flag[<span class="number">15</span>], flag[<span class="number">17</span>] = flag[<span class="number">17</span>], flag[<span class="number">15</span>]</span><br><span class="line">flag[<span class="number">14</span>], flag[<span class="number">18</span>] = flag[<span class="number">18</span>], flag[<span class="number">14</span>]</span><br><span class="line">flag[<span class="number">19</span>], flag[<span class="number">13</span>] = flag[<span class="number">13</span>], flag[<span class="number">19</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># z3</span></span><br><span class="line">a6, a7, a8 = BitVecs(<span class="string">'a6 a7 a8'</span>, <span class="number">8</span>)</span><br><span class="line">s = Solver()</span><br><span class="line">s.add(flag[<span class="number">6</span>] == (a8 + <span class="number">2</span> * a7 + <span class="number">3</span> * a6) * flag[<span class="number">12</span>])</span><br><span class="line">s.add(flag[<span class="number">7</span>] == (flag[<span class="number">9</span>]  + <span class="number">2</span> * a8 + <span class="number">3</span> * a7) * flag[<span class="number">12</span>])</span><br><span class="line">s.add(flag[<span class="number">8</span>] == (flag[<span class="number">10</span>] + <span class="number">2</span> * flag[<span class="number">9</span>] + <span class="number">3</span> * a8) * flag[<span class="number">12</span>])</span><br><span class="line"><span class="keyword">if</span> s.check() == sat:</span><br><span class="line">    m = s.model()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> m:</span><br><span class="line">        index = int(re.search(<span class="string">r'\d+'</span>, str(i)).group())</span><br><span class="line">        flag[index] = m[i].as_long()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 异或</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">    flag[i] ^= flag[i + <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">'[+] flag: '</span>, <span class="string">''</span>.join([chr(_) <span class="keyword">for</span> _ <span class="keyword">in</span> flag]))</span><br><span class="line"><span class="comment"># [+] flag:  Y0u_hav3_r3v3rs3_1t!</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reverse/" rel="tag"># Reverse</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/27/Login-py反编译/" rel="next" title="Login-py反编译">
+                <i class="fa fa-chevron-left"></i> Login-py反编译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Tyaoo">
+            
+              <p class="site-author-name" itemprop="name">Tyaoo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Tyaoo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#主函数"><span class="nav-number">1.</span> <span class="nav-text">主函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vm自定义方法"><span class="nav-number">2.</span> <span class="nav-text">vm自定义方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加密操作1"><span class="nav-number">3.</span> <span class="nav-text">加密操作1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#密文比较1"><span class="nav-number">4.</span> <span class="nav-text">密文比较1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#密文比较2"><span class="nav-number">5.</span> <span class="nav-text">密文比较2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加密操作2"><span class="nav-number">6.</span> <span class="nav-text">加密操作2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EXP"><span class="nav-number">7.</span> <span class="nav-text">EXP</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tyaoo</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
