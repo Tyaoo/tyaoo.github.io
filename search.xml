@@ -1198,7 +1198,12 @@
   <entry>
     <title>Cobalt Strike Learn</title>
     <url>/2021/03/10/Cobalt-Strike-Learn/</url>
-    <content><![CDATA[<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><blockquote>
+    <content><![CDATA[<blockquote>
+<p>关于Cobalt Strike的基础操作</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><blockquote>
 <p>官方文档：<a href="https://www.cobaltstrike.com/aggressor-script/index.html" target="_blank" rel="noopener">https://www.cobaltstrike.com/aggressor-script/index.html</a></p>
 <p>使用手册翻译版本：<a href="https://wbglil.gitbook.io/cobalt-strike/" target="_blank" rel="noopener">https://wbglil.gitbook.io/cobalt-strike/</a></p>
 </blockquote>
