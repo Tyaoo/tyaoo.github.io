@@ -402,29 +402,37 @@
 <blockquote>
 <p>以后想要root的话也需要这样打开</p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/tools</span><br><span class="line">emulator -list-avds</span><br><span class="line">emulator -avd Pixel_2_API_24 -writable-system</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">cd xxx/android-sdk/tools
+emulator -list-avds
+emulator -avd Pixel_2_API_24 -writable-system</code></pre>
 <h3 id="安装SuperSU"><a href="#安装SuperSU" class="headerlink" title="安装SuperSU"></a>安装SuperSU</h3><blockquote>
 <p>SuperSU下载地址：<a href="https://supersuroot.org/download/" target="_blank" rel="noopener">https://supersuroot.org/download/</a></p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb install supersu-2-82.apk</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">cd xxx/android-sdk/platform-tools
+adb install supersu-2-82.apk</code></pre>
 <h3 id="安装Xposed"><a href="#安装Xposed" class="headerlink" title="安装Xposed"></a>安装Xposed</h3><blockquote>
 <p>Xposed下载地址：<a href="https://repo.xposed.info/module/de.robv.android.xposed.installer" target="_blank" rel="noopener">https://repo.xposed.info/module/de.robv.android.xposed.installer</a></p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb install XposedInstaller_3.1.5.apk</span><br></pre></td></tr></table></figure>
-
-<h3 id="Root模拟器"><a href="#Root模拟器" class="headerlink" title="Root模拟器"></a>Root模拟器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd xxx/android-sdk/platform-tools</span><br><span class="line">adb root</span><br><span class="line">adb remount</span><br><span class="line">adb shell </span><br><span class="line">setenforce 0</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">cd xxx/android-sdk/platform-tools
+adb install XposedInstaller_3.1.5.apk</code></pre>
+<h3 id="Root模拟器"><a href="#Root模拟器" class="headerlink" title="Root模拟器"></a>Root模拟器</h3><pre><code class="shell">cd xxx/android-sdk/platform-tools
+adb root
+adb remount
+adb shell 
+setenforce 0
+exit</code></pre>
 <h3 id="上传配置文件"><a href="#上传配置文件" class="headerlink" title="上传配置文件"></a>上传配置文件</h3><blockquote>
 <p>SupoerSu.zip下载地址：<a href="https://download.chainfire.eu/1220/SuperSU" target="_blank" rel="noopener">https://download.chainfire.eu/1220/SuperSU</a></p>
 </blockquote>
 <p>把<code>SuperSu/x86/su.pie</code>上传到模拟器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb push su.pie /system/bin/su</span><br><span class="line">adb push su.pie /system/xbin/su</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">adb push su.pie /system/bin/su
+adb push su.pie /system/xbin/su</code></pre>
 <p>进入adb shell修改文件权限</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb shell</span><br><span class="line">chmod 0755 /system/bin/su</span><br><span class="line">chmod 0755 /system/xbin/su</span><br><span class="line">su --install</span><br><span class="line">su --daemon&amp;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">adb shell
+chmod 0755 /system/bin/su
+chmod 0755 /system/xbin/su
+su --install
+su --daemon&amp;</code></pre>
 <p>在模拟器上分别打开SuperSU和Xposed Installer进行安装</p>
 <blockquote>
 <p>安装SuperSU时不要选择更新，不然会卡死在开机页面，需要重新root</p>
@@ -436,14 +444,14 @@
 <p>AplShelling下载地址：<a href="https://github.com/OakChen/ApkShelling" target="_blank" rel="noopener">https://github.com/OakChen/ApkShelling</a></p>
 </blockquote>
 <p>Android Studio打开ApkShelling，修改XposedEntry.java的targetPackages值，加入需要脱壳的包名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String[] targetPackages =</span><br><span class="line">        <span class="keyword">new</span> String[]&#123;<span class="string">"com.example.how_debug"</span>, <span class="string">"com.sfysoft.shellingtest2"</span>&#125;;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="java">private static final String[] targetPackages =
+        new String[]{&quot;com.example.how_debug&quot;, &quot;com.sfysoft.shellingtest2&quot;};</code></pre>
 <blockquote>
 <p>launch option改为nothing</p>
 </blockquote>
 <p>安装完后重启，然后上传题目的apk，再拉取题目的dex</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell ls /<span class="keyword">data</span>/<span class="keyword">data</span>/com.example.how_debug</span><br><span class="line">adb pull /<span class="keyword">data</span>/<span class="keyword">data</span>/com.example.how_debug/<span class="number">00125</span>-<span class="number">02</span>.dex ./</span><br></pre></td></tr></table></figure>
-
+<pre><code class="powershell">adb shell ls /data/data/com.example.how_debug
+adb pull /data/data/com.example.how_debug/00125-02.dex ./</code></pre>
 <p>jadx直接打开dex搜索flag</p>
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032017503e57ecc42afcf9a2e56f.png" alt="image-20210320174944804" style="zoom: 80%;">
 
@@ -579,7 +587,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -592,7 +600,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -683,6 +691,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

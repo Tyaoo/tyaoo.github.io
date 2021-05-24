@@ -405,14 +405,36 @@
 <blockquote>
 <p>这里需要注意的是C#里面字符串默认是Unicode，每个字符后面补”\x00”，所以这里的key为”1\x002\x003\x004\x00”</p>
 </blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> DES</span><br><span class="line"></span><br><span class="line">key = <span class="string">"1\x002\x003\x004\x00"</span></span><br><span class="line">des = DES.new(key, DES.MODE_CBC, key)</span><br><span class="line">cipher = <span class="string">"1Tsy0ZGotyMinSpxqYzVBWnfMdUcqCMLu0MA+22Jnp+MNwLHvYuFToxRQr0c+ONZc6Q7L0EAmzbycqobZHh4H23U4WDTNmmXwusW4E+SZjygsntGkO2sGA=="</span></span><br><span class="line">cipher = base64.b64decode(cipher)</span><br><span class="line">plain = des.decrypt(cipher).decode()</span><br><span class="line">print(plain)</span><br><span class="line"><span class="comment"># He_P1ay_Basketball_Very_We11!Hahahahaha!</span></span><br></pre></td></tr></table></figure>
+<pre><code class="python">import base64
+from Crypto.Cipher import DES
 
+key = &quot;1\x002\x003\x004\x00&quot;
+des = DES.new(key, DES.MODE_CBC, key)
+cipher = &quot;1Tsy0ZGotyMinSpxqYzVBWnfMdUcqCMLu0MA+22Jnp+MNwLHvYuFToxRQr0c+ONZc6Q7L0EAmzbycqobZHh4H23U4WDTNmmXwusW4E+SZjygsntGkO2sGA==&quot;
+cipher = base64.b64decode(cipher)
+plain = des.decrypt(cipher).decode()
+print(plain)
+# He_P1ay_Basketball_Very_We11!Hahahahaha!</code></pre>
 <p>但是这个flag是假的，所以这个<code>Assembly-CSharp.dll</code>其实打包的不是真正的源码，所以我们就得动态调式程序来获取真实值</p>
 <h3 id="cheat-engine分析"><a href="#cheat-engine分析" class="headerlink" title="cheat engine分析"></a>cheat engine分析</h3><p>开外挂器查看其内存，在ce中搜索弹窗里面出现的字符串”Emmmmm”，发现一共有两处</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210321202185f0353d43ffa725a934.png" alt="image-20210321200237714"></p>
 <p>两处Emmmmm的上下文我们都发现了不同的的密文和key</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> DES</span><br><span class="line"></span><br><span class="line">key = <span class="string">"t\x00e\x00s\x00t\x00"</span></span><br><span class="line"><span class="comment"># key = "1\x002\x003\x004\x00"</span></span><br><span class="line">des = DES.new(key, DES.MODE_CBC, key)</span><br><span class="line">cipher = <span class="string">"1Tsy0ZGotyMinSpxqYzVBWnfMdUcqCMLu0MA+22Jnp+MNwLHvYuFToxRQr0c+ONZc6Q7L0EAmzbycqobZHh4H23U4WDTNmmXwusW4E+SZjygsntGkO2sGA=="</span></span><br><span class="line">cipher = <span class="string">'78 00 5A 00 57 00 44 00 5A 00 61 00 4B 00 45 00 68 00 57 00 4E 00 4D 00 43 00 62 00 69 00 47 00 59 00 50 00 42 00 49 00 6C 00 59 00 33 00 2B 00 61 00 72 00 6F 00 7A 00 4F 00 39 00 7A 00 6F 00 6E 00 77 00 72 00 59 00 4C 00 69 00 56 00 4C 00 34 00 6E 00 6A 00 53 00 65 00 7A 00 32 00 52 00 59 00 4D 00 32 00 57 00 77 00 73 00 47 00 6E 00 73 00 6E 00 6A 00 43 00 44 00 6E 00 48 00 73 00 37 00 4E 00 34 00 33 00 61 00 46 00 76 00 4E 00 45 00 35 00 34 00 6E 00 6F 00 53 00 61 00 64 00 50 00 39 00 46 00 38 00 65 00 45 00 70 00 76 00 54 00 73 00 35 00 51 00 50 00 47 00 2B 00 4B 00 4C 00 30 00 54 00 44 00 45 00 2F 00 34 00 30 00 6E 00 62 00 55 00 3D 00'</span></span><br><span class="line"><span class="comment"># cipher = '71 00 2B 00 77 00 38 00 39 00 59 00 32 00 32 00 72 00 4F 00 62 00 66 00 7A 00 78 00 67 00 73 00 71 00 75 00 63 00 35 00 51 00 78 00 62 00 62 00 68 00 39 00 5A 00 49 00 41 00 48 00 45 00 54 00 2F 00 4E 00 6E 00 63 00 6D 00 69 00 71 00 45 00 6F 00 36 00 37 00 52 00 72 00 44 00 76 00 7A 00 33 00 34 00 63 00 64 00 41 00 6B 00 30 00 42 00 61 00 6C 00 4B 00 57 00 68 00 4A 00 47 00 6C 00 32 00 43 00 42 00 59 00 4D 00 6C 00 72 00 38 00 70 00 50 00 41 00 3D 00'</span></span><br><span class="line">cipher = cipher.replace(<span class="string">' 00'</span>, <span class="string">''</span>).split(<span class="string">' '</span>)</span><br><span class="line">cipher = <span class="string">''</span>.join([chr(int(_, <span class="number">16</span>)) <span class="keyword">for</span> _ <span class="keyword">in</span> cipher])</span><br><span class="line">cipher = base64.b64decode(cipher)</span><br><span class="line">plain = des.decrypt(cipher).decode()</span><br><span class="line">print(plain)</span><br><span class="line"><span class="comment"># [right] She_P1ay_Black_Hole_Very_Wel1!LOL!XD!</span></span><br><span class="line"><span class="comment"># [tip] Oh no!This is a trick!!!</span></span><br></pre></td></tr></table></figure>
+<pre><code class="python">import base64
+from Crypto.Cipher import DES
 
+key = &quot;t\x00e\x00s\x00t\x00&quot;
+# key = &quot;1\x002\x003\x004\x00&quot;
+des = DES.new(key, DES.MODE_CBC, key)
+cipher = &quot;1Tsy0ZGotyMinSpxqYzVBWnfMdUcqCMLu0MA+22Jnp+MNwLHvYuFToxRQr0c+ONZc6Q7L0EAmzbycqobZHh4H23U4WDTNmmXwusW4E+SZjygsntGkO2sGA==&quot;
+cipher = &#39;78 00 5A 00 57 00 44 00 5A 00 61 00 4B 00 45 00 68 00 57 00 4E 00 4D 00 43 00 62 00 69 00 47 00 59 00 50 00 42 00 49 00 6C 00 59 00 33 00 2B 00 61 00 72 00 6F 00 7A 00 4F 00 39 00 7A 00 6F 00 6E 00 77 00 72 00 59 00 4C 00 69 00 56 00 4C 00 34 00 6E 00 6A 00 53 00 65 00 7A 00 32 00 52 00 59 00 4D 00 32 00 57 00 77 00 73 00 47 00 6E 00 73 00 6E 00 6A 00 43 00 44 00 6E 00 48 00 73 00 37 00 4E 00 34 00 33 00 61 00 46 00 76 00 4E 00 45 00 35 00 34 00 6E 00 6F 00 53 00 61 00 64 00 50 00 39 00 46 00 38 00 65 00 45 00 70 00 76 00 54 00 73 00 35 00 51 00 50 00 47 00 2B 00 4B 00 4C 00 30 00 54 00 44 00 45 00 2F 00 34 00 30 00 6E 00 62 00 55 00 3D 00&#39;
+# cipher = &#39;71 00 2B 00 77 00 38 00 39 00 59 00 32 00 32 00 72 00 4F 00 62 00 66 00 7A 00 78 00 67 00 73 00 71 00 75 00 63 00 35 00 51 00 78 00 62 00 62 00 68 00 39 00 5A 00 49 00 41 00 48 00 45 00 54 00 2F 00 4E 00 6E 00 63 00 6D 00 69 00 71 00 45 00 6F 00 36 00 37 00 52 00 72 00 44 00 76 00 7A 00 33 00 34 00 63 00 64 00 41 00 6B 00 30 00 42 00 61 00 6C 00 4B 00 57 00 68 00 4A 00 47 00 6C 00 32 00 43 00 42 00 59 00 4D 00 6C 00 72 00 38 00 70 00 50 00 41 00 3D 00&#39;
+cipher = cipher.replace(&#39; 00&#39;, &#39;&#39;).split(&#39; &#39;)
+cipher = &#39;&#39;.join([chr(int(_, 16)) for _ in cipher])
+cipher = base64.b64decode(cipher)
+plain = des.decrypt(cipher).decode()
+print(plain)
+# [right] She_P1ay_Black_Hole_Very_Wel1!LOL!XD!
+# [tip] Oh no!This is a trick!!!</code></pre>
 <p>所以我们最终的flag是<code>flag{She_P1ay_Black_Hole_Very_Wel1!LOL!XD!}</code></p>
 <h2 id="Snake"><a href="#Snake" class="headerlink" title="Snake"></a>Snake</h2><blockquote>
 <p>题目来源于【2019 红帽杯】</p>
@@ -422,12 +444,34 @@
 <h3 id="IDA分析"><a href="#IDA分析" class="headerlink" title="IDA分析"></a>IDA分析</h3><p>把<code>Interface.dll</code>拖到IDA分析，找到输出flag的代码，代码量还挺大的，</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032215059479ba02602d50b23ba6.png" alt="image-20210322144354551"></p>
 <p>但是观察到该函数只接受一个a1参数，而且a1有一个约束条件，只在[0, 99]的范围内</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__int64 __<span class="function">fastcall <span class="title">GameObject</span><span class="params">(<span class="keyword">int</span> a1)</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="c">__int64 __fastcall GameObject(int a1) { ... }</code></pre>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103221505f7d9ebc8122446219e45.png" alt="image-20210322144611115"></p>
 <p>所以我们可以直接导入这个ddl进行爆破</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool, Manager</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(d)</span>:</span></span><br><span class="line"></span><br><span class="line">    print(d)</span><br><span class="line">    dll = ctypes.WinDLL(<span class="string">"Interface.dll"</span>)</span><br><span class="line">    dll.GameObject(d)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line"></span><br><span class="line">    num = <span class="number">5</span></span><br><span class="line">    data = range(<span class="number">100</span>)</span><br><span class="line">    pool = Pool(processes=num)</span><br><span class="line">    manager = Manager()</span><br><span class="line">    jobs = []</span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> data:</span><br><span class="line">        job = pool.apply_async(func, (d, ))</span><br><span class="line">        jobs.append(job)</span><br><span class="line">    pool.close()</span><br><span class="line">    pool.join()</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 19</span></span><br><span class="line"><span class="comment"># You win! flag is </span></span><br><span class="line"><span class="comment"># flag&#123;Ch4rp_W1th_R$@&#125;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="python">import ctypes
+from multiprocessing import Pool, Manager
 
+def func(d):
+
+    print(d)
+    dll = ctypes.WinDLL(&quot;Interface.dll&quot;)
+    dll.GameObject(d)
+
+if __name__ == &quot;__main__&quot;:
+
+    num = 5
+    data = range(100)
+    pool = Pool(processes=num)
+    manager = Manager()
+    jobs = []
+    for d in data:
+        job = pool.apply_async(func, (d, ))
+        jobs.append(job)
+    pool.close()
+    pool.join()
+
+# 19
+# You win! flag is 
+# flag{Ch4rp_W1th_R$@}</code></pre>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.anquanke.com/post/id/181019" target="_blank" rel="noopener">SCTF2019 Writeup——De1ta</a></p>
 
       
@@ -559,7 +603,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -572,7 +616,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -663,6 +707,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

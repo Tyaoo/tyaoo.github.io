@@ -394,57 +394,357 @@
 <h4 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a><strong>主函数</strong></h4><p>程序主函数如下，下面我们对调用到的3个函数进行分析</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021032802545d24aa8308413d2dccd8.png" alt="image-20210327233354971"></p>
 <h4 id="vm自定义方法"><a href="#vm自定义方法" class="headerlink" title="vm自定义方法"></a><strong>vm自定义方法</strong></h4><p><code>sub_55BE054DCCD1()</code>函数用于存储需要调用到的方法，也可以观察到每调用完一次操作，a1就会自增跳到下一个命令，类似RIP功能</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCCD1</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 = <span class="number">0</span>;</span><br><span class="line">  *(_DWORD *)(a1 + <span class="number">4</span>) = <span class="number">0x12</span>;</span><br><span class="line">  *(_DWORD *)(a1 + <span class="number">8</span>) = <span class="number">0</span>;</span><br><span class="line">  *(_DWORD *)(a1 + <span class="number">12</span>) = <span class="number">0</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">16</span>) = &amp;unk_55BE056DE060;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">24</span>) = <span class="number">0xF1</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">32</span>) = sub_55BE054DCB5F;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">40</span>) = <span class="number">0xF2</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">48</span>) = sub_55BE054DCA64;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">56</span>) = <span class="number">0xF5</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">64</span>) = sub_55BE054DCAC5;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">72</span>) = <span class="number">0xF4</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">80</span>) = sub_55BE054DC956;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">88</span>) = <span class="number">0xF7</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">96</span>) = sub_55BE054DCA08;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">104</span>) = <span class="number">0xF8</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">112</span>) = sub_55BE054DC8F0;</span><br><span class="line">  *(_BYTE *)(a1 + <span class="number">120</span>) = <span class="number">0xF6</span>;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">128</span>) = sub_55BE054DC99C;</span><br><span class="line">  qword_55BE056DE2A8 = <span class="built_in">malloc</span>(<span class="number">0x512</span>uLL);</span><br><span class="line">  <span class="built_in">memset</span>(qword_55BE056DE2A8, <span class="number">0</span>, <span class="number">0x512</span>uLL);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DCCD1(__int64 a1)
+{
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  *(_DWORD *)a1 = 0;
+  *(_DWORD *)(a1 + 4) = 0x12;
+  *(_DWORD *)(a1 + 8) = 0;
+  *(_DWORD *)(a1 + 12) = 0;
+  *(_QWORD *)(a1 + 16) = &amp;unk_55BE056DE060;
+  *(_BYTE *)(a1 + 24) = 0xF1;
+  *(_QWORD *)(a1 + 32) = sub_55BE054DCB5F;
+  *(_BYTE *)(a1 + 40) = 0xF2;
+  *(_QWORD *)(a1 + 48) = sub_55BE054DCA64;
+  *(_BYTE *)(a1 + 56) = 0xF5;
+  *(_QWORD *)(a1 + 64) = sub_55BE054DCAC5;
+  *(_BYTE *)(a1 + 72) = 0xF4;
+  *(_QWORD *)(a1 + 80) = sub_55BE054DC956;
+  *(_BYTE *)(a1 + 88) = 0xF7;
+  *(_QWORD *)(a1 + 96) = sub_55BE054DCA08;
+  *(_BYTE *)(a1 + 104) = 0xF8;
+  *(_QWORD *)(a1 + 112) = sub_55BE054DC8F0;
+  *(_BYTE *)(a1 + 120) = 0xF6;
+  *(_QWORD *)(a1 + 128) = sub_55BE054DC99C;
+  qword_55BE056DE2A8 = malloc(0x512uLL);
+  memset(qword_55BE056DE2A8, 0, 0x512uLL);
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <p>选择置换</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCB5F</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> *v2; <span class="comment">// [rsp+28h] [rbp-18h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+38h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  v2 = (<span class="keyword">int</span> *)(*(_QWORD *)(a1 + <span class="number">16</span>) + <span class="number">2L</span>L);</span><br><span class="line">  <span class="keyword">switch</span> ( *(_BYTE *)(*(_QWORD *)(a1 + <span class="number">16</span>) + <span class="number">1L</span>L) )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE1</span>:</span><br><span class="line">      *(_DWORD *)a1 = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE2</span>:</span><br><span class="line">      *(_DWORD *)(a1 + <span class="number">4</span>) = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE3</span>:</span><br><span class="line">      *(_DWORD *)(a1 + <span class="number">8</span>) = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE4</span>:</span><br><span class="line">      *((_BYTE *)qword_55BE056DE2A8 + *v2) = *(_DWORD *)a1;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE5</span>:</span><br><span class="line">      *(_DWORD *)(a1 + <span class="number">12</span>) = *((<span class="keyword">char</span> *)qword_55BE056DE2A8 + *v2);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0xE7</span>:</span><br><span class="line">      *((_BYTE *)qword_55BE056DE2A8 + *v2) = *(_DWORD *)(a1 + <span class="number">4</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">16</span>) += <span class="number">6L</span>L;</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DCB5F(__int64 a1)
+{
+  int *v2; // [rsp+28h] [rbp-18h]
+  unsigned __int64 v3; // [rsp+38h] [rbp-8h]
 
+  v3 = __readfsqword(0x28u);
+  v2 = (int *)(*(_QWORD *)(a1 + 16) + 2LL);
+  switch ( *(_BYTE *)(*(_QWORD *)(a1 + 16) + 1LL) )
+  {
+    case 0xE1:
+      *(_DWORD *)a1 = *((char *)qword_55BE056DE2A8 + *v2);
+      break;
+    case 0xE2:
+      *(_DWORD *)(a1 + 4) = *((char *)qword_55BE056DE2A8 + *v2);
+      break;
+    case 0xE3:
+      *(_DWORD *)(a1 + 8) = *((char *)qword_55BE056DE2A8 + *v2);
+      break;
+    case 0xE4:
+      *((_BYTE *)qword_55BE056DE2A8 + *v2) = *(_DWORD *)a1;
+      break;
+    case 0xE5:
+      *(_DWORD *)(a1 + 12) = *((char *)qword_55BE056DE2A8 + *v2);
+      break;
+    case 0xE7:
+      *((_BYTE *)qword_55BE056DE2A8 + *v2) = *(_DWORD *)(a1 + 4);
+      break;
+    default:
+      break;
+  }
+  *(_QWORD *)(a1 + 16) += 6LL;
+  return __readfsqword(0x28u) ^ v3;
+}</code></pre>
 <p>异或</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCA64</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 ^= *(_DWORD *)(a1 + <span class="number">4</span>);</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DCA64(__int64 a1)
+{
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  *(_DWORD *)a1 ^= *(_DWORD *)(a1 + 4);
+  ++*(_QWORD *)(a1 + 16);
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <p>读取数据，并且限制长度为21</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCAC5</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *buf; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  buf = (<span class="keyword">const</span> <span class="keyword">char</span> *)qword_55BE056DE2A8;</span><br><span class="line">  read(<span class="number">0</span>, qword_55BE056DE2A8, <span class="number">0x20</span>uLL);</span><br><span class="line">  dword_55BE056DE2A4 = <span class="built_in">strlen</span>(buf);</span><br><span class="line">  <span class="keyword">if</span> ( dword_55BE056DE2A4 != <span class="number">21</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">"WRONG!"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DCAC5(__int64 a1)
+{
+  const char *buf; // [rsp+10h] [rbp-10h]
+  unsigned __int64 v3; // [rsp+18h] [rbp-8h]
 
+  v3 = __readfsqword(0x28u);
+  buf = (const char *)qword_55BE056DE2A8;
+  read(0, qword_55BE056DE2A8, 0x20uLL);
+  dword_55BE056DE2A4 = strlen(buf);
+  if ( dword_55BE056DE2A4 != 21 )
+  {
+    puts(&quot;WRONG!&quot;);
+    exit(0);
+  }
+  ++*(_QWORD *)(a1 + 16);
+  return __readfsqword(0x28u) ^ v3;
+}</code></pre>
 <p>无操作</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DC956</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DC956(__int64 a1)
+{
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  ++*(_QWORD *)(a1 + 16);
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <p>乘法</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCA08</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 *= *(_DWORD *)(a1 + <span class="number">12</span>);</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DCA08(__int64 a1)
+{
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  *(_DWORD *)a1 *= *(_DWORD *)(a1 + 12);
+  ++*(_QWORD *)(a1 + 16);
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <p>交换</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DC8F0</span><span class="params">(<span class="keyword">int</span> *a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v2; <span class="comment">// [rsp+14h] [rbp-Ch]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  v2 = *a1;</span><br><span class="line">  *a1 = a1[<span class="number">1</span>];</span><br><span class="line">  a1[<span class="number">1</span>] = v2;</span><br><span class="line">  ++*((_QWORD *)a1 + <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DC8F0(int *a1)
+{
+  int v2; // [rsp+14h] [rbp-Ch]
+  unsigned __int64 v3; // [rsp+18h] [rbp-8h]
 
+  v3 = __readfsqword(0x28u);
+  v2 = *a1;
+  *a1 = a1[1];
+  a1[1] = v2;
+  ++*((_QWORD *)a1 + 2);
+  return __readfsqword(0x28u) ^ v3;
+}</code></pre>
 <p>加法</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DC99C</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_DWORD *)a1 = *(_DWORD *)(a1 + <span class="number">8</span>) + <span class="number">2</span> * *(_DWORD *)(a1 + <span class="number">4</span>) + <span class="number">3</span> * *(_DWORD *)a1;</span><br><span class="line">  ++*(_QWORD *)(a1 + <span class="number">16</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DC99C(__int64 a1)
+{
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  *(_DWORD *)a1 = *(_DWORD *)(a1 + 8) + 2 * *(_DWORD *)(a1 + 4) + 3 * *(_DWORD *)a1;
+  ++*(_QWORD *)(a1 + 16);
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <h4 id="加密操作1"><a href="#加密操作1" class="headerlink" title="加密操作1"></a><strong>加密操作</strong>1</h4><p><code>sub_55BE054DCE0B()</code>函数根据<code>unk_55BE056DE060</code>给出的opcode对a1进行加密，知道操作码等于<code>0xF4</code>为止</p>
 <p>下面我们需要对opcode进行分析，也是我们解题中最关键的一步</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_55BE054DCE0B</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  *(_QWORD *)(a1 + <span class="number">16</span>) = &amp;unk_55BE056DE060;</span><br><span class="line">  <span class="keyword">while</span> ( **(_BYTE **)(a1 + <span class="number">16</span>) != <span class="number">0xF4</span> )</span><br><span class="line">    sub_55BE054DCE6E(a1);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_55BE054DCE0B(__int64 a1)
+{
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  *(_QWORD *)(a1 + 16) = &amp;unk_55BE056DE060;
+  while ( **(_BYTE **)(a1 + 16) != 0xF4 )
+    sub_55BE054DCE6E(a1);
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <p>根据地址选取指令对a1进行操作</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __int64 __<span class="function">fastcall <span class="title">sub_556FD909DE6E</span><span class="params">(__int64 a1)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+14h] [rbp-Ch]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v3; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v3 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; **(_BYTE **)(a1 + <span class="number">16</span>) != *(_BYTE *)(<span class="number">16</span> * (i + <span class="number">1L</span>L) + a1 + <span class="number">8</span>); ++i )</span><br><span class="line">    ;</span><br><span class="line">  (*(<span class="keyword">void</span> (__fastcall **)(__int64))(<span class="number">16</span> * (i + <span class="number">1L</span>L) + a1 + <span class="number">16</span>))(a1);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 __fastcall sub_556FD909DE6E(__int64 a1)
+{
+  int i; // [rsp+14h] [rbp-Ch]
+  unsigned __int64 v3; // [rsp+18h] [rbp-8h]
 
+  v3 = __readfsqword(0x28u);
+  for ( i = 0; **(_BYTE **)(a1 + 16) != *(_BYTE *)(16 * (i + 1LL) + a1 + 8); ++i )
+    ;
+  (*(void (__fastcall **)(__int64))(16 * (i + 1LL) + a1 + 16))(a1);
+  return __readfsqword(0x28u) ^ v3;
+}</code></pre>
 <p>把opcode截取到0xF4（在这里你会发现有两段F5-F4），结合动态调试分析，其实一个简单的异或循环，虽然这里写进<code>input[0x20]</code>显得有点奇怪，但是只要看一下<strong>密文对比1</strong>那部分就知道其实这里存储的就是加密后的结果</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">F5 <span class="comment">// read</span></span><br><span class="line">F1 E1 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x20] = input[0] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>  </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">21</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x21] = input[0x01] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2  </span><br><span class="line">F1 E4 <span class="number">22</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x22] = input[0x02] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">23</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x23] = input[0x03] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">24</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x24] = input[0x04] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">25</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x25] = input[0x05] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">26</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x26] = input[0x06] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">27</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x27] = input[0x07] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">28</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x28] = input[0x08] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">09</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">29</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x29] = input[0x09] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>A <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>A <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2A] = input[0x0A] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0B</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2B</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2B] = input[0x0B] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2C] = input[0x0C] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2D] = input[0x0D] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2E] = input[0x0E] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">0F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">2F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x2F] = input[0x0F] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">10</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">30</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x30] = input[0x10] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">31</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x31] = input[0x11] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">12</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">32</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x32] = input[0x12] ^ a1[1]</span></span><br><span class="line">F1 E1 <span class="number">13</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">33</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x33] = input[0x13] ^ a1[1]</span></span><br><span class="line">F4 <span class="comment">// ret</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="c">F5 // read
+F1 E1 00 00 00 00 
+F2 
+F1 E4 20 00 00 00 // input[0x20] = input[0] ^ a1[1]
+F1 E1 01 00 00 00  
+F2 
+F1 E4 21 00 00 00 // input[0x21] = input[0x01] ^ a1[1]
+F1 E1 02 00 00 00 
+F2  
+F1 E4 22 00 00 00 // input[0x22] = input[0x02] ^ a1[1]
+F1 E1 03 00 00 00 
+F2 
+F1 E4 23 00 00 00 // input[0x23] = input[0x03] ^ a1[1]
+F1 E1 04 00 00 00 
+F2 
+F1 E4 24 00 00 00 // input[0x24] = input[0x04] ^ a1[1]
+F1 E1 05 00 00 00 
+F2 
+F1 E4 25 00 00 00 // input[0x25] = input[0x05] ^ a1[1]
+F1 E1 06 00 00 00 
+F2 
+F1 E4 26 00 00 00 // input[0x26] = input[0x06] ^ a1[1]
+F1 E1 07 00 00 00 
+F2 
+F1 E4 27 00 00 00 // input[0x27] = input[0x07] ^ a1[1]
+F1 E1 08 00 00 00 
+F2 
+F1 E4 28 00 00 00 // input[0x28] = input[0x08] ^ a1[1]
+F1 E1 09 00 00 00 
+F2 
+F1 E4 29 00 00 00 // input[0x29] = input[0x09] ^ a1[1]
+F1 E1 0A 00 00 00 
+F2 
+F1 E4 2A 00 00 00 // input[0x2A] = input[0x0A] ^ a1[1]
+F1 E1 0B 00 00 00 
+F2 
+F1 E4 2B 00 00 00 // input[0x2B] = input[0x0B] ^ a1[1]
+F1 E1 0C 00 00 00 
+F2 
+F1 E4 2C 00 00 00 // input[0x2C] = input[0x0C] ^ a1[1]
+F1 E1 0D 00 00 00 
+F2 
+F1 E4 2D 00 00 00 // input[0x2D] = input[0x0D] ^ a1[1]
+F1 E1 0E 00 00 00 
+F2 
+F1 E4 2E 00 00 00 // input[0x2E] = input[0x0E] ^ a1[1]
+F1 E1 0F 00 00 00 
+F2 
+F1 E4 2F 00 00 00 // input[0x2F] = input[0x0F] ^ a1[1]
+F1 E1 10 00 00 00 
+F2 
+F1 E4 30 00 00 00 // input[0x30] = input[0x10] ^ a1[1]
+F1 E1 11 00 00 00 
+F2 
+F1 E4 31 00 00 00 // input[0x31] = input[0x11] ^ a1[1]
+F1 E1 12 00 00 00 
+F2 
+F1 E4 32 00 00 00 // input[0x32] = input[0x12] ^ a1[1]
+F1 E1 13 00 00 00 
+F2 
+F1 E4 33 00 00 00 // input[0x33] = input[0x13] ^ a1[1]
+F4 // ret</code></pre>
 <blockquote>
 <p>a1[1]就是之前存储的<code>*(_DWORD *)(a1 + 4) = 0x12;</code></p>
 </blockquote>
 <h4 id="密文比较1"><a href="#密文比较1" class="headerlink" title="密文比较1"></a><strong>密文比较1</strong></h4><p><code>sub_55BE054DCF83()</code>函数与<code>aFzAmAmFmtSum</code>的指针值（其实就是我们的input）进行比较</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __<span class="function">int64 <span class="title">sub_55BE054DCF83</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; dword_55BE056DE2A4 - <span class="number">1</span> &gt; i; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( *((_BYTE *)qword_55BE056DE2A8 + i + <span class="number">0x20</span>) != aFzAmAmFmtSum[i] )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">"WRONG!"</span>);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"Congratulation?"</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">"tips: input is the start"</span>);</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 sub_55BE054DCF83()
+{
+  int i; // [rsp+Ch] [rbp-14h]
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  for ( i = 0; dword_55BE056DE2A4 - 1 &gt; i; ++i )
+  {
+    if ( *((_BYTE *)qword_55BE056DE2A8 + i + 0x20) != aFzAmAmFmtSum[i] )
+    {
+      puts(&quot;WRONG!&quot;);
+      exit(0);
+    }
+  }
+  puts(&quot;Congratulation?&quot;);
+  puts(&quot;tips: input is the start&quot;);
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <p>直接用这个值<code>aFzAmAmFmtSum</code>解密发现是假flag</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'[+] flag:'</span>, <span class="string">''</span>.join([chr(ord(_)^<span class="number">0x12</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="string">'Fz&#123;aM&#123;aM|&#125;fMt~suM !!'</span>]))</span><br><span class="line"><span class="comment"># [+] flag: This_is_not_flag_233</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="python">print(&#39;[+] flag:&#39;, &#39;&#39;.join([chr(ord(_)^0x12) for _ in &#39;Fz{aM{aM|}fMt~suM !!&#39;]))
+# [+] flag: This_is_not_flag_233</code></pre>
 <h4 id="密文比较2"><a href="#密文比较2" class="headerlink" title="密文比较2"></a>密文比较2</h4><p>在假flag上面有一个疑似密文的<code>byte_556FD929F020</code>数据，交叉引用到<code>sub_556FD909DF00()</code>中找到了另外一段密文比较</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> __<span class="function">int64 <span class="title">sub_556FD909DF00</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v2; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v2 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; dword_556FD929F2A4 - <span class="number">1</span> &gt; i; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( *((_BYTE *)qword_556FD929F2A8 + i) != byte_556FD929F020[i] )</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> __readfsqword(<span class="number">0x28</span>u) ^ v2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="c">unsigned __int64 sub_556FD909DF00()
+{
+  int i; // [rsp+Ch] [rbp-14h]
+  unsigned __int64 v2; // [rsp+18h] [rbp-8h]
 
+  v2 = __readfsqword(0x28u);
+  for ( i = 0; dword_556FD929F2A4 - 1 &gt; i; ++i )
+  {
+    if ( *((_BYTE *)qword_556FD929F2A8 + i) != byte_556FD929F020[i] )
+      exit(0);
+  }
+  return __readfsqword(0x28u) ^ v2;
+}</code></pre>
 <h4 id="加密操作2"><a href="#加密操作2" class="headerlink" title="加密操作2"></a>加密操作2</h4><p>在上面进行加密操作1的时候我们发现还有第二段opcode，那我们尝试分析一下</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">F5 <span class="comment">// read</span></span><br><span class="line">F1 E1 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0] = input[0] ^ input[0x01]</span></span><br><span class="line">F1 E1 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x01] = input[0x01] ^ input[0x02]</span></span><br><span class="line">F1 E1 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x02] = input[0x02] ^ input[0x03]</span></span><br><span class="line">F1 E1 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">03</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x03] = input[0x03] ^ input[0x04]</span></span><br><span class="line">F1 E1 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">04</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x04] = input[0x04] ^ input[0x05]</span></span><br><span class="line">F1 E1 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F2 </span><br><span class="line">F1 E4 <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x05] = input[0x05] ^ input[0x06]</span></span><br><span class="line">F1 E1 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E3 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E5 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F6 </span><br><span class="line">F7 </span><br><span class="line">F1 E4 <span class="number">06</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x06] = (input[0x08] + 2 ** input[0x07] + 3 ** input[0x06]) * input[0x0C]</span></span><br><span class="line">F1 E1 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E3 <span class="number">09</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E5 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F6 </span><br><span class="line">F7 </span><br><span class="line">F1 E4 <span class="number">07</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x07] = (input[0x09] + 2 ** input[0x08] + 3 ** input[0x07]) * input[0x0C]</span></span><br><span class="line">F1 E1 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">09</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E3 <span class="number">0</span>A <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E5 <span class="number">0</span>C <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F6 </span><br><span class="line">F7 </span><br><span class="line">F1 E4 <span class="number">08</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x08] = (input[0x0A] + 2 ** input[0x09] + 3 ** input[0x08]) * input[0x0C]</span></span><br><span class="line">F1 E1 <span class="number">0</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">13</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F8 </span><br><span class="line">F1 E4 <span class="number">0</span>D <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E7 <span class="number">13</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x0D], input[0x13] = input[0x13], input[0x0D]</span></span><br><span class="line">F1 E1 <span class="number">0</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">12</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F8 </span><br><span class="line">F1 E4 <span class="number">0</span>E <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E7 <span class="number">12</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x0E], input[0x12] = input[0x12], input[0x0E]</span></span><br><span class="line">F1 E1 <span class="number">0F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E2 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F8 </span><br><span class="line">F1 E4 <span class="number">0F</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> </span><br><span class="line">F1 E7 <span class="number">11</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="comment">// input[0x0F], input[0x11] = input[0x11], input[0x0F]</span></span><br><span class="line">F4 <span class="comment">// ret</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="c">F5 // read
+F1 E1 00 00 00 00 
+F1 E2 01 00 00 00 
+F2 
+F1 E4 00 00 00 00 // input[0] = input[0] ^ input[0x01]
+F1 E1 01 00 00 00 
+F1 E2 02 00 00 00 
+F2 
+F1 E4 01 00 00 00 // input[0x01] = input[0x01] ^ input[0x02]
+F1 E1 02 00 00 00 
+F1 E2 03 00 00 00 
+F2 
+F1 E4 02 00 00 00 // input[0x02] = input[0x02] ^ input[0x03]
+F1 E1 03 00 00 00 
+F1 E2 04 00 00 00 
+F2 
+F1 E4 03 00 00 00 // input[0x03] = input[0x03] ^ input[0x04]
+F1 E1 04 00 00 00 
+F1 E2 05 00 00 00 
+F2 
+F1 E4 04 00 00 00 // input[0x04] = input[0x04] ^ input[0x05]
+F1 E1 05 00 00 00 
+F1 E2 06 00 00 00 
+F2 
+F1 E4 05 00 00 00 // input[0x05] = input[0x05] ^ input[0x06]
+F1 E1 06 00 00 00 
+F1 E2 07 00 00 00 
+F1 E3 08 00 00 00 
+F1 E5 0C 00 00 00 
+F6 
+F7 
+F1 E4 06 00 00 00 // input[0x06] = (input[0x08] + 2 ** input[0x07] + 3 ** input[0x06]) * input[0x0C]
+F1 E1 07 00 00 00 
+F1 E2 08 00 00 00 
+F1 E3 09 00 00 00 
+F1 E5 0C 00 00 00 
+F6 
+F7 
+F1 E4 07 00 00 00 // input[0x07] = (input[0x09] + 2 ** input[0x08] + 3 ** input[0x07]) * input[0x0C]
+F1 E1 08 00 00 00 
+F1 E2 09 00 00 00 
+F1 E3 0A 00 00 00 
+F1 E5 0C 00 00 00 
+F6 
+F7 
+F1 E4 08 00 00 00 // input[0x08] = (input[0x0A] + 2 ** input[0x09] + 3 ** input[0x08]) * input[0x0C]
+F1 E1 0D 00 00 00 
+F1 E2 13 00 00 00 
+F8 
+F1 E4 0D 00 00 00 
+F1 E7 13 00 00 00 // input[0x0D], input[0x13] = input[0x13], input[0x0D]
+F1 E1 0E 00 00 00 
+F1 E2 12 00 00 00 
+F8 
+F1 E4 0E 00 00 00 
+F1 E7 12 00 00 00 // input[0x0E], input[0x12] = input[0x12], input[0x0E]
+F1 E1 0F 00 00 00 
+F1 E2 11 00 00 00 
+F8 
+F1 E4 0F 00 00 00 
+F1 E7 11 00 00 00 // input[0x0F], input[0x11] = input[0x11], input[0x0F]
+F4 // ret</code></pre>
 <h4 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h4><p>直接逆向上面的操作就好</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> z3 <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">flag = <span class="string">'69 45 2A 37 09 17 C5 0B 5C 72 33 76 33 21 74 31 5F 33 73 72'</span>.split(<span class="string">' '</span>)</span><br><span class="line">flag = [int(_, <span class="number">16</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> flag]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 置换</span></span><br><span class="line">flag[<span class="number">15</span>], flag[<span class="number">17</span>] = flag[<span class="number">17</span>], flag[<span class="number">15</span>]</span><br><span class="line">flag[<span class="number">14</span>], flag[<span class="number">18</span>] = flag[<span class="number">18</span>], flag[<span class="number">14</span>]</span><br><span class="line">flag[<span class="number">19</span>], flag[<span class="number">13</span>] = flag[<span class="number">13</span>], flag[<span class="number">19</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># z3</span></span><br><span class="line">a6, a7, a8 = BitVecs(<span class="string">'a6 a7 a8'</span>, <span class="number">8</span>)</span><br><span class="line">s = Solver()</span><br><span class="line">s.add(flag[<span class="number">6</span>] == (a8 + <span class="number">2</span> * a7 + <span class="number">3</span> * a6) * flag[<span class="number">12</span>])</span><br><span class="line">s.add(flag[<span class="number">7</span>] == (flag[<span class="number">9</span>]  + <span class="number">2</span> * a8 + <span class="number">3</span> * a7) * flag[<span class="number">12</span>])</span><br><span class="line">s.add(flag[<span class="number">8</span>] == (flag[<span class="number">10</span>] + <span class="number">2</span> * flag[<span class="number">9</span>] + <span class="number">3</span> * a8) * flag[<span class="number">12</span>])</span><br><span class="line"><span class="keyword">if</span> s.check() == sat:</span><br><span class="line">    m = s.model()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> m:</span><br><span class="line">        index = int(re.search(<span class="string">r'\d+'</span>, str(i)).group())</span><br><span class="line">        flag[index] = m[i].as_long()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 异或</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">    flag[i] ^= flag[i + <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">print(<span class="string">'[+] flag: '</span>, <span class="string">''</span>.join([chr(_) <span class="keyword">for</span> _ <span class="keyword">in</span> flag]))</span><br><span class="line"><span class="comment"># [+] flag:  Y0u_hav3_r3v3rs3_1t!</span></span><br></pre></td></tr></table></figure>
+<pre><code class="python">from z3 import *
+import re
 
+flag = &#39;69 45 2A 37 09 17 C5 0B 5C 72 33 76 33 21 74 31 5F 33 73 72&#39;.split(&#39; &#39;)
+flag = [int(_, 16) for _ in flag]
+
+# 置换
+flag[15], flag[17] = flag[17], flag[15]
+flag[14], flag[18] = flag[18], flag[14]
+flag[19], flag[13] = flag[13], flag[19]
+
+# z3
+a6, a7, a8 = BitVecs(&#39;a6 a7 a8&#39;, 8)
+s = Solver()
+s.add(flag[6] == (a8 + 2 * a7 + 3 * a6) * flag[12])
+s.add(flag[7] == (flag[9]  + 2 * a8 + 3 * a7) * flag[12])
+s.add(flag[8] == (flag[10] + 2 * flag[9] + 3 * a8) * flag[12])
+if s.check() == sat:
+    m = s.model()
+    for i in m:
+        index = int(re.search(r&#39;\d+&#39;, str(i)).group())
+        flag[index] = m[i].as_long()
+
+# 异或
+for i in range(5, -1, -1):
+    flag[i] ^= flag[i + 1]
+
+print(&#39;[+] flag: &#39;, &#39;&#39;.join([chr(_) for _ in flag]))
+# [+] flag:  Y0u_hav3_r3v3rs3_1t!</code></pre>
 
       
     </div>
@@ -575,7 +875,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -588,7 +888,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -679,6 +979,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

