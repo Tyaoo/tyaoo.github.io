@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Reverse中Angr的利用 | Tyaoo's Blog</title><meta name="keywords" content="Reverse"><meta name="author" content="Tyaoo"><meta name="copyright" content="Tyaoo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="记录一下入门Reverse中符号执行的利用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reverse中Angr的利用">
+<meta property="og:url" content="https://tyaoo.github.io/2021/03/19/Reverse%E4%B8%ADAngr%E7%9A%84%E5%88%A9%E7%94%A8/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="记录一下入门Reverse中符号执行的利用">
+<meta property="og:locale">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2021-03-19T15:20:49.000Z">
+<meta property="article:modified_time" content="2021-03-22T03:11:32.762Z">
+<meta property="article:author" content="Tyaoo">
+<meta property="article:tag" content="Reverse">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2021/03/19/Reverse%E4%B8%ADAngr%E7%9A%84%E5%88%A9%E7%94%A8/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Reverse中Angr的利用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-03-22 11:11:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Reverse中Angr的利用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-03-19T15:20:49.000Z" title="Created 2021-03-19 23:20:49">2021-03-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-03-22T03:11:32.762Z" title="Updated 2021-03-22 11:11:32">2021-03-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Reverse中Angr的利用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>记录一下入门Reverse中符号执行的利用</p>
+<span id="more"></span>
+
+<h2 id="Angr"><a href="#Angr" class="headerlink" title="Angr"></a>Angr</h2><blockquote>
+<p>官方文档：<a target="_blank" rel="noopener" href="http://angr.io/api-doc/angr.html">http://angr.io/api-doc/angr.html</a></p>
+</blockquote>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Angr是一个利用python开发的二进制程序分析框架，我们可以利用这个工具尝试对一些CTF题目进行符号执行来找到正确的解答，即flag。当然，要注意的是符号执行的路径选择问题到现在依旧是一个很大的问题，换句话说也就是当我们的程序存在循环时，因为符号执行会尽量遍历所有的路径，所以每次循环之后会形成至少两个分支，当循环的次数足够多时，就会造成路径爆炸，整个机器的内存会被耗尽。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>ubuntu安装教程如下</p>
+<pre><code class="shell"># 安装依赖
+sudo apt-get install python3-dev libffi-dev build-essential virtualenvwrapper
+# 在/etc/profile中加入以下代码并进行source
+export WORKON_HOME=$HOME/Python-workhome
+source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+# 安装angr
+mkvirtualenv --python=$(which python3) angr &amp;&amp; pip install angr
+# 运行angr
+workon angr</code></pre>
+<h3 id="符号执行"><a href="#符号执行" class="headerlink" title="符号执行"></a>符号执行</h3><p><strong>基础实例</strong></p>
+<pre><code class="python">import angr
+
+def main():
+    p = angr.Project(&quot;r100&quot;, auto_load_libs=True)
+    simgr = p.factory.simulation_manager(p.factory.full_init_state())
+    simgr.explore(find=0x400844, avoid=0x400855)
+    return simgr.found[0].posix.dumps(0).strip(b&#39;\0\n&#39;)
+
+if __name__ == &#39;__main__&#39;:
+    print(main())</code></pre>
+<p><strong>加载依赖库</strong></p>
+<p>auto_load_libs用来设置是否自动载入依赖的库，如果设置为True会自动载入依赖的库，然后分析到库函数调用时也会进入库函数，这样会增加分析的工作量。如果为False，程序调用函数时，会直接返回一个不受约束的符号值</p>
+<p><strong>设置SimState</strong></p>
+<p>SimState表示程序的状态，包括它的内存、寄存器等等</p>
+<p>SimState对象通常有三种：</p>
+<ol>
+<li><code>blank_state(**kwargs)</code><br>返回一个未初始化的state，此时需要主动设置入口地址，以及自己想要设置的参数</li>
+<li><code>entry_state(**kwargs)</code><br>返回程序入口地址的state，通常来说都会使用该状态</li>
+<li><code>full_init_state(**kwargs)</code><br>和<code>entry_state(**kwargs)</code>类似，但是调用在执行到达入口点之前应该调用每个初始化函数</li>
+</ol>
+<p>我们可以通过 <code>state.regs</code> 和 <code>state.mem</code> 访问寄存器和内存信息。</p>
+<pre><code class="python">state.regs.rip
+state.regs.rax
+state.mem[proj.entry].int.resolved</code></pre>
+<p><strong>创建Simulation Managers</strong></p>
+<p>p.factory.simulation_manager创建一个simulation_manager进行模拟执行，其中传入一个SimState</p>
+<p>SimulationManager一共有三种运行方式：</p>
+<ol>
+<li><code>step()</code><br>每次向前运行一个基本块，并返回进行分类</li>
+<li><code>run()</code><br>运行完所有的基本块，然后会出现deadended的状态，此时我们通常访问最后一个状态来获取我们所需要的信息</li>
+<li><code>explore()</code><br>根据find和avoid进行基本块的执行，最后会返回found和avoid状态</li>
+</ol>
+<p><strong>获取执行结果</strong></p>
+<p>simgr.found存储了所有符合条件的分支</p>
+<p><strong>help命令</strong></p>
+<p>可以使用help命令查看某个函数的详细说明，比如<code>help(state)</code></p>
+<p><strong>clarioy</strong></p>
+<blockquote>
+<p>官方文档：<a target="_blank" rel="noopener" href="http://angr.io/api-doc/claripy.html">http://angr.io/api-doc/claripy.html</a></p>
+</blockquote>
+<p>claripy是一个符号求解引擎，和z3类似，通常用来构造输入，单位为bit</p>
+<p>使用<code>claripy.BVS()</code>创建位向量符号</p>
+<pre><code class="python">claripy.BVS(&quot;u&quot;, 8)</code></pre>
+<p>使用<code>claripy.BVV()</code>创建位向量值</p>
+<pre><code class="python">claripy.BVV(0xab, 0x2 * 8)</code></pre>
+<h3 id="CTF"><a href="#CTF" class="headerlink" title="CTF"></a>CTF</h3><p>这个<a target="_blank" rel="noopener" href="https://github.com/jakespringer/angr_ctf">地址</a>是官方关于在CTF利用Angr的详细教程</p>
+<p>这个<a target="_blank" rel="noopener" href="https://docs.angr.io/examples">地址</a>是官方给出的在CTF比赛中使用Angr的例子，都是些精髓</p>
+<p>此外还有@<a target="_blank" rel="noopener" href="https://xz.aliyun.com/u/11261">Badrer</a>师傅在先知也写了很多相关的文章，大家可以学习一下</p>
+<p>下面是一些我碰到的一些CTF例子，会不断地进行更新</p>
+<h2 id="funnyre"><a href="#funnyre" class="headerlink" title="funnyre"></a>funnyre</h2><blockquote>
+<p>题目源于【WUSTCTF2020】</p>
+</blockquote>
+<h3 id="去花指令"><a href="#去花指令" class="headerlink" title="去花指令"></a>去花指令</h3><p>直接用IDA打开，尝试反编译main函数发现有花指令，根据上下文逻辑nop掉图中红框部分，一共有4处</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317bf81ee1b2abcab097522.png" alt="image-20210319172652670" style="zoom:80%;" />
+
+
+
+<p>把data强制分析为code，再把修改过的code声明为function，之后就可以正常的反汇编了</p>
+<p>main()函数中确定了flag的长度和格式，还有一长串的异或运算</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021031923179e8ec2c34d6a38fed435.png" alt="image-20210319211423984" style="zoom: 80%;" />
+
+<p>最后与unk_4025C0的数据进行比对</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103192317b68e2a8d0e4880427510.png" alt="image-20210319211739539" style="zoom:80%;" />
+
+<h3 id="符号执行-1"><a href="#符号执行-1" class="headerlink" title="符号执行"></a>符号执行</h3><p>到这里就可以有三种解决方法，第一种是直接爆破，时间会很长；第二种是把所有代码逆回去，会很麻烦；第三种，也是最简单的一种，就是使用Angr来进行符号执行约束求解</p>
+<p>下面给出符号执行的代码</p>
+<pre><code class="python">import angr
+import claripy
+
+# 创建project
+p = angr.Project(&quot;./attachment&quot;, load_options=&#123;&quot;auto_load_libs&quot;: False&#125;)
+# 设置程序入口,此处必须是flag加载完的位置
+state = p.factory.entry_state(addr=0x400601)
+# 创建符号向量
+flag = claripy.BVS(&quot;flag&quot;, 8*32)
+# 按照程序逻辑flag存放在rdx的第6位,因为前5位是&#39;flag&#123;&#39;
+state.memory.store(state.regs.rdx + 5, flag)
+&#39;&#39;&#39;
+# 也可以自己手动修改rdx的位置，但是相对位置不变就行
+state.memory.store(0x603056+0x300 + 5, flag)
+state.regs.rdx = 0x603056+0x300
+&#39;&#39;&#39;
+# 创建Simulation Manager
+sm = p.factory.simulation_manager(state)
+print(&quot;[+] init ok&quot;)
+
+# 设置探索成功的地址
+sm.explore(find=0x401DAE)
+if sm.found:
+    print(&quot;[+] found!&quot;)
+    #输出flag结果
+    x = sm.found[0].solver.eval(flag, cast_to=bytes).strip(b&#39;\0&#39;)
+    print(x)</code></pre>
+<h2 id="very-success"><a href="#very-success" class="headerlink" title="very_success"></a>very_success</h2><blockquote>
+<p>题目来源于【flareon2015_2】</p>
+</blockquote>
+<h3 id="符号执行-2"><a href="#符号执行-2" class="headerlink" title="符号执行"></a>符号执行</h3><p>程序主要代码如下，把用户输入存储到<code>byte_402159</code>中，其中用户输入为37位，<code>sub_401084()</code>对用户输入进行加密，最后与系统的<code>a1</code>比较，相同则成功，其中<code>a1</code>可以通过动态调试得到</p>
+<p>所以我们可以把符号执行的初始地址地位在<code>sub_401084()</code>的开始</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210322015898685f1ba3e262015856.png" alt="image-20210322002451961"></p>
+<p>选取好了初始地址之后，我们需要给参数进行赋值，这里涉及到对内存进行操控</p>
+<p>第1个参数来源于<code>0x401064</code>，即函数的返回地址</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158b532dd716df687936055.png" alt="image-20210322013920422"></p>
+<p>第2个参数来源于<code>0x4010e4</code>，得追溯到父函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210322015864c952b7f622010e130d.png" alt="image-20210322012614011"></p>
+<p>第3个参数来源于<code>0x402159</code>，直接是一个静态地址</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202103220158d6b80952cb87c09ebd2b.png" alt="image-20210322001900137"></p>
+<p>第4个参数就是输入字符串的长度，直接赋一个大于等于37的数值即可</p>
+<p>所以最终脚本如下</p>
+<pre><code class="python">import angr
+import claripy
+
+p = angr.Project(&quot;./very_success&quot;, load_options=&#123;&quot;auto_load_libs&quot;: False&#125;)
+s = p.factory.entry_state(addr=0x401084)
+
+# 填入函数的参数
+s.mem[s.regs.esp:].dword = 0x401064
+s.mem[s.regs.esp+4:].dword = 0x4010E4
+s.mem[s.regs.esp+8:].dword = 0x402159
+s.mem[s.regs.esp+12:].dword = 37
+
+# 在第三个参数创建一个符号向量
+s.memory.store(0x402159, claripy.BVS(&quot;flag&quot;, 8*37))
+
+sm = p.factory.simulation_manager(s)
+print(&quot;[+] init ok&quot;)
+
+sm.explore(find=0x40106B, avoid=0x401072)
+if sm.found:
+    print(&quot;[+] found!&quot;)
+    x = sm.found[0].solver.eval(flag, cast_to=bytes).strip(b&#39;\0&#39;)
+    print(x)</code></pre>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.52hertz.tech/2020/03/30/wctf2020_official_wp/#funnyre-7-solves">WUST-CTF 2020 官方 Writeup</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/u/11261">先知社区-Badrer</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7117">angr 系列教程(一）核心概念及模块解读</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2021/03/19/Reverse%E4%B8%ADAngr%E7%9A%84%E5%88%A9%E7%94%A8/">https://tyaoo.github.io/2021/03/19/Reverse%E4%B8%ADAngr%E7%9A%84%E5%88%A9%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Reverse/">Reverse</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/03/21/bang-apk%E8%84%B1%E5%A3%B3/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">bang-apk脱壳</div></div></a></div><div class="next-post pull-right"><a href="/2021/03/10/Cobalt-Strike-Learn/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Cobalt Strike Learn</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Angr"><span class="toc-number">1.</span> <span class="toc-text">Angr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C"><span class="toc-number">1.3.</span> <span class="toc-text">符号执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CTF"><span class="toc-number">1.4.</span> <span class="toc-text">CTF</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#funnyre"><span class="toc-number">2.</span> <span class="toc-text">funnyre</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%BB%E8%8A%B1%E6%8C%87%E4%BB%A4"><span class="toc-number">2.1.</span> <span class="toc-text">去花指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C-1"><span class="toc-number">2.2.</span> <span class="toc-text">符号执行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#very-success"><span class="toc-number">3.</span> <span class="toc-text">very_success</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C-2"><span class="toc-number">3.1.</span> <span class="toc-text">符号执行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tomcat内存马"/></a><div class="content"><a class="title" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马">Tomcat内存马</a><time datetime="2021-12-06T07:51:42.000Z" title="Created 2021-12-06 15:51:42">2021-12-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Handlebars AST注入"/></a><div class="content"><a class="title" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入">Handlebars AST注入</a><time datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dubbo反序列化漏洞研究"/></a><div class="content"><a class="title" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究">Dubbo反序列化漏洞研究</a><time datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Yii2最新反序列化POP链分析"/></a><div class="content"><a class="title" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析">Yii2最新反序列化POP链分析</a><time datetime="2021-06-03T15:09:56.000Z" title="Created 2021-06-03 23:09:56">2021-06-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Laravel Debug mode RCE复现"/></a><div class="content"><a class="title" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现">Laravel Debug mode RCE复现</a><time datetime="2021-05-28T06:15:46.000Z" title="Created 2021-05-28 14:15:46">2021-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>

