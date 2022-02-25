@@ -5044,7 +5044,7 @@
 <img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/202112041901cc740176246a7b512a0c.png" alt="image-20211201204202339" style="zoom: 67%;" />
 
 <p><strong>Pipeline调用链</strong></p>
-<img src="C:\Users\Tyao\AppData\Roaming\Typora\typora-user-images\image-20211202153946928.png" alt="image-20211202153946928" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/Tyaoo/PicBed/master/img/PicGo-Github-PicBed/2022022514188f36aeccd50ffad408c1.png" alt="image-20211202153946928" style="zoom:50%;" />
 
 <ul>
 <li><code>Connector</code>在某个指定的端口上来监听客户端发来的请求</li>
